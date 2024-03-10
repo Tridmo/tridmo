@@ -1,0 +1,456 @@
+"use client"
+
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Grid, Box, styled, IconButton } from '@mui/material'
+import SimpleCard from '../../simple_card'
+import SimpleTypography from '../../typography'
+import Pagination from '../../pagination/pagination'
+import Categories from '../../views/categories'
+import { selectAllModels } from '../../../data/get_all_models';
+import { setPageFilter } from '../../../data/handle_filters'
+import ColorsFilter from '../../views/colors'
+import Style from '../../views/model_styles'
+import Filters from '../../views/filters'
+import Image from 'next/image'
+import SearchInput from '@/components/inputs/search'
+import { useRouter } from 'next/navigation'
+import { ThemeProps } from '@/types/theme'
+import Link from 'next/link'
+import Buttons from '@/components/buttons'
+
+const all__models: { data?: any } = { data: [] }
+
+all__models.data.length = 17;
+
+const MorePages = [
+    {
+        path: '/designers',
+        title: 'Дизайнеры',
+        desc: 'Откройте безграничные возможности с нашими 3D-моделями.',
+        preview: [
+            { image_src: '/img/3dmodels-sofa.png' },
+            { image_src: '/img/3dmodels-chair1.png' },
+            { image_src: '/img/3dmodels-chair2.png' },
+        ]
+    },
+    {
+        path: '/brands',
+        title: 'Бренды',
+        desc: 'Преобразите свое пространство с помощью нашей подобранной коллекции продуктов.',
+        preview: [
+            { image_src: '/img/interior1.png' },
+            { image_src: '/img/interior2.png' },
+            { image_src: '/img/interior3.png' },
+        ]
+    }
+]
+
+const WhyUsDatas = [
+    {
+        id: 1,
+        title: "Качественная продукция",
+        desc: "Широкий выбор тщательно проработанных, точных и качественных 3D-моделей и интерьеров.",
+        icon: "/icons/why-us-check.svg"
+    },
+    {
+        id: 2,
+        title: "Низкие цены",
+        desc: "Качественные 3D модели и интерьеры по доступным ценам.",
+        icon: "/icons/why-us-label.svg"
+    },
+    {
+        id: 3,
+        title: "Удобный",
+        desc: "Веб-сайт с простой навигацией для беспроблемного совершения покупок.",
+        icon: "/icons/why-us-cursor.svg"
+    },
+    {
+        id: 4,
+        title: "Экспертная команда",
+        desc: "Опытная команда экспертов доступна для поддержки клиентов и помощи.",
+        icon: "/icons/why-us-message.svg"
+    },
+]
+
+export default function LandingPage() {
+
+    const router = useRouter();
+    const [searchClicked, setSearchClicked] = useState(false)
+    const [searchVal, setSearchVal] = useState("")
+    // const all__models = useSelector(selectAllModels)
+
+    function SearchModel(e: any) {
+        e.preventDefault()
+        console.log(e);
+        router.push(`/models?keyword=${searchVal}`)
+        // dispatch(searchModels(val))
+    }
+
+    return (
+        <>
+            <Box sx={{ width: '100%', backgroundColor: '#fff' }}>
+                <Box
+                    sx={{
+                        width: '1200px',
+                        minHeight: 507,
+                        display: "flex",
+                        margin: "0 auto",
+                        alignItems: 'center'
+                    }}
+                >
+                    <Grid spacing={2} container
+                        sx={{
+                            marginLeft: 0,
+                            alignItems: 'center',
+                            justifyContent: 'space-between'
+                        }}
+                    >
+                        <Grid>
+                            <Box sx={{ width: '590px' }}>
+                                <SimpleTypography
+                                    text='Lorem ipsum dolor sit amet, consectetur elit.'
+                                    className='hero__title'
+                                    variant={'h1'}
+                                />
+                                <SimpleTypography
+                                    text='Lorem ipsum dolor sit amet, consectetur elit. Lorem ipsum dolor sit amet, consectetur elit.Lorem ipsum dolor sit '
+                                    className='hero__desc'
+                                />
+                                <Grid>
+                                    <Box>
+                                        <form onSubmit={(e) => SearchModel(e)}>
+                                            <SearchInput
+                                                startIcon={false}
+                                                withButton={true}
+                                                className='search__input--models'
+                                                search={SearchModel}
+                                                onChange={setSearchVal}
+                                                clic={setSearchClicked}
+                                                placeHolder="Поиск..."
+                                            />
+                                        </form>
+                                    </Box>
+                                </Grid>
+                            </Box>
+                        </Grid>
+                        <Grid>
+                            <Image
+                                src={'/img/landing_main_img.png'}
+                                alt='Landing image'
+                                width={442}
+                                height={396}
+                            />
+                        </Grid>
+                    </Grid>
+                </Box>
+            </Box>
+            <Box sx={{ width: '100%' }}>
+                <Box
+                    sx={{
+                        width: '1200px',
+                        display: "flex",
+                        margin: "0 auto",
+                        alignItems: 'flex-start'
+                    }}
+                >
+                    <Grid container
+                        sx={{
+                            marginLeft: 0,
+                            marginTop: '40px',
+                            alignItems: 'center',
+                            justifyContent: 'space-between'
+                        }}
+                    >
+                        {
+                            MorePages.map((item) =>
+                                <Link href={item?.path}>
+                                    <Grid sx={{
+                                        backgroundColor: '#fff',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                        flexDirection: 'row',
+                                        padding: '20px',
+                                        width: '590px',
+                                        border: '1px solid transparent',
+                                        borderRadius: '4px',
+                                        boxShadow: '0px 2px 8px 0px #0000000D',
+
+                                        '&:hover': {
+                                            borderColor: '#E0E0E0',
+                                            boxShadow: '0px 6px 10px 0px #0000000F',
+                                        },
+                                        '&:hover .landing_section_text .landing_section_name': {
+                                            color: '#7210BE !important',
+                                        },
+                                        '&:hover .preview_images .arrow_button': {
+                                            backgroundColor: '#7210BE'
+                                        },
+                                        '&:hover .preview_images .arrow_button svg path': {
+                                            fill: '#fff'
+                                        }
+                                    }}>
+                                        <Box className='landing_section_text' sx={{ maxWidth: 310 }}>
+                                            <SimpleTypography
+                                                text={item?.title}
+                                                className='landing_section_name'
+                                                variant={'h2'}
+                                            />
+                                            <SimpleTypography
+                                                text={item?.desc}
+                                                className='landing_section_desc'
+                                            />
+                                        </Box>
+                                        <Box
+                                            className='preview_images'
+                                            sx={{
+                                                height: 80,
+                                                width: 228,
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                flexDirection: 'row',
+                                                position: 'relative'
+                                            }}
+                                        >
+                                            {
+                                                item?.preview.map((model, index) =>
+
+                                                    <Box
+                                                        sx={{
+                                                            backgroundColor: '#fff',
+                                                            width: '80px',
+                                                            height: '80px',
+                                                            padding: '10px',
+                                                            border: '1px solid #E0E0E0',
+                                                            borderRadius: '5px',
+                                                            position: 'absolute',
+                                                            top: 0,
+                                                            left: `${index * 30}%`,
+                                                            zIndex: index + 1,
+                                                        }}
+                                                    >
+                                                        <Image
+                                                            src={model.image_src}
+                                                            alt='Landing image'
+                                                            width={60}
+                                                            height={60}
+                                                            style={{
+                                                                borderRadius: '5px'
+                                                            }}
+                                                        />
+                                                    </Box>
+                                                )
+                                            }
+                                            <IconButton
+                                                className='arrow_button'
+                                                aria-label="menu"
+                                                sx={{
+                                                    marginRight: "16px",
+                                                    backgroundColor: '#F3E5FF',
+                                                    border: '2px solid #fff',
+                                                    zIndex: 5,
+                                                    position: 'absolute',
+                                                    right: '-12%',
+                                                }}>
+                                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M10.9766 9.99962L6.85156 5.87462L8.0299 4.69629L13.3332 9.99962L8.0299 15.303L6.85156 14.1246L10.9766 9.99962Z" fill="#7210BE" />
+                                                </svg>
+
+                                            </IconButton>
+                                        </Box>
+                                    </Grid>
+                                </Link>
+                            )
+                        }
+                    </Grid>
+                </Box>
+                {/* Models */}
+                <Box
+                    sx={{
+                        maxWidth: "1200px",
+                        minHeight: 829,
+                        display: "block",
+                        margin: "0 auto",
+                        alignItems: 'flex-start',
+                        marginTop: '64px'
+                    }}
+                >
+                    <Grid spacing={2}>
+                        {/* 3D MODELS */}
+
+                        <Grid
+                            sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                            }}
+                            container
+                            spacing={2}
+                            className="texts__wrap"
+                        >
+                            <Grid item xs={10}>
+                                <SimpleTypography
+                                    text="3D модели"
+                                    className="section__title"
+                                    variant="h2"
+                                />
+                            </Grid>
+
+                            <Grid
+                                item
+                                xs={2}
+                                sx={{
+                                    display: "flex",
+                                    justifyContent: "flex-end",
+                                    marginBottom: "12px",
+                                }}
+                            >
+                                <Link href={`models`}>
+                                    <Buttons
+                                        name={"Узнайте больше"}
+                                        endIcon={"right"}
+                                        className={`bordered__btn--explore`}
+                                    />
+                                </Link>
+                            </Grid>
+                        </Grid>
+
+                        {/* 3D MODELS MAP */}
+
+                        <Grid sx={{ mb: "32px" }}>
+                            <SimpleCard cols={5} route={"models"} sliced={15} />
+                        </Grid>
+
+                    </Grid>
+                </Box>
+                {/* Why Us */}
+                <Box
+                    sx={{
+                        width: '1200px',
+                        display: "flex",
+                        margin: "0 auto",
+                        alignItems: 'flex-start',
+                        marginTop: '64px',
+                    }}
+                >
+                    <Grid spacing={2}>
+                        <Grid
+                            sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                            }}
+                            container
+                            spacing={2}
+                            className="texts__wrap"
+                        >
+                            <Grid item xs={10}>
+                                <SimpleTypography
+                                    text="Почему мы?"
+                                    className="section__title"
+                                    variant="h2"
+                                />
+                            </Grid>
+                        </Grid>
+
+                        <Grid
+                            container
+                            spacing={2}
+                            className="why-us__wrapper"
+                            sx={{ marginTop: "4px", marginBottom: "40px" }}
+                        >
+                            {WhyUsDatas.map((item) => (
+                                <Grid key={item.id} item md={3} xs={12}>
+                                    <Box
+                                        sx={{ background: "#fff", padding: "16px", height: "221px" }}
+                                        className="why-us__card"
+                                    >
+                                        <Box
+                                            sx={{
+                                                background: "#F3E5FF",
+                                                borderRadius: "8px",
+                                                width: "48px",
+                                                height: "48px",
+                                                marginBottom: "13px",
+                                                backgroundImage: `url(${item.icon})`,
+                                                backgroundRepeat: "no-repeat",
+                                                backgroundPosition: "center center",
+                                            }}
+                                        ></Box>
+                                        <SimpleTypography
+                                            text={item.title}
+                                            className="why-us__title"
+                                            variant="h2"
+                                        />
+                                        <SimpleTypography
+                                            text={item.desc}
+                                            className="why-us__desc"
+                                            variant="p"
+                                        />
+                                    </Box>
+                                </Grid>
+                            ))}
+                        </Grid>
+                    </Grid>
+                </Box>
+                {/* Inter */}
+                <Box
+                    sx={{
+                        width: '1200px',
+                        display: "flex",
+                        margin: "0 auto",
+                        alignItems: 'flex-start',
+                        marginTop: '64px',
+                    }}
+                >
+                    <Grid spacing={2}>
+
+                        {/* INTERIORS */}
+
+                        <Grid
+                            sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                            }}
+                            container
+                            spacing={2}
+                            className="texts__wrap"
+                        >
+                            <Grid item xs={10}>
+                                <SimpleTypography
+                                    text="Дизайн интерьера"
+                                    className="section__title"
+                                    variant="h2"
+                                />
+                            </Grid>
+
+                            <Grid
+                                item
+                                xs={2}
+                                sx={{
+                                    display: "flex",
+                                    justifyContent: "flex-end",
+                                    marginBottom: "12px",
+                                }}
+                            >
+                                <Link href={`interiors`}>
+                                    <Buttons
+                                        name={"Узнайте больше"}
+                                        endIcon={"right"}
+                                        className={`bordered__btn--explore`}
+                                    />
+                                </Link>
+                            </Grid>
+                        </Grid>
+
+                        {/* INTERIORS MAP */}
+
+                        <Grid sx={{ mb: "45px" }}>
+                            <SimpleCard cols={4} route={"interiors"} sliced={8} landing_page={true} />
+                        </Grid>
+
+                    </Grid>
+                </Box>
+            </Box>
+        </>
+    )
+}
