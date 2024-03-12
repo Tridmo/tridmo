@@ -7,6 +7,7 @@ import { Avatar, Divider, List, ListItem, ListItemAvatar, ListItemText, Box, Gri
 import Image from 'next/image';
 import SimpleTypography from '@/components/typography';
 import BasicPagination from '@/components/pagination/pagination';
+import Link from 'next/link';
 
 
 const SX = {
@@ -43,6 +44,7 @@ export default function DesignersPage() {
                     width: '100%',
                     maxWidth: 1200,
                     bgcolor: 'background.paper',
+                    border: '1px solid #E0E0E0',
                     borderRadius: '4px',
                     paddingTop: 0,
                 }}
@@ -76,9 +78,22 @@ export default function DesignersPage() {
                 </ListItem>
                 {
                     all__designers?.data?.map((user, index: any) =>
-                        <>
+                        <Link href={`/designers/${user?.username}`}>
+
                             <ListItem key={user?.id} alignItems="center"
-                                sx={{ justifyContent: 'flex-start', padding: '12px 24px' }}>
+                                sx={{
+                                    justifyContent: 'flex-start',
+                                    padding: '12px 24px',
+                                    transition: '0.4s all ease',
+
+                                    '&:hover': {
+                                        backgroundColor: '#FAFAFA',
+                                    },
+                                    '&:hover .username': {
+                                        color: '#0646E6 !important',
+                                    }
+                                }}
+                            >
                                 <ListItemText sx={{ maxWidth: 56, marginRight: '16px' }}>
 
                                     <SimpleTypography
@@ -114,7 +129,7 @@ export default function DesignersPage() {
                                         }}
                                     />
                                 </ListItemAvatar>
-                                <ListItemText sx={{ margin: '0 8px', minWidth: '480px' }}>
+                                <ListItemText className='username' sx={{ margin: '0 8px', minWidth: '480px' }}>
 
                                     <SimpleTypography
                                         text={user?.username}
@@ -173,29 +188,15 @@ export default function DesignersPage() {
                                     <Divider sx={{ margin: 0 }} variant="inset" component="li" />
                                     : null
                             }
-                        </>
+                        </Link>
                     )
                 }
             </List>
             <Grid spacing={2} container sx={{ width: '100%', margin: "0 auto", padding: "17px 0 32px 0" }}>
                 <Grid
-                    sx={{ display: "flex", alignItems: "baseline" }}
                     item
-                    xs={6}
-                >
-                    <SimpleTypography
-                        text={`Показаны ${all__designers[0]?.pagination?.current + 1}–${all__designers[0]?.pagination?.limit} из`}
-                        className='pagenation__desc'
-                    />
-
-                    <SimpleTypography
-                        text={`${all__designers[0]?.pagination?.pages * all__designers[0]?.pagination?.limit} Брендов`}
-                        className='pagenation__desc--bold' />
-                </Grid>
-                <Grid
-                    item
-                    xs={6}
-                    sx={{ padding: "0 !important", display: "flex", justifyContent: "flex-end" }}
+                    xs={12}
+                    sx={{ padding: "0 !important", display: "flex", justifyContent: "center" }}
                 >
                     <BasicPagination
                         count={all__designers[0]?.pagination?.pages}

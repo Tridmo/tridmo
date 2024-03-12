@@ -30,7 +30,7 @@ export default function ModelsPage() {
                     <Filters />
                     {/* ---- MODEL CARDS ---- */}
 
-                    <SimpleCard cols={4} />
+                    <SimpleCard cols={4} route={"models"} />
 
 
                     {/* ---- MODEL CARDS ---- */}

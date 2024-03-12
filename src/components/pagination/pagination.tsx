@@ -93,7 +93,7 @@ const SimplePagination = styled(Pagination)(
     }
 
     .Mui-selected{
-      background-color: transparent;
+      background-color: rgba(0,0,0,0);
       height: calc(40px - 1.7px);
       border-bottom: 1.7px solid #141414;
       border-radius:0px;

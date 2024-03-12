@@ -7,6 +7,7 @@ import { Avatar, Divider, List, ListItem, ListItemAvatar, ListItemText, Box, Gri
 import Image from 'next/image';
 import SimpleTypography from '@/components/typography';
 import BasicPagination from '@/components/pagination/pagination';
+import Link from 'next/link';
 
 
 const SX = {
@@ -44,6 +45,7 @@ export default function BrandsPage() {
                     width: '100%',
                     maxWidth: 1200,
                     bgcolor: 'background.paper',
+                    border: '1px solid #E0E0E0',
                     borderRadius: '4px',
                     paddingTop: 0,
                 }}
@@ -77,9 +79,22 @@ export default function BrandsPage() {
                 </ListItem>
                 {
                     all__brands?.data?.map((brand, index: any) =>
-                        <>
+                        <Link href={`/brands/${brand?.id}`}>
                             <ListItem key={index} alignItems="center"
-                                sx={{ justifyContent: 'flex-start', padding: '12px 24px' }}>
+                                sx={{
+                                    justifyContent: 'flex-start',
+                                    padding: '12px 24px',
+                                    transition: '0.4s all ease',
+
+                                    '&:hover': {
+                                        backgroundColor: '#FAFAFA',
+                                    },
+                                    '&:hover .brand_name': {
+                                        color: '#0646E6 !important',
+                                    }
+                                }}
+                            >
+
                                 <ListItemText sx={{ maxWidth: 56, marginRight: '16px' }}>
                                     <SimpleTypography
                                         text={index + 1}
@@ -93,6 +108,7 @@ export default function BrandsPage() {
                                         }}
                                     />
                                 </ListItemText>
+
                                 <ListItemAvatar
                                     sx={{
                                         backgroundColor: '#fff',
@@ -113,7 +129,9 @@ export default function BrandsPage() {
                                         }}
                                     />
                                 </ListItemAvatar>
-                                <ListItemText sx={{ margin: '0 8px', minWidth: '380px' }} >
+
+
+                                <ListItemText className='brand_name' sx={{ margin: '0 8px', minWidth: '380px' }} >
                                     <SimpleTypography
                                         text={brand?.name}
                                         sx={{
@@ -137,6 +155,7 @@ export default function BrandsPage() {
                                         }}
                                     />
                                 </ListItemText>
+
                                 <ListItemText sx={{ minWidth: '400px' }} >
                                     <SimpleTypography
                                         text={brand?.style}
@@ -167,29 +186,15 @@ export default function BrandsPage() {
                                     <Divider sx={{ margin: 0 }} variant="inset" component="li" />
                                     : null
                             }
-                        </>
+                        </Link>
                     )
                 }
             </List>
             <Grid spacing={2} container sx={{ width: '100%', margin: "0 auto", padding: "17px 0 32px 0" }}>
                 <Grid
-                    sx={{ display: "flex", alignItems: "baseline" }}
                     item
-                    xs={6}
-                >
-                    <SimpleTypography
-                        text={`Показаны ${all__brands[0]?.pagination?.current + 1}–${all__brands[0]?.pagination?.limit} из`}
-                        className='pagenation__desc'
-                    />
-
-                    <SimpleTypography
-                        text={`${all__brands[0]?.pagination?.pages * all__brands[0]?.pagination?.limit} Брендов`}
-                        className='pagenation__desc--bold' />
-                </Grid>
-                <Grid
-                    item
-                    xs={6}
-                    sx={{ padding: "0 !important", display: "flex", justifyContent: "flex-end" }}
+                    xs={12}
+                    sx={{ padding: "0 !important", display: "flex", justifyContent: "center" }}
                 >
                     <BasicPagination
                         count={all__brands[0]?.pagination?.pages}
@@ -213,6 +218,6 @@ export default function BrandsPage() {
                     />
                 </Grid>
             </Grid>
-        </Box>
+        </Box >
     )
 }

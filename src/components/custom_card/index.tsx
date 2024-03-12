@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { Box, styled, Paper } from '@mui/material';
+import { Box, styled, Paper, Avatar } from '@mui/material';
 import Image from 'next/image';
 import SimpleTypography from '../typography';
 import Link from 'next/link';
@@ -26,10 +26,13 @@ type CustomCardProps = {
   type?: any,
   model?: any,
   link?: any,
-  img_height?: any,
+  imgHeight?: any,
+  tagText?: string,
+  tagIcon?: string,
+  withAuthor?: boolean,
 }
 
-function CustomCard({ type, model, link, img_height }: CustomCardProps) {
+function CustomCard({ model, link, imgHeight, tagIcon, tagText, withAuthor }: CustomCardProps) {
 
   const Label = styled(Paper)(({ theme }: ThemeProps) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -41,78 +44,59 @@ function CustomCard({ type, model, link, img_height }: CustomCardProps) {
     borderBottomRightRadius: 0,
   }));
 
-  const BoxStyle = {
-    height: "280px",
-    width: "100%",
-    border: " 1px solid #e0e0e0",
-    background: "#fff",
-    position: "relative",
-    cursor: "pointer",
-    transition: "all 0.4s ease",
-    padding: "12px 12px 0 12px",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between"
-  }
-
-  const InteriorsBoxStyle = {
-    height: "auto",
-    width: "100%",
-    border: " 1px solid #e0e0e0",
-    background: "#fff",
-    position: "relative",
-    cursor: "pointer",
-    transition: "all 0.4s ease",
-    padding: "12px 12px 0 12px",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between"
-  }
-
-  if (type === "interiors") {
-
-    return (
-      <Link key={model?.id} href={link ? link : ""} style={{ margin: '0 0 15px 0', textDecoration: "none" }}>
-        <Box sx={InteriorsBoxStyle}>
-          <SimpleTypography text='Интерьер' className='card__sale' />
-          <LazyLoadImage
-            src={`${model?.cover[0]?.image?.src}`}
-            alt="Model"
-            effect="blur"
-            width={"100%"}
-            placeholderSrc={"/img/card-loader.jpg"}
-            height={img_height || `208px`}
-            delayTime={500}
-            style={{ objectFit: "cover" }}
-          />
-          <Label
-            sx={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "space-between",
-              padding: "13px 13px"
-            }}
-          >
-            <SimpleTypography
-              text={model?.name}
-              className='card__title'
-            />
-          </Label>
-        </Box>
-      </Link>
-    )
-  }
 
   return (
     <Link key={model?.id} href={link ? link : ""} style={{ margin: '0 0 15px 0', textDecoration: "none" }}>
-      <Box sx={BoxStyle}>
+      <Box sx={{
+        height: "auto",
+        width: "100%",
+        border: " 1px solid #e0e0e0",
+        background: "#fff",
+        position: "relative",
+        cursor: "pointer",
+        transition: "all 0.4s ease",
+        padding: "12px 12px 0 12px",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between"
+      }}>
+        {
+          tagText ?
+            <SimpleTypography text={tagText || ""} className='card__sale' />
+            : tagIcon ?
+              <Box
+                sx={{
+                  position: 'absolute',
+                  width: '24px',
+                  height: '24px',
+                  top: '5px',
+                  right: '5px',
+                  color: '#fff',
+                  backgroundColor: '#7210be',
+                  border: '1.5px solid #fff',
+                  borderRadius: '3px',
+                  zIndex: 10,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Image
+                  src={tagIcon}
+                  alt='icon'
+                  width={14}
+                  height={14}
+                />
+              </Box>
+              : null
+        }
         <LazyLoadImage
           src={`${model?.cover[0]?.image?.src}`}
           alt="Model"
           effect="blur"
           width={"100%"}
           placeholderSrc={"/img/card-loader.jpg"}
-          height={"208px !important"}
+          height={imgHeight || `208px`}
           delayTime={500}
           style={{ objectFit: "cover" }}
         />
@@ -121,17 +105,40 @@ function CustomCard({ type, model, link, img_height }: CustomCardProps) {
             width: "100%",
             display: "flex",
             justifyContent: "space-between",
-            padding: "13px 13px"
+            padding: "13px 0"
           }}
         >
-          <SimpleTypography
-            text={model?.name}
-            className='card__title'
-          />
-          <SimpleTypography
-            text={`${model?.brand?.name}`}
-            className='card__title-brand'
-          />
+          {
+            withAuthor
+              ? <Box sx={{ display: 'flex', width: '100%' }}>
+                <Image
+                  src={model?.user?.image_src}
+                  alt='avatar'
+                  width={28}
+                  height={28}
+                  style={{
+                    borderRadius: '50%'
+                  }}
+                />
+                <SimpleTypography
+                  sx={{ marginLeft: '8px', display: 'flex', alignItems: 'center', textAlign: 'left' }}
+                  text={model?.user?.username}
+                  className='card__title'
+                />
+              </Box>
+              : <SimpleTypography
+                text={model?.name}
+                className='card__title'
+              />
+          }
+          {
+            model?.brand && model?.brand?.name
+              ? <SimpleTypography
+                text={`${model?.brand?.name}`}
+                className='card__title-brand'
+              />
+              : null
+          }
         </Label>
       </Box>
     </Link>

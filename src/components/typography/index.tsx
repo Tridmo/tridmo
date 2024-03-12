@@ -1,3 +1,5 @@
+"use client"
+
 import { ThemeProps } from '@/types/theme';
 import { SxProps, Typography, styled } from '@mui/material';
 import React from 'react'
@@ -182,6 +184,39 @@ const TypographyWrapper = styled(Typography)(
         color: #424242;
       }
 
+      &.MuiTypography-brand__info--title{
+        font-weight: 500;
+        font-size: 30px;
+        line-height: 36px;
+        letter-spacing: -0.02em;
+        color: #141414;
+      }
+
+      &.MuiTypography-brand__info--desc{
+        max-width:760px;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 22px;
+        color: #424242;
+      }
+
+      &.MuiTypography-brand_page__info--title{
+        font-weight: 500;
+        font-size: 34px;
+        line-height: 41px;
+        letter-spacing: -0.02em;
+        color: #141414;
+      }
+
+      &.MuiTypography-brand_page__info--desc{
+        max-width:760px;
+        font-weight: 400;
+        font-size: 20px;
+        line-height: 30px;
+        letter-spacing: -0.02em;
+        color: #424242;
+      }
+
       &.MuiTypography-table__text{
         font-weight: 400;
         font-size: 16px;
@@ -339,8 +374,8 @@ const TypographyWrapper = styled(Typography)(
       &.MuiTypography-brand__name{
         text-align: start;
         font-weight: 400;
-        font-size: 16px;
-        line-height: 22px;
+        font-size: 13px;
+        line-height: 18px;
         color: #A6A6A6;
       }
 
@@ -348,7 +383,7 @@ const TypographyWrapper = styled(Typography)(
         font-size: 18px;
         line-height: 22px;
         letter-spacing: -0.01em;
-        color: #1d5bf9;
+        color: #7210BE;
         border-bottom: 1.5px solid #b7cbfd;
         width: fit-content;
 

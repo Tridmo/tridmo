@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Box, Grid, Paper, styled } from '@mui/material';
 import Masonry from '@mui/lab/Masonry';
 import Image from 'next/image';
-import { ThemeProps } from '../../types/ThemeTypes';
-import SimpleTypography from '../Typography';
+import { ThemeProps } from '../../types/theme';
+import SimpleTypography from '../typography';
 import Link from 'next/link';
 import { selectAllModels } from '../../data/get_all_models';
 import MyLoader from './Skeleton'
@@ -37,8 +37,8 @@ export const SimpleCardsSkeleton: React.FC = () => {
                   src={"/img/card-loader.jpg"}
                   // srcSet={`${process.env.NEXT_PUBLIC_BASE_IMG_URL}/${model?.model_images[0]?.image[0]?.src}`}
                   // layout='fill'
-                  width="282px"
-                  height="282px"
+                  width={282}
+                  height={282}
                   alt={model?.title}
                   loading="lazy"
                   style={{

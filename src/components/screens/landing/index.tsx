@@ -417,7 +417,7 @@ export default function LandingPage() {
                         >
                             <Grid item xs={10}>
                                 <SimpleTypography
-                                    text="Дизайн интерьера"
+                                    text="Интерьеры"
                                     className="section__title"
                                     variant="h2"
                                 />
@@ -445,7 +445,7 @@ export default function LandingPage() {
                         {/* INTERIORS MAP */}
 
                         <Grid sx={{ mb: "45px" }}>
-                            <SimpleCard cols={4} route={"interiors"} sliced={8} landing_page={true} />
+                            <SimpleCard cols={4} route={"interiors"} sliced={8} />
                         </Grid>
 
                     </Grid>

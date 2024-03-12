@@ -29,7 +29,7 @@ export default function InteriorsPage() {
                     <Filters />
                     {/* ---- MODEL CARDS ---- */}
 
-                    <SimpleCard cols={4} route='interiors' />
+                    <SimpleCard cols={4} route='interiors' cardImgHeight={'208px'} />
 
 
                     {/* ---- MODEL CARDS ---- */}

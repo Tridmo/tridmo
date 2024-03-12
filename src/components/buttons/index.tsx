@@ -23,6 +23,7 @@ type ButtonsProps = {
   onClick?: React.ButtonHTMLAttributes<HTMLButtonElement>["onClick"];
   endIcon?: string,
   bgColor?: string,
+  childrenFirst?: boolean,
 };
 
 const ButtonWrapper = styled(Button)(
@@ -295,6 +296,7 @@ const ButtonWrapper = styled(Button)(
 
       &.MuiButton-not-found__btn{
         padding:9px 20px;
+        border-radius: 4px;
         background: #141414;
         font-weight: 500;
         font-size: 16px;
@@ -308,6 +310,38 @@ const ButtonWrapper = styled(Button)(
           margin-right:10px !important;
         }
         
+      }
+
+      &.MuiButton-bookmark__btn{
+        padding:9px 12px;
+        color: #303030;
+        background-color: #fff;
+        position:relative;
+        border: 1.7px solid #B3B3B3;
+        border-radius: 4px;
+
+        &:hover{
+          border-color: #686868;
+        } 
+
+        img{
+          margin: 0 4px !important;
+        }
+      }
+
+      &.MuiButton-bookmark__btn--disabled{
+        padding:9px 12px;
+        background-color: #F5F5F5;
+        color: #848484;
+        cursor: not-allowed;
+        pointer-events: none;
+        position:relative;
+        border: 1.7px solid #E0E0E0;
+        border-radius: 4px;
+
+        img{
+          margin: 0 4px !important;
+        }
       }
 
       &.MuiButton-upload__img--btn{
@@ -392,7 +426,7 @@ const ButtonWrapper = styled(Button)(
         border: 1px solid #E0E0E0;
         border-radius: 5px;
         padding:8px 15px;
-        width:282px;
+        width:244px;
         height:auto;
         margin-bottom:10px;
         display: flex;
@@ -513,7 +547,7 @@ const ButtonWrapper = styled(Button)(
 `
 )
 
-export default function Buttons(props: ButtonsProps) {
+export default function Buttons({ childrenFirst, ...props }: ButtonsProps) {
   return (
     <ButtonWrapper
       className={`MuiButton-${props?.className}`}
@@ -533,8 +567,9 @@ export default function Buttons(props: ButtonsProps) {
       disabled={props?.disabled}
       type={props?.type}
     >
+      {childrenFirst ? props?.children : null}
       {props?.name}
-      {props?.children}
+      {!childrenFirst ? props?.children : null}
     </ButtonWrapper >
   );
 };
