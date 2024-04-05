@@ -3,20 +3,8 @@
 import { Box, Grid, styled } from '@mui/material'
 import { ThemeProps } from '../../../types/theme';
 import SimpleTypography from '../../typography'
-import List, { listClasses } from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import Buttons from '../../buttons';
-import Image from "next/image";
-import Tabs, { tabsClasses } from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
 import { useCallback, useEffect, useState } from 'react';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useSelector } from 'react-redux';
-import { selectCategories } from '../../../data/categories';
-import { selectAllColors } from '../../../data/get_all_colors';
-import { selectAllStyles } from '../../../data/get_all_styles';
 import { flatten } from "lodash";
 import { useDispatch } from 'react-redux';
 import { setCategoryFilter, setColorFilter, setOrderByFilter, setStyleFilter } from '../../../data/handle_filters'

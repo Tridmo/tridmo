@@ -1,6 +1,6 @@
 "use client"
 
-import * as React from 'react';
+import React, { Suspense } from 'react';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/navigation'
 import { useDispatch, useSelector } from 'react-redux';
@@ -72,7 +72,9 @@ export default function Models() {
   return (
     <>
       <section style={{ background: "#fafafa" }}>
-        <ModelsPage />
+        <Suspense>
+          <ModelsPage />
+        </Suspense>
       </section>
     </>
   )

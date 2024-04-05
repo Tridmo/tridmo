@@ -1,6 +1,6 @@
 "use client"
 
-import * as React from 'react';
+import React, { Suspense } from 'react';
 import { useRouter } from 'next/navigation'
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllStyles } from '@/data/get_all_styles';
@@ -49,7 +49,9 @@ export default function Interiors() {
   return (
     <>
       <section style={{ background: "#fafafa" }}>
-        <InteriorsPage />
+        <Suspense>
+          <InteriorsPage />
+        </Suspense>
       </section>
     </>
   )

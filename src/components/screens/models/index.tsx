@@ -8,12 +8,7 @@ import SimpleTypography from '../../typography'
 import Pagination from '../../pagination/pagination'
 import Categories from '../../views/categories/model_categories'
 import { selectAllModels } from '../../../data/get_all_models';
-import { setPageFilter } from '../../../data/handle_filters'
-import ColorsFilter from '../../views/colors'
 import Style from '../../views/styles/model_styles'
-import Filters from '../../views/filters'
-import EmptyData from '../../views/empty_data'
-import { setFiltersModal } from '../../../data/modal_checker'
 import { useSearchParams } from 'next/navigation'
 import { searchModels, setSearchVal } from '../../../data/search_model'
 import { Close } from '@mui/icons-material'
@@ -63,7 +58,9 @@ export default function ModelsPage() {
                     <Suspense>
                         <Box className='models-page__filters--child'>
                             <Box className='models-page__filters--box'>
-                                <Categories />
+                                <Suspense>
+                                    <Categories />
+                                </Suspense>
                             </Box>
                             <Box className='models-page__filters--box'>
                                 <Style />
