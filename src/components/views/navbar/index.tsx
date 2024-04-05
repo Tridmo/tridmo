@@ -8,24 +8,23 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Image from 'next/image';
-// import BasicModal from '../../Modals/LoginModal';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Buttons from '../../buttons';
 import { selectMyProfile } from '@/data/me'
 import { CircularProgress, Divider, IconButton } from '@mui/material';
-// import { ThemeProps } from '../../../types/ThemeTypes';
 import SearchInput from '../../inputs/search';
-import Cookies from 'js-cookie'
-// import { switch_on } from '../../../data/toggle_cart'
-// import { selectGetOrders } from '../../../data/get_orders';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 // import { searchModels } from 'src/data/search_model';
 import SimpleTypography from '../../typography';
 import { ThemeProps } from '@/types/theme';
 import Link from 'next/link';
 import BasicModal from '@/components/modals/login_modal';
+import { switch_on } from '../../../data/toggle_cart';
+import { setAuthState } from '../../../data/login';
+import Cookies from 'js-cookie'
+import { IMAGES_BASE_URL } from '../../../utils/image_src';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -40,9 +39,9 @@ const DropDown = styled(Menu)(
     ({ theme }: ThemeProps) => `
 
   .MuiList-root{
-    width:130px;
+    width:162px;
     border: 1px solid #E0E0E0;
-    border-radius: 2px;
+    border-radius: 4px;
     padding: 4px 0;
     // margin:10px 12px;
     
@@ -50,7 +49,8 @@ const DropDown = styled(Menu)(
 
   .MuiPaper-root{
     border-radius:0 !important;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.18);
+    // box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.18);
+    box-shadow: 0px 8px 18px 0px #00000029;
   }
   `
 );
@@ -82,13 +82,20 @@ export default function Navbar() {
 
     const isAuthenticated = useSelector((state: any) => state?.auth_slicer?.authState)
     const userData = useSelector(selectMyProfile)
-    const router = useRouter();
     const [searchClicked, setSearchClicked] = useState(false)
     const [searchVal, setSearchVal] = useState("")
+
+    const router = useRouter();
+    const pathname = usePathname();
+
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const dispatch = useDispatch<any>();
+
+    // useEffect(() => {
+    //     setIsAuthenticated(authState);
+    // }, [authState]);
 
     const handleClick = (event: any) => {
         setAnchorEl(event.currentTarget);
@@ -101,15 +108,33 @@ export default function Navbar() {
     const handleLogout = () => {
         Cookies.remove('accessToken')
         Cookies.remove('refreshToken')
+        setAuthState(false)
+        router.push(pathname)
         router.refresh();
         setAnchorEl(null);
     }
 
     function SearchModel(e: any) {
         e.preventDefault()
-        console.log(e);
         router.push(`/models?keyword=${searchVal}`)
         // dispatch(searchModels(val))
+    }
+
+    const openRightBar = () => {
+        dispatch(switch_on(true))
+
+        // if (router.pathname === '/models' || router.pathname === '/interiors') {
+        //     router.push({
+        //         query: {
+        //             page: getModelPageFilter,
+        //             isOpen: true,
+        //             colors: getModelColorFilter,
+        //             styles: getModelStyleFilter,
+        //             category_name: getModelCategoryNameFilter,
+        //             category: getModelCategoryFilter,
+        //         },
+        //     });
+        // }
     }
 
     return (
@@ -119,6 +144,76 @@ export default function Navbar() {
             <Box sx={{ position: 'relative' }}>
                 <Box sx={{ flexGrow: 1, background: "#fff", borderBottom: "1px solid #e0e0e0", marginBottom: 0 }}>
                     <Grid container spacing={2} sx={{ maxWidth: "1200px", width: "100%", margin: "0 auto", alignItems: "center", position: "relative" }}>
+
+                        <DropDown
+                            id="basic-menu"
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            MenuListProps={{
+                                'aria-labelledby': 'basic-button',
+                            }}
+                        >
+
+                            <MenuItem
+                                onClick={handleClose}
+                                sx={{ padding: "6px 12px" }}
+                            >
+                                <Link
+                                    href='/profile'
+                                    style={{ textDecoration: "none", display: "flex", alignItems: "center" }}
+                                >
+
+                                    <Image
+                                        src="/icons/user-line.svg"
+                                        alt="user icon"
+                                        width={17}
+                                        height={17}
+                                    />
+                                    <SimpleTypography className='drow-down__text' text='Мой профайл' />
+
+                                </Link>
+                            </MenuItem>
+
+                            <MenuItem
+                                onClick={handleClose}
+                                sx={{ padding: "6px 12px" }}
+                            >
+                                <Link
+                                    href='/interiors/addnew'
+                                    style={{ textDecoration: "none", display: "flex", alignItems: "center" }}
+                                >
+
+                                    <Image
+                                        src="/icons/plus-round.svg"
+                                        alt="heart icon"
+                                        width={17}
+                                        height={17}
+                                    />
+                                    <SimpleTypography className='drow-down__text' text='Новый проект' />
+
+                                </Link>
+                            </MenuItem>
+
+
+                            <Divider
+                                sx={{
+                                    my: "0 !important",
+                                    width: "100%",
+                                }}
+                            />
+
+                            <MenuItem sx={{ padding: "6px 12px" }} onClick={handleLogout}>
+                                <Image
+                                    src="/icons/logout-circle-r-line.svg"
+                                    alt='logout icon'
+                                    width={17}
+                                    height={17}
+                                />
+                                <SimpleTypography sx={{ color: '#BC2020 !important' }} className='drow-down__text' text='Выйти' />
+                            </MenuItem>
+
+                        </DropDown>
 
                         <Grid
                             className='header__logo--wrapper'
@@ -176,50 +271,73 @@ export default function Navbar() {
                                 ></Image>
                             </IconButton>
 
+                            {
+                                isAuthenticated ?
+                                    <IconButton
+                                        onClick={openRightBar}
+                                        aria-label="menu"
+                                        sx={{ marginRight: "16px", backgroundColor: false ? 'rgba(0, 0, 0, 0.04)' : 'transparent' }}
+                                    >
+                                        <Image
+                                            src="/icons/bell-icon.svg"
+                                            alt='Search icon'
+                                            width={21}
+                                            height={21}
+                                        ></Image>
+                                    </IconButton>
+                                    : null
+                            }
+
 
                             <Box sx={{ background: "#fff", display: "flex", alignItems: "center", zIndex: "100", position: "relative", padding: "1px 0" }}>
                                 <Box className='header__btns'>
                                     {
                                         isAuthenticated ?
 
-                                            <Item sx={{ padding: "", display: "flex" }}>
-                                                <Button
-                                                    id="basic-menu"
-                                                    aria-controls={'basic-menu'}
-                                                    aria-haspopup="true"
-                                                    aria-expanded={true}
-                                                    onClick={handleClick}
-                                                    sx={{ padding: "0 3px ", display: "flex", "&:hover": { background: "#F5F5F5" } }}
-                                                >
-                                                    <Box sx={{ display: "flex", alignItems: "center" }}>
-                                                        <Image
-                                                            width="28"
-                                                            height="28"
-                                                            alt='user icon'
-                                                            src="/img/user.png"
-                                                        />
-                                                        <SimpleTypography
-                                                            text={
-                                                                userData?.full_name ?
-                                                                    userData?.full_name?.split(" ")[0] :
-                                                                    <CircularProgress size="1rem" />
-                                                            }
-                                                            sx={open ? { color: "#7210BE !important" } : {}}
-                                                            className={'user__name'}
-                                                        />
-                                                        <KeyboardArrowDownIcon
-                                                            sx={!open ? { minWidth: "11px", minHeight: "7px", color: "black" } : { minWidth: "11px", minHeight: "7px", color: "#7210BE", transform: "rotateZ(180deg)", transitionDuration: "1000ms" }}
-                                                        />
-                                                        {/* <Image
-                                                        width="11px"
-                                                        height="7px"
-                                                        alt='user icon'
-                                                        src="/icons/user-arrow.svg"
-                                                    /> */}
-                                                    </Box>
-                                                </Button>
+                                            <>
+                                                <Item sx={{ padding: '0 !important', display: "flex" }}>
+                                                    <Buttons
+                                                        id="basic-menu"
+                                                        aria-controls={'basic-menu'}
+                                                        aria-haspopup="true"
+                                                        aria-expanded={true}
+                                                        onClick={handleClick}
+                                                        sx={{
+                                                            padding: '0 !important',
+                                                            display: "flex",
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            "&:hover": { background: "#F5F5F5" }
+                                                        }}
+                                                    >
+                                                        <Box sx={{ display: "flex", alignItems: "center" }}>
+                                                            <Image
+                                                                width="28"
+                                                                height="28"
+                                                                alt='user icon'
+                                                                style={{
+                                                                    borderRadius: '50%'
+                                                                }}
+                                                                src={userData?.image_src ? `${IMAGES_BASE_URL}/${userData?.image_src}` : "/img/avatar.png"}
+                                                            />
+                                                            <SimpleTypography
+                                                                text={
+                                                                    userData?.full_name ?
+                                                                        userData?.full_name?.split(" ")[0] :
+                                                                        <CircularProgress size="1rem" />
+                                                                }
+                                                                sx={open ? { color: "#7210BE !important", marginLeft: '6px' }
+                                                                    : { marginLeft: '6px' }}
+                                                                className={'user__name'}
+                                                            />
+                                                            <KeyboardArrowDownIcon
+                                                                sx={!open ? { minWidth: "11px", minHeight: "7px", color: "black" } : { minWidth: "11px", minHeight: "7px", color: "#7210BE", transform: "rotateZ(180deg)", transitionDuration: "1000ms" }}
+                                                            />
+                                                        </Box>
+                                                    </Buttons>
 
-                                            </Item> :
+                                                </Item>
+                                            </> :
 
                                             <Item sx={{ padding: "0", display: "flex" }}>
                                                 <Box sx={{ marginRight: "16px" }}>
@@ -254,7 +372,7 @@ export default function Navbar() {
             </Grid> */}
                     </Grid>
                 </Box>
-                {
+                {/* {
                     searchClicked ?
                         <Box className='search_bar'
                             sx={{
@@ -294,7 +412,7 @@ export default function Navbar() {
                             </Grid>
                         </Box>
                         : null
-                }
+                } */}
             </Box>
         </>
     )

@@ -16,7 +16,7 @@ const GroupCard = () => {
             <SimpleTypography text='Section name' className='section__title' variant="h2" />
             {/* ---- MODEL CARDS ---- */}
 
-            <SimpleCard cols={0} />
+            <SimpleCard route='any' cols={0} />
 
             {/* ---- MODEL CARDS ---- */}
 

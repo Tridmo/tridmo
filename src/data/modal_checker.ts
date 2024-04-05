@@ -5,7 +5,7 @@ export interface AuthState {
   isSignup: boolean;
   isVerify: boolean;
   isModalOpen: boolean;
-  isEditModalOpen: boolean;
+  isProfileEdit: boolean;
   order_id: string | null,
   isOrderModal: boolean;
   isFilterModal: boolean;
@@ -16,7 +16,7 @@ const initialState: AuthState = {
   isLogin: false,
   isSignup: false,
   isVerify: false,
-  isEditModalOpen: false,
+  isProfileEdit: false,
   isModalOpen: false,
   order_id: null,
   isOrderModal: false,
@@ -35,7 +35,6 @@ const modalChecker = createSlice({
     },
     setSignupState(state, action) {
       state.isSignup = action.payload;
-      console.log(state.isSignup);
     },
     setVerifyState(state, action) {
       state.isVerify = action.payload;
@@ -47,8 +46,8 @@ const modalChecker = createSlice({
       state.isModalOpen = action.payload;
     },
 
-    setOpenEditModal(state, action) {
-      state.isEditModalOpen = action.payload;
+    setProfileEditState(state, action) {
+      state.isProfileEdit = action.payload;
     },
     setOpenOrderModal(state, action) {
       const { isOpen, order_id } = action.payload
@@ -59,6 +58,6 @@ const modalChecker = createSlice({
   },
 });
 
-export const { setLoginState, setSignupState, setOpenEditModal, setVerifyState, setOpenModal, setOpenOrderModal, setFiltersModal } = modalChecker.actions;
+export const { setLoginState, setSignupState, setProfileEditState, setVerifyState, setOpenModal, setOpenOrderModal, setFiltersModal } = modalChecker.actions;
 
 export const reducer = modalChecker.reducer;

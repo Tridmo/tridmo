@@ -2,6 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
+import SimpleInp from './simple_input';
 interface InputAdornmentsProps {
     error?: boolean;
     name?: string;
@@ -18,23 +19,21 @@ interface InputAdornmentsProps {
     placeholderText: string,
 }
 
-export default function InputAdornments(props: InputAdornmentsProps) {
+export default function EmailInputAdornments(props: InputAdornmentsProps) {
 
     return (
-        <FormControl sx={{ m: 1, width: '100%' }} variant="filled">
-            <TextField
-                id="filled-password-input"
+        <FormControl sx={{ width: '100%' }} variant="filled">
+            <SimpleInp
+                // id="filled-password-input"
+                label='Электронная почта'
                 autoComplete={props?.autoComplete}
                 error={props?.error}
                 helperText={props?.helperText}
                 onBlur={props?.onBlur}
                 onChange={props?.onChange}
-                label={props?.label}
                 name={props?.name}
-                placeholder={props?.placeholderText}
+                placeholderText={props?.placeholderText}
                 type={props?.type}
-                // autoComplete="current-password"
-                variant="filled"
             />
         </FormControl>
     )

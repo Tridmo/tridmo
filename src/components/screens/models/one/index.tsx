@@ -8,41 +8,49 @@ import ProductInfo from '../../../views/model/info'
 import ProductModal from '../../../views/model/model_modal';
 import SimpleTypography from '../../../typography';
 import CustomCard from '../../../custom_card';
-import axios from '../../../../utils/axios';
-import { selectOneModel } from '../../../../data/get_one_model';
-import Cookies from 'js-cookie';
-import SimpleCard from '@/components/simple_card';
-import { sampleModel } from '@/data/samples/sample_model';
+import { sampleModel } from '@/data/samples';
 import Link from 'next/link';
 import Buttons from '@/components/buttons';
+import { selectOneModel } from '../../../../data/get_one_model';
+import IconBreadcrumbs from '../../../breadcrumbs';
+import { selectBrandModels } from '../../../../data/get_brand_models';
+import { selectTopModels } from '../../../../data/get_top_models';
 
 
 export default function OneModel() {
     const isAuthenticated = useSelector((state: any) => state?.auth_slicer?.authState)
-    // const simpleModel = useSelector(selectOneModel);
-    const simpleModel = sampleModel;
-    const brandModels = Array.from({ length: 5 }, () => (simpleModel))
-    const topModels = Array.from({ length: 5 }, () => (simpleModel))
-    // const brandModels = axios.get(`/models/?brand_id=${simpleModel?.data?.brand_id}&limit=5`).then((res) => res.data.data)
-    // const topModels = axios.get(`/models/?orderBy=rating&limit=5`).then((res) => res.data.data)
+    const model = useSelector(selectOneModel);
+    const brandModels = useSelector(selectBrandModels)
+    const topModels = useSelector(selectTopModels)
+
+    console.log(brandModels, "BB");
+    console.log(topModels, "TT");
 
 
     return (
         <>
             <Box sx={{ background: "#fafafa" }} className="products">
                 <Box className='products__container' sx={{ maxWidth: "1200px", width: "100%", margin: "0 auto !important", alignItems: "center", }}>
+                    <Box sx={{ marginTop: '32px' }}>
+                        <IconBreadcrumbs route={"/models"} breadCrumbsData={model} />
+                    </Box>
+
                     <Grid
                         className='products__grid'
                         container
-                        spacing={2}
-                        sx={{ width: "100%", paddingBottom: "18px" }}
+                        sx={{
+                            marginTop: '6px',
+                            width: "100%",
+                            paddingBottom: "18px",
+                            justifyContent: 'space-between'
+                        }}
                     >
                         <ProductModal />
                         <ProductSlider name="slider" />
                         <ProductInfo />
                     </Grid>
 
-                    {simpleModel?.used_interiors[0] != null ? (
+                    {model?.used_interiors?.length > 0 && model?.used_interiors[0] != null ? (
                         <>
                             <Box
                                 sx={{
@@ -59,7 +67,7 @@ export default function OneModel() {
                                 />
                             </Box>
                             <Grid className="models__card--wrap" container spacing={3} sx={{ width: "100%", margin: "0 0 24px 0" }}>
-                                {simpleModel?.used_interiors?.map((model: any, index: any) => (
+                                {model?.used_interiors?.map((model: any, index: any) => (
                                     <Grid
                                         className='models__card'
                                         sx={{
@@ -93,14 +101,14 @@ export default function OneModel() {
                     ) : (null)}
 
                     {
-                        brandModels.length > 0 ?
+                        brandModels?.length > 0 ?
                             <Divider sx={{ marginBottom: '32px' }} />
                             : null
                     }
 
                     {/* BRAND MODELS */}
                     {brandModels?.length > 0 ? (
-                        <Grid spacing={2}>
+                        <Grid>
                             {/* 3D MODELS */}
 
                             <Grid
@@ -129,7 +137,7 @@ export default function OneModel() {
                                         marginBottom: "12px",
                                     }}
                                 >
-                                    <Link href={`/brands/${simpleModel?.brand_id}`}>
+                                    <Link href={`/brands/${model?.brand_id}`}>
                                         <Buttons
                                             name={"Смотреть все"}
                                             endIcon={"right"}
@@ -179,7 +187,7 @@ export default function OneModel() {
                     ) : (null)}
 
                     {
-                        !(brandModels.length > 0) && topModels.length > 0 ?
+                        !(brandModels?.length > 0) && topModels?.length > 0 ?
                             <Divider sx={{ marginBottom: '32px' }} />
                             : null
                     }
@@ -187,7 +195,7 @@ export default function OneModel() {
                     {/* TOP MODELS */}
                     {topModels?.length > 0 ? (
 
-                        <Grid spacing={2}>
+                        <Grid>
                             {/* 3D MODELS */}
 
                             <Grid

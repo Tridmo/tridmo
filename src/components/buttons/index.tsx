@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Button,
   CircularProgress,
+  SxProps,
   styled,
 } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -13,10 +14,11 @@ import '@/styles/buttons.module.scss'
 import { ThemeProps } from '@/types/theme';
 
 type ButtonsProps = {
-  name: string,
-  sx?: any,
+  id?: string,
+  name?: string,
+  sx?: SxProps,
   type?: React.ButtonHTMLAttributes<HTMLButtonElement>["type"] | "button",
-  className: string,
+  className?: string,
   children?: any,
   disabled?: boolean,
   startIcon?: boolean,
@@ -24,6 +26,7 @@ type ButtonsProps = {
   endIcon?: string,
   bgColor?: string,
   childrenFirst?: boolean,
+  loadingColor?: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'inherit' | any,
 };
 
 const ButtonWrapper = styled(Button)(
@@ -36,6 +39,8 @@ const ButtonWrapper = styled(Button)(
       line-height: 140%;
       color:  ${theme.colors.primary[100]};
       transition: all 0.4s ease;
+      cursor: pointer;
+      border-radius: 4px;
 
       &.MuiButton-bordered__btn {
         width:100px;
@@ -104,8 +109,22 @@ const ButtonWrapper = styled(Button)(
         } 
       }
 
+      &.MuiButton-upload__btn{
+        color:#FFFFFF;
+        background-color: #7210BE;
+        padding:11px 16px;
+        border-radius: 4px;
+
+        img {
+          margin-right: 8px;
+        }
+
+        &:hover{
+          background: #9E35EE;
+        } 
+      }
+
       &.MuiButton-login__btn {
-        width:90px;
         height:40px;
         border: 1.7px solid ${theme.colors.gray[900]};
         color:white;
@@ -118,9 +137,30 @@ const ButtonWrapper = styled(Button)(
           border-color: ${theme.colors.gray[700]};
           
         }   
+
+        &--disabled {
+          height:40px;
+          border: 1.7px solid ${theme.colors.gray[500]};
+          color:white;
+          background-color: ${theme.colors.gray[500]};
+          padding:0 20px ;
+          border-radius:4px;
+        }
       } 
+
+      &.MuiButton-borderless__btn {
+        height :40px;
+        color: #686868;
+        padding: 0 20px ;
+        border-radius: 4px;
+        
+        &:hover{
+          background-color: #F5F5F5;
+        }
+      } 
+
       &.MuiButton-underlined__btn {
-        min-width:47px;
+        min-width:30px;
         padding:0;
         font-size: 13px;
         line-height: 22px;
@@ -129,8 +169,6 @@ const ButtonWrapper = styled(Button)(
         border-bottom: 1.5px solid #B7CBFD;
         background:transparent;
         border-radius:0;
-        margin-left:8px;
-
         &:hover{
           background-color:white;
           border-color: ${theme.colors.gray[700]};
@@ -143,7 +181,7 @@ const ButtonWrapper = styled(Button)(
         color:#fff;
         margin-top: 24px;
         margin-bottom: 10px;
-        border-radius:5px;
+        border-radius:4px;
 
         &:hover{
           background: #9E35EE;  
@@ -159,7 +197,7 @@ const ButtonWrapper = styled(Button)(
         width:100%;
         padding: 9px 12px;
         border: 1px solid #e0e0e0;
-        border-radius: 5px;
+        border-radius: 4px;
         margin-bottom: 10px;
         justify-content: start;
         gap: 10px;
@@ -176,7 +214,7 @@ const ButtonWrapper = styled(Button)(
         width:100%;
         padding: 2px 8px;
         border: 1px solid #e0e0e0;
-        border-radius: 5px;
+        border-radius: 4px;
         justify-content: start;
         gap: 10px;
         text-align: start;
@@ -190,7 +228,7 @@ const ButtonWrapper = styled(Button)(
       &.MuiButton-download__model{
         width: 100%;
         background: #7210BE;
-        border-radius: 5px;
+        border-radius: 4px;
         font-size: 16px;
         line-height: 22px;
         text-align: center;
@@ -198,7 +236,7 @@ const ButtonWrapper = styled(Button)(
         &--model {
           width: 100%;
           background: #7210BE;
-          border-radius: 5px;
+          border-radius: 4px;
           color: #fff;
         }
         &:hover{
@@ -208,7 +246,7 @@ const ButtonWrapper = styled(Button)(
           pointer-events: none;
           width: 258px;
           background: #7210BE;
-          border-radius: 5px;
+          border-radius: 4px;
           font-size: 16px;
           line-height: 22px;
           text-align: center;
@@ -325,7 +363,7 @@ const ButtonWrapper = styled(Button)(
         } 
 
         img{
-          margin: 0 4px !important;
+          margin-right: 8px;
         }
       }
 
@@ -340,7 +378,7 @@ const ButtonWrapper = styled(Button)(
         border-radius: 4px;
 
         img{
-          margin: 0 4px !important;
+          margin-right: 8px;
         }
       }
 
@@ -416,7 +454,7 @@ const ButtonWrapper = styled(Button)(
 
       &.MuiButton-product__btn{
         border: 1px solid #E0E0E0;
-        border-radius: 5px;
+        border-radius: 4px;
         padding:5px 20px;
         height:auto
       }
@@ -424,11 +462,10 @@ const ButtonWrapper = styled(Button)(
       &.MuiButton-brand__box{
         background: #fff;
         border: 1px solid #E0E0E0;
-        border-radius: 5px;
+        border-radius: 4px;
         padding:8px 15px;
-        width:244px;
+        width:240px;
         height:auto;
-        margin-bottom:10px;
         display: flex;
         align-items: center;
         justify-content: start;
@@ -544,12 +581,37 @@ const ButtonWrapper = styled(Button)(
         width:100%;
       }
 
+      &.MuiButton-delete__tag{
+        background: #fafafa;
+        min-width: 36px;
+        width: 36px;
+        height: 36px;
+        border-radius: 0px !important;
+        padding: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        svg path {
+          transition: all 0.2s ease;  
+        }
+
+        &:hover {
+          background-color: #FAE1E1;
+        }
+
+        &:hover svg path {
+          fill: #DB2E2E;
+        }
+      }
+
 `
 )
 
 export default function Buttons({ childrenFirst, ...props }: ButtonsProps) {
   return (
     <ButtonWrapper
+      id={props?.id}
       className={`MuiButton-${props?.className}`}
       sx={{
         ...props?.sx,
@@ -557,7 +619,7 @@ export default function Buttons({ childrenFirst, ...props }: ButtonsProps) {
         ":hover": { background: props?.bgColor },
       }}
       onClick={props?.onClick}
-      startIcon={props?.startIcon ? <CircularProgress size="1rem" /> : null}
+      startIcon={props?.startIcon ? <CircularProgress size="1rem" color={props?.loadingColor || 'primary'} /> : null}
       endIcon={
         props?.endIcon === "right" ? <ArrowForwardIcon /> :
           props?.endIcon === "left" ? <ArrowBackIcon /> :

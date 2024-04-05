@@ -1,19 +1,18 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../utils/axios'
-import Cookies from 'js-cookie'
-// import { Cookies } from 'react-cookie';
+
 const initialState = {
   data: [],
   status: 'idle',
   error: null,
   progress: 0,
 };
-export const getAllDesigners = createAsyncThunk('/designers',
+export const getAllDesigners = createAsyncThunk('/users/designers',
   async (wrapper?: any) => {
-    let send__route = `/designers`
+    let send__route = `/users/designers`
 
     if (wrapper?.name) {
-      send__route += `/?keyword=${wrapper?.name}`
+      send__route += `/?full_name=${wrapper?.name}`
     }
 
     if (!send__route?.includes("/?") && wrapper?.page) {
@@ -23,6 +22,7 @@ export const getAllDesigners = createAsyncThunk('/designers',
     }
     const response = await api.get(send__route)
     return response.data
+
   })
 
 const get_all_designers = createSlice({
@@ -57,5 +57,5 @@ const get_all_designers = createSlice({
 
 export const { resetAllDesigners } = get_all_designers.actions;
 export const reducer = get_all_designers.reducer;
-export const selectAllDesigners = (state: any) => state?.get_all_designers?.data
+export const selectAllDesigners = (state: any) => state?.get_all_designers?.data[0]
 export default get_all_designers;

@@ -3,23 +3,21 @@
 import * as React from 'react'
 import { Box, Divider, Grid } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import ProductInfo from '../../../views/model/info'
 import SimpleTypography from '../../../typography';
 import CustomCard from '../../../custom_card';
-import { sampleModel } from '@/data/samples/sample_model';
-import Link from 'next/link';
-import Buttons from '@/components/buttons';
 import BrandInfo from '@/components/views/brand/info';
 import Image from 'next/image';
+import { selectOneBrand } from '../../../../data/get_one_brand';
+import { selectBrandModels } from '../../../../data/get_brand_models';
+import { IMAGES_BASE_URL } from '../../../../utils/image_src';
 
 
 export default function OneBrand() {
     const isAuthenticated = useSelector((state: any) => state?.auth_slicer?.authState)
-    // const simpleModel = useSelector(selectOneBrand);
-    const brand = sampleModel.brand;
-    const brandModels = Array.from({ length: 5 }, () => (sampleModel))
-    // const brandModels = axios.get(`/models/?brand_id=${simpleModel?.data?.brand_id}&limit=5`).then((res) => res.data.data)
-    // const topModels = axios.get(`/models/?orderBy=rating&limit=5`).then((res) => res.data.data)
+    const brand = useSelector(selectOneBrand);
+    const brandModels = useSelector(selectBrandModels)
+
+    console.log(brandModels);
 
 
     return (
@@ -42,23 +40,17 @@ export default function OneBrand() {
                                 height={400}
                                 alt="Brand image"
                                 style={{ objectFit: "cover" }}
-                                src={`${brand?.logo}`}
+                                src={`${IMAGES_BASE_URL}/${brand?.image_src}`}
                             />
                         </Grid>
                         <BrandInfo />
                     </Grid>
 
-                    {
-                        brandModels.length > 0 ?
-                            <Divider sx={{ marginBottom: '32px' }} />
-                            : null
-                    }
+                    <Divider sx={{ marginBottom: '32px' }} />
 
-                    {/* BRAND MODELS */}
-                    {brandModels?.length > 0 ? (
-                        <Grid spacing={2}>
-                            {/* 3D MODELS */}
+                    <Grid spacing={2}>
 
+                        <Grid sx={{ mb: brandModels?.length > 0 ? "32px" : "76px" }}>
                             <Grid
                                 sx={{
                                     display: "flex",
@@ -70,51 +62,51 @@ export default function OneBrand() {
                             >
                                 <Grid item xs={10}>
                                     <SimpleTypography
-                                        text="Продукция бренда"
+                                        text={`Продукция бренда (${brandModels?.length || 0})`}
                                         className="section__title"
                                         variant="h2"
                                     />
                                 </Grid>
                             </Grid>
-
-                            {/* 3D MODELS MAP */}
-
-                            <Grid sx={{ mb: "32px" }}>
-                                <Grid className="models__card--wrap" container spacing={3} sx={{ width: "100%", margin: "0" }}>
-                                    {brandModels?.map((model: any, index: any) => (
-                                        <Grid
-                                            className='models__card'
-                                            sx={{
-                                                [`&:not(:nth-of-type(5n))`]: {
-                                                    padding: "0 9.5px 0 0 !important",
-                                                },
-                                                [`&:nth-of-type(5n)`]: {
-                                                    padding: "0 0 0 0 !important",
-                                                },
-                                                marginBottom: "10px"
-                                            }}
-                                            key={index}
-                                            md={12 / 5}
-                                            sm={4}
-                                            xs={6}
-                                            item
-                                        >
-                                            <CustomCard
-                                                type={'/models'}
-                                                link={`/models/${model?.slug}`}
+                            {
+                                brandModels?.length > 0 ?
+                                    <Grid className="models__card--wrap" container spacing={3} sx={{ width: "100%", margin: "0" }}>
+                                        {brandModels?.map((model: any, index: any) => (
+                                            <Grid
+                                                className='models__card'
+                                                sx={{
+                                                    [`&:not(:nth-of-type(5n))`]: {
+                                                        padding: "0 9.5px 0 0 !important",
+                                                    },
+                                                    [`&:nth-of-type(5n)`]: {
+                                                        padding: "0 0 0 0 !important",
+                                                    },
+                                                    marginBottom: "10px"
+                                                }}
                                                 key={index}
-                                                model={model}
-                                                imgHeight={'208px'}
-                                                tagIcon={model?.top ? '/icons/star.svg' : ''}
-                                            />
-                                        </Grid>
-                                    ))
-                                    }
-                                </Grid >
-                            </Grid>
-
+                                                md={12 / 5}
+                                                sm={4}
+                                                xs={6}
+                                                item
+                                            >
+                                                <CustomCard
+                                                    type={'/models'}
+                                                    link={`/models/${model?.slug}`}
+                                                    key={index}
+                                                    model={model}
+                                                    imgHeight={'208px'}
+                                                    tagIcon={model?.top ? '/icons/star.svg' : ''}
+                                                />
+                                            </Grid>
+                                        ))
+                                        }
+                                    </Grid >
+                                    : null
+                            }
                         </Grid>
-                    ) : (null)}
+
+                    </Grid>
+
 
                 </Box>
             </Box>

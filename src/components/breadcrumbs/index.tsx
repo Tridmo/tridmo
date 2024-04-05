@@ -45,20 +45,17 @@ export default function IconBreadcrumbs(props: breadCrumbProps) {
 
       <Box sx={{ display: "flex", alignItems: "center" }}>
         <Box sx={{ marginRight: "10px" }} onClick={handleGoBack}>
-          <Link href="/">
-            <a style={{ display: "flex", alignItems: "center", textDecoration: "none" }} >
-              <Image
-                alt="Go back"
-                src="/icons/go-back.svg"
-                width={5}
-                height={9}
-              />
-              <SimpleTypography
-                className='back__text'
-                text='Go back'
-              />
-            </a>
-
+          <Link href="/models" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
+            <Image
+              alt="Назад"
+              src="/icons/go-back.svg"
+              width={5}
+              height={9}
+            />
+            <SimpleTypography
+              className='back__text'
+              text='Назад'
+            />
           </Link>
         </Box>
 
@@ -70,15 +67,15 @@ export default function IconBreadcrumbs(props: breadCrumbProps) {
           }}
         >
           <Box>
-            <a style={{ display: "flex", textDecoration: "none" }}>
+            <a style={{ display: "flex", alignItems: 'center', textDecoration: "none" }}>
               <SimpleTypography
                 className='breadcumb__text'
                 text={props?.breadCrumbsData?.category?.parent_name} />
               <Image
                 src="/icons/breadcrumb-arrow.svg"
                 alt="Breadcrumd arrow"
-                width={5}
-                height={9}
+                width={6}
+                height={10}
               />
             </a>
           </Box>

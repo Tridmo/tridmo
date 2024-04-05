@@ -1,28 +1,26 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../utils/axios'
 import Cookies from 'js-cookie'
-// import { Cookies } from 'react-cookie';
+
 const initialState = {
   data: [],
   status: 'idle',
   error: null,
   progress: 0,
 };
-export const getMyProfile = createAsyncThunk('/users/me', async () => {
-  const response = await api.get(`users/me`, {
+export const getMyProfile = createAsyncThunk('/users/profile', async () => {
+  const response = await api.get(`users/profile`, {
     headers: {
       Authorization: `Bearer ${Cookies.get('accessToken')}`,
     },
     onDownloadProgress: (progressEvent) => {
-      console.log('progressEvent', progressEvent);
-      console.log(`${Math.round((100 * progressEvent.loaded) / progressEvent.total!)}`, "progress")
       // initialState.progress = 70
     }
   })
   return response.data
 })
 export const deleteCustomer = createAsyncThunk('/reservations/customer/delete', async (id?: any) => {
-  console.log(id)
+
   const response = await api.delete(`api/reservations/customer/${id}`, {
     headers: {
       Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -70,5 +68,7 @@ const myProfile = createSlice({
 
 export const { resetMyProfile } = myProfile.actions;
 export const reducer = myProfile.reducer;
-export const selectMyProfile = (state: any) => state?.profile_me?.data[0]?.data
+export const selectMyProfile = (state: any) => {
+  return state?.profile_me?.data[0]?.data?.user
+}
 export default myProfile

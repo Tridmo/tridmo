@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../utils/axios'
-import Cookies from 'js-cookie'
-// import { Cookies } from 'react-cookie';
+
 const initialState = {
   data: [],
   status: 'idle',
@@ -13,37 +12,33 @@ export const getAllModels = createAsyncThunk('/models',
     let send__route = `/models`
 
     if (wrapper?.brand_id) {
-      send__route += `/?categories=${wrapper?.category_id}&brand_id=${wrapper?.brand_id}`
+      send__route += `/?brand_id=${wrapper?.category_id}&brand_id=${wrapper?.brand_id}`
     }
 
-    for (let i = 0; i < wrapper?.category_id?.length; i++) {
-      if (!send__route?.includes("/?")) {
-        send__route += `/?categories=${wrapper?.category_id[i]}`
-      } else {
-        send__route += `&categories=${wrapper?.category_id[i]}`
-      }
-    }
+    wrapper?.categories?.forEach(category_id => {
+      send__route += send__route.includes("/?") ? `&categories=${category_id}` : `/?categories=${category_id}`;
+    });
 
-    for (let i = 0; i < wrapper?.color_id?.length; i++) {
-      if (!send__route?.includes("/?")) {
-        send__route += `/?colors=${wrapper?.color_id[i]}`
-      } else {
-        send__route += `&colors=${wrapper?.color_id[i]}`
-      }
-    }
+    wrapper?.colors?.forEach(color_id => {
+      send__route += send__route.includes("/?") ? `&colors=${color_id}` : `/?colors=${color_id}`;
+    });
 
-    for (let i = 0; i < wrapper?.style_id?.length; i++) {
-      if (!send__route?.includes("/?")) {
-        send__route += `/?styles=${wrapper?.style_id[i]}`
-      } else {
-        send__route += `&styles=${wrapper?.style_id[i]}`
-      }
-    }
-    if (!send__route?.includes("/?") && wrapper?.page) {
-      send__route += `/?page=${wrapper?.page}`
-    } else if (wrapper?.page) {
-      send__route += `&page=${wrapper?.page}`
-    }
+    wrapper?.styles?.forEach(style_id => {
+      send__route += send__route.includes("/?") ? `&styles=${style_id}` : `/?styles=${style_id}`;
+    });
+
+    send__route +=
+      wrapper?.limit
+        ? (send__route?.includes("/?") ? `&limit=${wrapper?.limit}` : `/?limit=${wrapper?.limit}`)
+        : "";
+
+    send__route +=
+      wrapper?.orderBy
+        ? (send__route?.includes("/?") ? `&orderBy=${wrapper?.orderBy}` : `/?orderBy=${wrapper?.orderBy}`)
+        : "";
+
+    send__route += !send__route.includes("/?") && wrapper?.page ? `/?page=${wrapper.page}` : wrapper?.page ? `&page=${wrapper.page}` : "";
+
     const response = await api.get(send__route)
     return response.data
   })
@@ -80,5 +75,5 @@ const get_all_models = createSlice({
 
 export const { resetAllModels } = get_all_models.actions;
 export const reducer = get_all_models.reducer;
-export const selectAllModels = (state: any) => state?.get_all_models?.data
+export const selectAllModels = (state: any) => state?.get_all_models?.data[0]
 export default get_all_models;

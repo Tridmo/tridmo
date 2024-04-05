@@ -35,30 +35,6 @@ export default function SimpleList(props: InputProps) {
     // const all__brands = useSelector(selectAllModels)
     // const all__models__status = useSelector((state: any) => state?.get_all_models?.status)
 
-    const all__brands: { data?: any[] } = {
-        data: Array.from({ length: 20 }, () => ({
-            id: `${Math.random()}`,
-            cover: [{ image: { src: '/img/models1.jpg' } }],
-            brand: { name: 'Brand name' },
-            name: `Model`,
-            slug: `model_slug`,
-            site_link: `brand.com`,
-            description: 'Lorem',
-            image_src: `/img/interior1.png`,
-        }))
-    }
-
-    const all__designers: { data?: any[] } = {
-        data: Array.from({ length: 20 }, () => ({
-            id: `${Math.random()}`,
-            cover: [{ image: { src: '/img/interior2.jpg' } }],
-            brand: { name: 'Brand name' },
-            name: `Interior`,
-            slug: `interior_slug`
-        }))
-    }
-
-    console.log(all__designers, "all__designers")
 
     React.useEffect(() => {
         dispatch(getAllModels({

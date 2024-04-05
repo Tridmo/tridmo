@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../utils/axios'
 import Cookies from 'js-cookie'
+
 const initialState = {
    data: [],
    status: 'idle',
@@ -48,5 +49,5 @@ const userProfile = createSlice({
 
 export const { resetMyProfile } = userProfile.actions;
 export const reducer = userProfile.reducer;
-export const selectUserProfile = (state: any) => state?.get_profile?.data[0]?.data
+export const selectUserProfile = (state: any) => state?.get_profile?.data[0]?.data?.user
 export default userProfile

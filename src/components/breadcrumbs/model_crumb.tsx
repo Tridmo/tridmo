@@ -44,19 +44,17 @@ export default function ModelCrumb(props: breadCrumbProps) {
       <Box sx={{ display: "flex", alignItems: "center" }}>
         <Box sx={{ marginRight: "10px" }} onClick={handleGoBack}>
           {/* <Box sx={{ marginRight: "10px" }} onClick={handleGoBack}> */}
-          <Link href={`/`}>
-            <a style={{ display: "flex", alignItems: "center", textDecoration: "none" }} >
-              <Image
-                alt="Go back"
-                src="/icons/go-back.svg"
-                width={5}
-                height={9}
-              />
-              <SimpleTypography
-                className='back__text'
-                text='Go back'
-              />
-            </a>
+          <Link href={`/`} style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
+            <Image
+              alt="Go back"
+              src="/icons/go-back.svg"
+              width={5}
+              height={9}
+            />
+            <SimpleTypography
+              className='back__text'
+              text='Go back'
+            />
           </Link>
         </Box>
         <Box sx={{ marginRight: "10px", cursor: "pointer" }}>

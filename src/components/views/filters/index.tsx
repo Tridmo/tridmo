@@ -10,7 +10,7 @@ import Buttons from '../../buttons';
 import Image from "next/image";
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useSelector } from 'react-redux';
@@ -51,6 +51,7 @@ const FiltersItem = styled(Box)(
 function Filters() {
   const [value, setValue] = useState(0);
   const router = useRouter()
+  const pathname = usePathname()
   const searchParams = useSearchParams()
   // apply filters
   const [category_filter, setCategory_filter] = useState<any>([]);
@@ -73,9 +74,18 @@ function Filters() {
   const getModelStyleFilter = useSelector((state: any) => state?.handle_filters?.styles)
   const getModelPageFilter = useSelector((state: any) => state?.handle_filters?.page)
 
+  const createQueryString = useCallback(
+    (name: string, value: any) => {
+      const params = new URLSearchParams(searchParams.toString())
+      params.set(name, value)
+
+      return params.toString()
+    },
+    [searchParams]
+  )
+
   useEffect(() => {
     if (router) {
-      console.log(categoryData, searchParams.entries(), "filterData");
       let res = [];
       if (!searchParams.has('category')) {
         setCategory_filter([]);
@@ -88,7 +98,6 @@ function Filters() {
       }
       if (getModelCategoryFilter && categoriesData__status === "succeeded") {
         let rtCt = getModelCategoryFilter;
-        console.log(rtCt, "rtCtrtCt")
         let ctCollecter: any[] = [];
         for (let category of categoryData) {
           for (let chldCt of category?.children) {
@@ -157,12 +166,23 @@ function Filters() {
       }
     }
 
-    router.push(`/?page=${getModelPageFilter}&styles=${getModelStyleFilter}&category_name=${getModelCategoryNameFilter}&category=${arr}`);
+    // router.push(`/?page=${getModelPageFilter}&styles=${getModelStyleFilter}&category_name=${getModelCategoryNameFilter}&category=${arr}`);
+
+    createQueryString('page', getModelPageFilter)
+
+    if (getModelStyleFilter && getModelStyleFilter?.length) {
+      createQueryString('styles', getModelStyleFilter)
+    }
+    if (getModelCategoryNameFilter && getModelCategoryNameFilter?.length) {
+      createQueryString('category_name', getModelCategoryNameFilter)
+    }
+
+    createQueryString('category', arr)
 
     dispatch(getAllModels({
-      category_id: arr,
-      color_id: getModelColorFilter,
-      style_id: getModelStyleFilter,
+      categories: arr,
+      colors: getModelColorFilter,
+      styles: getModelStyleFilter,
       page: getModelPageFilter,
     }))
 
@@ -208,16 +228,22 @@ function Filters() {
       }
     }
 
-    if (getModelCategoryNameFilter) {
-      router.push(`/?page=${getModelPageFilter}&styles=${arr}&category_name=${getModelCategoryNameFilter}&category=${getModelCategoryFilter}`);
-    } else {
-      router.push(`/?page=${getModelPageFilter}&styles=${arr}&category=${getModelCategoryFilter}`);
-    }
+    // if (getModelCategoryNameFilter) {
+    //   router.push(`/?page=${getModelPageFilter}&styles=${arr}&category_name=${getModelCategoryNameFilter}&category=${getModelCategoryFilter}`);
+    // } else {
+    //   router.push(`/?page=${getModelPageFilter}&styles=${arr}&category=${getModelCategoryFilter}`);
+    // }
+
+    router.push(` ${pathname}/?page=${getModelPageFilter}`
+      + getModelStyleFilter?.length ? `&styles=${arr}` : ''
+        + getModelCategoryNameFilter?.length ? `&category_name=${getModelCategoryNameFilter}` : ''
+          + getModelCategoryFilter?.length ? `&category=${getModelCategoryFilter}` : ''
+    );
 
     dispatch(getAllModels({
-      category_id: getModelCategoryFilter,
-      color_id: getModelColorFilter,
-      style_id: arr,
+      categories: getModelCategoryFilter,
+      colors: getModelColorFilter,
+      styles: arr,
       page: getModelPageFilter,
     }))
 
@@ -226,12 +252,12 @@ function Filters() {
 
   const ClearFilters = (item: any) => {
 
-    router.push(`/?page=${1}&styles=${[]}&category=${[]}`);
+    router.push(`${pathname}/?page=${1}`);
 
     dispatch(getAllModels({
-      category_id: [],
-      color_id: [],
-      style_id: [],
+      categories: [],
+      colors: [],
+      styles: [],
       page: 1,
     }))
 
@@ -245,7 +271,7 @@ function Filters() {
   return (
     <Box sx={filtersWrapStyle}>
       <Grid spacing={2} container sx={{ margin: 0 }}>
-        <Grid xs={10} sx={{ display: "flex", alignItems: 'center' }}>
+        <Grid item xs={10} sx={{ display: "flex", alignItems: 'center' }}>
           <SimpleTypography className='filters__title' text="Фильтры:" />
           <Box
             sx={{
@@ -299,7 +325,7 @@ function Filters() {
                     }
 
                     <SimpleTypography className='filters__item--text' text={item.name} />
-                    <Buttons name="" onClick={() => ColorFilter(item)} className="filters__item--close">
+                    <Buttons name="" onClick={() => color_filter(item)} className="filters__item--close">
                       <CloseOutlinedIcon />
                     </Buttons>
                   </FiltersItem>
@@ -345,8 +371,8 @@ function Filters() {
             )
           }
         </Grid>
-        <Grid xs={2} >
-        </Grid>
+        {/* <Grid xs={2} >
+        </Grid> */}
       </Grid>
     </Box>
   )

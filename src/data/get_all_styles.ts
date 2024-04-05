@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../utils/axios'
-import Cookies from 'js-cookie'
-// import { Cookies } from 'react-cookie';
+
 const initialState = {
   data: [],
   status: 'idle',

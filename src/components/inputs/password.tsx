@@ -11,6 +11,7 @@ import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import SimpleInp from './simple_input';
 
 interface State {
     amount: string;
@@ -32,9 +33,10 @@ interface InputAdornmentsProps {
     required?: boolean;
     helperText?: React.ReactNode;
     placeholderText: string,
+    label?: string,
 }
 
-export default function InputAdornments(props: InputAdornmentsProps) {
+export default function PasswordInputAdornments(props: InputAdornmentsProps) {
     const [values, setValues] = React.useState<State>({
         amount: '',
         password: '',
@@ -60,24 +62,28 @@ export default function InputAdornments(props: InputAdornmentsProps) {
     };
 
     return (
-        <FormControl sx={{ m: 1, width: '100%' }} variant="filled">
-            <InputLabel htmlFor="filled-adornment-password">Password</InputLabel>
-            <FilledInput
-                id="filled-adornment-password"
-                type={values.showPassword ? 'text' : 'password'}
-                value={props?.value}
+        <FormControl sx={{ width: '100%' }} variant="filled">
+            <SimpleInp
+                // id="filled-adornment-password"
                 // helperText={props?.helperText}
                 // FormHelperText={props?.helperText}
+                label={props?.label || 'Пароль'}
+                type={values.showPassword ? 'text' : 'password'}
+                value={props?.value}
                 error={props?.error}
                 autoComplete={props?.autoComplete}
                 onBlur={props?.onBlur}
                 required={props?.required}
                 onChange={props?.onChange}
                 name={props?.name}
-                placeholder={props?.placeholderText}
+                placeholderText={props?.placeholderText}
+                helperText={props?.helperText}
                 endAdornment={
                     <InputAdornment position="end">
                         <IconButton
+                            sx={{
+                                margin: 0
+                            }}
                             aria-label="toggle password visibility"
                             onClick={handleClickShowPassword}
                             onMouseDown={handleMouseDownPassword}

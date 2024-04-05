@@ -114,7 +114,6 @@ export default function BasicPagination(props: PaginationProps) {
 
 
   const handleChange = (e: any, page: any) => {
-    console.log(e, page, "pagepage");
     // dispatch(setPageFilter({page}));
     dispatch(getAllModels({
       category_id: getModelCategoryFilter,

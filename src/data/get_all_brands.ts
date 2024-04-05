@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../utils/axios'
-import Cookies from 'js-cookie'
-// import { Cookies } from 'react-cookie';
+
 const initialState = {
   data: [],
   status: 'idle',
@@ -57,5 +56,5 @@ const get_all_brands = createSlice({
 
 export const { resetAllBrands } = get_all_brands.actions;
 export const reducer = get_all_brands.reducer;
-export const selectAllBrands = (state: any) => state?.get_all_brands?.data
+export const selectAllBrands = (state: any) => state?.get_all_brands?.data[0]
 export default get_all_brands;

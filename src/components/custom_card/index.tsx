@@ -6,6 +6,7 @@ import SimpleTypography from '../typography';
 import Link from 'next/link';
 import { ThemeProps } from '../../types/theme';
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { IMAGES_BASE_URL } from '../../utils/image_src';
 
 type InputProps = {
   item?: object,
@@ -91,7 +92,7 @@ function CustomCard({ model, link, imgHeight, tagIcon, tagText, withAuthor }: Cu
               : null
         }
         <LazyLoadImage
-          src={`${model?.cover[0]?.image?.src}`}
+          src={model.cover ? (model?.cover[0]?.image_src ? `${IMAGES_BASE_URL}/${model?.cover[0]?.image_src}` : '') : ''}
           alt="Model"
           effect="blur"
           width={"100%"}
@@ -104,15 +105,16 @@ function CustomCard({ model, link, imgHeight, tagIcon, tagText, withAuthor }: Cu
           sx={{
             width: "100%",
             display: "flex",
+            alignItems: 'center',
             justifyContent: "space-between",
             padding: "13px 0"
           }}
         >
           {
             withAuthor
-              ? <Box sx={{ display: 'flex', width: '100%' }}>
+              ? <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                 <Image
-                  src={model?.user?.image_src}
+                  src={model?.author?.image_src ? `${IMAGES_BASE_URL}/${model?.author?.image_src}` : '/img/avatar.png'}
                   alt='avatar'
                   width={28}
                   height={28}
@@ -122,11 +124,12 @@ function CustomCard({ model, link, imgHeight, tagIcon, tagText, withAuthor }: Cu
                 />
                 <SimpleTypography
                   sx={{ marginLeft: '8px', display: 'flex', alignItems: 'center', textAlign: 'left' }}
-                  text={model?.user?.username}
+                  text={model?.author?.username}
                   className='card__title'
                 />
               </Box>
-              : <SimpleTypography
+              :
+              <SimpleTypography
                 text={model?.name}
                 className='card__title'
               />

@@ -37,7 +37,13 @@ const TypographyWrapper = styled(Typography)(
         text-align: start;
         font-size: 14px;
         line-height: 18px;
+        display: flex;
+        align-items: center;
         color: ${theme.colors.gray[700]};
+        background-image: linear-gradient(90deg,#000000 0%,rgba(0,0,0,0));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        position:relative;
       }
 
       &.MuiTypography-modal__sub-title {
@@ -219,9 +225,18 @@ const TypographyWrapper = styled(Typography)(
 
       &.MuiTypography-table__text{
         font-weight: 400;
-        font-size: 16px;
-        line-height: 140%;
-        text-align: start
+        font-size: 14px;
+        line-height: 20px;
+        text-align: start;
+        color: #303030;
+      }
+
+      &.MuiTypography-table__text_info{
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 20px;
+        text-align: start;
+        color: #141414;
       }
 
       &.MuiTypography-table__link{
@@ -419,6 +434,7 @@ const TypographyWrapper = styled(Typography)(
       }
 
       &.MuiTypography-breadcumb__text{
+        font-weight: 500;
         font-size: 14px;
         line-height: 17px;
         margin-right:9px;

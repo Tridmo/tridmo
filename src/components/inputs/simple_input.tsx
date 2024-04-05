@@ -18,6 +18,8 @@ interface InputAdornmentsProps {
     placeholder?: string;
     required?: boolean;
     helperText?: any;
+    startAdornment?: any;
+    endAdornment?: any;
     placeholderText: string,
 }
 
@@ -43,6 +45,27 @@ const SimpleInputControl = styled(FormControl)(
         color: #424242;
         margin-bottom:6px;
     }
+
+    .Mui-focused::after{
+        border-color: #848484;
+    }
+
+
+    .MuiInput-root::before {
+        border-bottom: 1px solid #848484;
+    }
+    
+    .MuiInput-root:hover:not(.Mui-disabled, .Mui-error):before {
+        border-bottom: 1px solid #848484;
+    }
+
+    .MuiInput-root::after {
+        border-bottom: 2px solid #7210BE
+    }
+
+    .MuiInput-input:focus{
+        background-color: transparent !important;
+    }
   `
 );
 
@@ -67,7 +90,11 @@ export default function SimpleInp(props: InputAdornmentsProps) {
                 type={props?.type}
                 // autoComplete="current-password"
                 InputProps={{
-                    startAdornment: (
+                    startAdornment: props?.startAdornment || (
+                        <InputAdornment position="start">
+                        </InputAdornment>
+                    ),
+                    endAdornment: props?.endAdornment || (
                         <InputAdornment position="start">
                         </InputAdornment>
                     ),

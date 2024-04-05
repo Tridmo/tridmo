@@ -9,6 +9,9 @@ import { Box, SxProps } from '@mui/system';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import SimpleTypography from '../../../typography';
 import { sampleModel } from '@/data/samples/sample_model';
+import { IMAGES_BASE_URL } from '../../../../utils/image_src';
+
+const mainWidth = 558;
 
 const SimpleListItem = styled(ListItem)(
     ({ theme }) => `
@@ -26,16 +29,12 @@ const SimpleListItem = styled(ListItem)(
 
         &.MuiListItem-slider__big--item{
             width: 100%;
-            height: 558px;
+            height: ${mainWidth}px;
             border: none;
 
             &:hover{
                 
             }
-        }
-
-        img{
-            object-fit: contain !important;
         }
   `
 );
@@ -68,8 +67,8 @@ const SimpleSlider = ({ name }: any) => {
     const [sliderBtnHover, setSliderBtnHover] = useState(0)
     const dispatch = useDispatch<any>()
 
-    // const simpleModel = useSelector(selectOneModel);
-    const simpleModel = sampleModel;
+    const simpleModel = useSelector(selectOneModel);
+    // const simpleModel = sampleModel;
 
     const simple_model_status = useSelector((state: any) => state?.get_one_model?.status);
     const matches = useMediaQuery('(max-width:600px)');
@@ -88,16 +87,7 @@ const SimpleSlider = ({ name }: any) => {
         }
     }
 
-    const wdth = name === "slider" && !matches ? 507 : name !== "slider" ? 720 : window.innerWidth
-
-    const ListStyle: SxProps = {
-        transform: `translateX(-${sliderCount * wdth}px)`,
-        padding: "0 !important",
-        display: "flex",
-        position: 'relative',
-        width: `${simpleModel?.images?.length * wdth}px`,
-        transition: `all ${sliderTransition}s ease`
-    }
+    const wdth = name === "slider" && !matches ? mainWidth : name !== "slider" ? 720 : window.innerWidth
 
     const ButtonHover = {
         opacity: sliderBtnHover
@@ -112,6 +102,7 @@ const SimpleSlider = ({ name }: any) => {
                             display: "flex",
                             flexDirection: "unset",
                             marginTop: "20px",
+                            maxWidth: '55.5% !important',
                         } : {
                             display: "flex",
                             flexDirection: "column-reverse"
@@ -127,8 +118,13 @@ const SimpleSlider = ({ name }: any) => {
                     <Grid
                         className='products__small--wrap'
                         sx={name === "slider" ?
-                            { padding: "0 0 0 18px !important" } :
                             {
+                                padding: "0 !important",
+                                margin: "0 16px 0 18px !important",
+                                height: `${wdth}px !important`,
+                                maxWidth: '56px !important'
+                            }
+                            : {
                                 padding: "11px !important",
                                 display: "flex",
                                 justifyContent: "center"
@@ -139,7 +135,7 @@ const SimpleSlider = ({ name }: any) => {
                     >
                         <List
                             className='products__small-items'
-                            sx={{ display: `${name === "slider" ? "block" : "flex"}` }}
+                            sx={{ display: `${name === "slider" ? "block" : "flex"}`, paddingTop: 0 }}
                         >
                             {
                                 simpleModel?.images?.map((slide: any, index: number) => (
@@ -158,7 +154,7 @@ const SimpleSlider = ({ name }: any) => {
                                             }}
                                             priority={true}
                                             alt="slider"
-                                            src={`${slide?.image?.src}`}
+                                            src={`${IMAGES_BASE_URL}/${slide?.image_src}`}
                                         />
                                     </SimpleListItem>
                                 ))
@@ -166,9 +162,21 @@ const SimpleSlider = ({ name }: any) => {
 
                         </List>
                     </Grid>
+
                     <Grid
                         sx={name === "slider" ?
-                            { overflow: "hidden", position: "relative", padding: "0 0 18px 0 !important" } : { padding: "0 !important", overflow: "hidden" }}
+                            {
+                                overflow: "hidden",
+                                position: "relative",
+                                padding: "0 !important",
+                                minWidth: `${wdth}px !important`,
+                                maxHeight: `${wdth}px !important`
+                            }
+                            : {
+                                padding: "0 !important",
+                                overflow: "hidden"
+                            }
+                        }
                         item
                         xs={12}
                         md={name === "slider" ? 10 : 12}
@@ -205,19 +213,31 @@ const SimpleSlider = ({ name }: any) => {
                                 />
                             </Buttons>
                         </Box>
-                        <List sx={ListStyle}>
+                        <List sx={{
+                            transform: `translateX(-${sliderCount * wdth}px)`,
+                            padding: "0 !important",
+                            display: "flex",
+                            position: 'relative',
+                            width: `${simpleModel?.images?.length * wdth}px`,
+                            transition: `all ${sliderTransition}s ease`
+                        }}>
                             {
                                 simpleModel?.images?.map((slide: any, index: number) => (
                                     <SimpleListItem
                                         className="MuiListItem-slider__big--item"
                                         onClick={(e) => { dispatch(setShowModelsModal(true)) }}
                                         key={index}
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center'
+                                        }}
                                     >
                                         <SimpleImage
                                             alt=''
                                             layout='fill'
-                                            sx={{ objectFit: 'contain' }}
-                                            src={`${slide?.image?.src}`}
+                                            sx={{ objectFit: name == 'slider' ? 'cover' : 'contain' }}
+                                            src={`${IMAGES_BASE_URL}/${slide?.image_src}`}
                                             priority={true}
                                         />
                                     </SimpleListItem>
@@ -225,31 +245,35 @@ const SimpleSlider = ({ name }: any) => {
                             }
 
                         </List>
-                        {
-                            name === "slider" ?
-                                <Buttons
-                                    name='Сохранять'
-                                    className='bookmark__btn'
-                                    sx={{ margin: '0 2px' }}
-                                    childrenFirst={true}
-                                >
-                                    <Image
-                                        alt='bookmark'
-                                        width={18}
-                                        height={18}
-                                        src={'/icons/bookmark-line.svg'}
-                                    />
-                                </Buttons>
-                                : null
-                        }
-
                     </Grid>
+
+                    {
+                        name === "slider" ?
+
+                            <Buttons
+                                name='Сохранить'
+                                className='bookmark__btn'
+                                childrenFirst={true}
+                                sx={{
+                                    marginLeft: '90px',
+                                    position: 'absolute'
+                                }}
+                            >
+                                <Image
+                                    alt='bookmark'
+                                    width={18}
+                                    height={18}
+                                    src={'/icons/bookmark-line.svg'}
+                                />
+                            </Buttons>
+
+                            : null
+                    }
 
                 </Grid>
             </>
         )
     } else {
-        ListStyle.width = 5 * wdth;
         return (
             <>
                 <Grid
@@ -298,7 +322,7 @@ const SimpleSlider = ({ name }: any) => {
                                             width={56}
                                             height={56}
                                             alt="slider"
-                                            src={`/../../../../img/card-loader.jpg`}
+                                            src={`/img/card-loader.jpg`}
                                         />
                                     </SimpleListItem>
                                 ))
@@ -338,7 +362,14 @@ const SimpleSlider = ({ name }: any) => {
                                 height={14}
                             />
                         </Buttons>
-                        <List sx={ListStyle}>
+                        <List sx={{
+                            transform: `translateX(-${sliderCount * wdth}px)`,
+                            padding: "0 !important",
+                            display: "flex",
+                            position: 'relative',
+                            width: `${simpleModel?.images?.length * wdth}px`,
+                            transition: `all ${sliderTransition}s ease`
+                        }}>
                             {
                                 fakeModelImages.map((slide: any, index: number) => (
                                     <SimpleListItem
@@ -348,8 +379,8 @@ const SimpleSlider = ({ name }: any) => {
                                     >
                                         <SimpleImage
                                             loader={myLoader}
-                                            width={497}
-                                            height={558}
+                                            width={wdth}
+                                            height={wdth}
                                             // layout='fill'
                                             sx={{ objectFit: 'contain' }}
                                             priority={true}

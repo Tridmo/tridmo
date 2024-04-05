@@ -9,32 +9,35 @@ import { useState } from "react";
 import SimpleInp from "../inputs/simple_input";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUserProfile, resetMyProfile } from "../../data/get_profile";
-import { setOpenEditModal } from "../../data/modal_checker";
+import { setProfileEditState } from "../../data/modal_checker";
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import { toast } from 'react-toastify';
+// import Cookies from 'js-cookie'
 import Cookies from 'js-cookie'
+
 
 const EditProfileModal = styled(Box)(
   ({ theme }: ThemeProps) => `
-    position: absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
+  position: absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
     background: #fff;
     padding: 28px 32px;
     outline:none
-  `
+    `
 );
 
 function EditProfile() {
+
   const modalChecker = useSelector((state: any) => state.modal_checker.isEditModalOpen)
   const dispatch = useDispatch()
   const userData = useSelector(selectUserProfile);
   const userDataStatus = useSelector((state: any) => state?.get_profile?.status);
-  const handleOpen = () => dispatch(setOpenEditModal(true));
-  const handleClose = () => dispatch(setOpenEditModal(false));
-  console.log(userData, "userDatauserData")
+  const handleOpen = () => dispatch(setProfileEditState(true));
+  const handleClose = () => dispatch(setProfileEditState(false));
+
   if (userDataStatus === "succeeded") {
     return (
       <Modal
@@ -63,7 +66,6 @@ function EditProfile() {
           onSubmit={
             async (_values, { resetForm, setErrors, setStatus, setSubmitting }) => {
               try {
-                console.log(_values, "_values_values")
                 let res = await axios.put(
                   `users/profile`,
                   { full_name: `${_values.first_name} ${_values.last_name}` },

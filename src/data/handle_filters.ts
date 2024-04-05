@@ -1,6 +1,8 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 const initialState = {
+  author: '',
   categories: [],
+  interior_categories: [],
   selected_child: [],
   children_category: [],
   filter_categories: [],
@@ -23,103 +25,119 @@ const handle_filters = createSlice({
   name: 'handle_filters',
   initialState,
   reducers: {
-    setCategoryFilter(state?: any, action?: any) {
+    setAuthor: (state: any, action: PayloadAction<any>) => {
+      const { ...params } = action.payload;
+      state.author = params.author;
+    },
+    setCategoryFilter: (state: any, action: PayloadAction<any>) => {
       const { ...params } = action.payload;
       state.categories = params.knex;
     },
-    setCategoryId(state: any, action: any) {
+    setInteriorCategoryFilter: (state: any, action: PayloadAction<any>) => {
+      const { ...params } = action.payload;
+      state.interior_categories = params.knex;
+    },
+    setCategoryId: (state: any, action: PayloadAction<any>) => {
       const { ...id } = action.payload;
       state.selected__category = id
     },
-    setChildrenCategory(state: any, action: any) {
+    setChildrenCategory: (state: any, action: PayloadAction<any>) => {
       const { ...params } = action.payload;
       state.children_category = params.children;
     },
-    setChildrenCategoriesForFilters(state: any, action: any) {
+    setChildrenCategoriesForFilters: (state: any, action: PayloadAction<any>) => {
       const { ...params } = action.payload;
       state.filter_categories.push(params.all_data);
     },
-    removeChildrenCategoryForFilters(state: any, action: any) {
+    removeChildrenCategoryForFilters: (state: any, action: PayloadAction<any>) => {
       const { ...params } = action.payload;
       state.filter_categories = params.filtered;
     },
-    refreshModel(state: any, action: any) {
-      console.log(action, state.refreshModelOrder, "triggered")
+    refreshModel: (state: any, action: PayloadAction<any>) => {
       state.refreshModelOrder = action.payload;
     },
-    setCategoryNameFilter(state?: any, action?: any) {
+    setCategoryNameFilter: (state: any, action: PayloadAction<any>) => {
       const { ...params } = action.payload;
       state.category_name = params.knnex;
     },
-    setCategorySelectedChild(state?: any, action?: any) {
+    setCategorySelectedChild: (state: any, action: PayloadAction<any>) => {
       const { ...params } = action.payload;
       state.selected_child.push(params.selected);
     },
-    removeCategorySelectedChild(state?: any, action?: any) {
+    removeCategorySelectedChild: (state: any, action: PayloadAction<any>) => {
       const { ...params } = action.payload;
       state.selected_child = params.selected;
     },
-    setColorFilter(state?: any, action?: any) {
+    setColorFilter: (state: any, action: PayloadAction<any>) => {
       const { ...params } = action.payload;
       state.colors = params.cnex;
     },
-    setSelectedColors(state?: any, action?: any) {
+    setSelectedColors: (state: any, action: PayloadAction<any>) => {
       const { ...params } = action.payload;
       state.selected_colors.push(params.selected);
     },
-    removeSelectedColors(state?: any, action?: any) {
+    removeSelectedColors: (state: any, action: PayloadAction<any>) => {
       const { ...params } = action.payload;
       state.selected_colors = params.selected;
     },
-    setSelectedColorsId(state?: any, action?: any) {
+    setSelectedColorsId: (state: any, action: PayloadAction<any>) => {
       const { ...params } = action.payload;
       state.selected_colors__id.push(params.id)
     },
-    removeSelectedColorsId(state?: any, action?: any) {
+    removeSelectedColorsId: (state: any, action: PayloadAction<any>) => {
       const { ...params } = action.payload;
       state.selected_colors__id = params.id
     },
-    setStyleFilter(state?: any, action?: any) {
+    setStyleFilter: (state: any, action: PayloadAction<any>) => {
       const { ...params } = action.payload;
       state.styles = params.snex;
     },
-    setSelectedStyles(state?: any, action?: any) {
+    setSelectedStyles: (state: any, action: PayloadAction<any>) => {
       const { ...params } = action.payload;
       state.selected_styles.push(params.styles)
     },
-    setSelectedStylesId(state?: any, action?: any) {
+    setSelectedStylesId: (state: any, action: PayloadAction<any>) => {
       const { ...params } = action.payload;
       state.selected_styles_id.push(params.id);
     },
-    removeSelectedStyles(state?: any, action?: any) {
+    removeSelectedStyles: (state: any, action: PayloadAction<any>) => {
       const { ...params } = action.payload;
       state.selected_styles = params.styles;
     },
-    removeSelectedStylesId(state?: any, action?: any) {
+    removeSelectedStylesId: (state: any, action: PayloadAction<any>) => {
       const { ...params } = action.payload;
       state.selected_styles_id = params.id
     },
-    setPageFilter(state?: any, action?: any) {
+    setPageFilter: (state: any, action: PayloadAction<any>) => {
       const { ...params } = action.payload;
       state.page = params.page;
     },
-    setIs_free(state?: any, action?: any) {
+    setLimitFilter: (state: any, action: PayloadAction<any>) => {
+      const { ...params } = action.payload;
+      state.limit = params.limit;
+    },
+    setOrderByFilter: (state: any, action: PayloadAction<any>) => {
+      const { ...params } = action.payload;
+      state.orderBy = params.by;
+    },
+    setIs_free: (state: any, action: PayloadAction<any>) => {
       const { ...params } = action.payload;
       state.is_free = params.is_free;
     },
-    resetFilters() {
-      return {
-        ...initialState
-      }
-    },
+    resetFilters: () => ({
+      ...initialState
+    })
+    ,
   },
-  extraReducers(builder) {
+  extraReducers: (builder) => {
   }
 
 });
 
 export const {
+  setAuthor,
   setCategoryFilter,
+  setInteriorCategoryFilter,
   setCategorySelectedChild,
   setCategoryId,
   setChildrenCategory,
@@ -139,6 +157,8 @@ export const {
   removeSelectedStyles,
   removeSelectedStylesId,
   setPageFilter,
+  setLimitFilter,
+  setOrderByFilter,
   resetFilters,
   setIs_free
 } = handle_filters.actions;

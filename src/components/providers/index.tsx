@@ -1,30 +1,35 @@
 "use client"
 
 import { Provider } from 'react-redux'
-import { createWrapper } from 'next-redux-wrapper'
 import { CookiesProvider } from "react-cookie";
-import { AuthProvider } from '@/utils/auth'
+import { AuthProvider } from '@/components/providers/auth'
 import store from "@/store";
 import ThemeProviderWrapper from '@/theme/ThemeProvider';
+import React, { Suspense } from 'react';
+import { NavigationEvents } from './navigation_events';
 
 export default function Providers({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
-    <>
-      <Provider store={store}>
+
+    <Provider store={store}>
+      <CookiesProvider>
         <AuthProvider>
+
           <ThemeProviderWrapper>
-            <CookiesProvider>
+            <Suspense>
+              <NavigationEvents />
+            </Suspense>
+            {children}
 
-              {children}
-
-            </CookiesProvider>
           </ThemeProviderWrapper>
         </AuthProvider>
-      </Provider>
-    </>
+      </CookiesProvider>
+    </Provider>
+
   );
 }

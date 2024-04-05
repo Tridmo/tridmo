@@ -23,7 +23,7 @@ function ColorsFilter() {
   const dispatch = useDispatch<any>();
   const ColorsStatus = useSelector((state: any) => state?.get_all_colors?.status)
   const router = useRouter();
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
   const [custom__colors, setCustom__colors] = React.useState<any>([]);
 
   // ---- filters selector ----- //
@@ -34,14 +34,10 @@ function ColorsFilter() {
   const getModelStyleFilter = useSelector((state: any) => state?.handle_filters?.styles)
   const getModelPageFilter = useSelector((state: any) => state?.handle_filters?.page)
 
-  console.log(getModelCategoryNameFilter, "hing_hing")
-
   React.useEffect(() => {
     if (ColorsStatus === "succeeded") {
-      console.log(getModelColorFilter, "must not changess")
       if (router) {
         let arr = new Array();
-        // console.log(router.query.colors, "must not change")
         AllColors[0]?.data?.forEach((color: colorProps) => {
           if (getModelColorFilter?.includes(color.id) || getModelColorFilter?.includes((color.id)?.toString()) || getModelColorFilter == color?.id) {
             arr.push({

@@ -1,4 +1,4 @@
-import { Grid, Table, TableBody, TableCell, FormControl, FormControlLabel, Radio, RadioGroup, TableContainer, styled, Box, TableRow, Paper, Checkbox } from '@mui/material';
+import { Grid, Table, TableBody, TableCell, FormControl, FormControlLabel, Radio, RadioGroup, TableContainer, styled, Box, TableRow, Paper, Checkbox, SxProps } from '@mui/material';
 import SimpleTypography from '../../../typography';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -7,16 +7,17 @@ import { getOneModel, selectOneModel } from '@/data/get_one_model';
 
 import Link from 'next/link';
 import Buttons from '../../../buttons';
-import Cookies from 'js-cookie';
+import Cookies from 'js-cookie'
 import { useRouter } from 'next/navigation';
 import axios from '@/utils/axios';
 import { toast } from "react-toastify"
 import { setLoginState, setOpenModal, setSignupState } from '@/data/modal_checker';
-import { sampleModel } from '@/data/samples/sample_model';
+import { sampleModel } from '@/data/samples';
+import { IMAGES_BASE_URL } from '../../../../utils/image_src';
 
 
 export default function ModelInfo() {
-    const router = useRouter()
+
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
     const brandBox = {
         padding: "20px",
@@ -27,9 +28,28 @@ export default function ModelInfo() {
         display: "flex",
     }
 
+    const TrStyle: SxProps = {
+        '&:last-child td, &:last-child th': { border: 0 },
+        // background: "linear-gradient(to left, #fafafa 50%, #f5f5f5 50%)"
+    }
+
+    const TcStyle: SxProps = {
+        borderColor: "#B3B3B3",
+        padding: '6px 12px',
+
+        ':not(:last-child)': {
+            backgroundColor: '#f5f5f5'
+        },
+
+        ':last-child': {
+            backgroundColor: '#fafafa'
+        }
+    }
+
+    const router = useRouter()
     const dispatch = useDispatch<any>();
-    // const simpleModel = useSelector(selectOneModel);
-    const simpleModel = sampleModel;
+    const simpleModel = useSelector(selectOneModel);
+    // const simpleModel = sampleModel;
     const DownloadLink = useSelector((state: any) => state?.download_product)
     const downloadStatus = useSelector((state: any) => state?.auth_slicer?.authState)
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -49,7 +69,7 @@ export default function ModelInfo() {
 
 
     function DownloadHandler() {
-        console.log(simpleModel?.id);
+
         let config = {
             headers: {
                 'Authorization': `Bearer ${Cookies.get('accessToken')}`,
@@ -57,7 +77,6 @@ export default function ModelInfo() {
             }
         };
 
-        console.log(simpleModel?.id);
         if (downloadStatus) {
             axios.post(`products/download/${simpleModel?.id}`, {}, config)
                 .then(
@@ -75,7 +94,7 @@ export default function ModelInfo() {
         <Grid
             className='products__info' item
             xs={12} md={6}
-            sx={{ marginTop: "20px", paddingLeft: '44px !important' }}
+            sx={{ marginTop: "20px", maxWidth: '45.5% !important' }}
         >
 
             <SimpleTypography
@@ -95,7 +114,7 @@ export default function ModelInfo() {
                     height={180}
                     alt="Brand image"
                     style={{ objectFit: "cover" }}
-                    src={`${simpleModel?.brand?.logo}`}
+                    src={`${IMAGES_BASE_URL}/${simpleModel?.brand?.logo}`}
                 />
                 <Box sx={{ marginLeft: "24px" }}>
                     <SimpleTypography className='brand__name' text="Имя бренда" />
@@ -159,22 +178,17 @@ export default function ModelInfo() {
                         sx={{
                             borderTop: "1px solid #b3b3b3",
                             borderBottom: "1px solid #b3b3b3",
-
-                            '& tr th': { padding: '6px 8px' }
                         }}
                     >
                         {/* {rows.map((row, index) => ( */}
-                        <TableRow
-                            // key={index}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 }, background: "linear-gradient(to left, #fafafa 50%, #f5f5f5 50%)" }}
-                        >
-                            <TableCell sx={{ borderColor: " #B3B3B3" }} component="th" scope="row">
+                        <TableRow sx={TrStyle}>
+                            <TableCell sx={TcStyle} component="th" scope="row">
                                 <SimpleTypography
                                     text={"Стиль"}
                                     className="table__text"
                                 />
                             </TableCell>
-                            <TableCell sx={{ borderColor: "#b3b3b3" }} align="right">
+                            <TableCell sx={TcStyle}>
                                 <SimpleTypography
                                     text={simpleModel?.style?.name}
                                     className="table__text"
@@ -182,17 +196,14 @@ export default function ModelInfo() {
                             </TableCell>
                         </TableRow>
 
-                        <TableRow
-                            // key={index}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 }, background: "linear-gradient(to left, #fafafa 50%, #f5f5f5 50%)" }}
-                        >
-                            <TableCell sx={{ borderColor: " #B3B3B3" }} component="th" scope="row">
+                        <TableRow sx={TrStyle}>
+                            <TableCell sx={TcStyle} component="th" scope="row">
                                 <SimpleTypography
                                     text={"Размеры"}
                                     className="table__text"
                                 />
                             </TableCell>
-                            <TableCell sx={{ borderColor: " #b3b3b3" }} align="right">
+                            <TableCell sx={TcStyle}>
                                 <SimpleTypography
                                     text={`X: ${simpleModel?.width} см`}
                                     className="table__text"
@@ -208,17 +219,14 @@ export default function ModelInfo() {
                             </TableCell>
                         </TableRow>
 
-                        <TableRow
-                            // key={index}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 }, background: "linear-gradient(to left, #fafafa 50%, #f5f5f5 50%)" }}
-                        >
-                            <TableCell sx={{ borderColor: " #B3B3B3" }} component="th" scope="row">
+                        <TableRow sx={TrStyle}>
+                            <TableCell sx={TcStyle} component="th" scope="row">
                                 <SimpleTypography
                                     text={"Цвета"}
                                     className="table__text"
                                 />
                             </TableCell>
-                            <TableCell sx={{ borderColor: " #b3b3b3" }} align="right">
+                            <TableCell sx={TcStyle}>
                                 <Box sx={{ display: "flex" }}>
                                     {
                                         simpleModel?.colors?.map((color: any, index: number) => (
@@ -239,20 +247,14 @@ export default function ModelInfo() {
                             </TableCell>
                         </TableRow>
 
-                        <TableRow
-                            // key={index}
-                            sx={{
-                                '&:last-child td, &:last-child th': { border: 0 },
-                                background: "linear-gradient(to left, #fafafa 50%, #f5f5f5 50%)"
-                            }}
-                        >
-                            <TableCell sx={{ borderColor: " #B3B3B3" }} component="th" scope="row">
+                        <TableRow sx={TrStyle}>
+                            <TableCell sx={TcStyle} component="th" scope="row">
                                 <SimpleTypography
                                     text={"Материалы"}
                                     className="table__text"
                                 />
                             </TableCell>
-                            <TableCell sx={{ borderColor: " #b3b3b3" }}>
+                            <TableCell sx={TcStyle}>
                                 <Box sx={{ display: "flex" }}>
                                     {
                                         simpleModel?.materials?.map((material: any, index: number) => (
@@ -266,34 +268,32 @@ export default function ModelInfo() {
                                 </Box>
                             </TableCell>
                         </TableRow>
-                        <TableRow
-                            // key={index}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 }, background: "linear-gradient(to left, #fafafa 50%, #f5f5f5 50%)" }}
-                        >
-                            <TableCell sx={{ borderColor: " #B3B3B3" }} component="th" scope="row">
+                        <TableRow sx={TrStyle}>
+                            <TableCell sx={TcStyle} component="th" scope="row">
                                 <SimpleTypography
                                     text={"Доступность"}
                                     className="table__text"
                                 />
                             </TableCell>
-                            <TableCell sx={{ borderColor: "#b3b3b3" }} align="right">
+                            <TableCell sx={TcStyle}>
                                 <SimpleTypography
-                                    text={simpleModel?.availability}
+                                    text={
+                                        simpleModel?.availability == 1 ? 'Доступно'
+                                            : simpleModel?.availability == 2 ? 'Не доступно'
+                                                : ""
+                                    }
                                     className="table__text"
                                 />
                             </TableCell>
                         </TableRow>
-                        <TableRow
-                            // key={index}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 }, background: "linear-gradient(to left, #fafafa 50%, #f5f5f5 50%)" }}
-                        >
-                            <TableCell sx={{ borderColor: " #B3B3B3" }} component="th" scope="row">
+                        <TableRow sx={TrStyle}>
+                            <TableCell sx={TcStyle} component="th" scope="row">
                                 <SimpleTypography
                                     text={"Цена"}
                                     className="table__text"
                                 />
                             </TableCell>
-                            <TableCell sx={{ borderColor: "#b3b3b3" }} align="right">
+                            <TableCell sx={TcStyle}>
                                 <SimpleTypography
                                     text={simpleModel?.furniture_cost}
                                     className="table__text"

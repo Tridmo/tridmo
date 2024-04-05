@@ -1,16 +1,16 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Grid, Box, styled, IconButton } from '@mui/material'
 import SimpleCard from '../../simple_card'
 import SimpleTypography from '../../typography'
 import Pagination from '../../pagination/pagination'
-import Categories from '../../views/categories'
+import Categories from '../../views/categories/model_categories'
 import { selectAllModels } from '../../../data/get_all_models';
-import { setPageFilter } from '../../../data/handle_filters'
+import { setLimitFilter, setPageFilter } from '../../../data/handle_filters'
 import ColorsFilter from '../../views/colors'
-import Style from '../../views/model_styles'
+import Style from '../../views/styles/model_styles'
 import Filters from '../../views/filters'
 import Image from 'next/image'
 import SearchInput from '@/components/inputs/search'
@@ -18,10 +18,7 @@ import { useRouter } from 'next/navigation'
 import { ThemeProps } from '@/types/theme'
 import Link from 'next/link'
 import Buttons from '@/components/buttons'
-
-const all__models: { data?: any } = { data: [] }
-
-all__models.data.length = 17;
+import { searchModels } from '../../../data/search_model'
 
 const MorePages = [
     {
@@ -76,15 +73,14 @@ const WhyUsDatas = [
 export default function LandingPage() {
 
     const router = useRouter();
+    const dispatch = useDispatch<any>();
     const [searchClicked, setSearchClicked] = useState(false)
     const [searchVal, setSearchVal] = useState("")
-    // const all__models = useSelector(selectAllModels)
 
     function SearchModel(e: any) {
         e.preventDefault()
-        console.log(e);
         router.push(`/models?keyword=${searchVal}`)
-        // dispatch(searchModels(val))
+        dispatch(searchModels(searchVal))
     }
 
     return (
@@ -163,8 +159,8 @@ export default function LandingPage() {
                         }}
                     >
                         {
-                            MorePages.map((item) =>
-                                <Link href={item?.path}>
+                            MorePages.map((item, index) =>
+                                <Link key={index} href={item?.path}>
                                     <Grid sx={{
                                         backgroundColor: '#fff',
                                         display: 'flex',
@@ -217,6 +213,7 @@ export default function LandingPage() {
                                                 item?.preview.map((model, index) =>
 
                                                     <Box
+                                                        key={index}
                                                         sx={{
                                                             backgroundColor: '#fff',
                                                             width: '80px',
@@ -269,14 +266,13 @@ export default function LandingPage() {
                 <Box
                     sx={{
                         maxWidth: "1200px",
-                        minHeight: 829,
                         display: "block",
                         margin: "0 auto",
                         alignItems: 'flex-start',
                         marginTop: '64px'
                     }}
                 >
-                    <Grid spacing={2}>
+                    <Grid container>
                         {/* 3D MODELS */}
 
                         <Grid
@@ -317,9 +313,7 @@ export default function LandingPage() {
 
                         {/* 3D MODELS MAP */}
 
-                        <Grid sx={{ mb: "32px" }}>
-                            <SimpleCard cols={5} route={"models"} sliced={15} />
-                        </Grid>
+                        <SimpleCard cols={5} route={"models"} sliced={15} />
 
                     </Grid>
                 </Box>
@@ -333,7 +327,7 @@ export default function LandingPage() {
                         marginTop: '64px',
                     }}
                 >
-                    <Grid spacing={2}>
+                    <Grid container>
                         <Grid
                             sx={{
                                 display: "flex",
@@ -402,7 +396,7 @@ export default function LandingPage() {
                         marginTop: '64px',
                     }}
                 >
-                    <Grid spacing={2}>
+                    <Grid container>
 
                         {/* INTERIORS */}
 
@@ -444,9 +438,7 @@ export default function LandingPage() {
 
                         {/* INTERIORS MAP */}
 
-                        <Grid sx={{ mb: "45px" }}>
-                            <SimpleCard cols={4} route={"interiors"} sliced={8} />
-                        </Grid>
+                        <SimpleCard cols={4} route={"interiors"} sliced={8} />
 
                     </Grid>
                 </Box>

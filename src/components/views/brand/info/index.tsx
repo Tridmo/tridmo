@@ -1,18 +1,13 @@
-import { Grid, Table, TableBody, TableCell, FormControl, FormControlLabel, Radio, RadioGroup, TableContainer, styled, Box, TableRow, Paper, Checkbox } from '@mui/material';
+import { Grid, Box } from '@mui/material';
 import SimpleTypography from '../../../typography';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getOneModel, selectOneModel } from '@/data/get_one_model';
 
 import Link from 'next/link';
 import Buttons from '../../../buttons';
-import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
-import axios from '@/utils/axios';
-import { toast } from "react-toastify"
-import { setLoginState, setOpenModal, setSignupState } from '@/data/modal_checker';
-import { sampleBrand, sampleModel } from '@/data/samples/sample_model';
+import { sampleBrand } from '@/data/samples';
+import { selectOneBrand } from '../../../../data/get_one_brand';
 
 
 export default function BrandInfo() {
@@ -28,8 +23,7 @@ export default function BrandInfo() {
     }
 
     const dispatch = useDispatch<any>();
-    // const simpleModel = useSelector(selectOneModel);
-    const brand = sampleBrand;
+    const brand = useSelector(selectOneBrand);
 
     return (
         <Grid
@@ -38,7 +32,7 @@ export default function BrandInfo() {
             sx={{ marginTop: "20px", paddingLeft: '50px !important' }}
         >
 
-            <SimpleTypography className='brand__name' text="Имя бренда" />
+            <SimpleTypography className='brand__name' text="Название бренда" />
             <SimpleTypography
                 text={brand?.name}
                 className="brand_page__info--title"
@@ -53,12 +47,16 @@ export default function BrandInfo() {
                 sx={{ marginBottom: '40px' }}
             />
 
-            <Grid container columnSpacing={1}>
+            <Grid container spacing={1}
+                sx={{
+                    display: 'flex',
+                }}
+            >
 
                 <Grid item>
                     <Link
                         target="_blank"
-                        href={`https://www.google.com/maps/@${brand?.location?.lat},${brand?.location?.long},12z`}
+                        href={`http://maps.google.com/?q=${brand?.address}`}
                         rel="noopener noreferrer"
                     >
                         <Buttons className='brand__box' name="">
@@ -75,15 +73,14 @@ export default function BrandInfo() {
                                 />
                                 <SimpleTypography
                                     className='brand__box--text'
-                                    text={`${brand?.location?.name
-                                        }`}
+                                    text={brand?.address}
                                 />
                             </Box>
                         </Buttons>
                     </Link>
                 </Grid>
                 <Grid item>
-                    <Link href={`tel:${brand?.phone_number}`}>
+                    <Link href={`tel:${brand?.phone}`}>
                         <Buttons className='brand__box' name="">
                             <Image
                                 width={19}
@@ -93,7 +90,7 @@ export default function BrandInfo() {
                             />
                             <Box sx={{ marginLeft: "11px" }}>
                                 <SimpleTypography className='brand__name' text="Номер телефона" />
-                                <SimpleTypography className='brand__box--text' text={`${brand?.phone_number}`} />
+                                <SimpleTypography className='brand__box--text' text={`${brand?.phone}`} />
                             </Box>
                         </Buttons>
                     </Link>
@@ -115,45 +112,49 @@ export default function BrandInfo() {
                     </Link>
                 </Grid>
                 <Grid item>
-                    <Link target="_blank" href={brand?.site_link} rel="noopener noreferrer">
+                    <a target="_blank"
+                        href={brand?.site_link}
+                    >
                         <Buttons className='brand__box' name="">
                             <Image
                                 width={19}
                                 height={23}
                                 alt="web"
-                                src={"/icons/mail.svg"}
+                                src={"/icons/web.svg"}
                             />
                             <Box sx={{ marginLeft: "11px" }}>
                                 <SimpleTypography className='brand__name' text="Веб-сайт" />
                                 <SimpleTypography
                                     className='brand__box--text'
-                                    text={`${brand?.site_link.includes('https://') ||
-                                        brand?.site_link.includes('http://')
-                                        ?
-                                        brand?.site_link.split('://')[1].replaceAll('/', '')
-                                        : brand?.site_link
-                                        }`}
+                                    text={brand?.name}
                                 />
                             </Box>
                         </Buttons>
-                    </Link>
+                    </a>
                 </Grid>
-                <Grid item>
-                    <Box>
-                        <Buttons className='brand__box' name="">
-                            <Image
-                                width={19}
-                                height={23}
-                                alt="web"
-                                src={"/icons/cube.svg"}
-                            />
-                            <Box sx={{ marginLeft: "11px" }}>
-                                <SimpleTypography className='brand__name' text="Стиль" />
-                                <SimpleTypography className='brand__box--text' text={`${brand?.style}`} />
-                            </Box>
-                        </Buttons>
-                    </Box>
-                </Grid>
+                {
+                    brand?.styles ? (
+                        brand?.styles[0] ?
+                            <Grid item>
+                                <Box>
+                                    <Buttons className='brand__box' name="">
+                                        <Image
+                                            width={19}
+                                            height={23}
+                                            alt="web"
+                                            src={"/icons/cube.svg"}
+                                        />
+                                        <Box sx={{ marginLeft: "11px" }}>
+                                            <SimpleTypography className='brand__name' text="Стиль" />
+                                            <SimpleTypography className='brand__box--text' text={`${brand?.styles[0]?.name}`} />
+                                        </Box>
+                                    </Buttons>
+                                </Box>
+                            </Grid>
+                            : null
+                    )
+                        : null
+                }
             </Grid>
 
 
