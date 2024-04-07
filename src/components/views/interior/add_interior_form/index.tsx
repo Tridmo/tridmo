@@ -24,6 +24,7 @@ export function AddInteriorForm() {
 
 
     const dispatch = useDispatch<any>()
+    const router = useRouter()
 
     const supportedFileTypes = 'image/png, image/jpg, image/jpeg, image/webp'
     const imagesCountLimit = 9;
@@ -126,7 +127,7 @@ export function AddInteriorForm() {
                     onSubmit={async (
                         _values, { resetForm, setErrors, setStatus, setSubmitting }
                     ) => {
-                        console.log(_values, 'jddjdjd');
+                        setSubmitting(true)
                         try {
 
                             const formData = new FormData()
@@ -139,19 +140,26 @@ export function AddInteriorForm() {
 
                             _values.images.forEach(i => formData.append('images', i))
 
-                            const res = await instance.post(
+                            instance.post(
                                 `/interiors`,
                                 formData
-                            );
-                            toast.success(res?.data?.message);
-                            setStatus({ success: true });
-                            setSubmitting(false);
-                            useRouter().push(`/interiors/${res?.data?.data?.interior?.slug}`)
+                            ).then(res => {
+                                toast.success(res?.data?.message);
+                                setStatus({ success: true });
+                                setSubmitting(false);
+                                resetForm()
+                                router.push(`/interiors/${res?.data?.data?.interior?.slug}`)
+                            }).catch(err => {
+                                setStatus({ success: false });
+                                setErrors({ submit: err?.response?.data?.message });
+                                setSubmitting(false);
+                                toast.error(err?.response?.data?.message);
+                            })
+
                         } catch (err: any) {
                             setStatus({ success: false });
                             setErrors({ submit: err.message });
                             setSubmitting(false);
-                            toast.error(err?.response?.data?.message);
                         }
                     }}
                 >
