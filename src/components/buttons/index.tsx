@@ -632,9 +632,9 @@ export default function Buttons({ childrenFirst, ...props }: ButtonsProps) {
       disabled={props?.disabled}
       type={props?.type}
     >
-      {childrenFirst ? props?.children : null}
+      {childrenFirst && !props?.startIcon ? props?.children : null}
       {props?.name}
-      {!childrenFirst ? props?.children : null}
+      {!childrenFirst && !props?.startIcon ? props?.children : null}
     </ButtonWrapper >
   );
 };
