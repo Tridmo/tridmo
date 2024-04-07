@@ -33,14 +33,12 @@ export default function Interiors() {
   const getModelIsFree = useSelector((state: any) => state?.handle_filters?.is_free)
 
   React.useEffect(() => {
-    if (getInteriorsStatus === "idle") {
-      dispatch(getAllInteriors({
-        categories: getModelCategoryFilter,
-        colors: getModelColorFilter,
-        styles: getModelStyleFilter,
-        page: getModelPageFilter,
-      }))
-    }
+    dispatch(getAllInteriors({
+      categories: getModelCategoryFilter,
+      colors: getModelColorFilter,
+      styles: getModelStyleFilter,
+      page: getModelPageFilter,
+    }))
     if (StyleStatus === "idle") {
       dispatch(getAllStyles());
     }

@@ -39,33 +39,27 @@ export default function Models() {
 
 
   React.useEffect(() => {
-    if (getModelStatus === "idle") {
-      dispatch(getAllModels({
-        category_id: getModelCategoryFilter,
-        color_id: getModelColorFilter,
-        style_id: getModelStyleFilter,
-        page: getModelPageFilter,
-        is_free: getModelIsFree,
-      }))
-    }
-    if (searched__models__status === "idle") {
-      dispatch(searchModels({
-        category_id: getModelCategoryFilter,
-        color_id: getModelColorFilter,
-        style_id: getModelStyleFilter,
-        page: getModelPageFilter,
-        is_free: getModelIsFree,
-        keyword: keywords
-      }))
-    }
-    if (getColorStatus === "idle") {
-      dispatch(getAllColors());
-    }
+    dispatch(getAllModels({
+      category_id: getModelCategoryFilter,
+      color_id: getModelColorFilter,
+      style_id: getModelStyleFilter,
+      page: getModelPageFilter,
+      is_free: getModelIsFree,
+    }))
+    dispatch(searchModels({
+      category_id: getModelCategoryFilter,
+      color_id: getModelColorFilter,
+      style_id: getModelStyleFilter,
+      page: getModelPageFilter,
+      is_free: getModelIsFree,
+      keyword: keywords
+    }))
+
     if (StyleStatus === "idle") {
       dispatch(getAllStyles());
     }
 
-  }, [getModelStatus, dispatch, getColorStatus, StyleStatus, router, getModelCategoryFilter, getModelColorFilter, getModelIsFree, getModelPageFilter, getModelStyleFilter])
+  }, [getModelStatus, dispatch, StyleStatus, router, getModelCategoryFilter, getModelColorFilter, getModelIsFree, getModelPageFilter, getModelStyleFilter])
 
 
 
