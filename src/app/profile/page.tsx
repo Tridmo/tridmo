@@ -54,10 +54,8 @@ export default function UserProfile() {
     const interiors = useSelector(selectAuthorInteriors)
 
     React.useEffect(() => {
-        if (isAuthenticated) {
-            if (getProfileStatus === 'idle') {
-                dispatch(getProfile())
-            }
+        if (getProfileStatus === 'idle') {
+            dispatch(getProfile())
         }
     }, [dispatch, isAuthenticated, getProfileStatus])
 
@@ -65,11 +63,10 @@ export default function UserProfile() {
         if (profile) {
             dispatch(getAuthorInteriors({ author: profile?.username }))
         }
+        else {
+            notFound()
+        }
     }, [profile])
-
-    if (!isAuthenticated) {
-        notFound()
-    }
 
     if (getProfileStatus === "succeeded") {
         return (
