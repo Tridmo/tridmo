@@ -12,22 +12,8 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import '@/styles/buttons.module.scss'
 // import styled from '@emotion/styled';
 import { ThemeProps } from '@/types/theme';
+import CustomCircularProgress from '../circular_progress';
 
-type ButtonsProps = {
-  id?: string,
-  name?: string,
-  sx?: SxProps,
-  type?: React.ButtonHTMLAttributes<HTMLButtonElement>["type"] | "button",
-  className?: string,
-  children?: any,
-  disabled?: boolean,
-  startIcon?: boolean,
-  onClick?: React.ButtonHTMLAttributes<HTMLButtonElement>["onClick"];
-  endIcon?: string,
-  bgColor?: string,
-  childrenFirst?: boolean,
-  loadingColor?: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'inherit' | any,
-};
 
 const ButtonWrapper = styled(Button)(
   ({ theme }: ThemeProps) => `
@@ -608,7 +594,24 @@ const ButtonWrapper = styled(Button)(
 `
 )
 
+type ButtonsProps = {
+  id?: string,
+  name?: string,
+  sx?: SxProps,
+  type?: React.ButtonHTMLAttributes<HTMLButtonElement>["type"] | "button",
+  className?: string,
+  children?: any,
+  disabled?: boolean,
+  startIcon?: boolean,
+  onClick?: React.ButtonHTMLAttributes<HTMLButtonElement>["onClick"];
+  endIcon?: string,
+  bgColor?: string,
+  childrenFirst?: boolean,
+  loadingColor?: string,
+};
+
 export default function Buttons({ childrenFirst, ...props }: ButtonsProps) {
+
   return (
     <ButtonWrapper
       id={props?.id}
@@ -619,7 +622,7 @@ export default function Buttons({ childrenFirst, ...props }: ButtonsProps) {
         ":hover": { background: props?.bgColor },
       }}
       onClick={props?.onClick}
-      startIcon={props?.startIcon ? <CircularProgress size="1rem" color={props?.loadingColor || 'primary'} /> : null}
+      startIcon={props?.startIcon ? <CustomCircularProgress size="1rem" color={props?.loadingColor} /> : null}
       endIcon={
         props?.endIcon === "right" ? <ArrowForwardIcon /> :
           props?.endIcon === "left" ? <ArrowBackIcon /> :
