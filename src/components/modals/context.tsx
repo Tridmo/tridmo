@@ -84,22 +84,36 @@ export const LoginContext = (props: LoginContextProps) => {
             props?.setUserEmail(_values?.email);
             // dispatch(resetMyProfile())
             if (res?.data?.data?.user?.is_verified) {
-              toast.success(res?.data?.message || 'Авторизация прошла успешна')
+              toast.success(res?.data?.message || 'Авторизация прошла успешна');
 
-              Cookies.set(
-                'accessToken',
-                res?.data?.data?.token?.accessToken,
-                { expires: ACCESS_TOKEN_EXPIRATION_DAYS, path: '/', sameSite: 'Lax', secure: true }
-              )
+              (async () => {
+                // Set cookies
+                const accessTokenPromise = new Promise((resolve, reject) => {
+                  Cookies.set(
+                    'accessToken',
+                    res?.data?.data?.token?.accessToken,
+                    { expires: ACCESS_TOKEN_EXPIRATION_DAYS, path: '/', sameSite: 'Lax', secure: true }
+                  );
+                  resolve(true); // Resolve the promise once cookies are set
+                });
 
-              Cookies.set(
-                'refreshToken',
-                res?.data?.data?.token?.refreshToken,
-                { expires: REFRESH_TOKEN_EXPIRATION_DAYS, path: '/', sameSite: 'Lax', secure: true }
-              )
-              dispatch(getMyProfile())
-              dispatch(setAuthState(true))
-              dispatch(setOpenModal(false));
+                const refreshTokenPromise = new Promise((resolve, reject) => {
+                  Cookies.set(
+                    'refreshToken',
+                    res?.data?.data?.token?.refreshToken,
+                    { expires: REFRESH_TOKEN_EXPIRATION_DAYS, path: '/', sameSite: 'Lax', secure: true }
+                  );
+                  resolve(true); // Resolve the promise once cookies are set
+                });
+
+                // Wait for both promises to resolve
+                await Promise.all([accessTokenPromise, refreshTokenPromise]);
+
+                // Dispatch actions after cookies are set
+                await dispatch(getMyProfile());
+                await dispatch(setAuthState(true));
+                await dispatch(setOpenModal(false));
+              })();
             } else {
               dispatch(setVerifyState(true));
               // toast.success("Please verify your email!")
