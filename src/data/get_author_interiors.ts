@@ -7,7 +7,7 @@ const initialState = {
   error: null,
   progress: 0,
 };
-export const getAuthorInteriors = createAsyncThunk('/interiors',
+export const getAuthorInteriors = createAsyncThunk('/interiors/:author',
   async (wrapper?: {
     author: string;
     [x: string]: any
