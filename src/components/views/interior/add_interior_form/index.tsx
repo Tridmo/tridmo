@@ -127,13 +127,13 @@ export function AddInteriorForm() {
 
                     validationSchema={
                         Yup.object().shape({
-                            name: Yup.string().max(255).required('No first name provided.'),
-                            description: Yup.string().max(255).required('No surname provided.'),
-                            style_id: Yup.number().required('No style provided.'),
-                            category_id: Yup.number().required('No category provided.'),
+                            name: Yup.string().max(255).required('Название не указано'),
+                            description: Yup.string().max(255).required('Описание не указано'),
+                            style_id: Yup.number().required('Cтиль не указано'),
+                            category_id: Yup.number().required('Категория не указано'),
 
-                            cover: Yup.mixed().required('No cever provided.'),
-                            images: Yup.array().of(Yup.mixed()).required('No images provided.')
+                            cover: Yup.mixed().required('Загрузите изображение обложки'),
+                            images: Yup.array().of(Yup.mixed()).required('Загрузите хотя бы одно изображение')
                         })
                     }
                     onSubmit={async (
@@ -216,7 +216,7 @@ export function AddInteriorForm() {
                                                 onBlur={handleBlur}
                                                 onChange={handleChange}
                                                 value={values.name}
-                                                label="Заголовок"
+                                                label="Название"
                                                 placeholderText="Введите название"
                                             />
                                         </Box>
