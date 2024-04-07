@@ -56,7 +56,7 @@ export default function Designer() {
     React.useEffect(() => {
         dispatch(getDesignerProfile(params?.username))
         dispatch(getAuthorInteriors({ author: params?.username }))
-    }, [dispatch])
+    }, [dispatch, params])
 
 
     if (getProfileStatus === "succeeded") {
