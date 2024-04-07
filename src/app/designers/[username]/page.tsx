@@ -4,7 +4,7 @@ import * as React from 'react';
 import type { NextPage } from 'next'
 import { useDispatch, useSelector } from 'react-redux';
 import { getOneInterior, selectOneInterior } from '@/data/get_one_interior';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import IconBreadcrumbs from '@/components/breadcrumbs';
 import ConnectionError from '@/components/site_info/connection_error';
 import { Box, Grid } from '@mui/material';
@@ -46,18 +46,23 @@ const BgBlur = {
 }
 
 export default function Designer() {
+    const isAuthenticated = useSelector((state: any) => state?.auth_slicer?.authState)
     const getProfileStatus = useSelector((state: any) => state?.get_designer?.status)
     const getAuthorInteriorsStatus = useSelector((state: any) => state?.get_author_interiors?.status)
-    const dispatch = useDispatch<any>()
     const profile = useSelector(selectMyProfile)
+    const dispatch = useDispatch<any>()
+    const router = useRouter()
     const interiors = useSelector(selectAuthorInteriors)
     const params = useParams<{ username: string }>()
 
     React.useEffect(() => {
-        dispatch(getDesignerProfile(params?.username))
-        dispatch(getAuthorInteriors({ author: params?.username }))
-    }, [dispatch, params])
-
+        if (isAuthenticated && profile && params?.username == profile?.username) {
+            router.push('/profile')
+        } else {
+            dispatch(getDesignerProfile(params?.username))
+            dispatch(getAuthorInteriors({ author: params?.username }))
+        }
+    }, [dispatch, params, isAuthenticated, profile])
 
     if (getProfileStatus === "succeeded") {
         return (
