@@ -19,9 +19,7 @@ import { getInteriorCategories, selectInteriorCategories } from '../../../../dat
 
 export function AddInteriorForm() {
     const stylesData = useSelector(selectAllStyles)
-    const stylesData__status = useSelector((state: any) => state?.get_all_styles.status);
     const categoriesData = useSelector(selectInteriorCategories);
-    const categoriesDate__status = useSelector((state: any) => state?.categories?.interior_status)
 
 
     const dispatch = useDispatch<any>()
@@ -49,18 +47,6 @@ export function AddInteriorForm() {
         minHeight: minImages,
     }
 
-    useEffect(() => {
-
-        if (stylesData__status == 'idle') {
-            dispatch(getAllStyles())
-        }
-    }, [stylesData, stylesData__status, dispatch])
-
-    useEffect(() => {
-        if (categoriesDate__status == 'idle') {
-            dispatch(getInteriorCategories())
-        }
-    }, [categoriesData, categoriesDate__status, dispatch])
 
     const formControlSx: SxProps = {
         width: '90%',

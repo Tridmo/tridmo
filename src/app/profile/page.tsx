@@ -58,11 +58,14 @@ export default function UserProfile() {
             if (getProfileStatus === 'idle') {
                 dispatch(getProfile())
             }
-            if (getAuthorInteriorsStatus === 'idle' && profile) {
-                dispatch(getAuthorInteriors({ author: profile?.username }))
-            }
         }
-    }, [dispatch, isAuthenticated, getProfileStatus, profile, getAuthorInteriorsStatus])
+    }, [dispatch, isAuthenticated, getProfileStatus])
+
+    React.useEffect(() => {
+        if (profile) {
+            dispatch(getAuthorInteriors({ author: profile?.username }))
+        }
+    }, [profile])
 
     if (!isAuthenticated) {
         notFound()
