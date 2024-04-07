@@ -127,7 +127,7 @@ export function AddInteriorForm() {
                     onSubmit={async (
                         _values, { resetForm, setErrors, setStatus, setSubmitting }
                     ) => {
-                        setSubmitting(true)
+                        console.log(_values, 'jddjdjd');
                         try {
 
                             const formData = new FormData()
@@ -140,26 +140,23 @@ export function AddInteriorForm() {
 
                             _values.images.forEach(i => formData.append('images', i))
 
-                            instance.post(
+                            const res = await instance.post(
                                 `/interiors`,
                                 formData
-                            ).then(res => {
-                                toast.success(res?.data?.message);
-                                setStatus({ success: true });
-                                setSubmitting(false);
-                                resetForm()
-                                router.push(`/interiors/${res?.data?.data?.interior?.slug}`)
-                            }).catch(err => {
-                                setStatus({ success: false });
-                                setErrors({ submit: err?.response?.data?.message });
-                                setSubmitting(false);
-                                toast.error(err?.response?.data?.message);
-                            })
+                            );
+
+                            toast.success(res?.data?.message);
+                            setStatus({ success: true });
+                            setSubmitting(false);
+                            resetForm()
+
+                            router.push(`/interiors/${res?.data?.data?.interior?.slug}`)
 
                         } catch (err: any) {
                             setStatus({ success: false });
                             setErrors({ submit: err.message });
                             setSubmitting(false);
+                            toast.error(err?.response?.data?.message);
                         }
                     }}
                 >
