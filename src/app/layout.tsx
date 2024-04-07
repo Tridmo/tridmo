@@ -6,6 +6,10 @@ import Footer from "@/components/views/footer";
 import Providers from "@/components/providers";
 import React, { Suspense } from 'react';
 import { NavigationEvents } from '../components/providers/navigation_events';
+import { ToastContainer } from 'react-toastify';
+import TopLoading from '../components/top_loading';
+import AlertWrapper from '../components/alert';
+import { Box } from '@mui/system';
 
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
@@ -22,6 +26,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Providers>
+          <Box sx={{ position: 'realtive' }}>
+            {/* <TopLoading /> */}
+            <AlertWrapper />
+          </Box>
           <Navbar />
           {children}
           <Footer />

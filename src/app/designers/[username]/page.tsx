@@ -46,7 +46,7 @@ const BgBlur = {
 }
 
 export default function Designer() {
-    const getProfileStatus = useSelector((state: any) => state?.get_profile?.status)
+    const getProfileStatus = useSelector((state: any) => state?.get_designer?.status)
     const getAuthorInteriorsStatus = useSelector((state: any) => state?.get_author_interiors?.status)
     const dispatch = useDispatch<any>()
     const profile = useSelector(selectMyProfile)
@@ -57,6 +57,7 @@ export default function Designer() {
         dispatch(getDesignerProfile(params?.username))
         dispatch(getAuthorInteriors({ author: params?.username }))
     }, [dispatch])
+
 
     if (getProfileStatus === "succeeded") {
         return (

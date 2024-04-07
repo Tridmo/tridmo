@@ -10,9 +10,6 @@ const initialState = {
 };
 export const getMyProfile = createAsyncThunk('/users/profile', async () => {
   const response = await api.get(`users/profile`, {
-    headers: {
-      Authorization: `Bearer ${Cookies.get('accessToken')}`,
-    },
     onDownloadProgress: (progressEvent) => {
       // initialState.progress = 70
     }
@@ -21,11 +18,7 @@ export const getMyProfile = createAsyncThunk('/users/profile', async () => {
 })
 export const deleteCustomer = createAsyncThunk('/reservations/customer/delete', async (id?: any) => {
 
-  const response = await api.delete(`api/reservations/customer/${id}`, {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-    },
-  })
+  const response = await api.delete(`api/reservations/customer/${id}`)
   return response.data
 })
 const myProfile = createSlice({

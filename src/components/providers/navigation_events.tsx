@@ -47,10 +47,6 @@ export function NavigationEvents() {
     useEffect(() => {
         const url = `${pathname}?${searchParams}`
 
-        if (getDesignersStatus === "idle" && pathname === '/designers') {
-            dispatch(getAllDesigners({}))
-        }
-
     }, [pathname, searchParams, getModelStatus, dispatch, getModelCategoryFilter, getModelStyleFilter, getModelPageFilter, StyleStatus, router, getInteriorsStatus])
 
     useEffect(() => {
@@ -111,21 +107,21 @@ export function NavigationEvents() {
                 setTimeout(() => {
                     dispatch(resetMyProfile())
                     router.replace('/');
-                    toast.success("Congratulation! You have successfully verified your email");
+                    toast.success("Электронная почта успешно подтверждена");
                     dispatch(setAuthState(true))
                     dispatch(setVerifyState(false))
                 }, 0)
             }
             else {
                 setTimeout(() => {
-                    toast.error("Failed to verfiy! Please try again");
+                    toast.error("Не удалось подтвердить электронную почту! Пожалуйста, попробуйте еще раз");
                     router.push('/');
                 }, 0)
             }
         }
         if (pathname && pathname.includes("unauthorized_client")) {
             setTimeout(() => {
-                toast.error("Failed to verfiy! Please try again");
+                toast.error("Не удалось подтвердить электронную почту! Пожалуйста, попробуйте еще раз");
                 router.push('/');
             }, 0)
         }

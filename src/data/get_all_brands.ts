@@ -15,11 +15,18 @@ export const getAllBrands = createAsyncThunk('/brands',
       send__route += `/?keyword=${wrapper?.name}`
     }
 
-    if (!send__route?.includes("/?") && wrapper?.page) {
-      send__route += `/?page=${wrapper?.page}`
-    } else if (wrapper?.page) {
-      send__route += `&page=${wrapper?.page}`
-    }
+    send__route +=
+      wrapper?.limit
+        ? (send__route?.includes("/?") ? `&limit=${wrapper?.limit}` : `/?limit=${wrapper?.limit}`)
+        : "";
+
+    send__route +=
+      wrapper?.orderBy
+        ? (send__route?.includes("/?") ? `&orderBy=${wrapper?.orderBy}` : `/?orderBy=${wrapper?.orderBy}`)
+        : "";
+
+    send__route += !send__route.includes("/?") && wrapper?.page ? `/?page=${wrapper.page}` : wrapper?.page ? `&page=${wrapper.page}` : "";
+
     const response = await api.get(send__route)
     return response.data
   })

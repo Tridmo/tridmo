@@ -15,6 +15,7 @@ import { Formik } from 'formik';
 import { toast } from 'react-toastify';
 // import Cookies from 'js-cookie'
 import Cookies from 'js-cookie'
+import instance from '../../utils/axios';
 
 
 const EditProfileModal = styled(Box)(
@@ -66,18 +67,13 @@ function EditProfile() {
           onSubmit={
             async (_values, { resetForm, setErrors, setStatus, setSubmitting }) => {
               try {
-                let res = await axios.put(
+                let res = await instance.put(
                   `users/profile`,
-                  { full_name: `${_values.first_name} ${_values.last_name}` },
-                  {
-                    headers: {
-                      Authorization: `Bearer ${Cookies.get('accessToken')}`,
-                    },
-                  }
+                  { full_name: `${_values.first_name} ${_values.last_name}` }
                 );
                 // resetForm();
                 dispatch(resetMyProfile())
-                toast.success("You have successfully updated your profile.");
+                toast.success(res?.data?.message);
                 setStatus({ success: true });
                 handleClose()
                 setSubmitting(false);

@@ -11,8 +11,8 @@ function ConnectionError() {
                         <Image src="/img/connection-error.svg" alt="Connection error" width={500} height={500} />
                     </Grid>
                     <Grid sx={{ paddingLeft: "56px !important" }} item xs={6}>
-                        <SimpleTypography className="not-found__title" text="Something went wrong..." />
-                        <SimpleTypography className="not-found__text" text="Make sure your connection is good and try refreshing this page." />
+                        <SimpleTypography className="not-found__title" text='Что-то пошло не так...' />
+                        <SimpleTypography className="not-found__text" text='Убедитесь, что ваше соединение хорошее, и попробуйте обновить эту страницу.' />
                     </Grid>
                 </Grid>
             </Box>

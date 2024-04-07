@@ -22,7 +22,6 @@ type InputProps = {
   cardImgHeight?: any,
   withAuthor?: boolean,
 };
-const fakeModels = [1, 2, 3, 4, 5, 6, 7, 8];
 const heights = [208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208];
 const Label = styled(Paper)(({ theme }: ThemeProps) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -36,6 +35,7 @@ const Label = styled(Paper)(({ theme }: ThemeProps) => ({
 
 export default function SimpleCard(props: InputProps) {
   const dispatch = useDispatch<any>();
+  const fakeModels = new Array(props?.sliced || 16).fill('');
 
   React.useEffect(() => {
     dispatch(setLimitFilter({ limit: 15 }))

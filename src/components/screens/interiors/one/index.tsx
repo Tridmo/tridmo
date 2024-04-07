@@ -24,6 +24,8 @@ import { selectComments } from '../../../../data/get_comments';
 import formatComments, { CommentFormatInterface } from '../../../comment_section/format_comments';
 import InteriorImages from '../../../views/interior/interior_images';
 import InteriorImagesModal from '../../../views/interior/interior_images/images_modal';
+import { setLoginState, setOpenModal } from '../../../../data/modal_checker';
+import { toast } from 'react-toastify';
 
 const DropDown = styled(Menu)(
     ({ theme }: ThemeProps) => `
@@ -88,36 +90,35 @@ export default function OneInterior() {
 
     const handleSave = () => {
 
+        if (!isAuthenticated) {
+            dispatch(setLoginState(true))
+            dispatch(setOpenModal(true))
+            return;
+        }
 
         if (!isSaved) {
             setIsSaved(true)
             instance.post(
                 '/saved/interiors',
-                { interior_id: interior?.id },
-                {
-                    headers: {
-                        'Authorization': `Bearer ${Cookies.get('accessToken')}`
-                    }
-                }
+                { interior_id: interior?.id }
             ).then(res => {
-                setIsSaved(res.data.success)
+                setIsSaved(res?.data?.success)
+                // toast.success(res?.data?.message)
             }).catch(err => {
                 setIsSaved(false)
+                // toast.error(err?.response?.data?.message)
             })
         }
         else if (isSaved) {
             setIsSaved(false)
             instance.delete(
-                '/saved/interiors/' + interior?.id,
-                {
-                    headers: {
-                        'Authorization': `Bearer ${Cookies.get('accessToken')}`
-                    }
-                }
+                '/saved/interiors/' + interior?.id
             ).then(res => {
-                setIsSaved(!res.data.success)
+                setIsSaved(!res?.data?.success)
+                // toast.success(res?.data?.message)
             }).catch(err => {
                 setIsSaved(true)
+                // toast.error(err?.response?.data?.message)
             })
         }
     };
@@ -440,11 +441,6 @@ export default function OneInterior() {
                                         text: data.text,
                                         entity_source: 'interior',
                                         entity_id: interior?.id,
-                                    },
-                                    {
-                                        headers: {
-                                            'Authorization': `Bearer ${Cookies.get('accessToken')}`
-                                        }
                                     }
                                 ).then(async res => {
                                     const com = res.data?.data?.comment
@@ -462,11 +458,6 @@ export default function OneInterior() {
                                         parent_id: data.repliedToCommentId,
                                         entity_source: 'interior',
                                         entity_id: interior?.id,
-                                    },
-                                    {
-                                        headers: {
-                                            'Authorization': `Bearer ${Cookies.get('accessToken')}`
-                                        }
                                     }
                                 ).then(async res => {
                                     const com = res.data?.data?.comment

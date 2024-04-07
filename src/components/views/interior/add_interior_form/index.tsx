@@ -154,14 +154,9 @@ export function AddInteriorForm() {
 
                             let res = await instance.post(
                                 `/interiors`,
-                                formData,
-                                {
-                                    headers: {
-                                        Authorization: `Bearer ${Cookies.get('accessToken')}`,
-                                    },
-                                }
+                                formData
                             );
-                            toast.success("Success");
+                            toast.success(res?.data?.message);
                             setStatus({ success: true });
                             setSubmitting(false);
                         } catch (err: any) {
@@ -346,7 +341,7 @@ export function AddInteriorForm() {
                                         childrenFirst={true}
                                         type='submit'
                                         startIcon={isSubmitting}
-                                        disabled={isSubmitting}
+                                        disabled={Boolean(errors.submit) || isSubmitting}
                                         loadingColor='#fff'
                                         className="upload__btn"
                                         sx={{

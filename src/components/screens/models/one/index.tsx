@@ -137,7 +137,7 @@ export default function OneModel() {
                                         marginBottom: "12px",
                                     }}
                                 >
-                                    <Link href={`/brands/${model?.brand_id}`}>
+                                    <Link href={`/brands/${model?.brand?.slug}`}>
                                         <Buttons
                                             name={"Смотреть все"}
                                             endIcon={"right"}

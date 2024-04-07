@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../utils/axios'
 import Cookies from 'js-cookie'
+import instance from '../utils/axios';
 
 const initialState = {
    data: [],
@@ -9,11 +9,7 @@ const initialState = {
    progress: 0,
 };
 export const getProfile = createAsyncThunk('/users/profile', async () => {
-   const response = await api.get(`users/profile`, {
-      headers: {
-         Authorization: `Bearer ${Cookies.get('accessToken')}`,
-      },
-   })
+   const response = await instance.get(`users/profile`)
    return response.data
 })
 

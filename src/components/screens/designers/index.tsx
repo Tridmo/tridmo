@@ -16,6 +16,7 @@ import { IMAGES_BASE_URL } from '../../../utils/image_src';
 
 export default function DesignersPage() {
     const dispatch = useDispatch<any>();
+    const isAuthenticated = useSelector((state: any) => state?.auth_slicer?.authState)
     const getDesignersStatus = useSelector((state: any) => state?.get_all_designers?.status);
     const all__designers = useSelector(selectAllDesigners)
     const profile = useSelector(selectMyProfile)
@@ -109,7 +110,7 @@ export default function DesignersPage() {
                             {
                                 all__designers?.data?.designers && all__designers?.data?.designers?.length != 0
                                     ? all__designers?.data?.designers?.map((user, index: any) =>
-                                        <Link key={index} href={profile?.user_id == user.id ? '/profile' : `/designers/${user?.username}`}>
+                                        <Link key={index} href={profile?.user_id == user.id && isAuthenticated ? '/profile' : `/designers/${user?.username}`}>
 
                                             <ListItem key={user?.id} alignItems="center"
                                                 sx={liSx}

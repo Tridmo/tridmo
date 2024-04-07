@@ -108,7 +108,7 @@ export default function Navbar() {
     const handleLogout = () => {
         Cookies.remove('accessToken')
         Cookies.remove('refreshToken')
-        setAuthState(false)
+        dispatch(setAuthState(false))
         router.push(pathname)
         router.refresh();
         setAnchorEl(null);

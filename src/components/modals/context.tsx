@@ -20,6 +20,7 @@ import PasswordInputAdornments from '../inputs/password';
 import { passwordRegex, usernameRegex } from '@/types/regex';
 import Link from 'next/link';
 import UsernameInputAdornments from '../inputs/username';
+import instance from '../../utils/axios';
 //Login context
 interface LoginContextProps {
   // setAlertMessage: any
@@ -75,7 +76,7 @@ export const LoginContext = (props: LoginContextProps) => {
           { resetForm, setErrors, setStatus, setSubmitting }
         ) => {
           try {
-            let res = await axios.post(
+            const res = await axios.post(
               `auth/signin`,
               { email: _values.email, password: _values?.password },
             );
@@ -83,7 +84,7 @@ export const LoginContext = (props: LoginContextProps) => {
             props?.setUserEmail(_values?.email);
             // dispatch(resetMyProfile())
             if (res?.data?.data?.user?.is_verified) {
-              toast.success("You have successfully logged in")
+              toast.success(res?.data?.message || 'Авторизация прошла успешна')
 
               Cookies.set(
                 'accessToken',
@@ -96,8 +97,8 @@ export const LoginContext = (props: LoginContextProps) => {
                 res?.data?.data?.token?.refreshToken,
                 { expires: REFRESH_TOKEN_EXPIRATION_DAYS, path: '/', sameSite: 'Lax', secure: true }
               )
-              dispatch(setAuthState(true))
               dispatch(getMyProfile())
+              dispatch(setAuthState(true))
               dispatch(setOpenModal(false));
             } else {
               dispatch(setVerifyState(true));
@@ -249,28 +250,24 @@ export const SignUpContext = (props: LoginContextProps) => {
           { resetForm, setErrors, setStatus, setSubmitting }
         ) => {
           try {
-            const res = await axios.get(`users/check/${_values.username}`);
+            const res = await instance.get(`users/check/${_values.username}`);
             if (res.data.data.exists) {
               setStatus({ success: false });
               toast.error('Имя пользователя не доступно');
               setErrors({ submit: 'Имя пользователя не доступно' });
             } else {
-              const signupResponse = await axios.post(`auth/signup`, {
+              const signupResponse = await instance.post(`auth/signup`, {
                 full_name: `${_values.first_name} ${_values.last_name}`,
                 email: _values.email,
                 username: _values.username,
                 password: _values?.password,
-              }, {
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-                },
               });
               setStatus({ success: true });
               props?.setUserEmail(_values?.email);
               dispatch(setSignupState(false));
               dispatch(setVerifyState(true));
               dispatch(setOpenModal(true));
-              // toast.success("You have been registered successfully");
+              toast.success(res?.data?.message);
             }
 
           } catch (err: any) {
@@ -495,16 +492,9 @@ export const VerificationContext = (props: LoginContextProps) => {
           { resetForm, setErrors, setStatus, setSubmitting }
         ) => {
           try {
-            let res = await axios.post(
+            let res = await instance.post(
               `auth/verify`,
-              { code: parseFloat(_values?.code), email: props?.userEmail },
-              {
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem(
-                    'accessToken'
-                  )}`
-                },
-              },
+              { code: parseFloat(_values?.code), email: props?.userEmail }
             );
             resetForm();
 
@@ -524,7 +514,7 @@ export const VerificationContext = (props: LoginContextProps) => {
             dispatch(setAuthState(true))
             dispatch(setVerifyState(false))
             dispatch(setOpenModal(false));
-            toast.success("You have been registered successfully");
+            toast.success(res?.data?.message || 'Регистрация прошла успешно');
             setSubmitting(false);
           } catch (err: any) {
             setStatus({ success: false });
@@ -706,16 +696,12 @@ export const EditProfileContext = (props: LoginContextProps) => {
             if (_values.phone) formData.append('phone', _values.phone)
             if (_values.portfolio_link) formData.append('portfolio_link', _values.portfolio_link)
 
-            const signupResponse = await axios.put(`users/profile`, formData, {
-              headers: {
-                Authorization: `Bearer ${Cookies.get('accessToken')}`
-              },
-            });
+            const res = await instance.put(`users/profile`, formData);
             setStatus({ success: true });
             dispatch(setProfileEditState(false));
             dispatch(setOpenModal(false));
             dispatch(getMyProfile());
-            // toast.success("You have been registered successfully");
+            toast.success(res?.data?.message || 'Успешно сохранено');
           } catch (err: any) {
             setStatus({ success: false });
             toast.error(err?.response?.data?.message)
@@ -895,7 +881,7 @@ export const EditProfileContext = (props: LoginContextProps) => {
                   type="submit"
                   name="Сохранить"
                   startIcon={isSubmitting}
-                  disabled={isSubmitting}
+                  disabled={Boolean(errors.submit) || isSubmitting}
                   className='signIn__btn'
                 />
 

@@ -4,7 +4,7 @@ import * as React from 'react';
 import type { NextPage } from 'next'
 import { useDispatch, useSelector } from 'react-redux';
 import { getOneInterior, selectOneInterior } from '@/data/get_one_interior';
-import { useParams } from 'next/navigation';
+import { notFound, useParams, useRouter } from 'next/navigation';
 import IconBreadcrumbs from '@/components/breadcrumbs';
 import ConnectionError from '@/components/site_info/connection_error';
 import { Box, Grid } from '@mui/material';
@@ -18,6 +18,7 @@ import Profile from '../../components/screens/profile';
 import { selectMyProfile } from '../../data/me';
 import { getAuthorInteriors, selectAuthorInteriors } from '../../data/get_author_interiors';
 import { getProfile } from '../../data/get_profile';
+import { setLoginState } from '../../data/modal_checker';
 
 const LoaderStyle = {
     // width: "100px !important",
@@ -44,21 +45,28 @@ const BgBlur = {
 }
 
 export default function UserProfile() {
+    const isAuthenticated = useSelector((state: any) => state?.auth_slicer?.authState)
     const getProfileStatus = useSelector((state: any) => state?.get_profile?.status)
     const getAuthorInteriorsStatus = useSelector((state: any) => state?.get_author_interiors?.status)
     const dispatch = useDispatch<any>()
+    const router = useRouter()
     const profile = useSelector(selectMyProfile)
     const interiors = useSelector(selectAuthorInteriors)
 
     React.useEffect(() => {
-        if (getProfileStatus == 'idle') {
-            dispatch(getProfile())
+        if (isAuthenticated) {
+            if (getProfileStatus === 'idle') {
+                dispatch(getProfile())
+            }
+            if (getAuthorInteriorsStatus === 'idle' && profile) {
+                dispatch(getAuthorInteriors({ author: profile?.username }))
+            }
         }
-        if (getAuthorInteriorsStatus == 'idle' && profile) {
-            dispatch(getAuthorInteriors({ author: profile?.username }))
-        }
+    }, [dispatch, isAuthenticated, getProfileStatus, profile, getAuthorInteriorsStatus])
 
-    }, [dispatch, getProfileStatus, profile, getAuthorInteriorsStatus])
+    if (!isAuthenticated) {
+        notFound()
+    }
 
     if (getProfileStatus === "succeeded") {
         return (

@@ -18,20 +18,22 @@ const MorePages = [
         path: '/designers',
         title: 'Дизайнеры',
         desc: 'Откройте безграничные возможности с нашими 3D-моделями.',
+        imageRounded: true,
         preview: [
-            { image_src: '/img/3dmodels-sofa.png' },
-            { image_src: '/img/3dmodels-chair1.png' },
-            { image_src: '/img/3dmodels-chair2.png' },
+            { image_src: '/img/person1.jpg' },
+            { image_src: '/img/person2.jpg' },
+            { image_src: '/img/person3.jpg' },
         ]
     },
     {
         path: '/brands',
         title: 'Бренды',
         desc: 'Преобразите свое пространство с помощью нашей подобранной коллекции продуктов.',
+        imageRounded: false,
         preview: [
-            { image_src: '/img/interior1.png' },
-            { image_src: '/img/interior2.png' },
-            { image_src: '/img/interior3.png' },
+            { image_src: '/img/brand1.jpg' },
+            { image_src: '/img/brand2.jpg' },
+            { image_src: '/img/brand3.png' },
         ]
     }
 ]
@@ -194,8 +196,8 @@ export default function LandingPage() {
                                         <Box
                                             className='preview_images'
                                             sx={{
-                                                height: 80,
-                                                width: 228,
+                                                height: 64,
+                                                width: ((64 * 3) - (64 - 50)),
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 flexDirection: 'row',
@@ -209,24 +211,28 @@ export default function LandingPage() {
                                                         key={index}
                                                         sx={{
                                                             backgroundColor: '#fff',
-                                                            width: '80px',
-                                                            height: '80px',
-                                                            padding: '10px',
-                                                            border: '1px solid #E0E0E0',
-                                                            borderRadius: '5px',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            width: '64px',
+                                                            height: '64px',
+                                                            padding: item?.imageRounded ? '0px' : '6px',
+                                                            border: item?.imageRounded ? '' : '1px solid #E0E0E0',
+                                                            borderRadius: item?.imageRounded ? '50%' : '5px',
                                                             position: 'absolute',
                                                             top: 0,
-                                                            left: `${index * 30}%`,
+                                                            left: `${index * 50}px`,
                                                             zIndex: index + 1,
                                                         }}
                                                     >
                                                         <Image
                                                             src={model.image_src}
                                                             alt='Landing image'
-                                                            width={60}
-                                                            height={60}
+                                                            width={item?.imageRounded ? 64 : 52}
+                                                            height={item?.imageRounded ? 64 : 52}
                                                             style={{
-                                                                borderRadius: '5px'
+                                                                borderRadius: item?.imageRounded ? '50%' : '5px',
+                                                                border: item?.imageRounded ? '1px solid #fff' : '',
                                                             }}
                                                         />
                                                     </Box>

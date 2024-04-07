@@ -10,6 +10,10 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import SimpleTypography from '../../../typography';
 import { sampleModel } from '@/data/samples/sample_model';
 import { IMAGES_BASE_URL } from '../../../../utils/image_src';
+import { selectMyProfile } from '../../../../data/me';
+import instance from '../../../../utils/axios';
+import { setLoginState, setOpenModal } from '../../../../data/modal_checker';
+import { toast } from 'react-toastify';
 
 const mainWidth = 558;
 
@@ -68,12 +72,56 @@ const SimpleSlider = ({ name }: any) => {
     const dispatch = useDispatch<any>()
 
     const simpleModel = useSelector(selectOneModel);
-    // const simpleModel = sampleModel;
-
+    const currentUser = useSelector(selectMyProfile);
+    const isAuthenticated = useSelector((state: any) => state?.auth_slicer?.authState)
     const simple_model_status = useSelector((state: any) => state?.get_one_model?.status);
+
     const matches = useMediaQuery('(max-width:600px)');
     const [sliderCount, setSliderCount] = React.useState(0)
     const [sliderTransition, setSliderTransition] = React.useState(0.4)
+    const [isSaved, setIsSaved] = useState<any>(false)
+
+    useEffect(() => {
+        if (simpleModel && isAuthenticated && currentUser) {
+            setIsSaved(simpleModel?.is_saved)
+        }
+    }, [isAuthenticated, currentUser, simpleModel])
+
+    const handleSave = () => {
+
+        if (!isAuthenticated) {
+            dispatch(setLoginState(true))
+            dispatch(setOpenModal(true))
+            return;
+        }
+
+        if (!isSaved) {
+            setIsSaved(true)
+            instance.post(
+                '/saved/models',
+                { model_id: simpleModel?.id }
+            ).then(res => {
+                setIsSaved(res?.data?.success)
+                // toast.success(res?.data?.message)
+            }).catch(err => {
+                setIsSaved(false)
+                // toast.error(err?.response?.data?.message)
+            })
+        }
+        else if (isSaved) {
+            setIsSaved(false)
+            instance.delete(
+                '/saved/models/' + simpleModel?.id
+            ).then(res => {
+                setIsSaved(!res?.data?.success)
+                // toast.success(res?.data?.message)
+            }).catch(err => {
+                setIsSaved(true)
+                // toast.error(err?.response?.data?.message)
+            })
+        }
+    };
+
 
     function SliderRightHandler() {
         if (sliderCount < simpleModel?.images?.length - 1) {
@@ -251,19 +299,20 @@ const SimpleSlider = ({ name }: any) => {
                         name === "slider" ?
 
                             <Buttons
-                                name='Сохранить'
+                                name={isSaved ? 'Сохранено' : 'Сохранить'}
                                 className='bookmark__btn'
                                 childrenFirst={true}
+                                onClick={handleSave}
                                 sx={{
                                     marginLeft: '90px',
-                                    position: 'absolute'
+                                    // position: 'absolute'
                                 }}
                             >
                                 <Image
                                     alt='bookmark'
                                     width={18}
                                     height={18}
-                                    src={'/icons/bookmark-line.svg'}
+                                    src={isSaved ? '/icons/bookmark-full.svg' : '/icons/bookmark-line.svg'}
                                 />
                             </Buttons>
 

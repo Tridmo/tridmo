@@ -14,6 +14,8 @@ import { toast } from "react-toastify"
 import { setLoginState, setOpenModal, setSignupState } from '@/data/modal_checker';
 import { sampleModel } from '@/data/samples';
 import { IMAGES_BASE_URL } from '../../../../utils/image_src';
+import instance from '@/utils/axios';
+import { selectMyProfile } from '../../../../data/me';
 
 
 export default function ModelInfo() {
@@ -49,18 +51,16 @@ export default function ModelInfo() {
     const router = useRouter()
     const dispatch = useDispatch<any>();
     const simpleModel = useSelector(selectOneModel);
-    // const simpleModel = sampleModel;
+    const currentUser = useSelector(selectMyProfile);
+    const isAuthenticated = useSelector((state: any) => state?.auth_slicer?.authState)
     const DownloadLink = useSelector((state: any) => state?.download_product)
     const downloadStatus = useSelector((state: any) => state?.auth_slicer?.authState)
+
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleDownloadAfterRes = async (id: string, is_free?: boolean, product_id?: string) => {
 
-        await axios.post(`products/download/${product_id}`, {}, {
-            headers: {
-                Authorization: `Bearer ${Cookies.get("accessToken")}`
-            }
-        })
+        await instance.post(`products/download/${product_id}`)
             .then((res) => (
                 router.push(res?.data?.data?.url)
             ))
@@ -70,25 +70,19 @@ export default function ModelInfo() {
 
     function DownloadHandler() {
 
-        let config = {
-            headers: {
-                'Authorization': `Bearer ${Cookies.get('accessToken')}`,
-                'Content-Type': 'application/json'
-            }
-        };
-
-        if (downloadStatus) {
-            axios.post(`products/download/${simpleModel?.id}`, {}, config)
+        if (isAuthenticated) {
+            instance.post(`products/download/${simpleModel?.id}`)
                 .then(
                     (res) => {
                         router.push(res?.data?.data?.url)
                     }
                 )
         } else {
+            dispatch(setLoginState(true))
             dispatch(setOpenModal(true))
-            dispatch(setSignupState(true))
         }
     }
+
 
     return (
         <Grid
@@ -119,49 +113,64 @@ export default function ModelInfo() {
                 <Box sx={{ marginLeft: "24px" }}>
                     <SimpleTypography className='brand__name' text="Имя бренда" />
 
-                    <Link href={`/brands/${simpleModel?.brand?.id}`}>
+                    <Link href={`/brands/${simpleModel?.brand?.slug}`}>
                         <SimpleTypography sx={{ marginBottom: '15px' }} className='brand__title' text={simpleModel?.brand?.name} />
                     </Link>
 
-                    <Link
-                        target="_blank"
-                        href={`https://www.google.com/maps/@${simpleModel?.brand?.location?.lat},${simpleModel?.brand?.location?.long},12z`}
-                        rel="noopener noreferrer"
+                    <Grid container spacing={1}
+                        sx={{
+                            display: 'flex',
+                            width: '100% !important'
+                        }}
                     >
-                        <Buttons className='brand__box' name="">
-                            <Image
-                                width={19}
-                                height={23}
-                                alt="Location"
-                                src={"/icons/location.svg"}
-                            />
-                            <Box sx={{ marginLeft: "11px" }}>
-                                <SimpleTypography
-                                    className='brand__name'
-                                    text="Локация"
-                                />
-                                <SimpleTypography
-                                    className='brand__box--text'
-                                    text={`${simpleModel?.brand?.location?.name
-                                        }`}
-                                />
-                            </Box>
-                        </Buttons>
-                    </Link>
-                    <Link href={`tel:${simpleModel?.brand?.phone_number}`}>
-                        <Buttons className='brand__box' name="">
-                            <Image
-                                width={19}
-                                height={23}
-                                alt="Phone number"
-                                src={"/icons/phone.svg"}
-                            />
-                            <Box sx={{ marginLeft: "11px" }}>
-                                <SimpleTypography className='brand__name' text="Номер телефона" />
-                                <SimpleTypography className='brand__box--text' text={`${simpleModel?.brand?.phone_number}`} />
-                            </Box>
-                        </Buttons>
-                    </Link>
+                        <Grid item sx={{ width: '100% !important' }}>
+                            <Link
+                                target="_blank"
+                                href={`http://maps.google.com/?q=${simpleModel?.brand?.address}`}
+                                rel="noopener noreferrer"
+                                style={{ width: '100% !important' }}
+                            >
+                                <Buttons className='brand__box' sx={{ width: '100% !important' }} name="">
+                                    <Image
+                                        width={19}
+                                        height={23}
+                                        alt="Location"
+                                        src={"/icons/location.svg"}
+                                    />
+                                    <Box sx={{ marginLeft: "11px" }}>
+                                        <SimpleTypography
+                                            className='brand__name'
+                                            text="Локация"
+                                        />
+                                        <SimpleTypography
+                                            className='brand__box--text'
+                                            text={simpleModel?.brand?.address}
+                                        />
+                                    </Box>
+                                </Buttons>
+                            </Link>
+                        </Grid>
+
+                        <Grid item sx={{ width: '100% !important' }}>
+                            <Link
+                                href={`tel:${simpleModel?.brand?.phone}`}
+                                style={{ width: '100% !important' }}
+                            >
+                                <Buttons className='brand__box' sx={{ width: '100% !important' }} name="">
+                                    <Image
+                                        width={19}
+                                        height={23}
+                                        alt="Phone number"
+                                        src={"/icons/phone.svg"}
+                                    />
+                                    <Box sx={{ marginLeft: "11px" }}>
+                                        <SimpleTypography className='brand__name' text="Номер телефона" />
+                                        <SimpleTypography className='brand__box--text' text={`${simpleModel?.brand?.phone}`} />
+                                    </Box>
+                                </Buttons>
+                            </Link>
+                        </Grid>
+                    </Grid>
                 </Box>
             </Box >
 
@@ -260,7 +269,7 @@ export default function ModelInfo() {
                                         simpleModel?.materials?.map((material: any, index: number) => (
                                             <SimpleTypography
                                                 key={index}
-                                                text={`${material?.material?.name}${index + 1 !== simpleModel?.materials.length ? "," : ""}`}
+                                                text={`${material?.material?.name}${index + 1 !== simpleModel?.materials.length ? ", " : ""}`}
                                                 className="table__text"
                                             />
                                         ))
