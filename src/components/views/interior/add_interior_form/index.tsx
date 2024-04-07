@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import * as Yup from 'yup';
 import { getInteriorCategories, selectInteriorCategories } from '../../../../data/categories';
+import { useRouter } from 'next/navigation';
 
 export function AddInteriorForm() {
     const stylesData = useSelector(selectAllStyles)
@@ -138,13 +139,14 @@ export function AddInteriorForm() {
 
                             _values.images.forEach(i => formData.append('images', i))
 
-                            let res = await instance.post(
+                            const res = await instance.post(
                                 `/interiors`,
                                 formData
                             );
                             toast.success(res?.data?.message);
                             setStatus({ success: true });
                             setSubmitting(false);
+                            useRouter().push(`/interiors/${res?.data?.data?.interior?.slug}`)
                         } catch (err: any) {
                             setStatus({ success: false });
                             setErrors({ submit: err.message });
