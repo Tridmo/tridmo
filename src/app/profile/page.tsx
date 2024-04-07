@@ -63,9 +63,6 @@ export default function UserProfile() {
         if (profile) {
             dispatch(getAuthorInteriors({ author: profile?.username }))
         }
-        else {
-            notFound()
-        }
     }, [profile])
 
     if (getProfileStatus === "succeeded") {

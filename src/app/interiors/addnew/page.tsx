@@ -22,10 +22,6 @@ export default function Interiors() {
         }
     }, [stylesData__status, categoriesDate__status, dispatch])
 
-    if (!isAuthenticated) {
-        notFound()
-    }
-
     return (
         <section style={{ background: "#fafafa" }}>
             <AddInterior />
