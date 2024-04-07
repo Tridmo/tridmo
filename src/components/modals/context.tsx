@@ -110,7 +110,7 @@ export const LoginContext = (props: LoginContextProps) => {
                 await Promise.all([accessTokenPromise, refreshTokenPromise]);
 
                 // Dispatch actions after cookies are set
-                await dispatch(getMyProfile());
+                await dispatch(getMyProfile({ Authorization: res?.data?.data?.token?.accessToken }));
                 await dispatch(setAuthState(true));
                 await dispatch(setOpenModal(false));
               })();

@@ -8,14 +8,21 @@ const initialState = {
   error: null,
   progress: 0,
 };
-export const getMyProfile = createAsyncThunk('/users/profile', async () => {
-  const response = await api.get(`users/profile`, {
-    onDownloadProgress: (progressEvent) => {
-      // initialState.progress = 70
-    }
+export const getMyProfile = createAsyncThunk('/users/profile',
+  async (headers?: { Authorization: string }) => {
+    const response = await api.get(`users/profile`, {
+      headers: headers ? {
+        ...headers,
+        'Accept-Language': 'ru'
+      } : {
+        'Accept-Language': 'ru'
+      },
+      onDownloadProgress: (progressEvent) => {
+        // initialState.progress = 70
+      }
+    })
+    return response.data
   })
-  return response.data
-})
 export const deleteCustomer = createAsyncThunk('/reservations/customer/delete', async (id?: any) => {
 
   const response = await api.delete(`api/reservations/customer/${id}`)
