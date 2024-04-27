@@ -88,6 +88,12 @@ export default function InteriorImages() {
   const [newTags, setNewTags] = useState<NewTag[]>([])
   const [loadingTagId, setLoadingTagId] = useState<string>('')
 
+  useMemo(() => {
+    if (addingTags == false) {
+      setNewTags([])
+    }
+  }, [addingTags])
+
   function handleClick(event, index) {
     const target = event.target;
     const classList = [...target.classList]
