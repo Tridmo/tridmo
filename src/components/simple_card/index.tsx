@@ -103,7 +103,7 @@ export default function SimpleCard(props: InputProps) {
       const data_sliced = props?.sliced ? all__models?.data?.models?.slice(0, props?.sliced) : all__models?.data?.models;
 
       return (
-        data_sliced.length > 0 ?
+        data_sliced?.length > 0 ?
           <Grid className="models__card--wrap" container spacing={3} sx={{ width: "100%", margin: "0" }}>
             {data_sliced?.map((model: any, index: any) => (
               <Grid
@@ -203,7 +203,7 @@ export default function SimpleCard(props: InputProps) {
       const data_sliced = props?.sliced ? all__interiors?.data?.interiors?.slice(0, props?.sliced) : all__interiors?.data?.interiors;
 
       return (
-        data_sliced.length > 0 ?
+        data_sliced?.length > 0 ?
           <Grid className="models__card--wrap" container spacing={3} sx={{ width: "100%", margin: "0" }}>
             {data_sliced?.map((model: any, index: any) => (
               <Grid
@@ -302,7 +302,7 @@ export default function SimpleCard(props: InputProps) {
       const data_sliced = props?.sliced ? all__interiors?.data?.interiors?.slice(0, props?.sliced) : all__interiors?.data?.interiors;
 
       return (
-        data_sliced.length > 0 ?
+        data_sliced?.length > 0 ?
           <Grid className="models__card--wrap" container spacing={3} sx={{ width: "100%", margin: "0" }}>
             {data_sliced?.map((model: any, index: any) => (
               <Grid

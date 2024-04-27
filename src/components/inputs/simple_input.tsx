@@ -5,27 +5,28 @@ import { ThemeProps } from '@/types/theme';
 import { InputAdornment } from '@mui/material';
 import { styled } from '@mui/system';
 interface InputAdornmentsProps {
-    error?: boolean;
-    name?: string;
-    onBlur?: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
-    onChange?: React.ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement>;
-    onFocus?: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
-    value?: any;
-    disabled?: boolean,
-    label?: string,
-    type?: string,
-    autoComplete?: string,
-    placeholder?: string;
-    required?: boolean;
-    helperText?: any;
-    startAdornment?: any;
-    endAdornment?: any;
-    placeholderText: string,
+  error?: boolean;
+  name?: string;
+  onBlur?: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+  onChange?: React.ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement>;
+  onFocus?: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+  value?: any;
+  disabled?: boolean,
+  label?: string,
+  type?: string,
+  autoComplete?: string,
+  placeholder?: string;
+  required?: boolean;
+  helperText?: any;
+  startAdornment?: any;
+  endAdornment?: any;
+  placeholderText: string,
+  className?: string;
 }
 
 const SimpleInputControl = styled(FormControl)(
-    // text-transform: capitalize;
-    ({ theme }: ThemeProps) => `
+  // text-transform: capitalize;
+  ({ theme }: ThemeProps) => `
     margin: 0 !important;
 
     .MuiInput-underline{
@@ -72,35 +73,36 @@ const SimpleInputControl = styled(FormControl)(
 
 export default function SimpleInp(props: InputAdornmentsProps) {
 
-    return (
-        <SimpleInputControl sx={{ m: 1, width: '100%' }} variant="filled">
+  return (
+    <SimpleInputControl sx={{ m: 1, width: '100%' }} variant="filled">
 
-            <TextField
-                id={props?.label}
-                autoComplete={props?.autoComplete}
-                error={props?.error}
-                helperText={props?.helperText}
-                onBlur={props?.onBlur}
-                onChange={props?.onChange}
-                label={props?.label}
-                name={props?.name}
-                value={props?.value}
-                disabled={props?.disabled}
-                placeholder={props?.placeholderText}
-                type={props?.type}
-                // autoComplete="current-password"
-                InputProps={{
-                    startAdornment: props?.startAdornment || (
-                        <InputAdornment position="start">
-                        </InputAdornment>
-                    ),
-                    endAdornment: props?.endAdornment || (
-                        <InputAdornment position="start">
-                        </InputAdornment>
-                    ),
-                }}
-                variant="standard"
-            />
-        </SimpleInputControl>
-    )
+      <TextField
+        className={props?.className || ''}
+        id={props?.label}
+        autoComplete={props?.autoComplete}
+        error={props?.error}
+        helperText={props?.helperText}
+        onBlur={props?.onBlur}
+        onChange={props?.onChange}
+        label={props?.label}
+        name={props?.name}
+        value={props?.value}
+        disabled={props?.disabled}
+        placeholder={props?.placeholderText}
+        type={props?.type}
+        // autoComplete="current-password"
+        InputProps={{
+          startAdornment: props?.startAdornment || (
+            <InputAdornment position="start">
+            </InputAdornment>
+          ),
+          endAdornment: props?.endAdornment || (
+            <InputAdornment position="start">
+            </InputAdornment>
+          ),
+        }}
+        variant="standard"
+      />
+    </SimpleInputControl>
+  )
 }

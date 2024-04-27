@@ -19,6 +19,7 @@ const ButtonWrapper = styled(Button)(
   ({ theme }: ThemeProps) => `
       text-transform: inherit;
       width:auto;
+      min-width:auto;
       height:43px;
       font-weight: 500;
       font-size: 16px;
@@ -578,6 +579,10 @@ const ButtonWrapper = styled(Button)(
         align-items: center;
         justify-content: center;
 
+        & > .MuiButton-startIcon {
+          margin: 0 !important;
+        }
+
         svg path {
           transition: all 0.2s ease;  
         }
@@ -588,6 +593,25 @@ const ButtonWrapper = styled(Button)(
 
         &:hover svg path {
           fill: #DB2E2E;
+        }
+      }
+
+      &.MuiButton-icon_button{
+        min-width: 40px;
+        min-height: 40px;
+        border-radius: 50% !important;
+        padding: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #0000008a;
+
+        & > .MuiButton-startIcon {
+          margin: 0 !important;
+        }
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.04);
         }
       }
 

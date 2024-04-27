@@ -65,11 +65,18 @@ const Categories = () => {
   const [isAccardionOpen, setIsAccardionOpen] = useState(false);
   const [expanded, setExpanded] = React.useState<string | false | string[]>(false);
 
+  const keyword = searchParams.get('name') as string
+
   const getModelCategoryFilter = useSelector((state: any) => state?.handle_filters?.categories)
+  const getModelBrandFilter = useSelector((state: any) => state?.handle_filters?.model_brand)
   const getModelCategoryNameFilter = useSelector((state: any) => state?.handle_filters?.category_name)
   const getModelColorFilter = useSelector((state: any) => state?.handle_filters?.colors)
   const getModelStyleFilter = useSelector((state: any) => state?.handle_filters?.styles)
   const getModelPageFilter = useSelector((state: any) => state?.handle_filters?.page)
+  const getModelTopFilter = useSelector((state: any) => state?.handle_filters?.model_top)
+  const getModelNameFilter = useSelector((state: any) => state?.handle_filters?.model_name)
+  const getModelOrderBy = useSelector((state: any) => state?.handle_filters?.model_orderby)
+  const getModelOrder = useSelector((state: any) => state?.handle_filters?.model_order)
 
   const createQueryString = useCallback(
     (name: string, value: any) => {
@@ -116,7 +123,7 @@ const Categories = () => {
     }
     if (!isExpanded) {
       setChildrenCategoryData([])
-      dispatch(setCategoryFilter({ knex: [] }))
+      dispatch(setCategoryFilter([]))
       dispatch(setCategoryNameFilter({ knnex: null }))
       createQueryString('category', []);
       createQueryString('category_name', []);
@@ -189,13 +196,18 @@ const Categories = () => {
     }
 
     dispatch(getAllModels({
+      brand: getModelBrandFilter,
       categories: res,
-      // colors: getModelColorFilter,
+      colors: getModelColorFilter,
       styles: getModelStyleFilter,
+      name: keyword || getModelNameFilter,
+      top: getModelTopFilter,
       page: getModelPageFilter,
+      orderBy: getModelOrderBy,
+      order: getModelOrder,
     }))
 
-    dispatch(setCategoryFilter({ knex: res }))
+    dispatch(setCategoryFilter(res))
 
     setChildrenCategoryData(arr);
   };

@@ -1,6 +1,16 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { brandOrderBy, modelOrderBy, order } from '@/types/filters';
 const initialState = {
   author: '',
+  model_brand: '',
+  model_name: '',
+  model_top: undefined,
+  model_orderby: '',
+  model_order: 'desc',
+  brand_styles: [],
+  brand_name: '',
+  brand_orderby: '',
+  brand_order: 'desc',
   categories: [],
   interior_categories: [],
   selected_child: [],
@@ -29,9 +39,32 @@ const handle_filters = createSlice({
       const { ...params } = action.payload;
       state.author = params.author;
     },
-    setCategoryFilter: (state: any, action: PayloadAction<any>) => {
-      const { ...params } = action.payload;
-      state.categories = params.knex;
+    setCategoryFilter: (state: any, action: PayloadAction<any[]>) => {
+      state.categories = action.payload;
+    },
+    setModelBrandFilter: (state: any, action: PayloadAction<string>) => {
+      state.model_brand = action.payload;
+    },
+    setModelTopFilter: (state: any, action: PayloadAction<boolean | undefined>) => {
+      state.model_top = action.payload;
+    },
+    setModelNameFilter: (state: any, action: PayloadAction<string | null>) => {
+      state.model_name = action.payload;
+    },
+    setModelOrderBy: (state: any, action: PayloadAction<modelOrderBy>) => {
+      state.model_orderby = action.payload;
+    },
+    setModelOrder: (state: any, action: PayloadAction<order>) => {
+      state.model_order = action.payload;
+    },
+    setBrandNameFilter: (state: any, action: PayloadAction<string>) => {
+      state.brand_name = action.payload;
+    },
+    setBrandOrderBy: (state: any, action: PayloadAction<brandOrderBy>) => {
+      state.brand_orderby = action.payload;
+    },
+    setBrandOrder: (state: any, action: PayloadAction<order>) => {
+      state.brand_order = action.payload;
     },
     setInteriorCategoryFilter: (state: any, action: PayloadAction<any>) => {
       const { ...params } = action.payload;
@@ -126,8 +159,7 @@ const handle_filters = createSlice({
     },
     resetFilters: () => ({
       ...initialState
-    })
-    ,
+    }),
   },
   extraReducers: (builder) => {
   }
@@ -137,6 +169,14 @@ const handle_filters = createSlice({
 export const {
   setAuthor,
   setCategoryFilter,
+  setModelBrandFilter,
+  setModelTopFilter,
+  setModelNameFilter,
+  setModelOrderBy,
+  setModelOrder,
+  setBrandNameFilter,
+  setBrandOrderBy,
+  setBrandOrder,
   setInteriorCategoryFilter,
   setCategorySelectedChild,
   setCategoryId,
@@ -160,7 +200,7 @@ export const {
   setLimitFilter,
   setOrderByFilter,
   resetFilters,
-  setIs_free
+  setIs_free,
 } = handle_filters.actions;
 export const reducer = handle_filters.reducer;
 export default handle_filters;

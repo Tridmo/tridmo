@@ -9,6 +9,8 @@ type TypographyProps = {
   sx?: SxProps,
   variant?: any,
   className?: string,
+  classNames?: string,
+  id?: string,
   children?: any,
   paragraph?: any,
 };
@@ -29,7 +31,7 @@ const TypographyWrapper = styled(Typography)(
       }
 
       &.MuiTypography-card__title {
-        width:60%;
+        width: 60%;
         overflow: hidden;
         white-space: nowrap;
         font-weight: 400;
@@ -37,12 +39,9 @@ const TypographyWrapper = styled(Typography)(
         text-align: start;
         font-size: 14px;
         line-height: 18px;
-        display: flex;
+        display: inline-block;
         align-items: center;
         color: ${theme.colors.gray[700]};
-        background-image: linear-gradient(90deg,#000000 0%,rgba(0,0,0,0));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
         position:relative;
       }
 
@@ -925,7 +924,7 @@ const SimpleTypography = (props: TypographyProps) => {
     // <Button className={`${classes.styles} MuiButton-text-${props.color} MuiButton-bg-${props.color}`}>{props?.name}</Button>
     <TypographyWrapper
       sx={{ ...props?.sx }}
-      className={`MuiTypography-${props?.className}`}
+      className={`MuiTypography-${props?.className} ${props?.classNames}`}
       variant={props?.variant}
       paragraph={props?.paragraph}
     >

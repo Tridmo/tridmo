@@ -130,7 +130,7 @@ const RegularInput = ({
           }
           onClick={(e) => (text ? handleSubmit(e) : null)}
         >
-          Отправлять
+          Отправить
         </Buttons>
       </div>
     </form>

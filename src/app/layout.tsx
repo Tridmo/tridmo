@@ -2,12 +2,15 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/views/navbar";
+import RightBar from "@/components/right_bar";
 import Footer from "@/components/views/footer";
 import Providers from "@/components/providers";
 import React, { Suspense } from 'react';
 import { NavigationEvents } from '../components/providers/navigation_events';
 import { ToastContainer } from 'react-toastify';
 import TopLoading from '../components/top_loading';
+
+
 import AlertWrapper from '../components/alert';
 import { Box } from '@mui/system';
 
@@ -31,6 +34,7 @@ export default function RootLayout({
             <AlertWrapper />
           </Box>
           <Navbar />
+          <RightBar />
           {children}
           <Footer />
         </Providers>

@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux';
 import { setCategoryFilter, setColorFilter, setOrderByFilter, setStyleFilter } from '../../../data/handle_filters'
 import { getAllModels } from '../../../data/get_all_models';
 import { getAllInteriors } from '../../../data/get_all_interiors';
+import { useRouter, useSearchParams } from 'next/navigation';
 const FiltersItem = styled(Box)(
   ({ theme }: ThemeProps) => `
         background: #F5F5F5;
@@ -77,13 +78,24 @@ function Sorts({ route, ...props }) {
         ]
         : []
 
-  const dispatch = useDispatch<any>()
+  const searchParams = useSearchParams();
+  const dispatch = useDispatch<any>();
+  const router = useRouter();
+
+  const keyword = searchParams.get('name') as string
   const [sorts, setSorts] = useState(sortsData);
 
   const getCategoryFilter = useSelector((state: any) => state?.handle_filters?.categories)
+  const getModelBrandFilter = useSelector((state: any) => state?.handle_filters?.model_brand)
+  const getCategoryNameFilter = useSelector((state: any) => state?.handle_filters?.category_name)
+  const getColorFilter = useSelector((state: any) => state?.handle_filters?.colors)
   const getStyleFilter = useSelector((state: any) => state?.handle_filters?.styles)
   const getPageFilter = useSelector((state: any) => state?.handle_filters?.page)
-  const getOrderByFilter = useSelector((state: any) => state?.handle_filters?.orderBy)
+  const getModelTopFilter = useSelector((state: any) => state?.handle_filters?.model_top)
+  const getModelNameFilter = useSelector((state: any) => state?.handle_filters?.model_name)
+  const getModelOrderBy = useSelector((state: any) => state?.handle_filters?.model_orderby)
+  const getModelOrder = useSelector((state: any) => state?.handle_filters?.model_order)
+
 
   function handleChange(selected: number) {
 
@@ -91,10 +103,15 @@ function Sorts({ route, ...props }) {
 
     if (route == 'models') {
       dispatch(getAllModels({
+        brand: getModelBrandFilter,
         categories: getCategoryFilter,
+        colors: getColorFilter,
         styles: getStyleFilter,
+        name: keyword || getModelNameFilter,
+        top: getModelTopFilter,
         page: getPageFilter,
-        orderBy: sorts[selected].orderBy,
+        orderBy: getModelOrderBy,
+        order: getModelOrder,
       }))
     }
     else if (route == 'interiors') {

@@ -10,6 +10,7 @@ body {
     border-left: 5px solid #f1f1f1;
     padding-left: 5px;
   }
+
   pre {
     background: #f1f1f1;
     border-radius: 3px;
@@ -71,7 +72,7 @@ input:-webkit-autofill:active {
   background: #7210BE;
 }
 
-.topCategories__card:hover .topCategories__icon path{
+.topCategories__card:hover .topCategories__icon path {
   fill: white;
 }
 
@@ -118,21 +119,43 @@ input:-webkit-autofill:active {
 }
 
 
-@media screen  and (max-width:500px){
-    .search__input--models{
-      height: 30px !important;
-      width: 130px !important;
+@media screen and (max-width:500px) {
+  .search__input--models {
+    height: 30px !important;
+    width: 130px !important;
 
-    }
+  }
 
-    .search__input--models button {
-      padding: 0 !important;
-    }
+  .search__input--models button {
+    padding: 0 !important;
+  }
 
-    .header__actions{
-      padding: 10px 0 !important;
-    }
+  .header__actions {
+    padding: 10px 0 !important;
+  }
 }
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 /* //styleName: Body Text/Barlow/14/Regular;
 font-family: Barlow;
 font-size: 14px;

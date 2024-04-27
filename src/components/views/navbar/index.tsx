@@ -21,22 +21,25 @@ import SimpleTypography from '../../typography';
 import { ThemeProps } from '@/types/theme';
 import Link from 'next/link';
 import BasicModal from '@/components/modals/login_modal';
-import { switch_on } from '../../../data/toggle_cart';
+import { selectToggleCardActionStatus, switch_on } from '../../../data/toggle_cart';
 import { setAuthState } from '../../../data/login';
 import Cookies from 'js-cookie'
 import { IMAGES_BASE_URL } from '../../../utils/image_src';
+import { getAllModels } from '../../../data/get_all_models';
+import { setModelNameFilter } from '../../../data/handle_filters';
+import Close from '@mui/icons-material/Close';
 
 const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-    boxShadow: 'none'
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+  boxShadow: 'none'
 }));
 
 const DropDown = styled(Menu)(
-    ({ theme }: ThemeProps) => `
+  ({ theme }: ThemeProps) => `
 
   .MuiList-root{
     width:162px;
@@ -56,323 +59,348 @@ const DropDown = styled(Menu)(
 );
 
 const navItemsData = [
-    {
-        id: 1,
-        text: "Дизайнеры",
-        link: "/designers"
-    },
-    {
-        id: 2,
-        text: "Бренды",
-        link: "/brands"
-    },
-    {
-        id: 3,
-        text: "Модели",
-        link: "/models"
-    },
-    {
-        id: 4,
-        text: "Интерьеры",
-        link: "/interiors"
-    },
+  {
+    id: 1,
+    text: "Дизайнеры",
+    link: "/designers"
+  },
+  {
+    id: 2,
+    text: "Бренды",
+    link: "/brands"
+  },
+  {
+    id: 3,
+    text: "Модели",
+    link: "/models"
+  },
+  {
+    id: 4,
+    text: "Интерьеры",
+    link: "/interiors"
+  },
 ]
 
+
 export default function Navbar() {
+  const getModelCategoryFilter = useSelector((state: any) => state?.handle_filters?.categories)
+  const getModelBrandFilter = useSelector((state: any) => state?.handle_filters?.model_brand)
+  const getModelCategoryNameFilter = useSelector((state: any) => state?.handle_filters?.category_name)
+  const getModelColorFilter = useSelector((state: any) => state?.handle_filters?.colors)
+  const getModelStyleFilter = useSelector((state: any) => state?.handle_filters?.styles)
+  const getModelPageFilter = useSelector((state: any) => state?.handle_filters?.page)
+  const getModelTopFilter = useSelector((state: any) => state?.handle_filters?.model_top)
+  const getModelNameFilter = useSelector((state: any) => state?.handle_filters?.model_name)
+  const getModelOrderBy = useSelector((state: any) => state?.handle_filters?.model_orderby)
+  const getModelOrder = useSelector((state: any) => state?.handle_filters?.model_order)
 
-    const isAuthenticated = useSelector((state: any) => state?.auth_slicer?.authState)
-    const userData = useSelector(selectMyProfile)
-    const [searchClicked, setSearchClicked] = useState(false)
-    const [searchVal, setSearchVal] = useState("")
+  const isAuthenticated = useSelector((state: any) => state?.auth_slicer?.authState)
 
-    const router = useRouter();
-    const pathname = usePathname();
+  const userData = useSelector(selectMyProfile)
+  const [searchClicked, setSearchClicked] = useState(false)
+  const [searchVal, setSearchVal] = useState("")
+
+  const router = useRouter();
+  const pathname = usePathname();
 
 
-    const [anchorEl, setAnchorEl] = useState(null);
-    const open = Boolean(anchorEl);
-    const dispatch = useDispatch<any>();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const dispatch = useDispatch<any>();
 
-    // useEffect(() => {
-    //     setIsAuthenticated(authState);
-    // }, [authState]);
+  // useEffect(() => {
+  //     setIsAuthenticated(authState);
+  // }, [authState]);
 
-    const handleClick = (event: any) => {
-        setAnchorEl(event.currentTarget);
-    };
+  const handleClick = (event: any) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-    const handleLogout = () => {
-        Cookies.remove('accessToken')
-        Cookies.remove('refreshToken')
-        dispatch(setAuthState(false))
-        router.push(pathname)
-        router.refresh();
-        setAnchorEl(null);
-    }
+  const handleLogout = () => {
+    Cookies.remove('accessToken')
+    Cookies.remove('refreshToken')
+    dispatch(setAuthState(false))
+    router.push(pathname)
+    router.refresh();
+    setAnchorEl(null);
+  }
 
-    function SearchModel(e: any) {
-        e.preventDefault()
-        router.push(`/models?keyword=${searchVal}`)
-        // dispatch(searchModels(val))
-    }
+  function handleSearch(e) {
+    e.preventDefault()
+    dispatch(setModelNameFilter(searchVal))
+    const newUrl = `/models/?name=${searchVal}`
+    router.push(newUrl)
+    dispatch(getAllModels({
+      brand: getModelBrandFilter,
+      categories: getModelCategoryFilter,
+      colors: getModelColorFilter,
+      styles: getModelStyleFilter,
+      name: searchVal,
+      top: getModelTopFilter,
+      page: getModelPageFilter,
+      orderBy: getModelOrderBy,
+      order: getModelOrder,
+    }))
 
-    const openRightBar = () => {
-        dispatch(switch_on(true))
+  }
+  const openRightBar = () => {
+    dispatch(switch_on(true))
+  }
 
-        // if (router.pathname === '/models' || router.pathname === '/interiors') {
-        //     router.push({
-        //         query: {
-        //             page: getModelPageFilter,
-        //             isOpen: true,
-        //             colors: getModelColorFilter,
-        //             styles: getModelStyleFilter,
-        //             category_name: getModelCategoryNameFilter,
-        //             category: getModelCategoryFilter,
-        //         },
-        //     });
-        // }
-    }
+  return (
+    <>
+      <BasicModal />
 
-    return (
-        <>
-            <BasicModal />
+      <Box sx={{ position: 'relative' }}>
+        <Box sx={{ flexGrow: 1, background: "#fff", borderBottom: "1px solid #e0e0e0", marginBottom: 0 }}>
+          <Grid container spacing={2} sx={{ maxWidth: "1200px", width: "100%", margin: "0 auto", alignItems: "center", position: "relative" }}>
 
-            <Box sx={{ position: 'relative' }}>
-                <Box sx={{ flexGrow: 1, background: "#fff", borderBottom: "1px solid #e0e0e0", marginBottom: 0 }}>
-                    <Grid container spacing={2} sx={{ maxWidth: "1200px", width: "100%", margin: "0 auto", alignItems: "center", position: "relative" }}>
+            <DropDown
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                'aria-labelledby': 'basic-button',
+              }}
+            >
 
-                        <DropDown
+              <MenuItem
+                onClick={handleClose}
+                sx={{ padding: "6px 12px" }}
+              >
+                <Link
+                  href='/profile'
+                  style={{ textDecoration: "none", display: "flex", alignItems: "center" }}
+                >
+
+                  <Image
+                    src="/icons/user-line.svg"
+                    alt="user icon"
+                    width={17}
+                    height={17}
+                  />
+                  <SimpleTypography className='drow-down__text' text='Мой профайл' />
+
+                </Link>
+              </MenuItem>
+
+              <MenuItem
+                onClick={handleClose}
+                sx={{ padding: "6px 12px" }}
+              >
+                <Link
+                  href='/interiors/addnew'
+                  style={{ textDecoration: "none", display: "flex", alignItems: "center" }}
+                >
+
+                  <Image
+                    src="/icons/plus-round.svg"
+                    alt="heart icon"
+                    width={17}
+                    height={17}
+                  />
+                  <SimpleTypography className='drow-down__text' text='Новый проект' />
+
+                </Link>
+              </MenuItem>
+
+
+              <Divider
+                sx={{
+                  my: "0 !important",
+                  width: "100%",
+                }}
+              />
+
+              <MenuItem sx={{ padding: "6px 12px" }} onClick={handleLogout}>
+                <Image
+                  src="/icons/logout-circle-r-line.svg"
+                  alt='logout icon'
+                  width={17}
+                  height={17}
+                />
+                <SimpleTypography sx={{ color: '#BC2020 !important' }} className='drow-down__text' text='Выйти' />
+              </MenuItem>
+
+            </DropDown>
+
+            <Grid
+              className='header__logo--wrapper'
+              item
+              md={2.5}
+              xs={5}
+              sx={{ padding: "0 !important", paddingLeft: "0 !important", paddingTop: "0 !important", display: "flex", justifyContent: "start" }}>
+              <Link href="/">
+                <Item sx={{ padding: "0 !important", height: "27px" }}>
+                  <Image className='header__logo' alt="logo" priority={true} src="/img/logo.svg" width={123} height={32} />
+                </Item>
+              </Link>
+
+            </Grid>
+
+            <Grid
+              item
+              md={9.5}
+              xs={7}
+              sx={{
+                display: "flex",
+                padding: "16px 0 !important",
+                alignItems: "center",
+                justifyContent: "flex-end"
+              }}
+              className="header__actions"
+            >
+              <Box className='header__nav' component={"nav"} sx={{ marginRight: "16px" }}>
+                <Box component={"ul"} sx={{ display: "flex", alignItems: "center", margin: "0", padding: "0" }}>
+                  {
+                    navItemsData.map(item => (
+                      <Box key={item.id} component={"li"} sx={{ listStyle: "none", padding: "9px 12px" }}>
+                        <Link href={item.link} style={{ textDecoration: "none" }}>
+
+                          <SimpleTypography text={item.text} className="nav__item--text" />
+
+                        </Link>
+                      </Box>
+                    ))
+                  }
+
+                </Box>
+              </Box>
+
+              <Box sx={{ overflow: "hidden" }}>
+                <Box sx={{ width: searchClicked ? "300px" : 0, visibility: searchClicked ? "visible" : "hidden", transition: "all 0.4s ease" }}>
+                  <form onSubmit={handleSearch}>
+                    <SearchInput value={searchVal} className='search__input--models' onChange={(val) => setSearchVal(val)} clic={setSearchClicked} placeHolder="Search..." startIcon={true}></SearchInput>
+                  </form>
+                </Box>
+              </Box>
+              <IconButton onClick={() => {
+                if (searchClicked) setSearchVal('')
+                setSearchClicked(!searchClicked)
+              }} aria-label="menu" sx={{ marginRight: "16px" }}>
+                {
+                  searchClicked
+                    ? <Close />
+                    : <Image
+                      src="/img/search-icon.svg"
+                      alt='Search icon'
+                      width={21}
+                      height={21}
+                    ></Image>
+                }
+              </IconButton>
+              {/* {
+                !searchClicked ?
+                  : null
+              } */}
+
+              {
+                isAuthenticated ?
+                  <IconButton
+                    onClick={openRightBar}
+                    aria-label="menu"
+                    sx={{ marginRight: "16px", backgroundColor: false ? 'rgba(0, 0, 0, 0.04)' : 'transparent' }}
+                  >
+                    <Image
+                      src="/icons/bell-icon.svg"
+                      alt='Search icon'
+                      width={21}
+                      height={21}
+                    ></Image>
+                  </IconButton>
+                  : null
+              }
+
+
+              <Box sx={{ background: "#fff", display: "flex", alignItems: "center", zIndex: "100", position: "relative", padding: "1px 0" }}>
+                <Box className='header__btns'>
+                  {
+                    isAuthenticated ?
+
+                      <>
+                        <Item sx={{ padding: '0 !important', display: "flex" }}>
+                          <Buttons
                             id="basic-menu"
-                            anchorEl={anchorEl}
-                            open={open}
-                            onClose={handleClose}
-                            MenuListProps={{
-                                'aria-labelledby': 'basic-button',
-                            }}
-                        >
-
-                            <MenuItem
-                                onClick={handleClose}
-                                sx={{ padding: "6px 12px" }}
-                            >
-                                <Link
-                                    href='/profile'
-                                    style={{ textDecoration: "none", display: "flex", alignItems: "center" }}
-                                >
-
-                                    <Image
-                                        src="/icons/user-line.svg"
-                                        alt="user icon"
-                                        width={17}
-                                        height={17}
-                                    />
-                                    <SimpleTypography className='drow-down__text' text='Мой профайл' />
-
-                                </Link>
-                            </MenuItem>
-
-                            <MenuItem
-                                onClick={handleClose}
-                                sx={{ padding: "6px 12px" }}
-                            >
-                                <Link
-                                    href='/interiors/addnew'
-                                    style={{ textDecoration: "none", display: "flex", alignItems: "center" }}
-                                >
-
-                                    <Image
-                                        src="/icons/plus-round.svg"
-                                        alt="heart icon"
-                                        width={17}
-                                        height={17}
-                                    />
-                                    <SimpleTypography className='drow-down__text' text='Новый проект' />
-
-                                </Link>
-                            </MenuItem>
-
-
-                            <Divider
-                                sx={{
-                                    my: "0 !important",
-                                    width: "100%",
-                                }}
-                            />
-
-                            <MenuItem sx={{ padding: "6px 12px" }} onClick={handleLogout}>
-                                <Image
-                                    src="/icons/logout-circle-r-line.svg"
-                                    alt='logout icon'
-                                    width={17}
-                                    height={17}
-                                />
-                                <SimpleTypography sx={{ color: '#BC2020 !important' }} className='drow-down__text' text='Выйти' />
-                            </MenuItem>
-
-                        </DropDown>
-
-                        <Grid
-                            className='header__logo--wrapper'
-                            item
-                            md={2.5}
-                            xs={5}
-                            sx={{ padding: "0 !important", paddingLeft: "0 !important", paddingTop: "0 !important", display: "flex", justifyContent: "start" }}>
-                            <Link href="/">
-                                <Item sx={{ padding: "0 !important", height: "27px" }}>
-                                    <Image className='header__logo' alt="logo" priority={true} src="/img/logo.svg" width={123} height={32} />
-                                </Item>
-                            </Link>
-
-                        </Grid>
-
-                        <Grid
-                            item
-                            md={9.5}
-                            xs={7}
+                            aria-controls={'basic-menu'}
+                            aria-haspopup="true"
+                            aria-expanded={true}
+                            onClick={handleClick}
                             sx={{
-                                display: "flex",
-                                padding: "16px 0 !important",
-                                alignItems: "center",
-                                justifyContent: "flex-end"
+                              padding: '0 !important',
+                              display: "flex",
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              "&:hover": { background: "#F5F5F5" }
                             }}
-                            className="header__actions"
-                        >
-                            <Box className='header__nav' component={"nav"} sx={{ marginRight: "16px" }}>
-                                <Box component={"ul"} sx={{ display: "flex", alignItems: "center", margin: "0", padding: "0" }}>
-                                    {
-                                        navItemsData.map(item => (
-                                            <Box key={item.id} component={"li"} sx={{ listStyle: "none", padding: "9px 12px" }}>
-                                                <Link href={item.link} style={{ textDecoration: "none" }}>
-
-                                                    <SimpleTypography text={item.text} className="nav__item--text" />
-
-                                                </Link>
-                                            </Box>
-                                        ))
-                                    }
-
-                                </Box>
+                          >
+                            <Box sx={{ display: "flex", alignItems: "center" }}>
+                              <Image
+                                width="28"
+                                height="28"
+                                alt='user icon'
+                                style={{
+                                  borderRadius: '50%'
+                                }}
+                                src={userData?.image_src ? `${IMAGES_BASE_URL}/${userData?.image_src}` : "/img/avatar.png"}
+                              />
+                              <SimpleTypography
+                                text={
+                                  userData?.full_name ?
+                                    userData?.full_name?.split(" ")[0] :
+                                    <CircularProgress size="1rem" />
+                                }
+                                sx={open ? { color: "#7210BE !important", marginLeft: '6px' }
+                                  : { marginLeft: '6px' }}
+                                className={'user__name'}
+                              />
+                              <KeyboardArrowDownIcon
+                                sx={!open ? { minWidth: "11px", minHeight: "7px", color: "black" } : { minWidth: "11px", minHeight: "7px", color: "#7210BE", transform: "rotateZ(180deg)", transitionDuration: "1000ms" }}
+                              />
                             </Box>
+                          </Buttons>
 
-                            <IconButton
-                                onClick={() => setSearchClicked(!searchClicked)}
-                                aria-label="menu"
-                                sx={{ marginRight: "16px", backgroundColor: searchClicked ? 'rgba(0, 0, 0, 0.04)' : 'transparent' }}
-                            >
-                                <Image
-                                    src="/img/search-icon.svg"
-                                    alt='Search icon'
-                                    width={21}
-                                    height={21}
-                                ></Image>
-                            </IconButton>
+                        </Item>
+                      </> :
 
-                            {
-                                isAuthenticated ?
-                                    <IconButton
-                                        onClick={openRightBar}
-                                        aria-label="menu"
-                                        sx={{ marginRight: "16px", backgroundColor: false ? 'rgba(0, 0, 0, 0.04)' : 'transparent' }}
-                                    >
-                                        <Image
-                                            src="/icons/bell-icon.svg"
-                                            alt='Search icon'
-                                            width={21}
-                                            height={21}
-                                        ></Image>
-                                    </IconButton>
-                                    : null
-                            }
+                      <Item sx={{ padding: "0", display: "flex" }}>
+                        <Box sx={{ marginRight: "16px" }}>
+                          <Buttons
+                            name="Регистрация "
+                            onClick={() => {
+                              dispatch(setSignupState(true))
+                              dispatch(setOpenModal(true))
+                            }}
+                            className="bordered__btn--signup"
+                          />
+                        </Box>
+                        <Buttons
+                          name="Логин"
+                          onClick={() => {
+                            dispatch(setLoginState(true));
+                            dispatch(setOpenModal(true))
+                          }}
+                          className="login__btn"
+                        />
+                      </Item>
+                  }
+                </Box>
+              </Box>
 
 
-                            <Box sx={{ background: "#fff", display: "flex", alignItems: "center", zIndex: "100", position: "relative", padding: "1px 0" }}>
-                                <Box className='header__btns'>
-                                    {
-                                        isAuthenticated ?
-
-                                            <>
-                                                <Item sx={{ padding: '0 !important', display: "flex" }}>
-                                                    <Buttons
-                                                        id="basic-menu"
-                                                        aria-controls={'basic-menu'}
-                                                        aria-haspopup="true"
-                                                        aria-expanded={true}
-                                                        onClick={handleClick}
-                                                        sx={{
-                                                            padding: '0 !important',
-                                                            display: "flex",
-                                                            alignItems: 'center',
-                                                            justifyContent: 'center',
-                                                            "&:hover": { background: "#F5F5F5" }
-                                                        }}
-                                                    >
-                                                        <Box sx={{ display: "flex", alignItems: "center" }}>
-                                                            <Image
-                                                                width="28"
-                                                                height="28"
-                                                                alt='user icon'
-                                                                style={{
-                                                                    borderRadius: '50%'
-                                                                }}
-                                                                src={userData?.image_src ? `${IMAGES_BASE_URL}/${userData?.image_src}` : "/img/avatar.png"}
-                                                            />
-                                                            <SimpleTypography
-                                                                text={
-                                                                    userData?.full_name ?
-                                                                        userData?.full_name?.split(" ")[0] :
-                                                                        <CircularProgress size="1rem" />
-                                                                }
-                                                                sx={open ? { color: "#7210BE !important", marginLeft: '6px' }
-                                                                    : { marginLeft: '6px' }}
-                                                                className={'user__name'}
-                                                            />
-                                                            <KeyboardArrowDownIcon
-                                                                sx={!open ? { minWidth: "11px", minHeight: "7px", color: "black" } : { minWidth: "11px", minHeight: "7px", color: "#7210BE", transform: "rotateZ(180deg)", transitionDuration: "1000ms" }}
-                                                            />
-                                                        </Box>
-                                                    </Buttons>
-
-                                                </Item>
-                                            </> :
-
-                                            <Item sx={{ padding: "0", display: "flex" }}>
-                                                <Box sx={{ marginRight: "16px" }}>
-                                                    <Buttons
-                                                        name="Регистрация "
-                                                        onClick={() => {
-                                                            dispatch(setSignupState(true))
-                                                            dispatch(setOpenModal(true))
-                                                        }}
-                                                        className="bordered__btn--signup"
-                                                    />
-                                                </Box>
-                                                <Buttons
-                                                    name="Логин"
-                                                    onClick={() => {
-                                                        dispatch(setLoginState(true));
-                                                        dispatch(setOpenModal(true))
-                                                    }}
-                                                    className="login__btn"
-                                                />
-                                            </Item>
-                                    }
-                                </Box>
-                            </Box>
-
-
-                        </Grid>
-                        {/* <Grid item xs={3} sx={{ padding: "16px 0 !important", display: "flex", }}>
+            </Grid>
+            {/* <Grid item xs={3} sx={{ padding: "16px 0 !important", display: "flex", }}>
               <Item sx={{ padding: "0", width: "280px" }}>
                 <SearchInput placeHolder="Поиск..." className='' startIcon={true}></SearchInput>
               </Item>
             </Grid> */}
-                    </Grid>
-                </Box>
-                {/* {
+          </Grid>
+        </Box>
+        {/* {
                     searchClicked ?
                         <Box className='search_bar'
                             sx={{
@@ -413,7 +441,7 @@ export default function Navbar() {
                         </Box>
                         : null
                 } */}
-            </Box>
-        </>
-    )
+      </Box>
+    </>
+  )
 }

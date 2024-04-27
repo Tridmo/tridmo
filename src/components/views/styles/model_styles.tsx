@@ -6,7 +6,7 @@ import { getAllStyles, selectAllStyles } from '../../../data/get_all_styles'
 import { useDispatch, useSelector } from 'react-redux';
 import SimpleTypography from '../../typography'
 import { getAllModels } from '../../../data/get_all_models';
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { setStyleFilter } from '../../../data/handle_filters';
 
 const SkletonData = ['', '', '', '', '', '']
@@ -20,18 +20,24 @@ function Style() {
   const pathname = usePathname();
   const dispatch = useDispatch<any>();
   const StylesData = useSelector(selectAllStyles);
-  const [isAll__Chechbox__Selected, setIsAll__Chechbox__Selected] = useState(false)
   const StylesStatus = useSelector((state: any) => state?.get_all_styles?.status)
   const [custom__styles, setCustom__styles] = useState<any>([]);
   const router = useRouter();
-  const [isInitialized, setIsInitialized] = useState<boolean>(false);
-  // ---- filters selector ----- //
+  const searchParams = useSearchParams();
+
+  const keyword = searchParams.get('name') as string
+
 
   const getModelCategoryFilter = useSelector((state: any) => state?.handle_filters?.categories)
+  const getModelBrandFilter = useSelector((state: any) => state?.handle_filters?.model_brand)
   const getModelCategoryNameFilter = useSelector((state: any) => state?.handle_filters?.category_name)
   const getModelColorFilter = useSelector((state: any) => state?.handle_filters?.colors)
   const getModelStyleFilter = useSelector((state: any) => state?.handle_filters?.styles)
   const getModelPageFilter = useSelector((state: any) => state?.handle_filters?.page)
+  const getModelTopFilter = useSelector((state: any) => state?.handle_filters?.model_top)
+  const getModelNameFilter = useSelector((state: any) => state?.handle_filters?.model_name)
+  const getModelOrderBy = useSelector((state: any) => state?.handle_filters?.model_orderby)
+  const getModelOrder = useSelector((state: any) => state?.handle_filters?.model_order)
 
   useEffect(() => {
     if (StylesStatus == 'idle') {
@@ -44,23 +50,13 @@ function Style() {
       if (router) {
         let arr = new Array();
         StylesData?.data?.forEach((color: stylesProps) => {
-          if (getModelStyleFilter?.includes((color.id).toString()) || getModelStyleFilter?.includes(color.id) || getModelStyleFilter == color?.id) {
-            arr.push({
-              id: color?.id,
-              created_at: color?.created_at,
-              name: color?.name,
-              updated_at: color?.updated_at,
-              is__Selected: true,
-            })
-          } else {
-            arr.push({
-              id: color?.id,
-              created_at: color?.created_at,
-              name: color?.name,
-              updated_at: color?.updated_at,
-              is__Selected: false,
-            })
-          }
+          arr.push({
+            id: color?.id,
+            created_at: color?.created_at,
+            name: color?.name,
+            updated_at: color?.updated_at,
+            is__Selected: getModelStyleFilter?.includes((color.id).toString()) || getModelStyleFilter?.includes(color.id) || getModelStyleFilter == color?.id,
+          })
         })
 
         setCustom__styles(arr);
@@ -87,10 +83,15 @@ function Style() {
     }
     dispatch(setStyleFilter({ snex: res }))
     dispatch(getAllModels({
+      brand: getModelBrandFilter,
       categories: getModelCategoryFilter,
       colors: getModelColorFilter,
       styles: res,
+      name: keyword || getModelNameFilter,
+      top: getModelTopFilter,
       page: getModelPageFilter,
+      orderBy: getModelOrderBy,
+      order: getModelOrder,
     }))
 
     for (let i = 0; i < arr?.length; i++) {
