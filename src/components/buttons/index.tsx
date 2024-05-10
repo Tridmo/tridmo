@@ -111,6 +111,32 @@ const ButtonWrapper = styled(Button)(
         } 
       }
 
+      &.MuiButton-cancel__btn{
+        color:#292929;
+        background-color: #f5f5f5;
+        padding:10px 24px;
+        border-radius: 4px;
+
+        &:hover{
+          background: #f2f2f2;
+        } 
+      }
+      &.MuiButton-confirm__btn{
+        color:#fff;
+        background-color: #DA1515;
+        padding:10px 24px;
+        border-radius: 4px;
+
+        .MuiButton-startIcon {
+          margin-right: 0;
+          margin-left: 0;
+        }
+
+        &:hover{
+          background: #ea2e2e;
+        } 
+      }
+
       &.MuiButton-login__btn {
         height:40px;
         border: 1.7px solid ${theme.colors.gray[900]};
@@ -451,7 +477,7 @@ const ButtonWrapper = styled(Button)(
         border: 1px solid #E0E0E0;
         border-radius: 4px;
         padding:8px 15px;
-        width:240px;
+        width: 100%;
         height:auto;
         display: flex;
         align-items: center;

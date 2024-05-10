@@ -2,9 +2,9 @@ import * as React from 'react';
 import { Box, Button, Typography, Modal, keyframes, SxProps } from '@mui/material';
 import Image from 'next/image'
 import { Grid } from '@mui/material';
-import { SignUpContext, LoginContext, VerificationContext, EditProfileContext } from './context'
+import { SignUpContext, LoginContext, VerificationContext, EditProfileContext, ConfirmContext, ProfileImageContext } from './context'
 import { useDispatch, useSelector } from '../../store';
-import { setLoginState, setSignupState, setVerifyState, setOpenModal, setProfileEditState } from '../../data/modal_checker';
+import { setLoginState, setSignupState, setVerifyState, setOpenModal, setProfileEditState, setConfirmState, setProfileImageState, setProfileImagePreview } from '../../data/modal_checker';
 import AlertWrapper from '../alert';
 import LoadingBar from 'react-top-loading-bar';
 import EditProfile from './edit_profile';
@@ -14,12 +14,13 @@ export default function BasicModal(props: { styles?: SxProps }) {
   const [progress, setProgress] = React.useState(0);
 
   //open certain modal by its status
+  const isProfileImageOpen = useSelector((state: any) => state?.modal_checker?.isProfileImage);
+  const isConfirmOpen = useSelector((state: any) => state?.modal_checker?.isConfirm);
   const isLoginOpen = useSelector((state: any) => state?.modal_checker?.isLogin);
   const isSignupOpen = useSelector((state: any) => state?.modal_checker?.isSignup);
   const isVerifyOpen = useSelector((state: any) => state?.modal_checker?.isVerify);
   const isProfileEditOpen = useSelector((state: any) => state?.modal_checker?.isProfileEdit);
   const isModalOpen = useSelector((state: any) => state?.modal_checker?.isModalOpen);
-  const isModal = useSelector((state: any) => state)
 
   const style: SxProps = {
     minWidth: '440px',
@@ -44,7 +45,10 @@ export default function BasicModal(props: { styles?: SxProps }) {
     dispatch(setSignupState(false))
     dispatch(setLoginState(false))
     dispatch(setVerifyState(false))
+    dispatch(setConfirmState(false))
     dispatch(setProfileEditState(false))
+    dispatch(setProfileImageState(false))
+    dispatch(setProfileImagePreview(null))
     dispatch(setOpenModal(false))
   };
   const modalSlider = keyframes`
@@ -81,26 +85,30 @@ export default function BasicModal(props: { styles?: SxProps }) {
           </Box> */}
 
           {
-            isSignupOpen ?
-              <SignUpContext
-                setUserEmail={(email: any) => { setUserEmail(email) }}
-              /> :
-              isLoginOpen ?
-                <LoginContext
-                  setUserEmail={(email: any) => { setUserEmail(email) }}
-                />
-                :
-                isVerifyOpen ?
-                  <VerificationContext
-                    userEmail={userEmail}
-                    setProgress={(val: any) => { setProgress(val) }}
-                  />
-                  :
-                  isProfileEditOpen ?
-                    <EditProfileContext
-                      setProgress={(val: any) => { setProgress(val) }}
+            isProfileImageOpen ?
+              <ProfileImageContext /> :
+              isConfirmOpen ?
+                <ConfirmContext /> :
+                isSignupOpen ?
+                  <SignUpContext
+                    setUserEmail={(email: any) => { setUserEmail(email) }}
+                  /> :
+                  isLoginOpen ?
+                    <LoginContext
+                      setUserEmail={(email: any) => { setUserEmail(email) }}
                     />
-                    : null
+                    :
+                    isVerifyOpen ?
+                      <VerificationContext
+                        userEmail={userEmail}
+                        setProgress={(val: any) => { setProgress(val) }}
+                      />
+                      :
+                      isProfileEditOpen ?
+                        <EditProfileContext
+                          setProgress={(val: any) => { setProgress(val) }}
+                        />
+                        : null
           }
         </Box>
       </Modal>

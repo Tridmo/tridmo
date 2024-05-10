@@ -196,7 +196,6 @@ function EditProfile() {
                       height={20}
                       alt="Load"
                     />
-                    Change password
                   </Buttons>
 
                   <Buttons

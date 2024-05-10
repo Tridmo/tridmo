@@ -33,6 +33,7 @@ import { reducer as toggle_cart } from '../data/toggle_cart';
 import { reducer as get_notifications } from '../data/get_notifications';
 import { reducer as toggle_tags } from '../data/toggle_tags';
 import { reducer as get_interior_tags } from '../data/get_interior_tags';
+import { reducer as get_my_interiors } from '../data/get_my_interiors';
 
 
 
@@ -71,6 +72,7 @@ const rootReducer = combineReducers({
   get_notifications: get_notifications,
   toggle_tags: toggle_tags,
   get_interior_tags: get_interior_tags,
+  get_my_interiors: get_my_interiors,
 });
 
 export default rootReducer;

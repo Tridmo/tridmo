@@ -4,7 +4,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 export interface ConfirmContextProps {
   message?: string;
   info?: string;
-  is_loading?: boolean; 
+  is_loading?: boolean;
   actions?: {
     on_click: {
       args: any[];
@@ -21,6 +21,8 @@ export interface ConfirmData {
 }
 
 export interface ContextState {
+  isProfileImage: boolean;
+  profileImagePreview: File | null;
   isConfirm: boolean;
   isLogin: boolean;
   isSignup: boolean;
@@ -36,6 +38,8 @@ export interface ContextState {
 
 // Initial state
 const initialState: ContextState = {
+  isProfileImage: false,
+  profileImagePreview: null,
   isConfirm: false,
   isLogin: false,
   isSignup: false,
@@ -98,6 +102,12 @@ const modalChecker = createSlice({
     setProfileEditState(state, action) {
       state.isProfileEdit = action.payload;
     },
+    setProfileImageState(state, action) {
+      state.isProfileImage = action.payload;
+    },
+    setProfileImagePreview(state, action: PayloadAction<File | null>) {
+      state.profileImagePreview = action.payload;
+    },
     setOpenOrderModal(state, action) {
       const { isOpen, order_id } = action.payload
       state.isOrderModal = isOpen
@@ -127,6 +137,8 @@ const modalChecker = createSlice({
 });
 
 export const {
+  setProfileImagePreview,
+  setProfileImageState,
   setConfirmState,
   setLoginState,
   setSignupState,

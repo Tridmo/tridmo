@@ -5,11 +5,13 @@ const initialState = {
   one_data: [],
   interior_data: [],
   model_data: [],
+  brand_data: [],
   data_with_model_count: [],
   status: 'idle',
   with_model_count_status: 'idle',
   model_status: 'idle',
   interior_status: 'idle',
+  brand_status: 'idle',
   error: null,
 };
 export const getCategories = createAsyncThunk('/catgories', async () => {
@@ -30,6 +32,10 @@ export const getModelCategories = createAsyncThunk('/model/categories', async ()
 })
 export const getInteriorCategories = createAsyncThunk('/interior/categories', async () => {
   const response = await api.get(`/categories/main/?type=interior`)
+  return response.data
+})
+export const getBrandCategories = createAsyncThunk('/brand/categories', async (brand_id: string) => {
+  const response = await api.get(`/categories/brand/${brand_id}`)
   return response.data
 })
 const categories = createSlice({
@@ -125,6 +131,22 @@ const categories = createSlice({
         state.interior_status = 'failed'
         state.error = action.error.message
       })
+
+      .addCase(getBrandCategories.pending, (state?: any, action?: any) => {
+        state.brand_status = 'loading'
+      })
+      .addCase(getBrandCategories.fulfilled, (state?: any, action?: any) => {
+        state.progress = 20
+        state.brand_status = 'succeeded'
+        // Add any fetched posts to the array;
+        state.brand_data = [];
+        state.brand_data = state.brand_data.concat(action.payload)
+        state.progress = 100
+      })
+      .addCase(getBrandCategories.rejected, (state?: any, action?: any) => {
+        state.brand_status = 'failed'
+        state.error = action.error.message
+      })
   }
 });
 export const { setOneSelectedCategory } = categories.actions;
@@ -133,5 +155,6 @@ export const selectOneCategory = (state: any) => state?.categories?.one_data[0]?
 export const selectCategoriesWithModelCount = (state: any) => state?.categories?.data_with_model_count[0]?.data
 export const selectModelCategories = (state: any) => state?.categories?.model_data[0]?.data
 export const selectInteriorCategories = (state: any) => state?.categories?.interior_data[0]?.data
+export const selectBrandCategories = (state: any) => state?.categories?.brand_data[0]?.data
 export const reducer = categories.reducer;
 export default categories

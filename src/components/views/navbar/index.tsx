@@ -184,7 +184,7 @@ export default function Navbar() {
                     width={17}
                     height={17}
                   />
-                  <SimpleTypography className='drow-down__text' text='Мой профайл' />
+                  <SimpleTypography className='drow-down__text' text='Мой профил' />
 
                 </Link>
               </MenuItem>

@@ -8,7 +8,11 @@ const initialState = {
   progress: 0,
 };
 export const getBrandModels = createAsyncThunk('/models/?brand_id=id',
-  async (wrapper?: any) => {
+  async (wrapper?: {
+    brand_id: string;
+    categories?: string[] | number[]
+    [x: string]: any;
+  }) => {
     let send__route = `/models`
 
     wrapper?.categories?.forEach(category_id => {
@@ -76,5 +80,5 @@ const get_brand_models = createSlice({
 
 export const { resetBrandModels } = get_brand_models.actions;
 export const reducer = get_brand_models.reducer;
-export const selectBrandModels = (state: any) => state?.get_brand_models?.data[0]?.data?.models
+export const selectBrandModels = (state: any) => state?.get_brand_models?.data[0]
 export default get_brand_models;

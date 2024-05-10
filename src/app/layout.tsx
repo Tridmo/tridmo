@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import '@/styles/carousel.module.css';
 import Navbar from "@/components/views/navbar";
 import RightBar from "@/components/right_bar";
 import Footer from "@/components/views/footer";

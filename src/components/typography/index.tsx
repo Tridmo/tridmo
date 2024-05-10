@@ -206,18 +206,18 @@ const TypographyWrapper = styled(Typography)(
       }
 
       &.MuiTypography-brand_page__info--title{
-        font-weight: 500;
-        font-size: 34px;
+        font-weight: 600;
+        font-size: 28px;
         line-height: 41px;
         letter-spacing: -0.02em;
         color: #141414;
       }
 
       &.MuiTypography-brand_page__info--desc{
-        max-width:760px;
+        text-align: justify;
         font-weight: 400;
-        font-size: 20px;
-        line-height: 30px;
+        font-size: 16px;
+        line-height: 25.6px;
         letter-spacing: -0.02em;
         color: #424242;
       }

@@ -4,9 +4,9 @@ import { Formik } from 'formik';
 import { toast } from 'react-toastify';
 import { getMyProfile, resetMyProfile, selectMyProfile } from '../../data/me';
 import { useDispatch, useSelector } from 'react-redux';
-import { setLoginState, setSignupState, setVerifyState, setOpenModal, setProfileEditState } from '../../data/modal_checker';
+import { setLoginState, setSignupState, setVerifyState, setOpenModal, setProfileEditState, setConfirmState, resetConfirmProps, resetConfirmData, ConfirmContextProps, ConfirmData, setConfirmData, setProfileImageState, setProfileImagePreview } from '../../data/modal_checker';
 import { setAuthState } from "../../data/login";
-import { Box, Typography, Grid, Button, TextField, InputAdornment, IconButton, SxProps } from '@mui/material';
+import { Box, Typography, Grid, Button, TextField, InputAdornment, IconButton, SxProps, FormControlLabel, Checkbox, styled, TooltipProps, Tooltip, tooltipClasses } from '@mui/material';
 import Image from 'next/image';
 import SimpleTypography from '../typography'
 import Buttons from '../buttons';
@@ -17,10 +17,12 @@ import Cookies from 'js-cookie'
 import SimpleInp from '../inputs/simple_input';
 import EmailInputAdornments from '../inputs/email';
 import PasswordInputAdornments from '../inputs/password';
-import { passwordRegex, usernameRegex } from '@/types/regex';
+import { passwordRegex, phoneRegex, usernameRegex } from '@/types/regex';
 import Link from 'next/link';
 import UsernameInputAdornments from '../inputs/username';
 import instance from '../../utils/axios';
+import CropImage from '../crop_image';
+import ImageCropper from '../crop_image';
 //Login context
 interface LoginContextProps {
   // setAlertMessage: any
@@ -29,6 +31,148 @@ interface LoginContextProps {
   setUserEmail?: any,
   userEmail?: any,
   setProgress?: any,
+}
+
+const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))({
+  [`& .${tooltipClasses.tooltip}`]: {
+    maxWidth: 200,
+    fontSize: '16px',
+    pointerEvents: 'none',
+  },
+});
+
+export const ConfirmContext = () => {
+  const dispatch = useDispatch()
+  const authState = useSelector((state: any) => state?.auth_slicer?.authState);
+  const confirm_props: ConfirmContextProps = useSelector((state: any) => state?.modal_checker?.confirm_props);
+  const confirmation_data: ConfirmData = useSelector((state: any) => state?.modal_checker?.confirmation_data);
+
+  const [checked, setChecked] = React.useState<boolean>(false)
+  const [loading, setLoading] = React.useState<boolean>(Boolean(confirm_props.is_loading))
+
+  React.useEffect(() => {
+    dispatch(resetConfirmData())
+  }, [])
+  React.useMemo(() => {
+    setLoading(Boolean(confirm_props.is_loading))
+  }, [confirm_props.is_loading])
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked(event.target.checked)
+    dispatch(setConfirmData({ checkbox_checked: event.target.checked }));
+  };
+
+  return (
+    <Grid
+      container
+      width={'100%'}
+      display={'flex'}
+      flexDirection={'column'}
+      alignItems={'center'}
+      justifyContent={'center'}
+    >
+      <Grid
+        item
+        width={'100%'}
+        display={'flex'}
+        flexDirection={'column'}
+        alignItems={'center'}
+        justifyContent={'center'}
+        mb={'32px'}
+      >
+        <SimpleTypography
+          text={confirm_props?.message || 'Вы уверены, что предпримете это действие?'}
+          sx={{
+            fontWeight: 400,
+            fontSize: '22px',
+            lineHeight: '28px',
+            textAlign: 'center'
+          }}
+        />
+        {
+          confirm_props?.info ?
+            <SimpleTypography
+              text={confirm_props?.info}
+              sx={{
+                fontWeight: 400,
+                fontSize: '16px',
+                lineHeight: '22px',
+                textAlign: 'center',
+
+              }}
+            />
+            : null
+        }
+        {
+          confirm_props?.checkbox && confirm_props?.checkbox?.checkbox_label ?
+            <Box
+              sx={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+                marginTop: '16px'
+              }}
+            >
+              {
+                confirm_props?.checkbox?.checkbox_info ?
+                  <CustomTooltip title={confirm_props?.checkbox?.checkbox_info} placement='left'>
+                    <FormControlLabel
+                      label={confirm_props?.checkbox?.checkbox_label}
+                      control={
+                        <Checkbox checked={checked} onChange={handleChange} />
+                      }
+                    />
+                  </CustomTooltip>
+                  : <FormControlLabel
+                    label={confirm_props?.checkbox?.checkbox_label}
+                    control={
+                      <Checkbox checked={checked} onChange={handleChange} />
+                    }
+                  />
+
+              }
+            </Box>
+            : null
+        }
+      </Grid>
+
+      <Grid
+        item
+        width={'100%'}
+        display={'flex'}
+        alignItems={'center'}
+        justifyContent={'space-between'}
+      >
+        <Buttons
+          name='Отмена'
+          sx={{ width: '48%' }}
+          className='cancel__btn'
+          disabled={loading}
+          onClick={() => {
+            dispatch(setConfirmState(false))
+            dispatch(setOpenModal(false))
+            dispatch(resetConfirmProps())
+            dispatch(resetConfirmData())
+          }}
+        ></Buttons>
+
+        <Buttons
+          name='Да'
+          sx={{ width: '48%' }}
+          className='confirm__btn'
+          startIcon={loading}
+          disabled={loading}
+          loadingColor='#fff'
+          onClick={async () => {
+            await confirm_props?.actions?.on_click.func(checked, ...confirm_props?.actions?.on_click.args)
+          }}
+        ></Buttons>
+      </Grid>
+    </Grid >
+  );
 }
 
 export const LoginContext = (props: LoginContextProps) => {
@@ -252,10 +396,10 @@ export const SignUpContext = (props: LoginContextProps) => {
             .email('Указанный email должен быть действительным адресом электронной почты.')
             .required('Поле обязательно для заполнения.'),
           password: Yup.string()
-            .matches(
-              passwordRegex,
-              'Пароль должен содержать от 8 до 32 символов, включая хотя бы одну заглавную и одну строчную латинскую букву, хотя бы одну цифру и хотя бы один специальный символ.'
-            )
+            // .matches(
+            //   passwordRegex,
+            //   'Пароль должен содержать от 8 до 32 символов, включая хотя бы одну заглавную и одну строчную латинскую букву, хотя бы одну цифру и хотя бы один специальный символ.'
+            // )
             .required('Поле обязательно для заполнения.')
         })}
 
@@ -370,7 +514,7 @@ export const SignUpContext = (props: LoginContextProps) => {
                     helperText={touched.username && errors.username}
                     name="username"
                     type="text"
-                    label='Имя пользователя'
+                    label='Название компании'
                     onBlur={handleBlur}
                     onChange={handleChange}
                     value={values.username}
@@ -653,14 +797,14 @@ export const EditProfileContext = (props: LoginContextProps) => {
     <>
       <Formik
         initialValues={{
-          first_name: '',
-          last_name: '',
-          username: '',
-          birth_date: '',
-          address: '',
-          telegram: '',
-          phone: '',
-          portfolio_link: '',
+          first_name: profile?.full_name?.split(' ')[0] || '',
+          last_name: profile?.full_name?.split(' ')[1] || '',
+          username: profile?.username || '',
+          // birth_date: '',
+          address: profile?.address || '',
+          telegram: profile?.telegram || '',
+          phone: profile?.phone?.split('+998')[1] || '',
+          portfolio_link: profile?.portfolio_link || '',
           submit: null
         }}
         validationSchema={Yup.object().shape({
@@ -677,10 +821,14 @@ export const EditProfileContext = (props: LoginContextProps) => {
               usernameRegex,
               'Имя пользователя может содержать только буквы, цифры, символы подчеркивания (_), тире (-) и точки (.).'
             ),
-          birth_date: Yup.date().max(new Date()).optional(),
+          // birth_date: Yup.date().max(new Date()).optional(),
           address: Yup.string().optional(),
           telegram: Yup.string().optional(),
           phone: Yup.string().optional(),
+          // .matches(
+          //   phoneRegex,
+          //   'Телефон должен начинаться с +998'
+          // ),
           portfolio_link: Yup.string().optional(),
         })}
 
@@ -704,10 +852,10 @@ export const EditProfileContext = (props: LoginContextProps) => {
 
             if (_values.first_name || _values.last_name) formData.append('full_name', `${_values.first_name || profile?.full_name?.split(' ')[0]} ${_values.last_name || profile?.full_name?.split(' ')[1]}`)
             if (_values.username) formData.append('username', _values.username)
-            if (_values.birth_date) formData.append('birth_date', _values.birth_date)
+            // if (_values.birth_date) formData.append('birth_date', _values.birth_date)
             if (_values.address) formData.append('address', _values.address)
             if (_values.telegram) formData.append('telegram', _values.telegram)
-            if (_values.phone) formData.append('phone', _values.phone)
+            if (_values.phone) formData.append('phone', `+998${_values.phone}`)
             if (_values.portfolio_link) formData.append('portfolio_link', _values.portfolio_link)
 
             const res = await instance.put(`users/profile`, formData);
@@ -770,7 +918,7 @@ export const EditProfileContext = (props: LoginContextProps) => {
                           autoComplete="off"
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          value={values.first_name || profile?.full_name?.split(' ')[0]}
+                          value={values.first_name}
                           placeholderText='Имя'
                         />
                       </Box>
@@ -784,7 +932,7 @@ export const EditProfileContext = (props: LoginContextProps) => {
                           autoComplete="off"
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          value={values.last_name || profile?.full_name?.split(' ')[1]}
+                          value={values.last_name}
                           placeholderText='Фамилия'
                         />
                       </Box>
@@ -796,15 +944,15 @@ export const EditProfileContext = (props: LoginContextProps) => {
                         helperText={touched.username && errors.username}
                         name="username"
                         type="text"
-                        label='Имя пользователя'
+                        label='Название компании'
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        value={values.username || profile?.username}
+                        value={values.username}
                         placeholderText='username'
                       />
                     </Box>
 
-                    <Box sx={formControlSx}>
+                    {/* <Box sx={formControlSx}>
                       <SimpleInp
                         error={Boolean(touched.birth_date && errors.birth_date)}
                         helperText={touched.birth_date && errors.birth_date}
@@ -816,7 +964,7 @@ export const EditProfileContext = (props: LoginContextProps) => {
                         value={values.birth_date || profile?.birth_date}
                         placeholderText='birth_date'
                       />
-                    </Box>
+                    </Box> */}
 
                     <Box sx={formControlSx}>
                       <SimpleInp
@@ -827,7 +975,7 @@ export const EditProfileContext = (props: LoginContextProps) => {
                         label='Адрес'
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        value={values.address || profile?.address}
+                        value={values.address}
                         placeholderText='пример: Ташкент, Узбекистан'
                       />
                     </Box>
@@ -853,13 +1001,18 @@ export const EditProfileContext = (props: LoginContextProps) => {
                         label='Телеграм'
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        value={values.telegram || profile?.telegram}
+                        value={values.telegram}
                         placeholderText='username'
                       />
                     </Box>
 
                     <Box sx={formControlSx}>
                       <SimpleInp
+                        startAdornment={
+                          <InputAdornment sx={{ ml: '7px' }} position="start">
+                            <SimpleTypography sx={{ fontWeight: '400', fontSize: '14px' }} text='+998' />
+                          </InputAdornment>
+                        }
                         error={Boolean(touched.phone && errors.phone)}
                         helperText={touched.phone && errors.phone}
                         name="phone"
@@ -867,8 +1020,8 @@ export const EditProfileContext = (props: LoginContextProps) => {
                         label='Номер телефона'
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        value={values.phone || profile?.phone}
-                        placeholderText='_ _ _'
+                        value={values.phone}
+                        placeholderText=''
                       />
                     </Box>
 
@@ -878,10 +1031,10 @@ export const EditProfileContext = (props: LoginContextProps) => {
                         helperText={touched.portfolio_link && errors.portfolio_link}
                         name="portfolio_link"
                         type="text"
-                        label='Портфолио'
+                        label='Сайт'
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        value={values.portfolio_link || profile?.portfolio_link}
+                        value={values.portfolio_link}
                         placeholderText='https://'
                       />
                     </Box>
@@ -905,4 +1058,99 @@ export const EditProfileContext = (props: LoginContextProps) => {
       </Formik>
     </>
   );
+}
+
+export const ProfileImageContext = () => {
+  const dispatch = useDispatch<any>()
+  const previewImage = useSelector((state: any) => state?.modal_checker?.profileImagePreview)
+
+  return (
+    <Formik
+      initialValues={{
+        image: '',
+        submit: null
+      }}
+      onSubmit={async (
+        _values,
+        { resetForm, setErrors, setStatus, setSubmitting }
+      ) => {
+        try {
+
+          const formData = new FormData()
+
+          formData.append('image', _values.image)
+
+          const res = await instance.put(`users/profile`, formData);
+          setStatus({ success: true });
+          dispatch(setProfileImageState(false));
+          dispatch(setProfileImagePreview(null));
+          dispatch(setOpenModal(false));
+          dispatch(getMyProfile());
+          toast.success(res?.data?.message || 'Успешно сохранено');
+        } catch (err: any) {
+          setStatus({ success: false });
+          toast.error(err?.response?.data?.message)
+          setErrors({ submit: err.message });
+        } finally {
+          setSubmitting(false);
+        }
+      }}
+    >
+      {({
+        errors,
+        handleBlur,
+        handleChange,
+        handleSubmit,
+        setFieldValue,
+        isSubmitting,
+        touched,
+        values
+      }) => (
+        <form onSubmit={handleSubmit}>
+          <Grid style={{ transformOrigin: '0 0 0' }}>
+            <Grid sx={{ display: 'flex', alignItems: "start", justifyContent: "start", flexDirection: "column" }}>
+
+              <ImageCropper
+                image={previewImage}
+                updateAvatar={(url) => {
+                  console.log(url);
+                  setFieldValue('image', url)
+                }} />
+
+              <Box
+                sx={{
+                  mt: '24px',
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Buttons
+                  sx={{ width: '48%' }}
+                  name="Отмена"
+                  className="cancel__btn"
+                  onClick={() => {
+                    dispatch(setProfileImageState(false))
+                    dispatch(setProfileImagePreview(null))
+                    dispatch(setOpenModal(false))
+                  }}
+                >
+                </Buttons>
+                <Buttons
+                  sx={{ width: '48% !important', m: '0 !important' }}
+                  name="Загрузить"
+                  type="submit"
+                  startIcon={isSubmitting}
+                  disabled={Boolean(errors.submit) || isSubmitting}
+                  className='signIn__btn'
+                >
+                </Buttons>
+              </Box>
+
+            </Grid>
+          </Grid>
+        </form>)}
+    </Formik>
+  )
 }

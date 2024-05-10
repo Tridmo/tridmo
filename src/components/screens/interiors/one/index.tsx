@@ -264,50 +264,55 @@ export default function OneInterior() {
               justifyContent: 'flex-start'
             }}
           >
-            <ListItemAvatar
-              sx={{
-                backgroundColor: '#fff',
-                width: '72px',
-                height: '72px',
-                border: '1px solid #E0E0E0',
-                borderRadius: '50%',
-              }}
-            >
-              <Avatar
-                src={interior?.author?.image_src ? `${IMAGES_BASE_URL}/${interior?.author?.image_src}` : '/img/avatar.png'}
-                alt='User image'
+            <Link href={`/designers/${interior?.author?.username}`}>
+              <ListItemAvatar
                 sx={{
-                  width: '100%',
-                  height: '100%',
-                  borderRadius: '50%'
+                  backgroundColor: '#fff',
+                  width: '72px',
+                  height: '72px',
+                  border: '1px solid #E0E0E0',
+                  borderRadius: '50%',
                 }}
-              />
-            </ListItemAvatar>
+              >
+                <Avatar
+                  src={interior?.author?.image_src ? `${IMAGES_BASE_URL}/${interior?.author?.image_src}` : '/img/avatar.png'}
+                  alt='User image'
+                  sx={{
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: '50%'
+                  }}
+                />
+              </ListItemAvatar>
+            </Link>
 
             <Box sx={{ marginLeft: '24px' }}>
-              <SimpleTypography
-                text={interior?.author?.username}
-                sx={{
-                  fontSize: '22px',
-                  fontWeight: 400,
-                  lineHeight: '26px',
-                  letterSpacing: '-0.02em',
-                  textAlign: 'start',
-                  color: '#141414'
-                }}
-              />
-
-              <SimpleTypography
-                text={interior?.author?.full_name}
-                sx={{
-                  fontSize: '18px',
-                  fontWeight: 400,
-                  lineHeight: '24px',
-                  letterSpacing: '-0.01em',
-                  textAlign: 'start',
-                  color: '#848484'
-                }}
-              />
+              <Link href={`/designers/${interior?.author?.username}`}>
+                <SimpleTypography
+                  text={interior?.author?.username}
+                  sx={{
+                    fontSize: '22px',
+                    fontWeight: 400,
+                    lineHeight: '26px',
+                    letterSpacing: '-0.02em',
+                    textAlign: 'start',
+                    color: '#141414'
+                  }}
+                />
+              </Link>
+              <Link href={`/designers/${interior?.author?.username}`}>
+                <SimpleTypography
+                  text={interior?.author?.full_name}
+                  sx={{
+                    fontSize: '18px',
+                    fontWeight: 400,
+                    lineHeight: '24px',
+                    letterSpacing: '-0.01em',
+                    textAlign: 'start',
+                    color: '#848484'
+                  }}
+                />
+              </Link>
             </Box>
           </Grid>
 

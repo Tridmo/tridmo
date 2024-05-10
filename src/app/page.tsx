@@ -9,6 +9,7 @@ import LandingPage from '../components/screens/landing';
 import { getAllModels } from '../data/get_all_models';
 import { getAllDesigners } from '../data/get_all_designers';
 import { getAllBrands } from '../data/get_all_brands';
+import { getTopModels } from '../data/get_top_models';
 
 declare global {
   interface Window {
@@ -28,6 +29,7 @@ export default function Home() {
   React.useEffect(() => {
     dispatch(getAllInteriors({}))
     dispatch(getAllModels({}))
+    dispatch(getTopModels({}))
     // dispatch(getAllDesigners({}))
     // dispatch(getAllBrands({}))
   }, [])
