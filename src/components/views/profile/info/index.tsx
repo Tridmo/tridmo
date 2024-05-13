@@ -14,6 +14,7 @@ import { setProfileEditState, setOpenModal, setProfileImageState, setProfileImag
 import formatDate from '../../../../utils/format_date';
 import { useRef } from 'react';
 import { readFile } from '../../../inputs/file_input';
+import { RateReview } from '@mui/icons-material';
 
 interface ProfileProps {
   of: 'designer' | 'own'
@@ -107,46 +108,52 @@ export default function ProfileInfo(props: ProfileProps) {
                   }}
                   src={profileInfo?.image_src ? `${IMAGES_BASE_URL}/${profileInfo?.image_src}` : '/img/avatar.png'}
                 />
-                <Buttons
-                  className='image_change__btn'
-                  onClick={handleClick}
-                  sx={{
-                    opacity: '0',
-                    cursor: 'pointer',
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    rigth: 0,
-                    width: '152px',
-                    height: '40px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: '#00000040',
+                {
+                  props?.of == 'own' ?
+                    <>
+                      <Buttons
+                        className='image_change__btn'
+                        onClick={handleClick}
+                        sx={{
+                          opacity: '0',
+                          cursor: 'pointer',
+                          position: 'absolute',
+                          bottom: 0,
+                          left: 0,
+                          rigth: 0,
+                          width: '152px',
+                          height: '40px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: '#00000040',
 
-                    '&:hover': {
-                      backgroundColor: '#00000060',
-                    }
-                  }}
-                >
-                  <Image
-                    width={24}
-                    height={24}
-                    alt="avatar"
-                    src={'/icons/reload-icon.svg'}
-                  />
-                </Buttons>
+                          '&:hover': {
+                            backgroundColor: '#00000060',
+                          }
+                        }}
+                      >
+                        <Image
+                          width={24}
+                          height={24}
+                          alt="avatar"
+                          src={'/icons/reload-icon.svg'}
+                        />
+                      </Buttons>
 
-                <Input
-                  ref={hiddenFileInput}
-                  onChange={handleProfileImageChange}
-                  sx={{ display: 'none' }}
-                  type='file'
-                  inputProps={{
-                    multiple: false,
-                    accept: 'image/png, image/jpg, image/jpeg'
-                  }}
-                />
+                      <Input
+                        ref={hiddenFileInput}
+                        onChange={handleProfileImageChange}
+                        sx={{ display: 'none' }}
+                        type='file'
+                        inputProps={{
+                          multiple: false,
+                          accept: 'image/png, image/jpg, image/jpeg'
+                        }}
+                      />
+                    </>
+                    : null
+                }
               </Box>
             </Box>
             <SimpleTypography sx={{
@@ -183,7 +190,23 @@ export default function ProfileInfo(props: ProfileProps) {
               <TableBody
                 sx={tbodySx}
               >
-                {/* {rows.map((row, index) => ( */}
+                <TableRow
+                  sx={tRowSx}
+                >
+                  <TableCell sx={tCellSx} component="th" scope="row">
+                    <SimpleTypography
+                      text={"Компания"}
+                      className="table__text"
+                    />
+                  </TableCell>
+                  <TableCell sx={tCellSx} align="right">
+                    <SimpleTypography
+                      text={profileInfo?.company_name}
+                      className="table__text_info"
+                    />
+                  </TableCell>
+                </TableRow>
+
                 <TableRow
                   // key={index}
                   sx={tRowSx}
@@ -294,7 +317,27 @@ export default function ProfileInfo(props: ProfileProps) {
                   </TableCell>
                 </TableRow>
 
-                {/* ))} */}
+                {
+                  props?.of == 'own' ?
+                    <TableRow
+                      sx={tRowSx}
+                    >
+                      <TableCell sx={tCellSx} component="th" scope="row">
+                        <SimpleTypography
+                          text={"Телеграм"}
+                          className="table__text"
+                        />
+                      </TableCell>
+                      <TableCell sx={tCellSx} align="right">
+                        <SimpleTypography
+                          text={profileInfo?.telegram || ''}
+                          className="table__text_info"
+                        />
+                      </TableCell>
+                    </TableRow>
+                    : null
+                }
+
               </TableBody>
             </Table>
           </TableContainer>
@@ -337,37 +380,14 @@ export default function ProfileInfo(props: ProfileProps) {
                     }
                   </Grid>
                   <Grid item md={12} xs={12}>
-                    {
-                      profileInfo?.phone
-                        ? <Link href={`tel:${profileInfo?.phone}`}>
-                          <Buttons
-                            sx={{ width: '100%' }}
-                            className='bookmark__btn'
-                            name="Связаться по телефону"
-                            childrenFirst={true}
-                          >
-                            <Image
-                              width={19}
-                              height={23}
-                              alt="Phone number"
-                              src={"/icons/phone.svg"}
-                            />
-                          </Buttons>
-                        </Link>
-                        : <Buttons
-                          sx={{ width: '100%' }}
-                          className='bookmark__btn--disabled'
-                          name="Связаться по телефону"
-                          childrenFirst={true}
-                        >
-                          <Image
-                            width={19}
-                            height={23}
-                            alt="Phone number"
-                            src={"/icons/phone.svg"}
-                          />
-                        </Buttons>
-                    }
+                    <Buttons
+                      sx={{ width: '100%' }}
+                      className='upload__btn'
+                      name="Написать сообщение"
+                      childrenFirst={true}
+                    >
+                      <RateReview sx={{ mr: '8px' }} />
+                    </Buttons>
                   </Grid>
                 </>
 

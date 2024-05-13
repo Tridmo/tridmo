@@ -229,7 +229,7 @@ function CustomCard({ model, link, imgHeight, tagIcon, tagText, withAuthor, sett
                         height={14}
                       />
                     </Box>
-                    : settingsBtn ?
+                    : !!settingsBtn ?
                       <Box
                         className='settings'
                         sx={{
@@ -307,7 +307,7 @@ function CustomCard({ model, link, imgHeight, tagIcon, tagText, withAuthor, sett
                       />
                       <SimpleTypography
                         sx={{ marginLeft: '8px', display: 'flex', alignItems: 'center', textAlign: 'left' }}
-                        text={model?.author?.username}
+                        text={model?.author?.company_name}
                         className='card__title'
                       />
                     </Box>
@@ -408,7 +408,7 @@ function CustomCard({ model, link, imgHeight, tagIcon, tagText, withAuthor, sett
                       />
                       <SimpleTypography
                         sx={{ marginLeft: '8px', display: 'flex', alignItems: 'center', textAlign: 'left' }}
-                        text={model?.author?.username}
+                        text={model?.author?.company_name}
                         className='card__title'
                       />
                     </Box>

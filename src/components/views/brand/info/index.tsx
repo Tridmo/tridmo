@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import { sampleBrand } from '@/data/samples';
 import { selectOneBrand } from '../../../../data/get_one_brand';
 import { IMAGES_BASE_URL } from '../../../../utils/image_src';
+import { RateReview } from '@mui/icons-material';
 
 
 export default function BrandInfo() {
@@ -120,6 +121,16 @@ export default function BrandInfo() {
               </Box>
             </Buttons>
           </Link>
+        </Grid>
+        <Grid item sx={{ mt: '24px', width: '100%' }}>
+          <Buttons
+            sx={{ width: '100%' }}
+            className='upload__btn'
+            name="Написать сообщение"
+            childrenFirst={true}
+          >
+            <RateReview sx={{ mr: '8px' }} />
+          </Buttons>
         </Grid>
         {/* <Grid item>
           <a target="_blank"

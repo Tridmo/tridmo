@@ -23,6 +23,10 @@ import UsernameInputAdornments from '../inputs/username';
 import instance from '../../utils/axios';
 import CropImage from '../crop_image';
 import ImageCropper from '../crop_image';
+import { usePathname } from 'next/navigation';
+import { getMyInteriors } from '../../data/get_my_interiors';
+import { getSavedInteriors } from '../../data/get_saved_interiors';
+import { getSavedModels } from '../../data/get_saved_models';
 //Login context
 interface LoginContextProps {
   // setAlertMessage: any
@@ -177,10 +181,8 @@ export const ConfirmContext = () => {
 
 export const LoginContext = (props: LoginContextProps) => {
   const authState = useSelector((state: any) => state?.auth_slicer?.authState);
-
-
-  //declare dispatcher
   const dispatch = useDispatch<any>();
+  const pathname = usePathname();
   const [values, setValues] = React.useState({
     amount: '',
     password: '',
@@ -257,6 +259,11 @@ export const LoginContext = (props: LoginContextProps) => {
                 await dispatch(getMyProfile({ Authorization: `Bearer ${res?.data?.data?.token?.accessToken}` }));
                 await dispatch(setAuthState(true));
                 await dispatch(setOpenModal(false));
+                if (pathname == '/profile') {
+                  await dispatch(getMyInteriors({ Authorization: `Bearer ${res?.data?.data?.token?.accessToken}` }))
+                  await dispatch(getSavedInteriors({ Authorization: `Bearer ${res?.data?.data?.token?.accessToken}` }))
+                  await dispatch(getSavedModels({ Authorization: `Bearer ${res?.data?.data?.token?.accessToken}` }))
+                }
               })();
             } else {
               dispatch(setVerifyState(true));
@@ -371,7 +378,7 @@ export const SignUpContext = (props: LoginContextProps) => {
           first_name: '',
           last_name: '',
           email: '',
-          username: '',
+          company_name: '',
           password: '',
           submit: null
         }}
@@ -383,13 +390,9 @@ export const SignUpContext = (props: LoginContextProps) => {
           last_name: Yup.string()
             .max(255, 'Слишком длинная фамилия.')
             .min(2, 'Слишком короткая фамилия - минимум 2 символа.'),
-          username: Yup.string()
-            .max(255, 'Слишком длинное имя пользователя.')
-            .min(5, 'Слишком короткая имя пользователя - минимум 5 символа.')
-            .matches(
-              usernameRegex,
-              'Имя пользователя может содержать только буквы, цифры, символы подчеркивания (_), тире (-) и точки (.).'
-            ),
+          company_name: Yup.string()
+            .max(64, 'Слишком длинное название компании')
+            .min(5, 'Слишком короткая название компании - минимум 5 символа.'),
           email: Yup.string()
             .min(4, "Слишком короткий email.")
             .max(50, "Слишком длинный email.")
@@ -408,25 +411,24 @@ export const SignUpContext = (props: LoginContextProps) => {
           { resetForm, setErrors, setStatus, setSubmitting }
         ) => {
           try {
-            const res = await instance.get(`users/check/${_values.username}`);
-            if (res.data.data.exists) {
-              setStatus({ success: false });
-              toast.error('Имя пользователя не доступно');
-              setErrors({ submit: 'Имя пользователя не доступно' });
-            } else {
-              const signupResponse = await instance.post(`auth/signup`, {
-                full_name: `${_values.first_name} ${_values.last_name}`,
-                email: _values.email,
-                username: _values.username,
-                password: _values?.password,
-              });
-              setStatus({ success: true });
-              props?.setUserEmail(_values?.email);
-              dispatch(setSignupState(false));
-              dispatch(setVerifyState(true));
-              dispatch(setOpenModal(true));
-              toast.success(res?.data?.message);
-            }
+            // const res = await instance.get(`users/check/${_values.company_name}`);
+            // if (res.data.data.exists) {
+            //   setStatus({ success: false });
+            //   toast.error('Имя пользователя не доступно');
+            //   setErrors({ submit: 'Имя пользователя не доступно' });
+            // } 
+            const signupResponse = await instance.post(`auth/signup`, {
+              full_name: `${_values.first_name} ${_values.last_name}`,
+              email: _values.email,
+              company_name: _values.company_name,
+              password: _values?.password,
+            });
+            setStatus({ success: true });
+            props?.setUserEmail(_values?.email);
+            dispatch(setSignupState(false));
+            dispatch(setVerifyState(true));
+            dispatch(setOpenModal(true));
+            toast.success(signupResponse?.data?.message);
 
           } catch (err: any) {
             setStatus({ success: false });
@@ -510,15 +512,15 @@ export const SignUpContext = (props: LoginContextProps) => {
 
                 <Box sx={{ marginBottom: "26px", width: "100%" }}>
                   <UsernameInputAdornments
-                    error={Boolean(touched.username && errors.username)}
-                    helperText={touched.username && errors.username}
-                    name="username"
+                    error={Boolean(touched.company_name && errors.company_name)}
+                    helperText={touched.company_name && errors.company_name}
+                    name="company_name"
                     type="text"
                     label='Название компании'
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    value={values.username}
-                    placeholderText='username'
+                    value={values.company_name}
+                    placeholderText='Название компании'
                   />
                 </Box>
 
@@ -1113,7 +1115,6 @@ export const ProfileImageContext = () => {
               <ImageCropper
                 image={previewImage}
                 updateAvatar={(url) => {
-                  console.log(url);
                   setFieldValue('image', url)
                 }} />
 

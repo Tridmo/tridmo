@@ -29,6 +29,7 @@ import { toast } from 'react-toastify';
 import { selectToggleAddingTags, selectToggleShowTags, toggleAddingTags, toggleShowTags } from '../../../../data/toggle_tags';
 import { VisibilityOutlined, VisibilityOffOutlined } from '@mui/icons-material';
 import { selectInteriorTags, setInteriorTags } from '../../../../data/get_interior_tags';
+import { getSavedInteriors } from '../../../../data/get_saved_interiors';
 
 const DropDown = styled(Menu)(
   ({ theme }: ThemeProps) => `
@@ -113,6 +114,7 @@ export default function OneInterior() {
         { interior_id: interior?.id }
       ).then(res => {
         setIsSaved(res?.data?.success)
+        dispatch(getSavedInteriors())
         // toast.success(res?.data?.message)
       }).catch(err => {
         setIsSaved(false)
@@ -125,6 +127,7 @@ export default function OneInterior() {
         '/saved/interiors/' + interior?.id
       ).then(res => {
         setIsSaved(!res?.data?.success)
+        dispatch(getSavedInteriors())
         // toast.success(res?.data?.message)
       }).catch(err => {
         setIsSaved(true)
@@ -142,8 +145,6 @@ export default function OneInterior() {
         .then(res => {
           arr.splice(tagIndex, 1)
           dispatch(setInteriorTags(arr))
-          console.log(anchorEl);
-          console.log(open);
         })
         .catch(err => {
           console.log(err);
@@ -289,7 +290,7 @@ export default function OneInterior() {
             <Box sx={{ marginLeft: '24px' }}>
               <Link href={`/designers/${interior?.author?.username}`}>
                 <SimpleTypography
-                  text={interior?.author?.username}
+                  text={interior?.author?.company_name}
                   sx={{
                     fontSize: '22px',
                     fontWeight: 400,
@@ -509,7 +510,6 @@ export default function OneInterior() {
               }
             }
             currentData={(data: any) => {
-              console.log('curent data', data)
             }}
             removeEmoji={true}
           />

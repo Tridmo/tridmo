@@ -23,10 +23,6 @@ export default function OneModel() {
   const brandModels = useSelector(selectBrandModels)
   const topModels = useSelector(selectTopModels)
 
-  console.log(brandModels, "BB");
-  console.log(topModels, "TT");
-
-
   return (
     <>
       <Box sx={{ background: "#fafafa" }} className="products">
@@ -87,7 +83,7 @@ export default function OneModel() {
                   >
                     <CustomCard
                       type={'interiors'}
-                      link={`/interiors/${interior?.slug}`}
+                      link={`/interiors/${interior?.interior?.slug}`}
                       key={index}
                       model={interior?.interior}
                       imgHeight={'268px'}

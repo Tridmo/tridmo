@@ -57,8 +57,6 @@ export default function ModelsPage() {
 
   useEffect(() => {
     if (getModelStatus === "idle") {
-      console.log('idle');
-
       dispatch(getAllModels({
         brand: getModelBrandFilter,
         categories: getModelCategoryFilter,

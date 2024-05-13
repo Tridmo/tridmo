@@ -7,12 +7,12 @@ const initialState = {
   error: null,
   progress: 0,
 };
-export const getMyInteriors = createAsyncThunk('/myinteriors',
+export const getSavedInteriors = createAsyncThunk('/saved_interiors',
   async (wrapper?: {
     Authorization?: string;
     [x: string]: any;
   }) => {
-    let send__route = `/myinteriors`
+    let send__route = `/saved/interiors`
 
     wrapper?.style_id?.forEach(style_id => {
       send__route += !send__route.includes("/?") ? `/?styles=${style_id}` : `&styles=${style_id}`;
@@ -31,8 +31,8 @@ export const getMyInteriors = createAsyncThunk('/myinteriors',
     return response.data
   })
 
-const get_my_interiors = createSlice({
-  name: 'get_my_interiors',
+const get_saved_interiors = createSlice({
+  name: 'get_saved_interiors',
   initialState,
   reducers: {
     resetMyInteriors() {
@@ -43,10 +43,10 @@ const get_my_interiors = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(getMyInteriors.pending, (state?: any, action?: any) => {
+      .addCase(getSavedInteriors.pending, (state?: any, action?: any) => {
         state.status = 'loading'
       })
-      .addCase(getMyInteriors.fulfilled, (state?: any, action?: any) => {
+      .addCase(getSavedInteriors.fulfilled, (state?: any, action?: any) => {
         state.progress = 20
         state.status = 'succeeded'
         // Add any fetched posts to the array;
@@ -54,14 +54,14 @@ const get_my_interiors = createSlice({
         state.data = state.data.concat(action.payload)
         state.progress = 100
       })
-      .addCase(getMyInteriors.rejected, (state?: any, action?: any) => {
+      .addCase(getSavedInteriors.rejected, (state?: any, action?: any) => {
         state.status = 'failed'
         state.error = action.error.message
       })
   }
 });
 
-export const { resetMyInteriors } = get_my_interiors.actions;
-export const reducer = get_my_interiors.reducer;
-export const selectMyInteriors = (state: any) => state?.get_my_interiors?.data[0]
-export default get_my_interiors;
+export const { resetMyInteriors } = get_saved_interiors.actions;
+export const reducer = get_saved_interiors.reducer;
+export const selectSavedInteriors = (state: any) => state?.get_saved_interiors?.data[0]
+export default get_saved_interiors;

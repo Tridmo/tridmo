@@ -64,10 +64,10 @@ const labelStyle: CSSProperties = {
 
 
 export function AddInteriorForm({ editing }: { editing?: boolean }) {
+  // const dispatch = useDispatch<any>()
+  // const stylesData = useSelector(selectAllStyles)
   const interior = useSelector(selectOneInterior)
-  const stylesData = useSelector(selectAllStyles)
   const categoriesData = useSelector(selectInteriorCategories);
-  const dispatch = useDispatch<any>()
   const router = useRouter()
 
   const initials = {
@@ -122,7 +122,7 @@ export function AddInteriorForm({ editing }: { editing?: boolean }) {
                 : {
                   name: Yup.string().max(255).required('Название не указано'),
                   description: Yup.string().max(255).required('Описание не указано'),
-                  style_id: Yup.number().required('Cтиль не указано'),
+                  style_id: Yup.number().optional(),
                   category_id: Yup.number().required('Категория не указано'),
 
                   cover: Yup.mixed().required('Загрузите изображение обложки'),
@@ -155,7 +155,7 @@ export function AddInteriorForm({ editing }: { editing?: boolean }) {
               } else {
                 formData.append('name', _values.name)
                 formData.append('description', _values.description)
-                formData.append('style_id', _values.style_id)
+                if (_values.style_id) formData.append('style_id', _values.style_id)
                 formData.append('category_id', _values.category_id)
                 formData.append('cover', _values.cover)
                 _values.images.forEach(i => formData.append('images', i))
@@ -176,7 +176,7 @@ export function AddInteriorForm({ editing }: { editing?: boolean }) {
               setSubmitting(false);
               resetForm()
 
-              router.push(`/interiors/${interior?.slug}`)
+              router.push(`/interiors/${editing ? interior?.slug : res?.data?.data?.interior?.slug}`)
 
             } catch (err: any) {
               setStatus({ success: false });
@@ -255,30 +255,6 @@ export function AddInteriorForm({ editing }: { editing?: boolean }) {
                         label="Описание"
                         placeholderText="Введите текст..."
                       />
-                    </Box>
-
-                    <Box
-                      sx={{ ...formControlSx }}
-                    >
-                      {/* <label data-shrink='true' style={labelStyle}> Категория </label> */}
-                      <SimpleSelect
-                        error={Boolean(touched.style_id && errors.style_id)}
-                        helperText={touched.style_id && errors.style_id}
-                        name="style_id"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        label="Cтиль"
-                        placeholderText="Выберите стиль"
-                        value={values.style_id || "Выберите стиль"}
-                      >
-                        {
-                          stylesData?.data?.map(
-                            (c, i) => (
-                              <MenuItem key={i} value={c.id}>{c.name}</MenuItem>
-                            )
-                          )
-                        }
-                      </SimpleSelect>
                     </Box>
 
                     <Box

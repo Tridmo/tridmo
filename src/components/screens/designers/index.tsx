@@ -136,7 +136,7 @@ export default function DesignersPage() {
                         <ListItemText className='username' sx={{ margin: '0 8px', minWidth: '880px' }}>
 
                           <SimpleTypography
-                            text={user?.username}
+                            text={user?.company_name}
                             sx={{
                               fontSize: '22px',
                               fontWeight: 400,
@@ -147,17 +147,35 @@ export default function DesignersPage() {
                             }}
                           />
 
-                          <SimpleTypography
-                            text={user?.full_name}
+                          <Box
                             sx={{
-                              fontSize: '18px',
-                              fontWeight: 400,
-                              lineHeight: '24px',
-                              letterSpacing: '-0.01em',
-                              textAlign: 'start',
-                              color: '#848484'
+                              display: 'flex'
                             }}
-                          />
+                          >
+                            <SimpleTypography
+                              text={user?.full_name}
+                              sx={{
+                                fontSize: '18px',
+                                fontWeight: 400,
+                                lineHeight: '24px',
+                                letterSpacing: '-0.01em',
+                                textAlign: 'start',
+                                color: '#848484'
+                              }}
+                            />
+                            {/* <SimpleTypography
+                              text={`@${user?.username}`}
+                              sx={{
+                                // ml: '8px',
+                                fontSize: '18px',
+                                fontWeight: 400,
+                                lineHeight: '24px',
+                                letterSpacing: '-0.01em',
+                                textAlign: 'start',
+                                color: '#949494'
+                              }}
+                            /> */}
+                          </Box>
 
                         </ListItemText>
                         <ListItemText sx={{ minWidth: '80px' }}>

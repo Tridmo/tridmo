@@ -34,7 +34,6 @@ export default function InteriorsPage() {
     //     }
     //   })
     // }
-    console.log(keyword, "router.query.keyword");
 
     const query = {}
     Object.keys(searchParams.keys()).forEach(k => query[k] = searchParams.get(k))

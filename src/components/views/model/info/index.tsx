@@ -358,13 +358,13 @@ export default function ModelInfo() {
         >
 
           <Buttons
-            onClick={DownloadHandler}
+            onClick={simpleModel?.availability != 2 ? DownloadHandler : () => { }}
             name={`Скачать`}
             startIcon={isSubmitting}
             endIcon={undefined}
             type="button"
             disabled={isSubmitting || simpleModel?.availability == 2}
-            className={!isSubmitting ? "download__model--model" : "download__model--disabled"}
+            className={isSubmitting || simpleModel?.availability == 2 ? "download__model--disabled" : "download__model--model"}
           />
 
         </Grid>

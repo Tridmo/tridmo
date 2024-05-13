@@ -34,6 +34,8 @@ import { reducer as get_notifications } from '../data/get_notifications';
 import { reducer as toggle_tags } from '../data/toggle_tags';
 import { reducer as get_interior_tags } from '../data/get_interior_tags';
 import { reducer as get_my_interiors } from '../data/get_my_interiors';
+import { reducer as get_saved_interiors } from '../data/get_saved_interiors';
+import { reducer as get_saved_models } from '../data/get_saved_models';
 
 
 
@@ -73,6 +75,8 @@ const rootReducer = combineReducers({
   toggle_tags: toggle_tags,
   get_interior_tags: get_interior_tags,
   get_my_interiors: get_my_interiors,
+  get_saved_interiors: get_saved_interiors,
+  get_saved_models: get_saved_models,
 });
 
 export default rootReducer;
