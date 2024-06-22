@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import InteriorsPage from '../../components/screens/interiors';
 import { getAllBrands } from '../../data/get_all_brands';
 import BrandsPage from '../../components/screens/brands';
+import { brandsLimit } from '../../types/filters';
 
 declare global {
   interface Window {
@@ -22,7 +23,8 @@ export default function Brands() {
   React.useEffect(() => {
     if (getBrandsStatus === "idle") {
       dispatch(getAllBrands({
-        orderBy: 'models_count'
+        orderBy: 'models_count',
+        limit: brandsLimit,
       }))
     }
   }, [dispatch, router, getBrandsStatus])

@@ -7,6 +7,7 @@ import { getAllBrands } from '../../data/get_all_brands';
 import DesignersPage from '../../components/screens/designers';
 import { getAllDesigners } from '../../data/get_all_designers';
 import { getMyProfile } from '../../data/me';
+import { designersLimit } from '../../types/filters';
 
 declare global {
   interface Window {
@@ -23,7 +24,7 @@ export default function Designers() {
 
   React.useEffect(() => {
     if (getDesignersStatus === "idle") {
-      dispatch(getAllDesigners({}))
+      dispatch(getAllDesigners({ limit: designersLimit }))
     }
     if (getProfileStatus === "idle") {
       dispatch(getMyProfile())

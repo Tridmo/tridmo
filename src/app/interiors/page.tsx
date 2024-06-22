@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAllStyles } from '@/data/get_all_styles';
 import { getAllInteriors } from '@/data/get_all_interiors';
 import InteriorsPage from '../../components/screens/interiors';
+import { interiorsLimit } from '../../types/filters';
 
 declare global {
   interface Window {
@@ -39,6 +40,7 @@ export default function Interiors() {
         colors: getModelColorFilter,
         styles: getModelStyleFilter,
         page: getModelPageFilter,
+        limit: interiorsLimit,
       }))
     }
     if (StyleStatus === "idle") {

@@ -24,6 +24,7 @@ import { getSavedInteriors } from '../../data/get_saved_interiors';
 import { getSavedModels } from '../../data/get_saved_models';
 import { getChatToken } from '../../data/get_chat_token';
 import { getMyProjects } from '../../data/get_my_projects';
+import { myInteriorsLimit, projectsLimit, savedModelsLimit } from '../../types/filters';
 
 const LoaderStyle = {
   // width: "100px !important",
@@ -68,13 +69,13 @@ export default function UserProfile() {
   React.useEffect(() => {
     if (profile) {
       if (getMyInteriorsStatus == 'idle') {
-        dispatch(getMyInteriors())
+        dispatch(getMyInteriors({ limit: myInteriorsLimit }))
       }
       if (getSavedModelsStatus == 'idle') {
-        dispatch(getSavedModels())
+        dispatch(getSavedModels({ limit: savedModelsLimit }))
       }
       if (getProjectsStatus == 'idle') {
-        dispatch(getMyProjects())
+        dispatch(getMyProjects({ limit: projectsLimit }))
       }
     }
   }, [profile])

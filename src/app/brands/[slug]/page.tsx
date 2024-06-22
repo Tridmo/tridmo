@@ -14,6 +14,7 @@ import { getBrandCategories } from '../../../data/categories';
 import { selectMyProfile } from '../../../data/me';
 import { getProfile } from '../../../data/get_profile';
 import { getChatToken } from '../../../data/get_chat_token';
+import { brandModelsLimit } from '../../../types/filters';
 
 const LoaderStyle = {
   // width: "100px !important",
@@ -55,7 +56,7 @@ export default function UserProfile() {
 
   React.useMemo(() => {
     if (brand) {
-      dispatch(getBrandModels({ brand_id: brand?.id }))
+      dispatch(getBrandModels({ brand_id: brand?.id, limit: brandModelsLimit }))
       dispatch(getBrandCategories(brand?.id))
     }
   }, [brand])

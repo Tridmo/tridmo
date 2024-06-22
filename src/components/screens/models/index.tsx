@@ -18,6 +18,7 @@ import ModelCrumb from '../../breadcrumbs/model_crumb'
 import { getAllStyles } from '../../../data/get_all_styles'
 import { setModelNameFilter } from '../../../data/handle_filters'
 import { useNavigate } from 'react-router-dom'
+import { modelsLimit } from '../../../types/filters'
 
 export default function ModelsPage() {
   const IsFilterOpen = useSelector((state: any) => state?.modal_checker?.isFilterModal)
@@ -67,6 +68,7 @@ export default function ModelsPage() {
         page: getModelPageFilter,
         orderBy: getModelOrderBy,
         order: getModelOrder,
+        limit: modelsLimit
       }))
     }
     if (StyleStatus === "idle") {

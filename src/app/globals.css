@@ -282,3 +282,7 @@ text-align: left; */
 .withImage {
   overflow: hidden;
 }
+
+wy-conversation-new {
+  display: none;
+}
