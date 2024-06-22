@@ -259,9 +259,9 @@ export const LoginContext = (props: LoginContextProps) => {
                 await Promise.all([accessTokenPromise, refreshTokenPromise]);
 
                 // Dispatch actions after cookies are set
-                await dispatch(getMyProfile({ Authorization: `Bearer ${res?.data?.data?.token?.accessToken}` }));
-                await dispatch(setAuthState(true));
                 await dispatch(setOpenModal(false));
+                await dispatch(setAuthState(true));
+                await dispatch(getMyProfile({ Authorization: `Bearer ${res?.data?.data?.token?.accessToken}` }));
                 await dispatch(getMyInteriors({ Authorization: `Bearer ${res?.data?.data?.token?.accessToken}`, limit: myInteriorsLimit }))
                 await dispatch(getMyProjects({ Authorization: `Bearer ${res?.data?.data?.token?.accessToken}`, limit: projectsLimit }))
                 await dispatch(getSavedModels({ Authorization: `Bearer ${res?.data?.data?.token?.accessToken}`, limit: savedModelsLimit }))
