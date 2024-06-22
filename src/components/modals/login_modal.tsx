@@ -2,9 +2,9 @@ import * as React from 'react';
 import { Box, Button, Typography, Modal, keyframes, SxProps } from '@mui/material';
 import Image from 'next/image'
 import { Grid } from '@mui/material';
-import { SignUpContext, LoginContext, VerificationContext, EditProfileContext, ConfirmContext, ProfileImageContext } from './context'
+import { SignUpContext, LoginContext, VerificationContext, EditProfileContext, ConfirmContext, ProfileImageContext, AddProjectContext, EditProjectContext, ProjectsContext } from './context'
 import { useDispatch, useSelector } from '../../store';
-import { setLoginState, setSignupState, setVerifyState, setOpenModal, setProfileEditState, setConfirmState, setProfileImageState, setProfileImagePreview } from '../../data/modal_checker';
+import { setLoginState, setSignupState, setVerifyState, setOpenModal, setProfileEditState, setConfirmState, setProfileImageState, setProfileImagePreview, setAddingProjectState, setEditingProjectState } from '../../data/modal_checker';
 import AlertWrapper from '../alert';
 import LoadingBar from 'react-top-loading-bar';
 import EditProfile from './edit_profile';
@@ -20,6 +20,9 @@ export default function BasicModal(props: { styles?: SxProps }) {
   const isSignupOpen = useSelector((state: any) => state?.modal_checker?.isSignup);
   const isVerifyOpen = useSelector((state: any) => state?.modal_checker?.isVerify);
   const isProfileEditOpen = useSelector((state: any) => state?.modal_checker?.isProfileEdit);
+  const isProjectsListOpen = useSelector((state: any) => state?.modal_checker?.isProjectsList);
+  const isAddingProjectOpen = useSelector((state: any) => state?.modal_checker?.isAddingProject);
+  const isEditingProjectOpen = useSelector((state: any) => state?.modal_checker?.isEditingProject);
   const isModalOpen = useSelector((state: any) => state?.modal_checker?.isModalOpen);
 
   const style: SxProps = {
@@ -47,6 +50,8 @@ export default function BasicModal(props: { styles?: SxProps }) {
     dispatch(setVerifyState(false))
     dispatch(setConfirmState(false))
     dispatch(setProfileEditState(false))
+    dispatch(setAddingProjectState(false))
+    dispatch(setEditingProjectState(false))
     dispatch(setProfileImageState(false))
     dispatch(setProfileImagePreview(null))
     dispatch(setOpenModal(false))
@@ -104,11 +109,14 @@ export default function BasicModal(props: { styles?: SxProps }) {
                         setProgress={(val: any) => { setProgress(val) }}
                       />
                       :
-                      isProfileEditOpen ?
-                        <EditProfileContext
-                          setProgress={(val: any) => { setProgress(val) }}
-                        />
-                        : null
+                      isProfileEditOpen ? <EditProfileContext />
+                        :
+                        isAddingProjectOpen ? <AddProjectContext />
+                          :
+                          isEditingProjectOpen ? <EditProjectContext />
+                            :
+                            isProjectsListOpen ? <ProjectsContext />
+                              : null
           }
         </Box>
       </Modal>

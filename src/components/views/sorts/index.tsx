@@ -155,7 +155,11 @@ function Sorts({ route, ...props }) {
                       item.isSelected ? { backgroundColor: '#FAFAFA' } : {}
                     }
                   >
-                    <SimpleTypography className='filters__item--text' text={item.title} />
+                    <SimpleTypography
+                      sx={{ color: item.isSelected ? '#141414 !important' : '#686868 !important' }}
+                      className='filters__item--text'
+                      text={item.title}
+                    />
                   </FiltersItem>
                 ))
               }

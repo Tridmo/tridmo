@@ -9,10 +9,10 @@ import { Box, SxProps } from '@mui/system';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import SimpleTypography from '../../../typography';
 import { sampleModel } from '@/data/samples/sample_model';
-import { IMAGES_BASE_URL } from '../../../../utils/image_src';
+import { IMAGES_BASE_URL } from '../../../../utils/env_vars';
 import { selectMyProfile } from '../../../../data/me';
 import instance from '../../../../utils/axios';
-import { setLoginState, setOpenModal } from '../../../../data/modal_checker';
+import { setLoginState, setOpenModal, setProjectsListState } from '../../../../data/modal_checker';
 import { toast } from 'react-toastify';
 import { getSavedModels } from '../../../../data/get_saved_models';
 
@@ -88,6 +88,11 @@ const SimpleSlider = ({ name }: any) => {
     }
   }, [isAuthenticated, currentUser, simpleModel])
 
+  function handleListProjects() {
+    dispatch(setProjectsListState(true))
+    dispatch(setOpenModal(true))
+  }
+
   const handleSave = () => {
 
     if (!isAuthenticated) {
@@ -125,7 +130,6 @@ const SimpleSlider = ({ name }: any) => {
     }
   };
 
-
   function SliderRightHandler() {
     if (sliderCount < simpleModel?.images?.length - 1) {
       setSliderCount(sliderCount + 1)
@@ -144,7 +148,7 @@ const SimpleSlider = ({ name }: any) => {
     opacity: sliderBtnHover
   }
 
-  if ("succeeded") {
+  if (simple_model_status == "succeeded") {
     return (
       <>
         <Grid
@@ -300,24 +304,46 @@ const SimpleSlider = ({ name }: any) => {
 
           {
             name === "slider" ?
+              <>
+                {
+                  !!isAuthenticated && (
+                    <Buttons
+                      name={'Добавить в проект'}
+                      className='bookmark__btn'
+                      childrenFirst={true}
+                      onClick={handleListProjects}
+                      sx={{
+                        marginLeft: '90px',
+                      }}
+                    >
+                      <Image
+                        alt='icon'
+                        width={18}
+                        height={18}
+                        src={'/icons/plus-bordered-gray.svg'}
+                      />
+                    </Buttons>
+                  )
+                }
 
-              <Buttons
-                name={isSaved ? 'Сохранено' : 'Сохранить'}
-                className='bookmark__btn'
-                childrenFirst={true}
-                onClick={handleSave}
-                sx={{
-                  marginLeft: '90px',
-                  // position: 'absolute'
-                }}
-              >
-                <Image
-                  alt='bookmark'
-                  width={18}
-                  height={18}
-                  src={isSaved ? '/icons/bookmark-full.svg' : '/icons/bookmark-line.svg'}
-                />
-              </Buttons>
+                <Buttons
+                  name={isSaved ? 'Сохранено' : 'Сохранить'}
+                  className='bookmark__btn'
+                  childrenFirst={true}
+                  onClick={handleSave}
+                  sx={{
+                    marginLeft: '18px',
+                    // position: 'absolute'
+                  }}
+                >
+                  <Image
+                    alt='bookmark'
+                    width={18}
+                    height={18}
+                    src={isSaved ? '/icons/bookmark-full.svg' : '/icons/bookmark-line.svg'}
+                  />
+                </Buttons>
+              </>
 
               : null
           }

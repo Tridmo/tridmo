@@ -165,6 +165,7 @@ export default function ModelsPage() {
           sx={{ padding: "0 !important", display: "flex", justifyContent: "flex-end" }}
         >
           <Pagination
+            dataSource='models'
             count={all__models?.data?.pagination?.pages}
             page={parseInt(all__models?.data?.pagination?.current) + 1}
           // page={page}

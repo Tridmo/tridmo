@@ -11,6 +11,9 @@ import { getOneBrand, selectOneBrand } from '../../../data/get_one_brand';
 import { getBrandModels } from '../../../data/get_brand_models';
 import OneBrand from '../../../components/screens/brands/one';
 import { getBrandCategories } from '../../../data/categories';
+import { selectMyProfile } from '../../../data/me';
+import { getProfile } from '../../../data/get_profile';
+import { getChatToken } from '../../../data/get_chat_token';
 
 const LoaderStyle = {
   // width: "100px !important",
@@ -39,20 +42,32 @@ const BgBlur = {
 export default function UserProfile() {
   const getBrandStatus = useSelector((state: any) => state?.get_one_brand?.status)
   const getBrandCategoriesStatus = useSelector((state: any) => state?.categories?.brand_status)
+  const getProfileStatus = useSelector((state: any) => state?.get_profile?.status)
+  const tokenStatus = useSelector((state: any) => state?.get_chat_token?.status)
+  const profile = useSelector(selectMyProfile)
   const dispatch = useDispatch<any>()
   const params = useParams<{ slug: string }>()
   const brand = useSelector(selectOneBrand)
 
-  React.useEffect(() => {
+  React.useMemo(() => {
     dispatch(getOneBrand(params?.slug))
   }, [params, dispatch])
 
-  React.useEffect(() => {
+  React.useMemo(() => {
     if (brand) {
       dispatch(getBrandModels({ brand_id: brand?.id }))
       dispatch(getBrandCategories(brand?.id))
     }
   }, [brand])
+
+  React.useMemo(() => {
+    if (getProfileStatus === 'idle') {
+      dispatch(getProfile())
+    }
+    if (profile && tokenStatus == 'idle') {
+      dispatch(getChatToken())
+    }
+  }, [profile, tokenStatus, getProfileStatus])
 
   if (getBrandStatus === "succeeded") {
     return (

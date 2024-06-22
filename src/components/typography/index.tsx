@@ -214,7 +214,7 @@ const TypographyWrapper = styled(Typography)(
       }
 
       &.MuiTypography-brand_page__info--desc{
-        text-align: justify;
+        text-align: start;
         font-weight: 400;
         font-size: 16px;
         line-height: 25.6px;

@@ -19,6 +19,7 @@ import { selectMyInteriors } from '../../data/get_my_interiors';
 import { selectBrandModels } from '../../data/get_brand_models';
 import { selectSavedModels } from '../../data/get_saved_models';
 import { selectSavedInteriors } from '../../data/get_saved_interiors';
+import { selectMyProjects } from '../../data/get_my_projects';
 type InputProps = {
   route: string,
   sliced?: number,
@@ -39,7 +40,7 @@ const Label = styled(Paper)(({ theme }: ThemeProps) => ({
 
 export default function SimpleCard(props: InputProps) {
   const dispatch = useDispatch<any>();
-  const fakeModels = new Array(props?.sliced || 16).fill('');
+  const fakeModels = new Array(props?.sliced || 8).fill('');
 
   React.useEffect(() => {
     dispatch(setLimitFilter({ limit: 15 }))
@@ -49,16 +50,6 @@ export default function SimpleCard(props: InputProps) {
 
     const all__models = useSelector(selectAllModels)
     const all__models__status = useSelector((state: any) => state?.get_all_models?.status)
-
-    // const all__models: { data?: any[] } = {
-    //   data: Array.from({ length: 20 }, () => ({
-    //     id: `${Math.random()}`,
-    //     cover: [{ image: { src: '/img/models1.jpg' } }],
-    //     brand: { name: 'Brand name' },
-    //     name: `Model`,
-    //     slug: `model_slug`
-    //   }))
-    // }
 
     if (all__models__status === "failed") {
       return (
@@ -688,6 +679,95 @@ export default function SimpleCard(props: InputProps) {
                   link={`/interiors/${model?.interior?.slug}`}
                   key={index}
                   model={model?.interior}
+                  imgHeight={props?.cardImgHeight || '268px'}
+                  withAuthor={props?.withAuthor}
+                />
+              </Grid>
+            ))
+            }
+          </Grid >
+
+          : <EmptyData />
+      )
+    }
+  }
+
+  if (props?.route == 'projects') {
+
+    const all__projects = useSelector(selectMyProjects)
+    const all__projects__status = useSelector((state: any) => state?.get_my_projects?.status)
+
+    if (all__projects__status === "failed") {
+      return (
+        <SimpleTypography text='Извините, ошибка сетевого подключения:('></SimpleTypography>
+      )
+    }
+    if (all__projects__status === "loading") {
+      return (
+        <Grid className="models__card--wrap" container spacing={3} sx={{ width: "100%", margin: "0" }}>
+          {fakeModels?.map((model: any, index: any) => (
+            <Grid
+              className='models__card'
+              sx={{
+                [`&:not(:nth-of-type(${2}n))`]: {
+                  padding: "0 9.5px 0 0 !important",
+                },
+                [`&:nth-of-type(${2}n)`]: {
+                  padding: "0 0 0 0 !important",
+                },
+                marginBottom: "10px"
+              }}
+              key={index}
+              md={6}
+              sm={12}
+              xs={12}
+              item
+            >
+              <CustomCardSkeleton
+                type={props?.route}
+                key={index}
+                model={model}
+                imgHeight={'346px'}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      )
+    }
+
+    if (all__projects__status === "succeeded") {
+
+      const data_sliced = props?.sliced ? all__projects?.data?.projects?.slice(0, props?.sliced) : all__projects?.data?.projects;
+
+      return (
+        data_sliced?.length > 0 ?
+          <Grid className="models__card--wrap" container spacing={3} sx={{ width: "100%", margin: "0" }}>
+            {data_sliced?.map((model: any, index: any) => (
+              <Grid
+                className='models__card'
+                sx={{
+                  [`&:not(:nth-of-type(${2}n))`]: {
+                    padding: "0 9.5px 0 0 !important",
+                  },
+                  [`&:nth-of-type(${2}n)`]: {
+                    padding: "0 0 0 0 !important",
+                  },
+                  marginBottom: "10px"
+                }}
+                key={index}
+                md={6}
+                sm={12}
+                xs={12}
+                item
+              >
+                <CustomCard
+                  imageSplit={4}
+                  useButton
+                  settingsBtn
+                  type={props?.route}
+                  link={`/projects/${model?.id}`}
+                  key={index}
+                  model={model}
                   imgHeight={props?.cardImgHeight || '268px'}
                   withAuthor={props?.withAuthor}
                 />

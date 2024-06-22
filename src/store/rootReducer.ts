@@ -36,7 +36,13 @@ import { reducer as get_interior_tags } from '../data/get_interior_tags';
 import { reducer as get_my_interiors } from '../data/get_my_interiors';
 import { reducer as get_saved_interiors } from '../data/get_saved_interiors';
 import { reducer as get_saved_models } from '../data/get_saved_models';
-
+import { reducer as get_chat_token } from '../data/get_chat_token';
+import { reducer as set_verified } from '../data/set_verified';
+import { reducer as get_chat_conversations } from '../data/get_chat_conversations';
+import { reducer as get_chat_messages } from '../data/get_chat_messages';
+import { reducer as get_my_projects } from '../data/get_my_projects';
+import { reducer as get_one_project } from '../data/get_one_project';
+import { reducer as chat } from '../data/chat';
 
 
 const rootReducer = combineReducers({
@@ -77,6 +83,13 @@ const rootReducer = combineReducers({
   get_my_interiors: get_my_interiors,
   get_saved_interiors: get_saved_interiors,
   get_saved_models: get_saved_models,
+  get_chat_token: get_chat_token,
+  set_verified: set_verified,
+  get_chat_conversations: get_chat_conversations,
+  get_chat_messages: get_chat_messages,
+  chat: chat,
+  get_my_projects: get_my_projects,
+  get_one_project: get_one_project,
 });
 
 export default rootReducer;

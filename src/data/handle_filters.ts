@@ -26,7 +26,16 @@ const initialState = {
   styles: [],
   selected_styles: [],
   selected_styles_id: [],
-  page: 1,
+  brand_models_category: '',
+  models_page: 1,
+  interiors_page: 1,
+  my_interiors_page: 1,
+  designer_interiors_page: 1,
+  projects_page: 1,
+  saved_models_page: 1,
+  brand_models_page: 1,
+  designers_page: 1,
+  brands_page: 1,
   error: null,
   progress: 0,
 };
@@ -133,6 +142,9 @@ const handle_filters = createSlice({
       const { ...params } = action.payload;
       state.selected_styles_id.push(params.id);
     },
+    setBrandModelsCategory: (state: any, action: PayloadAction<any>) => {
+      state.brand_models_category = action.payload;
+    },
     removeSelectedStyles: (state: any, action: PayloadAction<any>) => {
       const { ...params } = action.payload;
       state.selected_styles = params.styles;
@@ -141,9 +153,24 @@ const handle_filters = createSlice({
       const { ...params } = action.payload;
       state.selected_styles_id = params.id
     },
-    setPageFilter: (state: any, action: PayloadAction<any>) => {
+    setPageFilter: (
+      state: any,
+      action: PayloadAction<{
+        p:
+        'models_page' |
+        'interiors_page' |
+        'my_interiors_page' |
+        'designer_interiors_page' |
+        'projects_page' |
+        'saved_models_page' |
+        'brand_models_page' |
+        'designers_page' |
+        'brands_page';
+        n: number;
+      }>
+    ) => {
       const { ...params } = action.payload;
-      state.page = params.page;
+      state[params.p] = params.n;
     },
     setLimitFilter: (state: any, action: PayloadAction<any>) => {
       const { ...params } = action.payload;
@@ -167,6 +194,7 @@ const handle_filters = createSlice({
 });
 
 export const {
+  setBrandModelsCategory,
   setAuthor,
   setCategoryFilter,
   setModelBrandFilter,

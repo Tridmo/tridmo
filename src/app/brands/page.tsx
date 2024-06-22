@@ -21,7 +21,9 @@ export default function Brands() {
 
   React.useEffect(() => {
     if (getBrandsStatus === "idle") {
-      dispatch(getAllBrands({}))
+      dispatch(getAllBrands({
+        orderBy: 'models_count'
+      }))
     }
   }, [dispatch, router, getBrandsStatus])
 

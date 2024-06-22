@@ -2,7 +2,7 @@
 
 import React, { FormEvent, Fragment, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Grid, Box, styled, IconButton } from '@mui/material'
+import { Grid, Box, styled, IconButton, Skeleton } from '@mui/material'
 import SimpleCard from '../../simple_card'
 import SimpleTypography from '../../typography'
 import Image from 'next/image'
@@ -21,7 +21,7 @@ const MorePages = [
   {
     path: '/designers',
     title: 'Дизайнеры',
-    desc: 'Откройте безграничные возможности с нашими 3D-моделями.',
+    desc: 'Дизайнеры интерьера, работающие с нами, и их работы.',
     imageRounded: true,
     preview: [
       { image_src: '/img/person1.jpg' },
@@ -32,7 +32,7 @@ const MorePages = [
   {
     path: '/brands',
     title: 'Бренды',
-    desc: 'Преобразите свое пространство с помощью нашей подобранной коллекции продуктов.',
+    desc: 'Продукция ведущих мебельных брендов Узбекистана.',
     imageRounded: false,
     preview: [
       { image_src: '/img/brand1.jpg' },
@@ -45,26 +45,26 @@ const MorePages = [
 const WhyUsDatas = [
   {
     id: 1,
-    title: "Качественная продукция",
-    desc: "Широкий выбор тщательно проработанных, точных и качественных 3D-моделей и интерьеров.",
+    title: "Разнообразие выбора",
+    desc: "На этой платформе вы можете найти множество 3D-моделей и дизайнов на свой вкус.",
     icon: "/icons/why-us-check.svg"
   },
   {
     id: 2,
-    title: "Низкие цены",
-    desc: "Качественные 3D модели и интерьеры по доступным ценам.",
+    title: "Простое решение",
+    desc: "Не нужно бояться, что продукцию, использованную в вашем дизайне, не найдут в Узбекистане. Потому что через демоверсию вы будете пользоваться продукцией производителей «SARA» в Узбекистане.",
     icon: "/icons/why-us-label.svg"
   },
   {
     id: 3,
-    title: "Удобный",
-    desc: "Веб-сайт с простой навигацией для беспроблемного совершения покупок.",
+    title: "Уникальность и удобство",
+    desc: "Вы можете выполнить свою работу быстро, комфортно и легко через платформу, не имеющую аналогов на рынке Узбекистана.",
     icon: "/icons/why-us-cursor.svg"
   },
   {
     id: 4,
     title: "Экспертная команда",
-    desc: "Опытная команда экспертов доступна для поддержки клиентов и помощи.",
+    desc: "Команда платформы может помочь вам на каждом этапе. Это ещё больше ускорит процесс.",
     icon: "/icons/why-us-message.svg"
   },
 ]
@@ -130,12 +130,12 @@ export default function LandingPage() {
             <Grid>
               <Box sx={{ width: '590px' }}>
                 <SimpleTypography
-                  text='Lorem ipsum dolor sit amet, consectetur elit.'
+                  text='Теперь дизайн не только на бумаге.'
                   className='hero__title'
                   variant={'h1'}
                 />
                 <SimpleTypography
-                  text='Lorem ipsum dolor sit amet, consectetur elit. Lorem ipsum dolor sit amet, consectetur elit.Lorem ipsum dolor sit '
+                  text='Единственная площадка для дизайнеров и производителей мебели в Узбекистане.'
                   className='hero__desc'
                 />
                 <Grid>
@@ -172,9 +172,8 @@ export default function LandingPage() {
                     autoScroll
                   />
                   :
-                  <Image
-                    src={'/img/landing_main_img.png'}
-                    alt='Landing image'
+                  <Skeleton
+                    variant='rectangular'
                     width={354}
                     height={396}
                   />
@@ -385,7 +384,7 @@ export default function LandingPage() {
             >
               <Grid item xs={10}>
                 <SimpleTypography
-                  text="Почему мы?"
+                  text="Почему именно demod?"
                   className="section__title"
                   variant="h2"
                 />
@@ -399,9 +398,13 @@ export default function LandingPage() {
               sx={{ marginTop: "4px", marginBottom: "40px" }}
             >
               {WhyUsDatas.map((item) => (
-                <Grid key={item.id} item md={3} xs={12}>
+                <Grid key={item.id} item md={3} xs={12}
+                  sx={{
+                    minHeight: '340px'
+                  }}
+                >
                   <Box
-                    sx={{ background: "#fff", padding: "16px", height: "221px" }}
+                    sx={{ background: "#fff", padding: "16px", height: "100%" }}
                     className="why-us__card"
                   >
                     <Box

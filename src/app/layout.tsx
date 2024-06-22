@@ -27,7 +27,9 @@ export default function RootLayout({
 }>) {
 
   return (
-    <html lang="en">
+    <html lang="ru">
+      <head>
+      </head>
       <body className={inter.className}>
         <Providers>
           <Box sx={{ position: 'realtive' }}>

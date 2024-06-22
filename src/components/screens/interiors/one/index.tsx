@@ -14,7 +14,7 @@ import { CommentSection } from '@/components/comment_section';
 import { getOneInterior, selectOneInterior } from '../../../../data/get_one_interior';
 import { selectMyProfile } from '../../../../data/me';
 import { useParams, useRouter } from 'next/navigation';
-import { IMAGES_BASE_URL } from '../../../../utils/image_src';
+import { IMAGES_BASE_URL } from '../../../../utils/env_vars';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import Link from 'next/link';
 import EmptyData from '../../../views/empty_data';
@@ -24,19 +24,36 @@ import { selectComments } from '../../../../data/get_comments';
 import formatComments, { CommentFormatInterface } from '../../../comment_section/format_comments';
 import InteriorImages from '../../../views/interior/interior_images';
 import InteriorImagesModal from '../../../views/interior/interior_images/images_modal';
-import { setLoginState, setOpenModal } from '../../../../data/modal_checker';
+import { ConfirmContextProps, resetConfirmData, resetConfirmProps, setConfirmProps, setConfirmState, setLoginState, setOpenModal } from '../../../../data/modal_checker';
 import { toast } from 'react-toastify';
 import { selectToggleAddingTags, selectToggleShowTags, toggleAddingTags, toggleShowTags } from '../../../../data/toggle_tags';
-import { VisibilityOutlined, VisibilityOffOutlined } from '@mui/icons-material';
+import { VisibilityOutlined, VisibilityOffOutlined, Favorite, FavoriteBorder } from '@mui/icons-material';
 import { selectInteriorTags, setInteriorTags } from '../../../../data/get_interior_tags';
 import { getSavedInteriors } from '../../../../data/get_saved_interiors';
+import { getCategories } from '../../../../data/categories';
 
-const DropDown = styled(Menu)(
+const TagsDropDown = styled(Menu)(
   ({ theme }: ThemeProps) => `
 
   .MuiList-root{
     width:340px;
     max-height: 500px;
+    overflow-x: auto;
+    border: 1px solid #E0E0E0;
+    padding: 8px;
+  }
+
+  .MuiPaper-root{
+    border-radius:0 !important;
+    box-shadow: 0px 7px 12px 0px #00000040;
+  }
+  `
+);
+
+const ActionsDropDown = styled(Menu)(
+  ({ theme }: ThemeProps) => `
+
+  .MuiList-root{
     overflow-x: auto;
     border: 1px solid #E0E0E0;
     padding: 8px;
@@ -68,10 +85,25 @@ export default function OneInterior() {
   const [comments, setComments] = useState<CommentFormatInterface[]>([]);
   const [commentCurrentUser, setCommentUser] = useState<any>(null)
   const [isSaved, setIsSaved] = useState<any>(false)
+  const [isLiked, setIsLiked] = useState<any>(false)
+  const [likesCount, setLikesCount] = useState<number>(0)
+  const [menuAnchorEl, setMenuAnchorEl] = React.useState(null);
+  const menuOpen = Boolean(menuAnchorEl);
+
+
+  const handleMenuClick = (event: any) => {
+    setMenuAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setMenuAnchorEl(null);
+  };
 
   React.useEffect(() => {
     if (interior && isAuthenticated && currentUser) {
       setIsSaved(interior?.is_saved)
+      setIsLiked(interior?.is_liked)
+      setLikesCount(interior?.likes)
     }
   }, [isAuthenticated, currentUser, interior])
 
@@ -136,26 +168,125 @@ export default function OneInterior() {
     }
   };
 
+  const handleLike = () => {
+
+    if (!isAuthenticated) {
+      dispatch(setLoginState(true))
+      dispatch(setOpenModal(true))
+      return;
+    }
+
+    if (!isLiked) {
+      setIsLiked(true)
+      setLikesCount(prev => prev + 1)
+      instance.post(`/interiors/lk/${interior?.id}`)
+        .then(res => {
+          setIsLiked(res?.data?.success)
+          if (res?.data?.success == false) setLikesCount(prev => prev - 1)
+        }).catch(err => {
+          setIsLiked(false)
+        })
+    }
+    else if (isLiked) {
+      setIsLiked(false)
+      setLikesCount(prev => prev - 1)
+      instance.delete(`/interiors/lk/${interior?.id}`)
+        .then(res => {
+          setIsLiked(!res?.data?.success)
+        }).catch(err => {
+          setIsLiked(true)
+          setLikesCount(prev => prev + 1)
+        })
+    }
+  };
+
+
   function handleDeleteTag(tagId) {
+
     const arr = [...interiorTags]
     const tagIndex = arr.findIndex(t => t.id === tagId)
     const tag = arr[tagIndex]
     if (tag) {
-      instance.delete(`tags/${tag?.id}`)
-        .then(res => {
-          arr.splice(tagIndex, 1)
-          dispatch(setInteriorTags(arr))
-        })
-        .catch(err => {
-          console.log(err);
-          toast.error(err?.response?.data?.message)
-        })
+      const modalContent: ConfirmContextProps = {
+        message: `Вы уверены, что хотите удалить бирка «${tag?.model?.name}»?`,
+        actions: {
+          on_click: {
+            args: [interior?.id],
+            func: async (checked: boolean, id: number) => {
+              dispatch(setConfirmProps({ is_loading: true }))
+              instance.delete(`tags/${tag?.id}`)
+                .then(res => {
+                  if (res?.data?.success) {
+                    toast.success(res?.data?.message)
+                    dispatch(setConfirmState(false))
+                    dispatch(setOpenModal(false))
+                    dispatch(resetConfirmProps())
+                    dispatch(resetConfirmData())
+                    arr.splice(tagIndex, 1)
+                    dispatch(setInteriorTags(arr))
+                  }
+                })
+                .catch(err => {
+                  console.log(err);
+                  toast.error(err?.response?.data?.message)
+                })
+                .finally(() => {
+                  dispatch(setConfirmProps({ is_loading: false }))
+                  handleMenuClose();
+                })
+
+            }
+          }
+        }
+      }
+      dispatch(resetConfirmProps())
+      dispatch(setConfirmProps(modalContent))
+      dispatch(setConfirmState(true))
+      dispatch(setOpenModal(true))
     }
+  }
+
+  function handleClickDelete() {
+    const modalContent: ConfirmContextProps = {
+      message: `Вы уверены, что хотите удалить интерьер «${interior?.name}»?`,
+      actions: {
+        on_click: {
+          args: [interior?.id],
+          func: async (checked: boolean, id: number) => {
+            dispatch(setConfirmProps({ is_loading: true }))
+            instance.delete(`/interiors/${id}`)
+              .then(res => {
+                if (res?.data?.success) {
+                  toast.success(res?.data?.message)
+                  dispatch(getCategories())
+                  dispatch(setConfirmState(false))
+                  dispatch(setOpenModal(false))
+                  dispatch(resetConfirmProps())
+                  dispatch(resetConfirmData())
+                }
+                else {
+                  toast.success(res?.data?.message)
+                }
+              }).catch(err => {
+                toast.error(err?.response?.data?.message)
+              }).finally(() => {
+                dispatch(setConfirmProps({ is_loading: false }))
+                handleMenuClose();
+              })
+          }
+        }
+      }
+    }
+    dispatch(resetConfirmProps())
+    dispatch(setConfirmProps(modalContent))
+    dispatch(setConfirmState(true))
+    dispatch(setOpenModal(true))
   }
 
   return (
     <Box sx={{ background: "#fafafa" }} className="products" >
       <Box className='products__container' sx={{ maxWidth: "1200px", width: "100%", margin: "0 auto !important", alignItems: "center", }}>
+
         <Grid container
           sx={{
             margin: '32px 0 40px 0',
@@ -167,7 +298,8 @@ export default function OneInterior() {
         >
           <InteriorImagesModal mainImageWidth={800} />
 
-          <DropDown
+          {/* TAGS MENU */}
+          <TagsDropDown
             id="basic-menu"
             anchorEl={anchorEl}
             open={open}
@@ -255,11 +387,57 @@ export default function OneInterior() {
                 : <EmptyData boxShadow={false} border={false} />
             }
 
-          </DropDown>
+          </TagsDropDown>
+
+          {/* ACTIONS MENU */}
+          <ActionsDropDown
+            id="basic-menu"
+            anchorEl={menuAnchorEl}
+            open={menuOpen}
+            onClose={handleMenuClose}
+            MenuListProps={{
+              'aria-labelledby': 'basic-button',
+            }}
+          >
+
+            <MenuItem
+              onClick={handleMenuClose}
+              sx={{ padding: "6px 12px" }}
+            >
+              <Link
+                href={`/interiors/edit/${interior?.slug}`}
+                style={{ textDecoration: "none", display: "flex", alignItems: "center" }}
+              >
+
+                <Image
+                  src="/icons/edit-pen.svg"
+                  alt="icon"
+                  width={17}
+                  height={17}
+                />
+                <SimpleTypography className='drow-down__text' text='Редактировать' />
+
+              </Link>
+            </MenuItem>
+
+            <MenuItem
+              onClick={handleClickDelete}
+              sx={{ padding: "6px 12px" }}
+            >
+              <Image
+                src="/icons/trash.svg"
+                alt="icon"
+                width={17}
+                height={17}
+              />
+              <SimpleTypography className='drow-down__text' text='Удалить' />
+
+            </MenuItem>
+
+          </ActionsDropDown>
 
           <Grid item
             sx={{
-              minWidth: '520px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'flex-start'
@@ -319,7 +497,6 @@ export default function OneInterior() {
 
           <Grid item
             sx={{
-              minWidth: '480px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'flex-end'
@@ -384,10 +561,37 @@ export default function OneInterior() {
                       />
                     </Buttons>
                   </Box>
+                  <Box margin={'0 0 0 16px'}>
+                    <Buttons
+                      name={`Нравиться  (${likesCount})`}
+                      className='bookmark__btn'
+                      childrenFirst={true}
+                      onClick={handleLike}
+                    >
+                      {isLiked ? <Favorite sx={{ mr: '8px' }} /> : <FavoriteBorder sx={{ mr: '8px' }} />}
+                    </Buttons>
+                  </Box>
+                  <Box margin={'0 0 0 16px'}>
+                    <Buttons
+                      className='bookmark__btn'
+                      onClick={handleMenuClick}
+                      sx={{
+                        p: '8px !important'
+                      }}
+                    >
+                      <Image
+                        style={{ margin: '0' }}
+                        alt='icon'
+                        width={26}
+                        height={26}
+                        src={'/icons/horizontal-dots.svg'}
+                      />
+                    </Buttons>
+                  </Box>
                 </>
                 :
                 <>
-                  <Box margin={'0 0 0 16px'}>
+                  {/* <Box margin={'0 0 0 16px'}>
                     <Buttons
                       name={isSaved ? 'Сохранено' : 'Сохранить'}
                       className='bookmark__btn'
@@ -400,6 +604,16 @@ export default function OneInterior() {
                         height={18}
                         src={isSaved ? '/icons/bookmark-full.svg' : '/icons/bookmark-line.svg'}
                       />
+                    </Buttons>
+                  </Box> */}
+                  <Box margin={'0 0 0 16px'}>
+                    <Buttons
+                      name={`Нравиться  (${likesCount})`}
+                      className='bookmark__btn'
+                      childrenFirst={true}
+                      onClick={handleLike}
+                    >
+                      {isLiked ? <Favorite sx={{ mr: '8px' }} /> : <FavoriteBorder sx={{ mr: '8px' }} />}
                     </Buttons>
                   </Box>
                 </>

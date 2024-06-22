@@ -9,7 +9,7 @@ import { Box, SxProps } from '@mui/system';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import SimpleTypography from '../../../typography';
 import { sampleModel } from '@/data/samples/sample_model';
-import { IMAGES_BASE_URL } from '../../../../utils/image_src';
+import { IMAGES_BASE_URL } from '../../../../utils/env_vars';
 import { selectOneInterior } from '../../../../data/get_one_interior';
 
 

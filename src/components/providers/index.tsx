@@ -7,6 +7,7 @@ import store from "@/store";
 import ThemeProviderWrapper from '@/theme/ThemeProvider';
 import React, { Suspense } from 'react';
 import { NavigationEvents } from './navigation_events';
+import { SocketContextProvider } from '../../context/socket';
 
 export default function Providers({
   children,
@@ -19,13 +20,11 @@ export default function Providers({
     <Provider store={store}>
       <CookiesProvider>
         <AuthProvider>
-
           <ThemeProviderWrapper>
             <Suspense>
               <NavigationEvents />
             </Suspense>
             {children}
-
           </ThemeProviderWrapper>
         </AuthProvider>
       </CookiesProvider>

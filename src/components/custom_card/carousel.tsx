@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { selectTopModels } from '../../data/get_top_models';
 import Link from 'next/link';
 import Image from 'next/image';
-import { IMAGES_BASE_URL } from '../../utils/image_src';
+import { IMAGES_BASE_URL } from '../../utils/env_vars';
 import SimpleTypography from '../typography';
 
 

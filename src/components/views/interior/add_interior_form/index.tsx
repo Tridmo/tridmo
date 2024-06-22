@@ -19,7 +19,7 @@ import * as Yup from 'yup';
 import { getInteriorCategories, selectInteriorCategories } from '../../../../data/categories';
 import { useRouter } from 'next/navigation';
 import { selectOneInterior } from "../../../../data/get_one_interior";
-import { IMAGES_BASE_URL } from "../../../../utils/image_src";
+import { IMAGES_BASE_URL } from "../../../../utils/env_vars";
 
 const supportedFileTypes = 'image/png, image/jpg, image/jpeg, image/webp'
 const imagesCountLimit = 9;
@@ -92,7 +92,7 @@ export function AddInteriorForm({ editing }: { editing?: boolean }) {
     >
       <Box sx={{ marginBottom: '40px' }}>
         <SimpleTypography
-          text={editing ? "Редактировать проект" : "Загрузить новый проект"}
+          text={editing ? "Редактировать работу" : "Добавить работу"}
           sx={{
             fontSize: '30px',
             fontWeight: '500',

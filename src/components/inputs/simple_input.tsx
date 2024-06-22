@@ -3,7 +3,7 @@ import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
 import { ThemeProps } from '@/types/theme';
 import { InputAdornment } from '@mui/material';
-import { styled } from '@mui/system';
+import { SxProps, styled } from '@mui/system';
 interface InputAdornmentsProps {
   error?: boolean;
   name?: string;
@@ -22,6 +22,7 @@ interface InputAdornmentsProps {
   endAdornment?: any;
   placeholderText: string,
   className?: string;
+  sx?: SxProps;
 }
 
 const SimpleInputControl = styled(FormControl)(
@@ -74,9 +75,13 @@ const SimpleInputControl = styled(FormControl)(
 export default function SimpleInp(props: InputAdornmentsProps) {
 
   return (
-    <SimpleInputControl sx={{ m: 1, width: '100%' }} variant="filled">
+    <SimpleInputControl
+      sx={{
+        m: 1, width: '100%'
+      }} variant="filled">
 
       <TextField
+        sx={props?.sx}
         className={props?.className || ''}
         id={props?.label}
         autoComplete={props?.autoComplete}

@@ -29,6 +29,10 @@ export interface ContextState {
   isVerify: boolean;
   isModalOpen: boolean;
   isProfileEdit: boolean;
+  isProjectsList: boolean;
+  isAddingProject: boolean;
+  isEditingProject: boolean;
+  editingProject: any;
   order_id: string | null,
   isOrderModal: boolean;
   isFilterModal: boolean;
@@ -45,6 +49,10 @@ const initialState: ContextState = {
   isSignup: false,
   isVerify: false,
   isProfileEdit: false,
+  isAddingProject: false,
+  isProjectsList: false,
+  isEditingProject: false,
+  editingProject: null,
   isModalOpen: false,
   order_id: null,
   isOrderModal: false,
@@ -88,6 +96,18 @@ const modalChecker = createSlice({
     },
     setSignupState(state, action) {
       state.isSignup = action.payload;
+    },
+    setAddingProjectState(state, action) {
+      state.isAddingProject = action.payload;
+    },
+    setEditingProjectState(state, action) {
+      state.isEditingProject = action.payload;
+    },
+    setEditingProject(state, action) {
+      state.editingProject = action.payload;
+    },
+    setProjectsListState(state, action) {
+      state.isProjectsList = action.payload;
     },
     setVerifyState(state, action) {
       state.isVerify = action.payload;
@@ -137,6 +157,10 @@ const modalChecker = createSlice({
 });
 
 export const {
+  setProjectsListState,
+  setEditingProject,
+  setEditingProjectState,
+  setAddingProjectState,
   setProfileImagePreview,
   setProfileImageState,
   setConfirmState,
@@ -153,4 +177,5 @@ export const {
   resetConfirmData
 } = modalChecker.actions;
 
+export const selectEditingProject = (state: any) => state?.modal_checker?.editingProject
 export const reducer = modalChecker.reducer;

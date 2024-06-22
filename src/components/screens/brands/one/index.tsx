@@ -9,11 +9,12 @@ import BrandInfo from '@/components/views/brand/info';
 import Image from 'next/image';
 import { selectOneBrand } from '../../../../data/get_one_brand';
 import { getBrandModels, selectBrandModels } from '../../../../data/get_brand_models';
-import { IMAGES_BASE_URL } from '../../../../utils/image_src';
+import { IMAGES_BASE_URL } from '../../../../utils/env_vars';
 import SimpleCard from '../../../simple_card';
 import BasicPagination from '../../../pagination/pagination';
 import SimpleSelect from '../../../inputs/simple_select';
 import { selectBrandCategories } from '../../../../data/categories';
+import { setBrandModelsCategory } from '../../../../data/handle_filters';
 
 
 export default function OneBrand() {
@@ -27,6 +28,7 @@ export default function OneBrand() {
 
   React.useMemo(() => {
     if (!!category && category != 'all') {
+      dispatch(setBrandModelsCategory([category]))
       dispatch(getBrandModels({
         brand_id: brand?.id,
         categories: [category]
@@ -112,6 +114,8 @@ export default function OneBrand() {
                   }}
                 >
                   <BasicPagination
+                    dataSource='brand_models'
+                    dataId={brand?.id}
                     count={brandModels?.data?.pagination?.pages}
                     page={parseInt(brandModels?.data?.pagination?.current) + 1}
                   />

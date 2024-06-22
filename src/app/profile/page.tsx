@@ -22,6 +22,8 @@ import { setLoginState } from '../../data/modal_checker';
 import { getMyInteriors, selectMyInteriors } from '../../data/get_my_interiors';
 import { getSavedInteriors } from '../../data/get_saved_interiors';
 import { getSavedModels } from '../../data/get_saved_models';
+import { getChatToken } from '../../data/get_chat_token';
+import { getMyProjects } from '../../data/get_my_projects';
 
 const LoaderStyle = {
   // width: "100px !important",
@@ -51,8 +53,8 @@ export default function UserProfile() {
   const isAuthenticated = useSelector((state: any) => state?.auth_slicer?.authState)
   const getProfileStatus = useSelector((state: any) => state?.get_profile?.status)
   const getMyInteriorsStatus = useSelector((state: any) => state?.get_my_interiors?.status)
-  const getSavedInteriorsStatus = useSelector((state: any) => state?.get_saved_interiors?.status)
   const getSavedModelsStatus = useSelector((state: any) => state?.get_saved_models?.status)
+  const getProjectsStatus = useSelector((state: any) => state?.get_my_projects?.status)
   const dispatch = useDispatch<any>()
   const router = useRouter()
   const profile = useSelector(selectMyProfile)
@@ -68,11 +70,11 @@ export default function UserProfile() {
       if (getMyInteriorsStatus == 'idle') {
         dispatch(getMyInteriors())
       }
-      if (getSavedInteriorsStatus == 'idle') {
-        dispatch(getSavedInteriors())
-      }
       if (getSavedModelsStatus == 'idle') {
         dispatch(getSavedModels())
+      }
+      if (getProjectsStatus == 'idle') {
+        dispatch(getMyProjects())
       }
     }
   }, [profile])

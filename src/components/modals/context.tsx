@@ -4,14 +4,14 @@ import { Formik } from 'formik';
 import { toast } from 'react-toastify';
 import { getMyProfile, resetMyProfile, selectMyProfile } from '../../data/me';
 import { useDispatch, useSelector } from 'react-redux';
-import { setLoginState, setSignupState, setVerifyState, setOpenModal, setProfileEditState, setConfirmState, resetConfirmProps, resetConfirmData, ConfirmContextProps, ConfirmData, setConfirmData, setProfileImageState, setProfileImagePreview } from '../../data/modal_checker';
+import { setLoginState, setSignupState, setVerifyState, setOpenModal, setProfileEditState, setConfirmState, resetConfirmProps, resetConfirmData, ConfirmContextProps, ConfirmData, setConfirmData, setProfileImageState, setProfileImagePreview, setAddingProjectState, setEditingProjectState, selectEditingProject, setProjectsListState } from '../../data/modal_checker';
 import { setAuthState } from "../../data/login";
-import { Box, Typography, Grid, Button, TextField, InputAdornment, IconButton, SxProps, FormControlLabel, Checkbox, styled, TooltipProps, Tooltip, tooltipClasses } from '@mui/material';
+import { Box, Typography, Grid, Button, TextField, InputAdornment, IconButton, SxProps, FormControlLabel, Checkbox, styled, TooltipProps, Tooltip, tooltipClasses, List, ListItem, ListItemText, ListItemAvatar, Divider, Skeleton } from '@mui/material';
 import Image from 'next/image';
 import SimpleTypography from '../typography'
 import Buttons from '../buttons';
 import axios from '../../utils/axios';
-import { ACCESS_TOKEN_EXPIRATION_DAYS, REFRESH_TOKEN_EXPIRATION_DAYS } from '../../utils/expiration'
+import { ACCESS_TOKEN_EXPIRATION_DAYS, IMAGES_BASE_URL, REFRESH_TOKEN_EXPIRATION_DAYS } from '../../utils/env_vars'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import Cookies from 'js-cookie'
 import SimpleInp from '../inputs/simple_input';
@@ -27,6 +27,8 @@ import { usePathname } from 'next/navigation';
 import { getMyInteriors } from '../../data/get_my_interiors';
 import { getSavedInteriors } from '../../data/get_saved_interiors';
 import { getSavedModels } from '../../data/get_saved_models';
+import { getMyProjects, selectMyProjects } from '../../data/get_my_projects';
+import { selectOneModel } from '../../data/get_one_model';
 //Login context
 interface LoginContextProps {
   // setAlertMessage: any
@@ -1046,19 +1048,570 @@ export const EditProfileContext = (props: LoginContextProps) => {
                 </Grid>
 
                 {/* <Buttons name="Forgot your password?" className='underlined__btn' /> */}
-                <Buttons
-                  type="submit"
-                  name="Сохранить"
-                  startIcon={isSubmitting}
-                  disabled={Boolean(errors.submit) || isSubmitting}
-                  className='signIn__btn'
-                />
+                <Box
+                  sx={{
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end',
+                    mt: '24px',
+                  }}
+                >
+                  <Buttons
+                    type="button"
+                    name="Отмена"
+                    disabled={Boolean(errors.submit) || isSubmitting}
+                    className='bookmark__btn'
+                    onClick={() => {
+                      dispatch(setProfileEditState(false))
+                      dispatch(setOpenModal(false))
+                    }}
+                  />
+                  <Buttons
+                    sx={{ width: 'auto !important', ml: '16px' }}
+                    type="submit"
+                    name="Сохранить"
+                    startIcon={isSubmitting}
+                    disabled={Boolean(errors.submit) || isSubmitting}
+                    className='signIn__btn'
+                  />
+                </Box>
 
               </Grid>
             </Grid>
           </form>)}
       </Formik>
     </>
+  );
+}
+
+export const AddProjectContext = (props: LoginContextProps) => {
+  const dispatch = useDispatch<any>();
+  const profile = useSelector(selectMyProfile)
+
+  return (
+    <>
+      <Formik
+        initialValues={{
+          name: '',
+          submit: null
+        }}
+        validationSchema={Yup.object().shape({
+          name: Yup.string().required('Отсутствует название')
+            .max(255, 'Слишком длинное имя.')
+            .min(1, 'Слишком короткое имя - минимум 2 символа.'),
+        })}
+
+        onSubmit={async (
+          _values,
+          { resetForm, setErrors, setStatus, setSubmitting }
+        ) => {
+          try {
+
+            const formData = new FormData()
+
+            if (_values.name) formData.append('name', _values.name)
+
+            const res = await instance.post(`/projects`, formData);
+            setStatus({ success: true });
+            dispatch(setAddingProjectState(false));
+            dispatch(setOpenModal(false));
+            dispatch(getMyProjects());
+            toast.success(res?.data?.message || 'Успешно создано');
+          } catch (err: any) {
+            setStatus({ success: false });
+            toast.error(err?.response?.data?.message)
+            setErrors({ submit: err.message });
+          } finally {
+            setSubmitting(false);
+          }
+        }}
+      >
+        {({
+          errors,
+          handleBlur,
+          handleChange,
+          handleSubmit,
+          isSubmitting,
+          touched,
+          values
+        }) => (
+          <form onSubmit={handleSubmit}>
+            <Grid style={{ transformOrigin: '0 0 0' }}>
+              <Grid sx={{ display: 'flex', alignItems: "start", justifyContent: "start", flexDirection: "column" }}>
+                <SimpleTypography className="modal__title" variant="h6" text="Создать проект" />
+
+                <Grid container
+                  sx={{
+                    mt: '24px',
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    justifyContent: 'center'
+                  }}
+                >
+                  <SimpleInp
+                    sx={{ width: '100%' }}
+                    error={Boolean(touched.name && errors.name)}
+                    helperText={touched.name && errors.name}
+                    name="name"
+                    type="name"
+                    label="Название проекта"
+                    autoComplete="off"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.name}
+                    placeholderText=''
+                  />
+                </Grid>
+
+                {/* <Buttons name="Forgot your password?" className='underlined__btn' /> */}
+                <Box
+                  sx={{
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end',
+                    mt: '24px',
+                  }}
+                >
+                  <Buttons
+                    type="button"
+                    name="Отмена"
+                    disabled={Boolean(errors.submit) || isSubmitting}
+                    className='bookmark__btn'
+                    onClick={() => {
+                      dispatch(setAddingProjectState(false))
+                      dispatch(setOpenModal(false))
+                    }}
+                  />
+                  <Buttons
+                    sx={{ width: 'auto !important', ml: '16px' }}
+                    type="submit"
+                    name="Создать"
+                    startIcon={isSubmitting}
+                    disabled={Boolean(errors.submit) || isSubmitting}
+                    className='signIn__btn'
+                  />
+                </Box>
+
+              </Grid>
+            </Grid>
+          </form>)}
+      </Formik>
+    </>
+  );
+}
+
+export const EditProjectContext = (props: LoginContextProps) => {
+  const dispatch = useDispatch<any>();
+  const project = useSelector(selectEditingProject)
+
+  return (
+    <Formik
+      initialValues={{
+        name: project?.name ? project?.name : '',
+        submit: null
+      }}
+      validationSchema={Yup.object().shape({
+        name: Yup.string().optional()
+          .max(255, 'Слишком длинное имя.')
+          .min(1, 'Слишком короткое имя - минимум 2 символа.'),
+      })}
+
+      onSubmit={async (
+        _values,
+        { resetForm, setErrors, setStatus, setSubmitting }
+      ) => {
+        try {
+
+          const formData = new FormData()
+
+          if (_values.name) formData.append('name', _values.name)
+
+          const res = await instance.put(`/projects/${project?.id}`, formData);
+          setStatus({ success: true });
+          dispatch(setEditingProjectState(false));
+          dispatch(setOpenModal(false));
+          dispatch(getMyProjects());
+          toast.success(res?.data?.message || 'Успешно создано');
+        } catch (err: any) {
+          setStatus({ success: false });
+          toast.error(err?.response?.data?.message)
+          setErrors({ submit: err.message });
+        } finally {
+          setSubmitting(false);
+        }
+      }}
+    >
+      {({
+        errors,
+        handleBlur,
+        handleChange,
+        handleSubmit,
+        isSubmitting,
+        touched,
+        values
+      }) => (
+        <form onSubmit={handleSubmit}>
+          <Grid style={{ transformOrigin: '0 0 0' }}>
+            <Grid sx={{ display: 'flex', alignItems: "start", justifyContent: "start", flexDirection: "column" }}>
+              <SimpleTypography className="modal__title" variant="h6" text="Редактировать проект" />
+
+              <Grid container
+                sx={{
+                  mt: '24px',
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  justifyContent: 'center'
+                }}
+              >
+                <SimpleInp
+                  sx={{ width: '100%' }}
+                  error={Boolean(touched.name && errors.name)}
+                  helperText={touched.name && errors.name}
+                  name="name"
+                  type="name"
+                  label="Название проекта"
+                  autoComplete="off"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.name}
+                  placeholderText=''
+                />
+              </Grid>
+
+              {/* <Buttons name="Forgot your password?" className='underlined__btn' /> */}
+              <Box
+                sx={{
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-end',
+                  mt: '24px',
+                }}
+              >
+                <Buttons
+                  type="button"
+                  name="Отмена"
+                  disabled={Boolean(errors.submit) || isSubmitting}
+                  className='bookmark__btn'
+                  onClick={() => {
+                    dispatch(setEditingProjectState(false))
+                    dispatch(setOpenModal(false))
+                  }}
+                />
+                <Buttons
+                  sx={{ width: 'auto !important', ml: '16px' }}
+                  type="submit"
+                  name="Сохранить"
+                  startIcon={isSubmitting}
+                  disabled={Boolean(errors.submit) || isSubmitting}
+                  className='signIn__btn'
+                />
+              </Box>
+
+            </Grid>
+          </Grid>
+        </form>)}
+    </Formik>
+  );
+}
+
+const brandImageWrapperSx: SxProps = {
+  position: 'relative',
+  backgroundColor: '#fff',
+  width: '64px',
+  height: '72px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center'
+}
+
+const liSx: SxProps = {
+  justifyContent: 'flex-start',
+  padding: '12px',
+  transition: '0.4s all ease',
+}
+
+const listSx: SxProps = {
+  width: '100%',
+  maxWidth: 1200,
+  maxHeight: '400px',
+  display: 'block',
+  overflowY: 'auto',
+  bgcolor: 'background.paper',
+  borderRadius: '4px',
+  padding: 0,
+}
+
+
+export const ProjectsContext = (props: LoginContextProps) => {
+  const dispatch = useDispatch<any>();
+  const model = useSelector(selectOneModel)
+  const projects = useSelector(selectMyProjects)
+  const getProjectsStatus = useSelector((state: any) => state?.get_my_projects?.status)
+  const [selectedProjects, setSelectedProjects] = React.useState<any[]>([])
+
+  const fakeData = [1, 2, 3]
+
+  React.useEffect(() => {
+    if (!projects || getProjectsStatus != 'succeeded') {
+      dispatch(getMyProjects())
+      setSelectedProjects(projects?.data?.projects)
+    }
+    else if (!!projects) {
+      setSelectedProjects(projects?.data?.projects)
+    }
+  }, [projects, getMyProjects])
+
+
+  return (
+    <Formik
+      initialValues={{
+        projects: selectedProjects,
+        submit: null
+      }}
+
+      onSubmit={async (
+        _values,
+        { resetForm, setErrors, setStatus, setSubmitting }
+      ) => {
+        try {
+          const data = _values.projects?.filter(e => !!e?.selected).map(e => e.id)
+
+          const res = await instance.post(`/projects/model/${model?.id}`, {
+            projects: data
+          });
+          setStatus({ success: true });
+          dispatch(setProjectsListState(false));
+          dispatch(setOpenModal(false));
+          dispatch(getMyProjects());
+          toast.success(res?.data?.message || 'Успешно добавлено');
+        } catch (err: any) {
+          setStatus({ success: false });
+          toast.error(err?.response?.data?.message)
+          setErrors({ submit: err.message });
+        } finally {
+          setSubmitting(false);
+        }
+      }}
+    >
+      {({
+        handleSubmit,
+        setFieldValue,
+        errors,
+        isSubmitting,
+        touched,
+        values
+      }) => (
+        <form onSubmit={handleSubmit}>
+          <Grid style={{ transformOrigin: '0 0 0' }}>
+            <Grid sx={{ display: 'flex', alignItems: "start", justifyContent: "start", flexDirection: "column" }}>
+              <SimpleTypography className="modal__title" variant="h6" text="Добавить в проект" />
+
+              <Grid container
+                sx={{
+                  mt: '24px',
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  justifyContent: 'center'
+                }}
+              >
+                <List
+                  sx={listSx}
+                >
+                  {
+                    getProjectsStatus == 'succeeded' ?
+                      projects?.data?.projects?.map((project, index: any) => {
+                        const imagesArr: any[] = []
+                        for (let i = 0; i < 3; i++) {
+                          const element = project?.project_models[i];
+                          if (!!element) imagesArr.push({ src: `${IMAGES_BASE_URL}/${element["model.cover"][0]?.image_src}` })
+                          else imagesArr.unshift({ src: null })
+                        }
+                        return <>
+                          <ListItem key={index} alignItems="center"
+                            sx={liSx}
+                          >
+
+                            <Box sx={{
+                              width: '100%',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'flex-start'
+                            }}
+                            >
+                              <Box
+                                sx={brandImageWrapperSx}
+                              >
+                                {
+                                  imagesArr?.map((img, i) =>
+                                    <Box
+                                      sx={{
+                                        position: 'absolute',
+                                        bottom: `${i != 0 ? (i * 4) : i}px`,
+                                        width: '64px',
+                                        height: '64px',
+                                        bgcolor: '#F5F5F5',
+                                        backgroundImage: `url(${img?.src && img?.src != null ? img?.src : ''})`,
+                                        backgroundRepeat: 'no-repeat',
+                                        backgroundSize: 'cover',
+                                        boxShadow: '0px 1px 2px 0px #0000001A',
+                                        border: '1px solid #E0E0E0',
+                                      }}
+                                    />
+                                  )
+                                }
+                              </Box>
+
+                              <Box sx={{
+                                marginLeft: '24px',
+
+                              }} >
+                                <SimpleTypography
+                                  text={project?.name}
+                                  sx={{
+                                    fontSize: '13px',
+                                    fontWeight: 400,
+                                    lineHeight: '18px',
+                                    textAlign: 'start',
+                                    color: '#141414'
+                                  }}
+                                />
+                                <SimpleTypography
+                                  text={`${!!project?.project_models[0] ? project?.project_models?.length : 0} ${!!project?.project_models[0] && project?.project_models?.length > 1 ? 'мебели' : 'мебель'}`}
+                                  sx={{
+                                    fontSize: '14px',
+                                    fontWeight: 400,
+                                    lineHeight: '20px',
+                                    textAlign: 'start',
+                                    color: '#848484'
+                                  }}
+                                />
+                              </Box>
+                            </Box>
+
+                            <Box
+                              sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'flex-start'
+                              }}
+                            >
+                              <Checkbox
+                                onChange={() => {
+                                  const arr = [...selectedProjects]
+                                  const p = arr[index]
+                                  if (!p?.selected) {
+                                    arr[index] = { ...p, selected: true }
+                                    setSelectedProjects(arr)
+                                    setFieldValue('projects', arr)
+                                    console.log(arr);
+                                  }
+                                }}
+                              />
+                            </Box>
+
+                          </ListItem>
+                          {
+                            projects?.data?.projects?.length && index != projects?.data?.projects?.length - 1 ?
+                              <Divider sx={{ margin: 0 }} variant="inset" component="li" />
+                              : null
+                          }
+                        </>
+                      })
+                      :
+                      fakeData.map((e, index) =>
+                        <>
+                          <ListItem key={index} alignItems="center"
+                            sx={liSx}
+                          >
+
+                            <ListItemText sx={{
+                              width: '100%',
+                              '& span': {
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'flex-start'
+                              }
+                            }}
+                            >
+                              <Skeleton
+                                width={'64px'}
+                                height={'72px'}
+                                variant='rectangular'
+                              />
+
+                              <Box sx={{ display: 'block', marginLeft: '24px' }} >
+                                <Skeleton
+                                  width={90}
+                                  height={22}
+                                  variant='rectangular'
+                                />
+                                <Skeleton
+                                  sx={{ mt: '8px' }}
+                                  width={60}
+                                  height={20}
+                                  variant='rectangular'
+                                />
+                              </Box>
+                            </ListItemText>
+
+                          </ListItem>
+                          {
+                            index != fakeData.length - 1 ?
+                              <Divider sx={{ margin: 0 }} variant="inset" component="li" />
+                              : null
+                          }
+                        </>
+                      )
+                  }
+                </List>
+              </Grid>
+
+              <Box
+                sx={{
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  mt: '24px',
+                }}
+              >
+                <Buttons
+                  type="button"
+                  name="Новый проект"
+                  childrenFirst
+                  className='bookmark__btn'
+                  onClick={() => {
+                    dispatch(setProjectsListState(false))
+                    dispatch(setAddingProjectState(true))
+                  }}
+                >
+                  <Image
+                    alt='icon'
+                    width={18}
+                    height={18}
+                    src={'/icons/plus.svg'}
+                  />
+                </Buttons>
+                <Buttons
+                  sx={{ width: 'auto !important', ml: '16px' }}
+                  type="submit"
+                  name="Добавить"
+                  startIcon={isSubmitting}
+                  disabled={Boolean(errors.submit) || isSubmitting}
+                  className='signIn__btn'
+                />
+              </Box>
+
+            </Grid>
+          </Grid>
+        </form>)}
+    </Formik>
   );
 }
 

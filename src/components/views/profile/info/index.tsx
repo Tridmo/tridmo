@@ -9,12 +9,16 @@ import { useRouter } from 'next/navigation';
 import { sampleUser } from '@/data/samples';
 import { selectDesignerProfile } from '../../../../data/get_designer';
 import { selectMyProfile } from '../../../../data/me';
-import { IMAGES_BASE_URL } from '../../../../utils/image_src';
-import { setProfileEditState, setOpenModal, setProfileImageState, setProfileImagePreview } from '../../../../data/modal_checker';
+import { IMAGES_BASE_URL } from '../../../../utils/env_vars';
+import { setProfileEditState, setOpenModal, setProfileImageState, setProfileImagePreview, setAddingProjectState } from '../../../../data/modal_checker';
 import formatDate from '../../../../utils/format_date';
 import { useRef } from 'react';
 import { readFile } from '../../../inputs/file_input';
-import { RateReview } from '@mui/icons-material';
+import { Add, RateReview } from '@mui/icons-material';
+import { chatApi } from '../../../../utils/axios';
+import { selectChatToken } from '../../../../data/get_chat_token';
+import Cookies from 'js-cookie';
+import { setSelectedConversation } from '../../../../data/chat';
 
 interface ProfileProps {
   of: 'designer' | 'own'
@@ -47,9 +51,15 @@ const tContainerSx: SxProps = {
   overflowX: 'hidden'
 }
 
-const tRowSx: SxProps = { '&:last-child td, &:last-child th': { border: 0 }, }
+const tRowSx: SxProps = {
+  '&:last-child td, &:last-child th': { border: 0 },
+}
 
-const tCellSx: SxProps = { borderColor: "#F5F5F5" }
+const tCellSx: SxProps = {
+  textAlign: 'start',
+  padding: '12px 8px',
+  borderColor: "#F5F5F5"
+}
 
 export default function ProfileInfo(props: ProfileProps) {
   const router = useRouter()
@@ -57,6 +67,7 @@ export default function ProfileInfo(props: ProfileProps) {
   const dispatch = useDispatch()
 
   const profileInfo = useSelector(props?.of == 'designer' ? selectDesignerProfile : selectMyProfile)
+  const token = useSelector(selectChatToken)
 
   const hiddenFileInput = useRef<HTMLInputElement>(null);
 
@@ -71,6 +82,20 @@ export default function ProfileInfo(props: ProfileProps) {
     dispatch(setProfileImageState(true))
     dispatch(setOpenModal(true))
     dispatch(setProfileImagePreview(e.target.files[0]))
+  }
+
+  async function handleCreateConversation() {
+    chatApi.post(`/conversations`, {
+      members: [profileInfo?.user_id]
+    }, {
+      headers: {
+        'Authorization': `Bearer ${Cookies.get('chatToken') ? Cookies.get('chatToken') : token ? token : ''}`
+      }
+    })
+      .then(res => {
+        dispatch(setSelectedConversation(res?.data?.id))
+        router.push('/chat')
+      })
   }
 
   if (getProfileStatus == 'succeeded') {
@@ -274,10 +299,14 @@ export default function ProfileInfo(props: ProfileProps) {
                     />
                   </TableCell>
                   <TableCell sx={tCellSx} align="right">
-                    <SimpleTypography
-                      text={profileInfo?.address || ''}
-                      className="table__text_info"
-                    />
+                    {
+                      !!profileInfo?.address ?
+                        <SimpleTypography
+                          text={profileInfo?.address}
+                          className="table__text_info"
+                        />
+                        : <AddButton />
+                    }
                   </TableCell>
                 </TableRow>
 
@@ -291,12 +320,16 @@ export default function ProfileInfo(props: ProfileProps) {
                     />
                   </TableCell>
                   <TableCell sx={tCellSx} align="right">
-                    <Link target='_blank' href={profileInfo?.portfolio_link || ''}>
-                      <SimpleTypography
-                        text={profileInfo?.portfolio_link || ''}
-                        className="table__text_info"
-                      />
-                    </Link>
+                    {
+                      !!profileInfo?.portfolio_link ?
+                        <Link target='_blank' href={profileInfo?.portfolio_link || ''}>
+                          <SimpleTypography
+                            text={profileInfo?.portfolio_link || ''}
+                            className="table__text_info"
+                          />
+                        </Link>
+                        : <AddButton />
+                    }
                   </TableCell>
                 </TableRow>
 
@@ -310,10 +343,14 @@ export default function ProfileInfo(props: ProfileProps) {
                     />
                   </TableCell>
                   <TableCell sx={tCellSx} align="right">
-                    <SimpleTypography
-                      text={profileInfo?.phone || ''}
-                      className="table__text_info"
-                    />
+                    {
+                      !!profileInfo?.phone ?
+                        <SimpleTypography
+                          text={profileInfo?.phone}
+                          className="table__text_info"
+                        />
+                        : <AddButton />
+                    }
                   </TableCell>
                 </TableRow>
 
@@ -329,10 +366,14 @@ export default function ProfileInfo(props: ProfileProps) {
                         />
                       </TableCell>
                       <TableCell sx={tCellSx} align="right">
-                        <SimpleTypography
-                          text={profileInfo?.telegram || ''}
-                          className="table__text_info"
-                        />
+                        {
+                          !!profileInfo?.telegram ?
+                            <SimpleTypography
+                              text={profileInfo?.telegram}
+                              className="table__text_info"
+                            />
+                            : <AddButton />
+                        }
                       </TableCell>
                     </TableRow>
                     : null
@@ -381,6 +422,7 @@ export default function ProfileInfo(props: ProfileProps) {
                   </Grid>
                   <Grid item md={12} xs={12}>
                     <Buttons
+                      onClick={() => handleCreateConversation()}
                       sx={{ width: '100%' }}
                       className='upload__btn'
                       name="Написать сообщение"
@@ -417,25 +459,37 @@ export default function ProfileInfo(props: ProfileProps) {
         {
           props?.of == 'own'
             ? <Grid container sx={{ width: '100%', justifyContent: "space-between" }}>
-
-
-              <Grid item md={12} xs={12}>
-                <Buttons
-                  name="Новый проект"
-                  childrenFirst={true}
-                  className="upload__btn"
-                  sx={{ width: '100%' }}
-                  onClick={() => router.push('/interiors/addnew')}
-                >
-                  <Image
-                    alt="upload icon"
-                    src='/icons/plus-white.svg'
-                    width={13}
-                    height={13}
-                  />
-                </Buttons>
-              </Grid>
-
+              <Buttons
+                sx={{ width: '48%' }}
+                name="Создать проект"
+                childrenFirst={true}
+                className="login__btn"
+                onClick={() => {
+                  dispatch(setAddingProjectState(true))
+                  dispatch(setOpenModal(true))
+                }}
+              >
+                <Image
+                  alt="upload icon"
+                  src='/icons/plus-bordered.svg'
+                  width={16}
+                  height={16}
+                />
+              </Buttons>
+              <Buttons
+                sx={{ width: '48%' }}
+                name="Добавить работу"
+                childrenFirst={true}
+                className="upload__btn"
+                onClick={() => router.push('/interiors/addnew')}
+              >
+                <Image
+                  alt="upload icon"
+                  src='/icons/plus-white.svg'
+                  width={13}
+                  height={13}
+                />
+              </Buttons>
             </Grid>
 
             : null
@@ -639,23 +693,12 @@ export default function ProfileInfo(props: ProfileProps) {
         {
           props?.of == 'own'
             ? <Grid container sx={{ width: '100%', justifyContent: "space-between" }}>
-
-
               <Grid item md={12} xs={12}>
-                <Buttons
-                  name="Новый проект"
-                  childrenFirst={true}
-                  className="upload__btn"
-                  sx={{ width: '100%' }}
-                  onClick={() => router.push('/interiors/addnew')}
-                >
-                  <Image
-                    alt="upload icon"
-                    src='/icons/plus-white.svg'
-                    width={13}
-                    height={13}
-                  />
-                </Buttons>
+                <Skeleton
+                  variant="rectangular"
+                  width={'100%'}
+                  height={43}
+                />
               </Grid>
 
             </Grid>
@@ -666,4 +709,39 @@ export default function ProfileInfo(props: ProfileProps) {
       </Box>
     )
   }
+}
+
+
+function AddButton() {
+  const dispatch = useDispatch()
+  return (
+    <Buttons
+      sx={{
+        height: 'auto !important',
+        borderRadius: '28px !important',
+        padding: '7.5px 34.5px !important',
+        borderWidth: '1.7px !important'
+      }}
+      className='bookmark__btn'
+      childrenFirst={true}
+      onClick={() => {
+        dispatch(setProfileEditState(true))
+        dispatch(setOpenModal(true))
+      }}
+    >
+      <Image
+        width={14}
+        height={14}
+        alt="icon"
+        src={"/icons/plus.svg"}
+      />
+      <SimpleTypography
+        text="Добавить"
+        sx={{
+          fontSize: '14px',
+          lineHeight: '17px'
+        }}
+      />
+    </Buttons>
+  )
 }

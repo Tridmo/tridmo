@@ -1,19 +1,21 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { Box, styled, Paper, Avatar, MenuItem, Menu } from '@mui/material';
+import { Box, styled, Paper, Avatar, MenuItem, Menu, Grid } from '@mui/material';
 import Image from 'next/image';
 import SimpleTypography from '../typography';
 import Link from 'next/link';
 import { ThemeProps } from '../../types/theme';
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { IMAGES_BASE_URL } from '../../utils/image_src';
+import { IMAGES_BASE_URL } from '../../utils/env_vars';
 import { KeyboardArrowDown } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { ConfirmContextProps, resetConfirmData, resetConfirmProps, setConfirmProps, setConfirmState, setOpenModal } from '../../data/modal_checker';
+import { ConfirmContextProps, resetConfirmData, resetConfirmProps, setConfirmProps, setConfirmState, setEditingProject, setEditingProjectState, setOpenModal } from '../../data/modal_checker';
 import { getCategories } from '../../data/categories';
 import { toast } from 'react-toastify';
 import instance from '../../utils/axios';
+import { getMyInteriors } from '../../data/get_my_interiors';
+import { getMyProjects } from '../../data/get_my_projects';
 
 type InputProps = {
   item?: object,
@@ -40,6 +42,7 @@ type CustomCardProps = {
   withAuthor?: boolean,
   settingsBtn?: boolean,
   useButton?: boolean,
+  imageSplit?: number,
 }
 const Label = styled(Paper)(({ theme }: ThemeProps) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -71,15 +74,29 @@ const DropDown = styled(Menu)(
   `
 );
 
-function CustomCard({ model, link, imgHeight, tagIcon, tagText, withAuthor, settingsBtn, useButton = false }: CustomCardProps) {
+function CustomCard({ model, type, link, imgHeight, tagIcon, tagText, withAuthor, settingsBtn, imageSplit, useButton = false }: CustomCardProps) {
 
   const dispatch = useDispatch<any>()
   const router = useRouter()
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedInterior, setSelectedInterior] = React.useState<any>(null);
+  const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const [images, setImages] = React.useState<any[]>([])
 
+  React.useEffect(() => {
+    if (!!imageSplit && images.length < 4) {
+      const imagesArr: any[] = []
+      for (let i = 0; i < 4; i++) {
+        const element = model?.project_models[i];
+        imagesArr.push({
+          src: !!element ? `${IMAGES_BASE_URL}/${element["model.cover"][0]?.image_src}` : null
+        })
+      }
+      setImages(imagesArr)
+    }
+  }, [model])
 
+  console.log(images);
   const handleClick = (event: any, interior) => {
     setAnchorEl(event.currentTarget);
     setSelectedInterior(interior)
@@ -88,6 +105,12 @@ function CustomCard({ model, link, imgHeight, tagIcon, tagText, withAuthor, sett
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  function openEditProject(project) {
+    dispatch(setEditingProject(project))
+    dispatch(setEditingProjectState(true))
+    dispatch(setOpenModal(true))
+  }
 
   function handleBoxClick(e, link) {
     const classes = [...e.target!['classList']]
@@ -98,21 +121,26 @@ function CustomCard({ model, link, imgHeight, tagIcon, tagText, withAuthor, sett
 
   function handleClickDelete() {
     const modalContent: ConfirmContextProps = {
-      message: `Вы уверены, что хотите удалить интерьер «${selectedInterior?.name}»?`,
+      message: `Вы уверены, что хотите удалить ${type == 'projects' ? 'проект' : 'интерьер'} «${selectedInterior?.name}»?`,
       actions: {
         on_click: {
           args: [selectedInterior?.id],
           func: async (checked: boolean, id: number) => {
             dispatch(setConfirmProps({ is_loading: true }))
-            instance.delete(`categories/${id}/?cascade=${!checked}`)
+            instance.delete(`${type == 'projects' ? 'projects' : 'interiors'}/${id}/?cascade=${!checked}`)
               .then(res => {
                 if (res?.data?.success) {
                   toast.success(res?.data?.message)
-                  dispatch(getCategories())
                   dispatch(setConfirmState(false))
                   dispatch(setOpenModal(false))
                   dispatch(resetConfirmProps())
                   dispatch(resetConfirmData())
+                  dispatch(resetConfirmData())
+                  if (type == 'projects') {
+                    dispatch(getMyProjects())
+                  } else {
+                    dispatch(getMyInteriors())
+                  }
                 }
                 else {
                   toast.success(res?.data?.message)
@@ -146,23 +174,34 @@ function CustomCard({ model, link, imgHeight, tagIcon, tagText, withAuthor, sett
       >
 
         <MenuItem
-          onClick={handleClose}
+          onClick={() => type == 'projects' ? openEditProject(model) : handleClose()}
           sx={{ padding: "6px 12px" }}
         >
-          <Link
-            href={`/interiors/edit/${selectedInterior?.slug}`}
-            style={{ textDecoration: "none", display: "flex", alignItems: "center" }}
-          >
-
-            <Image
-              src="/icons/edit-pen.svg"
-              alt="icon"
-              width={17}
-              height={17}
-            />
-            <SimpleTypography className='drow-down__text' text='Редактировать' />
-
-          </Link>
+          {
+            type == 'projects' ?
+              <>
+                <Image
+                  src="/icons/edit-pen.svg"
+                  alt="icon"
+                  width={17}
+                  height={17}
+                />
+                <SimpleTypography className='drow-down__text' text='Редактировать' />
+              </>
+              :
+              <Link
+                href={`/interiors/edit/${selectedInterior?.slug}`}
+                style={{ textDecoration: "none", display: "flex", alignItems: "center" }}
+              >
+                <Image
+                  src="/icons/edit-pen.svg"
+                  alt="icon"
+                  width={17}
+                  height={17}
+                />
+                <SimpleTypography className='drow-down__text' text='Редактировать' />
+              </Link>
+          }
         </MenuItem>
 
         <MenuItem
@@ -274,16 +313,62 @@ function CustomCard({ model, link, imgHeight, tagIcon, tagText, withAuthor, sett
                       </Box>
                       : null
               }
-              <LazyLoadImage
-                src={model.cover ? (model?.cover[0]?.image_src ? `${IMAGES_BASE_URL}/${model?.cover[0]?.image_src}` : '') : ''}
-                alt="Model"
-                effect="blur"
-                width={"100%"}
-                placeholderSrc={"/img/card-loader.jpg"}
-                height={imgHeight || `208px`}
-                delayTime={500}
-                style={{ objectFit: "cover" }}
-              />
+              {
+                !imageSplit ?
+                  <LazyLoadImage
+                    src={model.cover ? (model?.cover[0]?.image_src ? `${IMAGES_BASE_URL}/${model?.cover[0]?.image_src}` : '') : ''}
+                    alt="cover"
+                    effect="blur"
+                    width={"100%"}
+                    placeholderSrc={"/img/card-loader.jpg"}
+                    height={imgHeight || `208px`}
+                    delayTime={500}
+                    style={{ objectFit: "cover" }}
+                  />
+                  :
+                  <Grid container
+                    rowGap={'4px'}
+                    columnGap={'4px'}
+                    sx={{
+                      width: '100%'
+                    }}
+                  >
+                    {
+                      images.map((i, index) => (
+                        i?.src && i?.src != null ?
+                          <Grid item key={index}
+                            sx={{
+                              width: '49%',
+                              height: '171px',
+                              border: '2px solid #F5F5F5',
+                            }}
+                          >
+                            <LazyLoadImage
+                              style={{
+                                objectFit: "cover"
+                              }}
+                              src={i?.src}
+                              alt="cover"
+                              effect="blur"
+                              width={"100%"}
+                              height={`100%`}
+                              placeholderSrc={"/img/card-loader.jpg"}
+                              delayTime={500}
+                            />
+                          </Grid>
+                          :
+                          <Grid item key={index}
+                            sx={{
+                              width: '49%',
+                              height: '171px',
+                              bgcolor: '#F5F5F5',
+                              border: '2px solid #F5F5F5'
+                            }}
+                          ></Grid>
+                      ))
+                    }
+                  </Grid>
+              }
               <Label
                 sx={{
                   width: "100%",
@@ -312,10 +397,34 @@ function CustomCard({ model, link, imgHeight, tagIcon, tagText, withAuthor, sett
                       />
                     </Box>
                     :
-                    <SimpleTypography
-                      text={model?.name}
-                      className='card__title'
-                    />
+                    type == 'projects' ?
+                      <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+                        <SimpleTypography
+                          text={model?.name}
+                          sx={{
+                            fontSize: '16px',
+                            fontWeight: 500,
+                            lineHeight: '22px',
+                            textAlign: 'start',
+                            color: '#141414'
+                          }}
+                        />
+                        <SimpleTypography
+                          text={`${!!model?.project_models[0] ? model?.project_models?.length : 0} ${!!model?.project_models[0] && model?.project_models?.length > 1 ? 'мебели' : 'мебель'}`}
+                          sx={{
+                            fontSize: '14px',
+                            fontWeight: 400,
+                            lineHeight: '20px',
+                            textAlign: 'start',
+                            color: '#848484'
+                          }}
+                        />
+                      </Box>
+                      :
+                      <SimpleTypography
+                        text={model?.name}
+                        className='card__title'
+                      />
                 }
                 {
                   model?.brand && model?.brand?.name
@@ -375,16 +484,62 @@ function CustomCard({ model, link, imgHeight, tagIcon, tagText, withAuthor, sett
                     </Box>
                     : null
               }
-              <LazyLoadImage
-                src={model.cover ? (model?.cover[0]?.image_src ? `${IMAGES_BASE_URL}/${model?.cover[0]?.image_src}` : '') : ''}
-                alt="Model"
-                effect="blur"
-                width={"100%"}
-                placeholderSrc={"/img/card-loader.jpg"}
-                height={imgHeight || `208px`}
-                delayTime={500}
-                style={{ objectFit: "cover" }}
-              />
+              {
+                !imageSplit ?
+                  <LazyLoadImage
+                    src={model.cover ? (model?.cover[0]?.image_src ? `${IMAGES_BASE_URL}/${model?.cover[0]?.image_src}` : '') : ''}
+                    alt="cover"
+                    effect="blur"
+                    width={"100%"}
+                    placeholderSrc={"/img/card-loader.jpg"}
+                    height={imgHeight || `208px`}
+                    delayTime={500}
+                    style={{ objectFit: "cover" }}
+                  />
+                  :
+                  <Grid container
+                    rowGap={'4px'}
+                    columnGap={'4px'}
+                    sx={{
+                      width: '100%'
+                    }}
+                  >
+                    {
+                      images.map((i, index) => (
+                        i?.src && i?.src != null ?
+                          <Grid item key={index}
+                            sx={{
+                              width: '49%',
+                              height: '171px',
+                              border: '2px solid #F5F5F5',
+                            }}
+                          >
+                            <LazyLoadImage
+                              style={{
+                                objectFit: "cover"
+                              }}
+                              src={i?.src}
+                              alt="cover"
+                              effect="blur"
+                              width={"100%"}
+                              height={`100%`}
+                              placeholderSrc={"/img/card-loader.jpg"}
+                              delayTime={500}
+                            />
+                          </Grid>
+                          :
+                          <Grid item key={index}
+                            sx={{
+                              width: '49%',
+                              height: '171px',
+                              bgcolor: '#F5F5F5',
+                              border: '2px solid #F5F5F5'
+                            }}
+                          ></Grid>
+                      ))
+                    }
+                  </Grid>
+              }
               <Label
                 sx={{
                   width: "100%",

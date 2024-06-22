@@ -6,7 +6,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { readFile } from '@/components/inputs/file_input';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectOneInterior } from '@/data/get_one_interior';
-import { IMAGES_BASE_URL } from '@/utils/image_src';
+import { IMAGES_BASE_URL } from '@/utils/env_vars';
 import { setShowInteriorImagesModal } from '@/data/loader';
 import Image from 'next/image';
 import { selectToggleAddingTags, selectToggleShowTags } from '../../../../data/toggle_tags';
@@ -22,6 +22,7 @@ import { toast } from 'react-toastify';
 import { selectInteriorTags, setInteriorTags } from '../../../../data/get_interior_tags';
 import Link from 'next/link';
 import { selectMyProfile } from '../../../../data/me';
+import { ConfirmContextProps, resetConfirmData, resetConfirmProps, setConfirmProps, setConfirmState, setOpenModal } from '../../../../data/modal_checker';
 
 const imageStyle: CSSProperties = {
   verticalAlign: 'top',
@@ -198,22 +199,47 @@ export default function InteriorImages() {
     }
   }
 
-  function handleDeleteTag(e, tagId) {
+  function handleDeleteTag(tagId) {
+
     const arr = [...interiorTags]
     const tagIndex = arr.findIndex(t => t.id === tagId)
     const tag = arr[tagIndex]
     if (tag) {
-      setLoadingTagId(tag?.id)
-      instance.delete(`tags/${tag?.id}`)
-        .then(res => {
-          arr.splice(tagIndex, 1)
-          dispatch(setInteriorTags(arr))
-        })
-        .catch(err => {
-          console.log(err);
-          toast.error(err?.response?.data?.message)
-        })
-        .finally(() => setLoadingTagId(''))
+      const modalContent: ConfirmContextProps = {
+        message: `Вы уверены, что хотите удалить бирка «${tag?.model?.name}»?`,
+        actions: {
+          on_click: {
+            args: [interior?.id],
+            func: async (checked: boolean, id: number) => {
+              dispatch(setConfirmProps({ is_loading: true }))
+              instance.delete(`tags/${tag?.id}`)
+                .then(res => {
+                  if (res?.data?.success) {
+                    toast.success(res?.data?.message)
+                    dispatch(setConfirmState(false))
+                    dispatch(setOpenModal(false))
+                    dispatch(resetConfirmProps())
+                    dispatch(resetConfirmData())
+                    arr.splice(tagIndex, 1)
+                    dispatch(setInteriorTags(arr))
+                  }
+                })
+                .catch(err => {
+                  console.log(err);
+                  toast.error(err?.response?.data?.message)
+                })
+                .finally(() => {
+                  dispatch(setConfirmProps({ is_loading: false }))
+                })
+
+            }
+          }
+        }
+      }
+      dispatch(resetConfirmProps())
+      dispatch(setConfirmProps(modalContent))
+      dispatch(setConfirmState(true))
+      dispatch(setOpenModal(true))
     }
   }
 
@@ -439,7 +465,7 @@ export default function InteriorImages() {
                                   }}
                                 >
                                   <Buttons className='delete__tag'
-                                    onClick={(e) => handleDeleteTag(e, t.id)}
+                                    onClick={(e) => handleDeleteTag(t.id)}
                                     disabled={loadingTagId == t.id}
                                     startIcon={loadingTagId == t.id}
                                   >

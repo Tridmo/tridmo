@@ -145,6 +145,10 @@ const ButtonWrapper = styled(Button)(
         padding:0 20px ;
         border-radius:4px;
         
+        img {
+          margin-right: 8px;
+        }
+
         &:hover{
           background-color:${theme.colors.gray[700]};
           border-color: ${theme.colors.gray[700]};
@@ -192,9 +196,6 @@ const ButtonWrapper = styled(Button)(
         width:100%;
         background: #7210BE;
         color:#fff;
-        margin-top: 24px;
-        margin-bottom: 10px;
-        border-radius:4px;
 
         &:hover{
           background: #9E35EE;  

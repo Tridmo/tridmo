@@ -116,7 +116,14 @@ const InputField = ({
   }
 
   return (
-    <div>
+    <div
+      style={
+        mode != 'replyMode' ? {
+          border: '1px solid #E0E0E0',
+          padding: '16px'
+        } : {}
+      }
+    >
       {globalStore.advancedInput ? (
         <AdvancedInput
           handleSubmit={handleSubmit}

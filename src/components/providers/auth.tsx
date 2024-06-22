@@ -6,22 +6,27 @@ import { getUpdatedAccessToken } from '../../data/re-update_access_token'
 import Cookies from 'js-cookie'
 const AuthContext = createContext({});
 import { getMyProfile, selectMyProfile } from '../../data/me';
+import { getChatToken } from "../../data/get_chat_token";
 
 
 export const AuthProvider = ({ children }) => {
   const dispatch = useDispatch<any>();
   const update_cookie_status = useSelector((state: any) => state?.update_access_token?.status);
-  const myProfile = useSelector(selectMyProfile)
   const myProfileStatus = useSelector((state: any) => state?.profile_me?.status)
+  const tokenStatus = useSelector((state: any) => state?.get_chat_token?.status)
+  const myProfile = useSelector(selectMyProfile)
 
   useEffect(() => {
     async function loadUserFromCookies() {
 
-      if (Cookies.get('accessToken') && Cookies.get('refreshToken')) {
+      if (Cookies.get('accessToken')) {
         dispatch(setAuthState(true));
 
         if (myProfileStatus === 'idle') {
           await dispatch(getMyProfile())
+        }
+        if (tokenStatus == 'idle') {
+          dispatch(getChatToken())
         }
         if (myProfileStatus === 'rejected') {
           dispatch(setAuthState(false));

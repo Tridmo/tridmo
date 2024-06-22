@@ -20,30 +20,29 @@ import SimpleCard from '../../simple_card';
 import { selectMyInteriors } from '../../../data/get_my_interiors';
 import { selectSavedInteriors } from '../../../data/get_saved_interiors';
 import { selectSavedModels } from '../../../data/get_saved_models';
+import { selectMyProjects } from '../../../data/get_my_projects';
 
 
 export default function Profile() {
   const isAuthenticated = useSelector((state: any) => state?.auth_slicer?.authState)
   const interiors = useSelector(selectMyInteriors)
-  const savedInteriors = useSelector(selectSavedInteriors)
+  const projects = useSelector(selectMyProjects)
   const savedModels = useSelector(selectSavedModels)
 
   const [interiorsCount, setInteriorsCount] = React.useState<number>(0)
-  const [sInteriorsCount, setSInteriorsCount] = React.useState<number>(0)
+  const [projectsCount, setProjectsCount] = React.useState<number>(0)
   const [sModelsCount, setSModelsCount] = React.useState<number>(0)
 
   React.useMemo(() => {
     if (interiors) setInteriorsCount(interiors?.data?.pagination?.data_count || 0)
   }, [interiors])
   React.useMemo(() => {
-    if (savedInteriors) setSInteriorsCount(savedInteriors?.data?.pagination?.data_count || 0)
-  }, [savedInteriors])
+    if (projects) setProjectsCount(projects?.data?.pagination?.data_count || 0)
+  }, [projects])
   React.useMemo(() => {
     if (savedModels) setSModelsCount(savedModels?.data?.pagination?.data_count || 0)
   }, [savedModels])
 
-  // const cards = Array.from({ length: 12 }, () => (sampleInterior))
-  const [cards, setCards] = React.useState<any>(interiors?.data?.interiors)
   const [cardsName, setCardsName] = React.useState<string>('my_interiors')
 
   const topButtons = [
@@ -54,17 +53,6 @@ export default function Profile() {
       count: interiorsCount,
       on_click: () => {
         setCardsName('my_interiors')
-        setCards(interiors?.data?.interiors);
-      },
-    },
-    {
-      text: 'Сохраненные интерьеры',
-      value: 'saved_interiors',
-      active: false,
-      count: sInteriorsCount,
-      on_click: () => {
-        setCardsName('saved_interiors')
-        setCards(savedInteriors?.data?.interiors);
       },
     },
     {
@@ -74,7 +62,15 @@ export default function Profile() {
       count: sModelsCount,
       on_click: () => {
         setCardsName('saved_models')
-        setCards(savedModels?.data?.interiors);
+      },
+    },
+    {
+      text: 'Проекты',
+      value: 'projects',
+      active: false,
+      count: projectsCount,
+      on_click: () => {
+        setCardsName('projects')
       },
     }
   ]
@@ -162,24 +158,39 @@ export default function Profile() {
                 />
 
               </Box>
-              {cards?.length > 0 ? (
-                <Grid
-                  item
-                  xs={6}
-                  sx={{
-                    padding: "0 !important",
-                    display: "flex",
-                    alignItems: 'center',
-                    justifyContent: "center",
-                    flexBasis: 'auto !important'
-                  }}
-                >
-                  <BasicPagination
-                    count={cards?.data?.pagination?.pages}
-                    page={parseInt(cards?.data?.pagination?.current) + 1}
-                  />
-                </Grid>
-              ) : null}
+              <Grid
+                item
+                xs={6}
+                sx={{
+                  padding: "0 !important",
+                  display: "flex",
+                  alignItems: 'center',
+                  justifyContent: "center",
+                  flexBasis: 'auto !important'
+                }}
+              >
+                {
+                  cardsName == 'my_interiors' ?
+                    <BasicPagination
+                      dataSource={'my_interiors'}
+                      count={interiors?.data?.pagination?.pages}
+                      page={parseInt(interiors?.data?.pagination?.current) + 1}
+                    />
+                    : cardsName == 'saved_models' ?
+                      <BasicPagination
+                        dataSource={'saved_models'}
+                        count={savedModels?.data?.pagination?.pages}
+                        page={parseInt(savedModels?.data?.pagination?.current) + 1}
+                      />
+                      : cardsName == 'projects' ?
+                        <BasicPagination
+                          dataSource={'projects'}
+                          count={projects?.data?.pagination?.pages}
+                          page={parseInt(projects?.data?.pagination?.current) + 1}
+                        />
+                        : null
+                }
+              </Grid>
 
             </Grid>
 

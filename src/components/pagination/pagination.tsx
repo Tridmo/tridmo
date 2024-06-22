@@ -4,11 +4,15 @@ import { getAllModels } from '../../data/get_all_models';
 import { styled, Pagination } from '@mui/material';
 import { ThemeProps } from '../../types/theme'
 import { setPageFilter } from '../../data/handle_filters'
-interface PaginationProps {
-  count?: number,
-  page?: number,
-  onChange?(name: string): number;
-};
+import { getAllInteriors } from '../../data/get_all_interiors';
+import { getBrandModels } from '../../data/get_brand_models';
+import { getAllBrands } from '../../data/get_all_brands';
+import { getAllDesigners } from '../../data/get_all_designers';
+import { getAuthorInteriors } from '../../data/get_author_interiors';
+import { getMyInteriors } from '../../data/get_my_interiors';
+import { getSavedModels } from '../../data/get_saved_models';
+import { getMyProjects } from '../../data/get_my_projects';
+import { current } from '@reduxjs/toolkit';
 
 const SimplePagination = styled(Pagination)(
   ({ theme }: ThemeProps) =>
@@ -105,26 +109,110 @@ const SimplePagination = styled(Pagination)(
     `
 )
 
-export default function BasicPagination(props: PaginationProps) {
+interface PaginationProps {
+  dataSource: string;
+  dataId?: any;
+  count?: number,
+  page?: number,
+  onChange?(name: string): number;
+};
+
+export default function BasicPagination({ dataSource, dataId, count, page, ...props }: PaginationProps) {
   const dispatch = useDispatch<any>();
 
-  // ---- filters selector ----- //
+  // ---- model filters selector ----- //
   const getModelCategoryFilter = useSelector((state: any) => state?.handle_filters?.categories)
+  const getModelBrandFilter = useSelector((state: any) => state?.handle_filters?.model_brand)
+  const getModelCategoryNameFilter = useSelector((state: any) => state?.handle_filters?.category_name)
+  const getModelColorFilter = useSelector((state: any) => state?.handle_filters?.colors)
   const getModelStyleFilter = useSelector((state: any) => state?.handle_filters?.styles)
+  const getModelTopFilter = useSelector((state: any) => state?.handle_filters?.model_top)
+  const getModelNameFilter = useSelector((state: any) => state?.handle_filters?.model_name)
+  const getModelOrderBy = useSelector((state: any) => state?.handle_filters?.model_orderby)
+  const getModelOrder = useSelector((state: any) => state?.handle_filters?.model_order)
+
+  // ---- brand-models filters selector ----- //
+  const getBrandModelsCategory = useSelector((state: any) => state?.handle_filters?.brand_models_category)
+
+  // ---- pages ---- //
+  // const getModelsPageFilter = useSelector((state: any) => state?.handle_filters?.models_page)
+  // const getInteriorsPageFilter = useSelector((state: any) => state?.handle_filters?.interiors_page)
+  // const getMyInteriorsPageFilter = useSelector((state: any) => state?.handle_filters?.my_interiors_page)
+  // const getProjectsPageFilter = useSelector((state: any) => state?.handle_filters?.projects_page)
+  // const getSavedModelsPageFilter = useSelector((state: any) => state?.handle_filters?.saved_models_page)
+  // const getDesignersPageFilter = useSelector((state: any) => state?.handle_filters?.designers_page)
+  // const getBrandsPageFilter = useSelector((state: any) => state?.handle_filters?.brands_page)
 
 
   const handleChange = (e: any, page: any) => {
-    // dispatch(setPageFilter({page}));
-    dispatch(getAllModels({
-      categories: getModelCategoryFilter,
-      styles: getModelStyleFilter,
-      page: page || 1,
-    }))
+
+    console.log(count);
+    console.log(page);
+
+
+    if (dataSource == 'models') {
+      dispatch(setPageFilter({ p: 'models_page', n: page }))
+      dispatch(getAllModels({
+        brand: getModelBrandFilter,
+        categories: getModelCategoryFilter,
+        colors: getModelColorFilter,
+        styles: getModelStyleFilter,
+        name: getModelNameFilter,
+        top: getModelTopFilter,
+        page: page,
+        orderBy: getModelOrderBy,
+        order: getModelOrder,
+      }))
+    }
+    if (dataSource == 'interiors') {
+      dispatch(setPageFilter({ p: 'interiors_page', n: page }))
+      dispatch(getAllInteriors({
+        categories: getModelCategoryFilter,
+        colors: getModelColorFilter,
+        styles: getModelStyleFilter,
+        page: page,
+      }))
+    }
+    if (dataSource == 'brand_models') {
+      dispatch(setPageFilter({ p: 'brand_models_page', n: page }))
+      dispatch(getBrandModels({
+        brand_id: dataId,
+        page: page,
+        ...(!!getBrandModelsCategory ? { categories: getBrandModelsCategory } : {})
+      }))
+    }
+    if (dataSource == 'brands') {
+      dispatch(setPageFilter({ p: 'brands_page', n: page }))
+      dispatch(getAllBrands({ orderBy: 'models_count', page: page }))
+    }
+    if (dataSource == 'designers') {
+      dispatch(setPageFilter({ p: 'designers_page', n: page }))
+      dispatch(getAllDesigners({ page }))
+    }
+    if (dataSource == 'designer_interiors') {
+      dispatch(setPageFilter({ p: 'designer_interiors_page', n: page }))
+      dispatch(getAuthorInteriors({ author: dataId, page: page }))
+    }
+    if (dataSource == 'my_interiors') {
+      dispatch(setPageFilter({ p: 'my_interiors_page', n: page }))
+      dispatch(getMyInteriors({ page }))
+    }
+    if (dataSource == 'saved_models') {
+      dispatch(setPageFilter({ p: 'saved_models_page', n: page }))
+      dispatch(getSavedModels({ page }))
+    }
+    if (dataSource == 'projects') {
+      dispatch(setPageFilter({ p: 'projects_page', n: page }))
+      dispatch(getMyProjects({ page }))
+    }
   }
+
+
+
   return (
     <SimplePagination
-      count={props?.count}
-      page={props?.page || 1}
+      count={count}
+      page={page || 1}
       onChange={(e, page) => { handleChange(e, page) }}
     />
   );

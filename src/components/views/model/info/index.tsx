@@ -13,7 +13,7 @@ import axios from '@/utils/axios';
 import { toast } from "react-toastify"
 import { setLoginState, setOpenModal, setSignupState } from '@/data/modal_checker';
 import { sampleModel } from '@/data/samples';
-import { IMAGES_BASE_URL } from '../../../../utils/image_src';
+import { IMAGES_BASE_URL } from '../../../../utils/env_vars';
 import instance from '@/utils/axios';
 import { selectMyProfile } from '../../../../data/me';
 

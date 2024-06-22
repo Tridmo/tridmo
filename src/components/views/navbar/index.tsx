@@ -24,10 +24,10 @@ import BasicModal from '@/components/modals/login_modal';
 import { selectToggleCardActionStatus, switch_on } from '../../../data/toggle_cart';
 import { setAuthState } from '../../../data/login';
 import Cookies from 'js-cookie'
-import { IMAGES_BASE_URL } from '../../../utils/image_src';
+import { IMAGES_BASE_URL } from '../../../utils/env_vars';
 import { getAllModels } from '../../../data/get_all_models';
 import { setModelNameFilter } from '../../../data/handle_filters';
-import Close from '@mui/icons-material/Close';
+import { Close, Chat, ChatOutlined } from '@mui/icons-material';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -123,6 +123,7 @@ export default function Navbar() {
   const handleLogout = () => {
     Cookies.remove('accessToken')
     Cookies.remove('refreshToken')
+    Cookies.remove('chatToken')
     dispatch(setAuthState(false))
     router.push(pathname)
     router.refresh();
@@ -204,7 +205,7 @@ export default function Navbar() {
                     width={17}
                     height={17}
                   />
-                  <SimpleTypography className='drow-down__text' text='Новый проект' />
+                  <SimpleTypography className='drow-down__text' text='Добавить работу' />
 
                 </Link>
               </MenuItem>
@@ -275,7 +276,16 @@ export default function Navbar() {
               <Box sx={{ overflow: "hidden" }}>
                 <Box sx={{ width: searchClicked ? "300px" : 0, visibility: searchClicked ? "visible" : "hidden", transition: "all 0.4s ease" }}>
                   <form onSubmit={handleSearch}>
-                    <SearchInput value={searchVal} className='search__input--models' onChange={(val) => setSearchVal(val)} clic={setSearchClicked} placeHolder="Search..." startIcon={true}></SearchInput>
+                    <SearchInput
+                      sx={{ width: '230px' }}
+                      value={searchVal}
+                      className='search__input--models'
+                      onChange={(val) =>
+                        setSearchVal(val)}
+                      clic={setSearchClicked}
+                      placeHolder="Поиск моделей"
+                      startIcon={true}
+                    />
                   </form>
                 </Box>
               </Box>
@@ -287,7 +297,7 @@ export default function Navbar() {
                   searchClicked
                     ? <Close />
                     : <Image
-                      src="/img/search-icon.svg"
+                      src="/icons/search-icon.svg"
                       alt='Search icon'
                       width={21}
                       height={21}
@@ -301,18 +311,27 @@ export default function Navbar() {
 
               {
                 isAuthenticated ?
-                  <IconButton
-                    onClick={openRightBar}
-                    aria-label="menu"
-                    sx={{ marginRight: "16px", backgroundColor: false ? 'rgba(0, 0, 0, 0.04)' : 'transparent' }}
-                  >
-                    <Image
-                      src="/icons/bell-icon.svg"
-                      alt='Search icon'
-                      width={21}
-                      height={21}
-                    ></Image>
-                  </IconButton>
+                  <>
+                    <IconButton
+                      onClick={openRightBar}
+                      aria-label="menu"
+                      sx={{ marginRight: "16px", backgroundColor: false ? 'rgba(0, 0, 0, 0.04)' : 'transparent' }}
+                    >
+                      <Image
+                        src="/icons/bell-icon.svg"
+                        alt='Bell'
+                        width={21}
+                        height={21}
+                      ></Image>
+                    </IconButton>
+                    <Link href={'/chat'}>
+                      <IconButton
+                        sx={{ marginRight: "16px", }}
+                      >
+                        <ChatOutlined htmlColor='#424242' />
+                      </IconButton>
+                    </Link>
+                  </>
                   : null
               }
 
