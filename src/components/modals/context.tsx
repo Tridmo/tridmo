@@ -29,6 +29,7 @@ import { getSavedInteriors } from '../../data/get_saved_interiors';
 import { getSavedModels } from '../../data/get_saved_models';
 import { getMyProjects, selectMyProjects } from '../../data/get_my_projects';
 import { selectOneModel } from '../../data/get_one_model';
+import { myInteriorsLimit, projectsLimit, savedModelsLimit } from '../../types/filters';
 //Login context
 interface LoginContextProps {
   // setAlertMessage: any
@@ -261,11 +262,9 @@ export const LoginContext = (props: LoginContextProps) => {
                 await dispatch(getMyProfile({ Authorization: `Bearer ${res?.data?.data?.token?.accessToken}` }));
                 await dispatch(setAuthState(true));
                 await dispatch(setOpenModal(false));
-                if (pathname == '/profile') {
-                  await dispatch(getMyInteriors({ Authorization: `Bearer ${res?.data?.data?.token?.accessToken}` }))
-                  await dispatch(getSavedInteriors({ Authorization: `Bearer ${res?.data?.data?.token?.accessToken}` }))
-                  await dispatch(getSavedModels({ Authorization: `Bearer ${res?.data?.data?.token?.accessToken}` }))
-                }
+                await dispatch(getMyInteriors({ Authorization: `Bearer ${res?.data?.data?.token?.accessToken}`, limit: myInteriorsLimit }))
+                await dispatch(getMyProjects({ Authorization: `Bearer ${res?.data?.data?.token?.accessToken}`, limit: projectsLimit }))
+                await dispatch(getSavedModels({ Authorization: `Bearer ${res?.data?.data?.token?.accessToken}`, limit: savedModelsLimit }))
               })();
             } else {
               dispatch(setVerifyState(true));

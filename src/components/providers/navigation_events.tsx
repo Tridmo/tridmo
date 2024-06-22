@@ -17,6 +17,11 @@ import { getAllDesigners } from '../../data/get_all_designers'
 import { getAllBrands } from '../../data/get_all_brands'
 import { setCategoryFilter, setCategoryNameFilter, setColorFilter, setStyleFilter, setPageFilter, } from '../../data/handle_filters'
 import { getSetVerified } from '../../data/set_verified'
+import { getMyInteriors } from '../../data/get_my_interiors'
+import { getSavedInteriors } from '../../data/get_saved_interiors'
+import { getSavedModels } from '../../data/get_saved_models'
+import { myInteriorsLimit, projectsLimit, savedModelsLimit } from '../../types/filters'
+import { getMyProjects } from '../../data/get_my_projects'
 
 const NavigationContext = createContext({})
 
@@ -55,6 +60,9 @@ export function NavigationEvents() {
 
         const x = setTimeout(() => {
           dispatch(getProfile({ Authorization: `Bearer ${accessToken}` }))
+          dispatch(getMyInteriors({ Authorization: `Bearer ${accessToken}`, limit: myInteriorsLimit }))
+          dispatch(getMyProjects({ Authorization: `Bearer ${accessToken}`, limit: projectsLimit }))
+          dispatch(getSavedModels({ Authorization: `Bearer ${accessToken}`, limit: savedModelsLimit }))
           router.replace('/');
           toast.success("Электронная почта успешно подтверждена");
           dispatch(setAuthState(true))
