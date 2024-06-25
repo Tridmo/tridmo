@@ -226,7 +226,7 @@ export const LoginContext = (props: LoginContextProps) => {
         ) => {
           try {
             const res = await axios.post(
-              `auth/signin`,
+              `auth/signin/user`,
               { email: _values.email, password: _values?.password },
             );
             resetForm();
