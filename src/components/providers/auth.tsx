@@ -7,6 +7,7 @@ import Cookies from 'js-cookie'
 const AuthContext = createContext({});
 import { getMyProfile, selectMyProfile } from '../../data/me';
 import { getChatToken } from "../../data/get_chat_token";
+import { setAuthToken } from "../../utils/axios";
 
 
 export const AuthProvider = ({ children }) => {
@@ -20,6 +21,7 @@ export const AuthProvider = ({ children }) => {
     async function loadUserFromCookies() {
 
       if (Cookies.get('accessToken')) {
+        setAuthToken(Cookies.get('accessToken'))
         dispatch(setAuthState(true));
 
         if (myProfileStatus === 'idle') {
