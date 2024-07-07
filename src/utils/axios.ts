@@ -1,27 +1,37 @@
-import axios, { AxiosHeaders } from "axios";
+import axios from "axios";
 import Cookies from "js-cookie";
 
 export const getServerSideProps = () => { }
-export const baseUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/api`
-// export const baseUrl = `http://localhost:8800/api`
-export const chatBaseUrl = `${process.env.NEXT_PUBLIC_CHAT_SERVER_URL}`
+export const baseUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/api`;
+export const chatBaseUrl = `${process.env.NEXT_PUBLIC_CHAT_SERVER_URL}`;
 
 const instance = axios.create({
   baseURL: baseUrl,
-  headers:
-    Cookies.get('accessToken') ? {
-      'Authorization': `Bearer ${Cookies.get('accessToken')}`,
-      'Accept-Language': 'ru'
-    } : {
-      'Accept-Language': 'ru'
-    }
+  headers: {
+    'Accept-Language': 'ru'
+  }
 });
 
-export const chatApi = axios.create({
+const chatApi = axios.create({
   baseURL: `${chatBaseUrl}/api`,
-  headers:
-    Cookies.get('chatToken') ? { 'Authorization': `Bearer ${Cookies.get('chatToken')}` } : {}
+  headers: {}
 });
 
-export default instance;
+export const setAuthToken = (token) => {
+  if (token) {
+    instance.defaults.headers['Authorization'] = `Bearer ${token}`;
+  } else {
+    delete instance.defaults.headers['Authorization'];
+  }
+};
 
+export const setChatToken = (token) => {
+  if (token) {
+    chatApi.defaults.headers['Authorization'] = `Bearer ${token}`;
+  } else {
+    delete chatApi.defaults.headers['Authorization'];
+  }
+};
+
+export { chatApi };
+export default instance;

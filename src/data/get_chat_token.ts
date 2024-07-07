@@ -1,5 +1,5 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "../utils/axios";
+import axios, { setChatToken } from "../utils/axios";
 import Cookies from 'js-cookie'
 
 export interface TokenType {
@@ -24,6 +24,7 @@ export const getChatToken = createAsyncThunk('/chat/token', async () => {
     response?.data?.access_token,
     { expires: response?.data?.expires_in }
   )
+  setChatToken(response?.data?.access_token)
   return response.data
 })
 

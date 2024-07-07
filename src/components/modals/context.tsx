@@ -10,7 +10,7 @@ import { Box, Typography, Grid, Button, TextField, InputAdornment, IconButton, S
 import Image from 'next/image';
 import SimpleTypography from '../typography'
 import Buttons from '../buttons';
-import axios from '../../utils/axios';
+import axios, { setAuthToken } from '../../utils/axios';
 import { ACCESS_TOKEN_EXPIRATION_DAYS, IMAGES_BASE_URL, REFRESH_TOKEN_EXPIRATION_DAYS } from '../../utils/env_vars'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import Cookies from 'js-cookie'
@@ -235,37 +235,24 @@ export const LoginContext = (props: LoginContextProps) => {
             if (res?.data?.data?.user?.is_verified) {
               toast.success(res?.data?.message || 'Авторизация прошла успешна');
 
-              (async () => {
-                // Set cookies
-                const accessTokenPromise = new Promise((resolve, reject) => {
-                  Cookies.set(
-                    'accessToken',
-                    res?.data?.data?.token?.accessToken,
-                    { expires: ACCESS_TOKEN_EXPIRATION_DAYS, path: '/', sameSite: 'Lax', secure: true }
-                  );
-                  resolve(true); // Resolve the promise once cookies are set
-                });
+              const accessToken = res?.data?.data?.token?.accessToken;
+              const refreshToken = res?.data?.data?.token?.refreshToken;
 
-                const refreshTokenPromise = new Promise((resolve, reject) => {
-                  Cookies.set(
-                    'refreshToken',
-                    res?.data?.data?.token?.refreshToken,
-                    { expires: REFRESH_TOKEN_EXPIRATION_DAYS, path: '/', sameSite: 'Lax', secure: true }
-                  );
-                  resolve(true); // Resolve the promise once cookies are set
-                });
+              Cookies.set('accessToken', accessToken, {
+                expires: ACCESS_TOKEN_EXPIRATION_DAYS, path: '/', sameSite: 'Lax', secure: true
+              });
+              Cookies.set('refreshToken', refreshToken, {
+                expires: REFRESH_TOKEN_EXPIRATION_DAYS, path: '/', sameSite: 'Lax', secure: true
+              });
 
-                // Wait for both promises to resolve
-                await Promise.all([accessTokenPromise, refreshTokenPromise]);
+              setAuthToken(accessToken); // Set the token for axios instance
 
-                // Dispatch actions after cookies are set
-                await dispatch(setOpenModal(false));
-                await dispatch(setAuthState(true));
-                await dispatch(getMyProfile({ Authorization: `Bearer ${res?.data?.data?.token?.accessToken}` }));
-                await dispatch(getMyInteriors({ Authorization: `Bearer ${res?.data?.data?.token?.accessToken}`, limit: myInteriorsLimit }))
-                await dispatch(getMyProjects({ Authorization: `Bearer ${res?.data?.data?.token?.accessToken}`, limit: projectsLimit }))
-                await dispatch(getSavedModels({ Authorization: `Bearer ${res?.data?.data?.token?.accessToken}`, limit: savedModelsLimit }))
-              })();
+              await dispatch(setOpenModal(false));
+              await dispatch(setAuthState(true));
+              await dispatch(getMyProfile({ Authorization: `Bearer ${accessToken}` }));
+              await dispatch(getMyInteriors({ Authorization: `Bearer ${accessToken}`, limit: myInteriorsLimit }));
+              await dispatch(getMyProjects({ Authorization: `Bearer ${accessToken}`, limit: projectsLimit }));
+              await dispatch(getSavedModels({ Authorization: `Bearer ${accessToken}`, limit: savedModelsLimit }));
             } else {
               dispatch(setVerifyState(true));
               // toast.success("Please verify your email!")
@@ -282,6 +269,7 @@ export const LoginContext = (props: LoginContextProps) => {
             }
           }
         }}
+
       >
         {({
           errors,
