@@ -7,16 +7,12 @@ import { selectSelectedConversation, setSelectedConversation } from '../../../da
 import { selectMyProfile } from '../../../data/me';
 import { tokenFactory } from '../../../utils/chat';
 import { WyMessenger, useWeavy } from '@weavy/uikit-react';
+import { CHAT_SERVER_URL } from '../../../utils/env_vars';
 
 export default function Chat() {
 
   const selectedConversation = useSelector(selectSelectedConversation)
   const selected = selectedConversation;
-
-  useWeavy({
-    url: "https://188d8f9b0bc24fe2b16472957b1213e6.weavy.io",
-    tokenFactory: tokenFactory
-  });
 
   useEffect(() => {
     if (selected == selectedConversation) {
@@ -29,18 +25,21 @@ export default function Chat() {
       <Box className='products__container' sx={{ maxWidth: "1200px", width: "100%", margin: "0 auto !important", alignItems: "center", }}>
         <Grid container
           sx={{
-            minHeight: '100dvh',
-            margin: '32px 0 40px 0',
+            m: '32px 0 32px 0',
             width: '100%',
             display: 'flex',
             alignItems: 'flex-start',
-            justifyContent: 'flex-start'
+            justifyContent: 'center'
           }}
         >
           <Grid item xs={12}>
             <WyMessenger
+              style={{ height: '80dvh' }}
               noMeetings
               noPolls
+              noComments
+              noWebDAV
+              noConfluence
               conversationId={selected || null}
             />
           </Grid>

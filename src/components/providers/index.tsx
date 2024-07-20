@@ -6,8 +6,9 @@ import { AuthProvider } from '@/components/providers/auth'
 import store from "@/store";
 import ThemeProviderWrapper from '@/theme/ThemeProvider';
 import React, { Suspense } from 'react';
-import { NavigationEvents } from './navigation_events';
-import { SocketContextProvider } from '../../context/socket';
+import dynamic from 'next/dynamic';
+
+const WeavyProvider = dynamic(() => import('./weavy'), { ssr: false });
 
 export default function Providers({
   children,
@@ -21,10 +22,9 @@ export default function Providers({
       <CookiesProvider>
         <AuthProvider>
           <ThemeProviderWrapper>
-            <Suspense>
-              <NavigationEvents />
-            </Suspense>
-            {children}
+            <WeavyProvider>
+              {children}
+              /</WeavyProvider>
           </ThemeProviderWrapper>
         </AuthProvider>
       </CookiesProvider>

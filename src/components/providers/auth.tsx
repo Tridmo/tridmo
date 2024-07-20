@@ -8,14 +8,30 @@ const AuthContext = createContext({});
 import { getMyProfile, selectMyProfile } from '../../data/me';
 import { getChatToken } from "../../data/get_chat_token";
 import { setAuthToken } from "../../utils/axios";
+import { useParams, usePathname, useRouter } from "next/navigation";
+import useHash from "../hooks/use_hash";
+import { toast } from "react-toastify";
+
+import { getProfile } from '../../data/get_profile'
+import { setVerifyState } from '../../data/modal_checker'
+import { getSetVerified } from '../../data/set_verified'
+import { getMyInteriors } from '../../data/get_my_interiors'
+import { getSavedModels } from '../../data/get_saved_models'
+import { myInteriorsLimit, projectsLimit, savedModelsLimit } from '../../types/filters'
+import { getMyProjects } from '../../data/get_my_projects'
 
 
 export const AuthProvider = ({ children }) => {
   const dispatch = useDispatch<any>();
   const update_cookie_status = useSelector((state: any) => state?.update_access_token?.status);
+  const myProfile = useSelector(selectMyProfile)
   const myProfileStatus = useSelector((state: any) => state?.profile_me?.status)
   const tokenStatus = useSelector((state: any) => state?.get_chat_token?.status)
-  const myProfile = useSelector(selectMyProfile)
+
+  const pathname = usePathname()
+  const router = useRouter();
+  const params = useParams();
+  const hash = useHash();
 
   useEffect(() => {
     async function loadUserFromCookies() {
@@ -54,6 +70,58 @@ export const AuthProvider = ({ children }) => {
     }
     loadUserFromCookies();
   }, [dispatch, update_cookie_status, myProfileStatus]);
+
+  useEffect(() => {
+    if (hash) {
+      const hashParams = new URLSearchParams(hash.slice(1))
+
+      const accessToken = hashParams.get('access_token')
+      const refreshToken = hashParams.get('refresh_token')
+      const expiresAt = hashParams.get('expires_at');
+      const expiresIn = hashParams.get('expires_in');
+
+
+      if (accessToken && refreshToken && expiresAt) {
+        Cookies.set(
+          'accessToken',
+          accessToken,
+          { expires: new Date(parseInt(expiresAt) * 1000), path: '/', sameSite: 'Lax', secure: true },
+        )
+
+        Cookies.set(
+          'refreshToken',
+          refreshToken,
+          { path: '/', sameSite: 'Lax', secure: true }
+        )
+
+        const x = setTimeout(() => {
+          dispatch(getProfile({ Authorization: `Bearer ${accessToken}` }))
+          dispatch(getMyInteriors({ Authorization: `Bearer ${accessToken}`, limit: myInteriorsLimit }))
+          dispatch(getMyProjects({ Authorization: `Bearer ${accessToken}`, limit: projectsLimit }))
+          dispatch(getSavedModels({ Authorization: `Bearer ${accessToken}`, limit: savedModelsLimit }))
+          router.replace('/');
+          toast.success("Электронная почта успешно подтверждена");
+          dispatch(setAuthState(true))
+          dispatch(setVerifyState(false))
+          dispatch(getSetVerified({ Authorization: `Bearer ${accessToken}` }))
+          clearTimeout(x)
+        }, 10)
+      }
+      else {
+        const x = setTimeout(() => {
+          toast.error("Не удалось подтвердить электронную почту! Пожалуйста, попробуйте еще раз");
+          router.push('/');
+          clearTimeout(x)
+        }, 0)
+      }
+    }
+    if (pathname && pathname.includes("unauthorized_client")) {
+      setTimeout(() => {
+        toast.error("Не удалось подтвердить электронную почту! Пожалуйста, попробуйте еще раз");
+        router.push('/');
+      }, 0)
+    }
+  }, [router, dispatch, params, hash])
 
   return (
     <AuthContext.Provider

@@ -28,6 +28,8 @@ import { IMAGES_BASE_URL } from '../../../utils/env_vars';
 import { getAllModels } from '../../../data/get_all_models';
 import { setModelNameFilter } from '../../../data/handle_filters';
 import { Close, Chat, ChatOutlined } from '@mui/icons-material';
+import { setSelectedConversation } from '../../../data/chat';
+import { AppTypeGuid } from '../../../types/weavy';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',

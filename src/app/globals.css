@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+::part(wy-conversation-new) {
+  display: none;
+}
+
 html,
 body {
   padding: 0;
@@ -281,8 +285,4 @@ text-align: left; */
 
 .withImage {
   overflow: hidden;
-}
-
-wy-conversation-new {
-  display: none;
 }

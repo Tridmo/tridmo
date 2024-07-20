@@ -110,10 +110,10 @@ const CheckoutBar = () => {
   const [deleteItem, setDeleteItem] = React.useState({ status: false, model_id: null })
 
   React.useEffect(() => {
-    if (notifications_status == 'idle') {
+    if (isAuthenticated) {
       dispatch(getNotifications())
     }
-  }, [notifications_status])
+  }, [isAuthenticated])
 
   const closeRightBar = () => {
     dispatch(switch_on(false))

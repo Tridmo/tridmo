@@ -305,7 +305,7 @@ export default function ProfileInfo(props: ProfileProps) {
                           text={profileInfo?.address}
                           className="table__text_info"
                         />
-                        : <AddButton />
+                        : props.of == 'own' && <AddButton />
                     }
                   </TableCell>
                 </TableRow>
@@ -328,7 +328,7 @@ export default function ProfileInfo(props: ProfileProps) {
                             className="table__text_info"
                           />
                         </Link>
-                        : <AddButton />
+                        : props.of == 'own' && <AddButton />
                     }
                   </TableCell>
                 </TableRow>
@@ -349,7 +349,7 @@ export default function ProfileInfo(props: ProfileProps) {
                           text={profileInfo?.phone}
                           className="table__text_info"
                         />
-                        : <AddButton />
+                        : props.of == 'own' && <AddButton />
                     }
                   </TableCell>
                 </TableRow>
@@ -372,7 +372,7 @@ export default function ProfileInfo(props: ProfileProps) {
                               text={profileInfo?.telegram}
                               className="table__text_info"
                             />
-                            : <AddButton />
+                            : props.of == 'own' && <AddButton />
                         }
                       </TableCell>
                     </TableRow>
