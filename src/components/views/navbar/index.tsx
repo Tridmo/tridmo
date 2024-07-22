@@ -314,7 +314,7 @@ export default function Navbar() {
               {
                 isAuthenticated ?
                   <>
-                    <IconButton
+                    {/* <IconButton
                       onClick={openRightBar}
                       aria-label="menu"
                       sx={{ marginRight: "16px", backgroundColor: false ? 'rgba(0, 0, 0, 0.04)' : 'transparent' }}
@@ -325,7 +325,7 @@ export default function Navbar() {
                         width={21}
                         height={21}
                       ></Image>
-                    </IconButton>
+                    </IconButton> */}
                     <Link href={'/chat'}>
                       <IconButton
                         sx={{ marginRight: "16px", }}
