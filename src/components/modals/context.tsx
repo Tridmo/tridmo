@@ -254,7 +254,7 @@ export const LoginContext = (props: LoginContextProps) => {
               await dispatch(getMyProjects({ Authorization: `Bearer ${accessToken}`, limit: projectsLimit }));
               await dispatch(getSavedModels({ Authorization: `Bearer ${accessToken}`, limit: savedModelsLimit }));
             } else {
-              dispatch(setVerifyState(true));
+              // dispatch(setVerifyState(true));
               // toast.success("Please verify your email!")
             }
             dispatch(setLoginState(false));
@@ -369,6 +369,7 @@ export const SignUpContext = (props: LoginContextProps) => {
           email: '',
           company_name: '',
           password: '',
+          password_repeat: '',
           submit: null
         }}
         validationSchema={Yup.object().shape({
@@ -392,6 +393,9 @@ export const SignUpContext = (props: LoginContextProps) => {
             //   passwordRegex,
             //   'Пароль должен содержать от 8 до 32 символов, включая хотя бы одну заглавную и одну строчную латинскую букву, хотя бы одну цифру и хотя бы один специальный символ.'
             // )
+            .required('Поле обязательно для заполнения.'),
+          password_repeat: Yup.string()
+            .oneOf([Yup.ref('password'), undefined], 'Пароли не совпадают')
             .required('Поле обязательно для заполнения.')
         })}
 
@@ -400,24 +404,37 @@ export const SignUpContext = (props: LoginContextProps) => {
           { resetForm, setErrors, setStatus, setSubmitting }
         ) => {
           try {
-            // const res = await instance.get(`users/check/${_values.company_name}`);
-            // if (res.data.data.exists) {
-            //   setStatus({ success: false });
-            //   toast.error('Имя пользователя не доступно');
-            //   setErrors({ submit: 'Имя пользователя не доступно' });
-            // } 
-            const signupResponse = await instance.post(`auth/signup`, {
+            const res = await instance.post(`auth/signup`, {
               full_name: `${_values.first_name} ${_values.last_name}`,
               email: _values.email,
               company_name: _values.company_name,
               password: _values?.password,
             });
-            setStatus({ success: true });
-            props?.setUserEmail(_values?.email);
-            dispatch(setSignupState(false));
-            dispatch(setVerifyState(true));
-            dispatch(setOpenModal(true));
-            toast.success(signupResponse?.data?.message);
+            if (res?.data?.data?.user?.is_verified) {
+              toast.success(res?.data?.message || 'Авторизация прошла успешна');
+
+              const accessToken = res?.data?.data?.token?.accessToken;
+              const refreshToken = res?.data?.data?.token?.refreshToken;
+
+              Cookies.set('accessToken', accessToken, {
+                expires: ACCESS_TOKEN_EXPIRATION_DAYS, path: '/', sameSite: 'Lax', secure: true
+              });
+              Cookies.set('refreshToken', refreshToken, {
+                expires: REFRESH_TOKEN_EXPIRATION_DAYS, path: '/', sameSite: 'Lax', secure: true
+              });
+
+              setAuthToken(accessToken); // Set the token for axios instance
+
+              await dispatch(setOpenModal(false));
+              await dispatch(setAuthState(true));
+              await dispatch(getMyProfile({ Authorization: `Bearer ${accessToken}` }));
+              await dispatch(getMyInteriors({ Authorization: `Bearer ${accessToken}`, limit: myInteriorsLimit }));
+              await dispatch(getMyProjects({ Authorization: `Bearer ${accessToken}`, limit: projectsLimit }));
+              await dispatch(getSavedModels({ Authorization: `Bearer ${accessToken}`, limit: savedModelsLimit }));
+            } else {
+              // dispatch(setVerifyState(true));
+              // toast.success("Please verify your email!")
+            }
 
           } catch (err: any) {
             setStatus({ success: false });
@@ -513,19 +530,37 @@ export const SignUpContext = (props: LoginContextProps) => {
                   />
                 </Box>
 
-                <PasswordInputAdornments
-                  error={Boolean(touched.password && errors.password)}
-                  helperText={touched.password && errors.password}
-                  name="password"
-                  label='Пароль'
-                  type="password"
-                  autoComplete="off"
-                  onBlur={handleBlur}
-                  required={true}
-                  onChange={handleChange}
-                  value={values.password}
-                  placeholderText='Придумайте пароль'
-                />
+                <Box sx={{ marginBottom: "26px", width: "100%" }}>
+                  <PasswordInputAdornments
+                    error={Boolean(touched.password && errors.password)}
+                    helperText={touched.password && errors.password}
+                    name="password"
+                    label='Пароль'
+                    type="password"
+                    autoComplete="off"
+                    onBlur={handleBlur}
+                    required={true}
+                    onChange={handleChange}
+                    value={values.password}
+                    placeholderText='Придумайте пароль'
+                  />
+                </Box>
+
+                <Box sx={{ marginBottom: "26px", width: "100%" }}>
+                  <PasswordInputAdornments
+                    error={Boolean(touched.password_repeat && errors.password_repeat)}
+                    helperText={touched.password_repeat && errors.password_repeat}
+                    name="password_repeat"
+                    label='Подтвердите пароль'
+                    type="password"
+                    autoComplete="off"
+                    onBlur={handleBlur}
+                    required={true}
+                    onChange={handleChange}
+                    value={values.password_repeat}
+                    placeholderText='Подтвердите пароль'
+                  />
+                </Box>
 
                 {/* <Buttons name="Forgot your password?" className='underlined__btn' /> */}
                 <Buttons
@@ -535,7 +570,7 @@ export const SignUpContext = (props: LoginContextProps) => {
                   disabled={Boolean(errors.submit) || isSubmitting}
                   className='signIn__btn'
                 />
-                <Box></Box>
+                <Box sx={{ marginBottom: "16px", width: "100%" }}></Box>
                 <SimpleTypography className='signIn__text' text=''
                   sx={{
                     fontSize: '12px',
