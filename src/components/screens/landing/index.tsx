@@ -400,7 +400,7 @@ export default function LandingPage() {
               {WhyUsDatas.map((item) => (
                 <Grid key={item.id} item md={3} xs={12}
                   sx={{
-                    minHeight: '340px'
+                    minHeight: '300px',
                   }}
                 >
                   <Box

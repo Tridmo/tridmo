@@ -240,7 +240,7 @@ export default function Navbar() {
               sx={{ padding: "0 !important", paddingLeft: "0 !important", paddingTop: "0 !important", display: "flex", justifyContent: "start" }}>
               <Link href="/">
                 <Item sx={{ padding: "0 !important", height: "27px" }}>
-                  <Image className='header__logo' alt="logo" priority={true} src="/img/logo.svg" width={123} height={32} />
+                  <Image className='header__logo' alt="logo" priority={true} src="/logos/logo.svg" width={123} height={32} />
                 </Item>
               </Link>
 

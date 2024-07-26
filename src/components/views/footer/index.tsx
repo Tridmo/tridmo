@@ -82,7 +82,7 @@ export default function Footer() {
                   width="110"
                   height="24"
                   alt="demod svg"
-                  src="/img/demod.svg"
+                  src="/logos/logo.svg"
                 />
               </Link>
             </Item>

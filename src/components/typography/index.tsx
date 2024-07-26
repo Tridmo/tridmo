@@ -726,7 +726,7 @@ const TypographyWrapper = styled(Typography)(
 
       &.MuiTypography-why-us__desc{
         font-weight: 400;
-        font-size: 18px;
+        font-size: 14px;
         line-height: 24px;
         letter-spacing: -0.01em;
         color: #686868;
