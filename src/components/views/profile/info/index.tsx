@@ -15,7 +15,7 @@ import formatDate from '../../../../utils/format_date';
 import { useRef } from 'react';
 import { readFile } from '../../../inputs/file_input';
 import { Add, RateReview } from '@mui/icons-material';
-import { chatApi } from '../../../../utils/axios';
+import { chatApi, setChatToken } from '../../../../utils/axios';
 import { selectChatToken } from '../../../../data/get_chat_token';
 import Cookies from 'js-cookie';
 import { setSelectedConversation } from '../../../../data/chat';
@@ -85,6 +85,8 @@ export default function ProfileInfo(props: ProfileProps) {
   }
 
   async function handleCreateConversation() {
+    setChatToken(Cookies.get('chatToken') || token)
+
     chatApi.post(`/conversations`, {
       members: [profileInfo?.user_id]
     }, {

@@ -38,18 +38,16 @@ export const AuthProvider = ({ children }) => {
 
       if (Cookies.get('accessToken')) {
         setAuthToken(Cookies.get('accessToken'))
-        dispatch(setAuthState(true));
 
         if (myProfileStatus === 'idle') {
           await dispatch(getMyProfile())
-        }
-        if (tokenStatus == 'idle') {
-          dispatch(getChatToken())
         }
         if (myProfileStatus === 'rejected') {
           dispatch(setAuthState(false));
         }
 
+        dispatch(getChatToken())
+        dispatch(setAuthState(true));
       }
 
       if (Cookies.get('refreshToken')) {
