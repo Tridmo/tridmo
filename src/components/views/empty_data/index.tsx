@@ -28,7 +28,7 @@ export default function EmptyData({ boxShadow = true, border = true, ...props }:
   return (
     <Container sx={{ ...props?.sx }}>
       <Box>
-        <Image width={160} height={160} alt='box' src='/img/empty-box.svg' />
+        <Image priority width={160} height={160} alt='box' src='/img/empty-box.svg' />
         <SimpleTypography
           sx={{
             fontWeight: 400,

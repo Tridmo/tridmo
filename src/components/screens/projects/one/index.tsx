@@ -1,7 +1,7 @@
 "use client"
 
-import React, { use, useContext, useMemo, useState } from 'react'
-import { Avatar, Box, Button, Divider, Grid, ListItemAvatar, Menu, MenuItem, Paper, styled } from '@mui/material';
+import React, { use, useContext, useEffect, useMemo, useState } from 'react'
+import { Avatar, Box, Button, Divider, Grid, ListItemAvatar, Menu, MenuItem, Paper, styled, SxProps, Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import SimpleTypography from '../../../typography';
 import Buttons from '@/components/buttons';
@@ -15,8 +15,12 @@ import { ConfirmContextProps, resetConfirmData, resetConfirmProps, setConfirmPro
 import { toast } from 'react-toastify';
 import { selectOneProject } from '../../../../data/get_one_project';
 import { getMyProjects } from '../../../../data/get_my_projects';
-import { ProjectInfo } from '../../../views/projects/info';
+import { ProjectInfoTable } from '../../../views/projects/info_table';
 import { ProjectModelsList } from '../../../views/projects/models_list';
+import formatDate from '../../../../utils/format_date';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import ReactDOM from 'react-dom/client';
 
 const ActionsDropDown = styled(Menu)(
   ({ theme }: ThemeProps) => `
@@ -35,15 +39,84 @@ const ActionsDropDown = styled(Menu)(
 );
 
 export default function OneProject() {
-
   const isAuthenticated = useSelector((state: any) => state?.auth_slicer?.authState)
   const dispatch = useDispatch<any>()
-
   const currentUser = useSelector(selectMyProfile);
   const project = useSelector(selectOneProject);
-
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const [pdfLoading, setPdfLoading] = useState(false);
+
+  function downloadPdf() {
+    setPdfLoading(true);
+    const element = document.createElement('div')
+    const list_elem = document.getElementById("model_list")!;
+    const list = list_elem.cloneNode(true) as HTMLElement;
+    const info_table_elem = document.getElementById("model_info_table")!;
+    const info_table = info_table_elem.cloneNode(true) as HTMLElement;
+
+    const info_wrap = document.createElement("div");
+    const info_text_wrap = document.createElement("div");
+    const info_text = document.createElement("p");
+
+    const list_wrap = document.createElement("div");
+    const list_text_wrap = document.createElement("div");
+    const list_text = document.createElement("p");
+
+    info_wrap.style.width = '100%';
+    info_wrap.style.backgroundColor = '#fff';
+    info_wrap.style.border = '1px solid #E0E0E0';
+    info_wrap.style.padding = '24px';
+    info_wrap.style.marginBottom = '24px';
+    info_text_wrap.style.width = '100%';
+    info_text_wrap.style.marginBottom = '18px';
+    info_text.style.fontWeight = '500';
+    info_text.style.fontSize = '22px';
+    info_text.style.lineHeight = '26px';
+    info_text.style.letterSpacing = '-0.02em';
+    info_text.style.textAlign = 'left';
+    info_text.textContent = "Информация";
+
+    list_wrap.style.width = '100%';
+    list_wrap.style.backgroundColor = '#fff';
+    list_wrap.style.border = '1px solid #E0E0E0';
+    list_wrap.style.padding = '24px';
+    list_wrap.style.marginBottom = '24px';
+    list_text_wrap.style.width = '100%';
+    list_text_wrap.style.marginBottom = '18px';
+    list_text.style.fontWeight = '500';
+    list_text.style.fontSize = '22px';
+    list_text.style.lineHeight = '26px';
+    list_text.style.letterSpacing = '-0.02em';
+    list_text.style.textAlign = 'left';
+    list_text.textContent = "Список моделей";
+
+    element.style.width = '100%';
+    element.style.padding = '24px';
+
+    info_text_wrap.appendChild(info_text)
+    info_wrap.appendChild(info_text_wrap)
+    info_wrap.appendChild(info_table)
+    list_text_wrap.appendChild(list_text)
+    list_wrap.appendChild(list_text_wrap)
+    list_wrap.appendChild(list)
+    element.appendChild(info_wrap)
+    element.appendChild(list_wrap)
+
+    document.getElementById('hidden-pdf-preview')!.append(element)
+
+    html2canvas(element).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png"); // Convert canvas to image data
+      const pdf = new jsPDF(); // Initialize jsPDF
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight); // Add image to PDF
+      pdf.save("converted-document.pdf"); // Save PDF
+
+      setPdfLoading(false);
+    });
+  }
 
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
@@ -98,7 +171,17 @@ export default function OneProject() {
   }
 
   return (
-    <Box sx={{ background: "#fafafa" }} className="products" >
+    <Box sx={{ background: "#fafafa", position: 'relative' }} className="products" >
+      <Box id="hidden-pdf-preview"
+        sx={{
+          position: 'absolute',
+          top: '-2000%',
+          right: 0,
+          left: 0,
+          width: '2480 px',
+          minHeight: '3508px'
+        }}
+      />
       <Box className='products__container' sx={{ maxWidth: "1200px", width: "100%", margin: "0 auto !important", alignItems: "center", }}>
 
         <Grid container
@@ -224,9 +307,54 @@ export default function OneProject() {
             xs={3.5}
             sm={12}
           >
-            <ProjectInfo project={project} />
+            <Box
+              sx={{
+                width: '100%',
+                backgroundColor: '#fff',
+                border: '1px solid #E0E0E0',
+                padding: '24px'
+              }}
+            >
+              <Box sx={{ width: '100%', mb: '18px' }}>
+                <SimpleTypography
+                  text="Информация"
+                  sx={{
+                    fontWeight: 500,
+                    fontSize: '22px',
+                    lineHeight: '26px',
+                    letterSpacing: '-0.02em',
+                    textAlign: 'left',
+                  }}
+                />
+              </Box>
+
+              <Box sx={{ width: '100%', mb: '18px' }}>
+                <ProjectInfoTable project={project} />
+              </Box>
+
+              <Box sx={{ width: '100%' }}>
+                <Buttons
+                  id="download-pdf"
+                  startIcon={pdfLoading}
+                  loadingColor='#fff'
+                  onClick={downloadPdf}
+                  sx={{ width: '100%' }}
+                  name="Скачать PDF"
+                  childrenFirst={true}
+                  className="login__btn"
+                >
+                  <Image
+                    alt="icon"
+                    src='/icons/get-pdf.svg'
+                    width={22}
+                    height={22}
+                  />
+                </Buttons>
+              </Box>
+            </Box>
           </Grid>
         </Grid>
+
       </Box>
     </Box>
   )

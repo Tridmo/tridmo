@@ -151,13 +151,6 @@ export function ProjectModelsList({ project }) {
     dispatch(setOpenModal(true))
   }
 
-  useEffect(() => {
-    console.log(project?.project_models);
-    console.log(project?.project_models?.length);
-    console.log(!!project?.project_models && !!project?.project_models?.length);
-
-  }, [project])
-
   return (
     <Box
       sx={{
@@ -181,7 +174,7 @@ export function ProjectModelsList({ project }) {
         />
       </Box>
 
-      <Box sx={{ width: '100%' }}>
+      <Box sx={{ width: '100%' }} id="model_list">
         {
           getProjectStatus == 'succeeded' ? (
             !!project?.project_models && !!project?.project_models?.length
