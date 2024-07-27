@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../utils/axios'
+import { designersOrderBy, order } from '../types/filters';
 
 const initialState = {
   data: [],
@@ -8,7 +9,13 @@ const initialState = {
   progress: 0,
 };
 export const getAllDesigners = createAsyncThunk('/users/designers',
-  async (wrapper?: any) => {
+  async (wrapper?: {
+    limit?: number;
+    name?: string;
+    orderBy?: designersOrderBy;
+    order?: order;
+    page?: number;
+  }) => {
     let send__route = `/users/designers`
 
     if (wrapper?.name) {
