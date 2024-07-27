@@ -24,7 +24,7 @@ export default function Providers({
           <ThemeProviderWrapper>
             <WeavyProvider>
               {children}
-              /</WeavyProvider>
+            </WeavyProvider>
           </ThemeProviderWrapper>
         </AuthProvider>
       </CookiesProvider>
