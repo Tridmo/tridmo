@@ -77,6 +77,29 @@ export default function DesignersPage() {
     borderRadius: '50%'
   }
 
+  const widthControl = {
+    '&:nth-of-type(1)': {
+      minWidth: '56px',
+      maxWidth: '56px',
+    },
+    '&:nth-of-type(2)': {
+      minWidth: '60%',
+      maxWidth: '60%',
+    },
+    '&:nth-of-type(3)': {
+      minWidth: '10%',
+      maxWidth: '10%',
+    },
+    '&:nth-of-type(4)': {
+      minWidth: '10%',
+      maxWidth: '10%',
+    },
+    '&:nth-of-type(5)': {
+      minWidth: '10%',
+      maxWidth: '10%',
+    }
+  }
+
   return (
     <Box sx={{ width: '1200px', minHeight: 829, display: "block", margin: "0 auto" }}>
       <SimpleTypography text='Дизайнеры' className='section__title' sx={{ margin: '32px auto !important' }} />
@@ -92,15 +115,23 @@ export default function DesignersPage() {
               >
                 <SimpleTypography
                   text='№'
-                  sx={{ ...liHeaderTextSx, minWidth: '56px', marginRight: '16px' }}
+                  sx={{ ...liHeaderTextSx, marginRight: '16px', ...widthControl }}
                 />
                 <SimpleTypography
                   text='Профиль'
-                  sx={{ ...liHeaderTextSx, minWidth: '990px', textAlign: 'start !important', }}
+                  sx={{ ...liHeaderTextSx, ...widthControl, textAlign: 'start !important', }}
                 />
                 <SimpleTypography
                   text='Галерея'
-                  sx={{ ...liHeaderTextSx, minWidth: '80px', }}
+                  sx={{ ...liHeaderTextSx, ...widthControl, }}
+                />
+                <SimpleTypography
+                  text='Бирки'
+                  sx={{ ...liHeaderTextSx, ...widthControl, }}
+                />
+                <SimpleTypography
+                  text='Рейтинг'
+                  sx={{ ...liHeaderTextSx, ...widthControl, }}
                 />
               </ListItem>
               {
@@ -126,44 +157,55 @@ export default function DesignersPage() {
                           />
                         </ListItemText>
 
-                        <ListItemAvatar sx={liAvatarWrapper}>
-                          <Avatar
-                            src={user?.image_src ? `${IMAGES_BASE_URL}/${user?.image_src}` : '/img/avatar.png'}
-                            alt='User image'
-                            sx={liAvatarSx}
-                          />
-                        </ListItemAvatar>
-                        <ListItemText className='username' sx={{ margin: '0 8px', minWidth: '880px' }}>
+                        <ListItemText
+                          sx={{
+                            ...widthControl,
+                            m: 0,
+                            '& > span': {
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'flex-start'
+                            }
+                          }}
+                        >
+                          <ListItemAvatar sx={liAvatarWrapper}>
+                            <Avatar
+                              src={user?.image_src ? `${IMAGES_BASE_URL}/${user?.image_src}` : '/img/avatar.png'}
+                              alt='User image'
+                              sx={liAvatarSx}
+                            />
+                          </ListItemAvatar>
+                          <ListItemText className='username' sx={{ margin: '0 8px', minWidth: '880px' }}>
 
-                          <SimpleTypography
-                            text={user?.company_name}
-                            sx={{
-                              fontSize: '22px',
-                              fontWeight: 400,
-                              lineHeight: '26px',
-                              letterSpacing: '-0.02em',
-                              textAlign: 'start',
-                              color: '#141414'
-                            }}
-                          />
-
-                          <Box
-                            sx={{
-                              display: 'flex'
-                            }}
-                          >
                             <SimpleTypography
-                              text={user?.full_name}
+                              text={user?.company_name}
                               sx={{
-                                fontSize: '18px',
+                                fontSize: '22px',
                                 fontWeight: 400,
-                                lineHeight: '24px',
-                                letterSpacing: '-0.01em',
+                                lineHeight: '26px',
+                                letterSpacing: '-0.02em',
                                 textAlign: 'start',
-                                color: '#848484'
+                                color: '#141414'
                               }}
                             />
-                            {/* <SimpleTypography
+
+                            <Box
+                              sx={{
+                                display: 'flex'
+                              }}
+                            >
+                              <SimpleTypography
+                                text={user?.full_name}
+                                sx={{
+                                  fontSize: '18px',
+                                  fontWeight: 400,
+                                  lineHeight: '24px',
+                                  letterSpacing: '-0.01em',
+                                  textAlign: 'start',
+                                  color: '#848484'
+                                }}
+                              />
+                              {/* <SimpleTypography
                               text={`@${user?.username}`}
                               sx={{
                                 // ml: '8px',
@@ -175,12 +217,14 @@ export default function DesignersPage() {
                                 color: '#949494'
                               }}
                             /> */}
-                          </Box>
+                            </Box>
 
+                          </ListItemText>
                         </ListItemText>
-                        <ListItemText sx={{ minWidth: '80px' }}>
+
+                        <ListItemText sx={{ ...widthControl }}>
                           <SimpleTypography
-                            text={user?.designs_count}
+                            text={user?.designs_count || 0}
                             sx={{
                               fontSize: '22px',
                               fontWeight: 400,
@@ -190,6 +234,33 @@ export default function DesignersPage() {
                             }}
                           />
                         </ListItemText>
+
+                        <ListItemText sx={{ ...widthControl }}>
+                          <SimpleTypography
+                            text={user?.tags_count || 0}
+                            sx={{
+                              fontSize: '22px',
+                              fontWeight: 400,
+                              lineHeight: '26px',
+                              letterSpacing: '-0.02em',
+                              textAlign: 'center',
+                            }}
+                          />
+                        </ListItemText>
+
+                        <ListItemText sx={{ ...widthControl }}>
+                          <SimpleTypography
+                            text={user?.rating || 0}
+                            sx={{
+                              fontSize: '22px',
+                              fontWeight: 400,
+                              lineHeight: '26px',
+                              letterSpacing: '-0.02em',
+                              textAlign: 'center',
+                            }}
+                          />
+                        </ListItemText>
+
                       </ListItem>
                       {
                         all__designers?.data?.designers?.length && index != all__designers?.data?.designers?.length - 1 ?
