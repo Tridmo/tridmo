@@ -27,7 +27,7 @@ export default function Designers() {
       dispatch(getAllDesigners({ limit: designersLimit, orderBy: 'rating' }))
     }
     if (getProfileStatus === "idle") {
-      dispatch(getMyProfile())
+      dispatch(getMyProfile({}))
     }
   }, [dispatch, router, getDesignersStatus, getProfileStatus])
 

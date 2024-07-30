@@ -13,12 +13,13 @@ import useHash from "../hooks/use_hash";
 import { toast } from "react-toastify";
 
 import { getProfile } from '../../data/get_profile'
-import { setVerifyState } from '../../data/modal_checker'
+import { setLoginState, setOpenModal, setVerifyState, setWarningMessage, setWarningState } from '../../data/modal_checker'
 import { getSetVerified } from '../../data/set_verified'
 import { getMyInteriors } from '../../data/get_my_interiors'
 import { getSavedModels } from '../../data/get_saved_models'
 import { myInteriorsLimit, projectsLimit, savedModelsLimit } from '../../types/filters'
 import { getMyProjects } from '../../data/get_my_projects'
+import { accountBannedMessage } from "../../variables";
 
 
 export const AuthProvider = ({ children }) => {
@@ -26,12 +27,22 @@ export const AuthProvider = ({ children }) => {
   const update_cookie_status = useSelector((state: any) => state?.update_access_token?.status);
   const myProfile = useSelector(selectMyProfile)
   const myProfileStatus = useSelector((state: any) => state?.profile_me?.status)
+  const myProfileError = useSelector((state: any) => state?.profile_me?.error)
   const tokenStatus = useSelector((state: any) => state?.get_chat_token?.status)
 
   const pathname = usePathname()
   const router = useRouter();
   const params = useParams();
   const hash = useHash();
+
+  const handleLogout = () => {
+    Cookies.remove('accessToken')
+    Cookies.remove('refreshToken')
+    Cookies.remove('chatToken')
+    dispatch(setAuthState(false))
+    router.push(pathname)
+    router.refresh();
+  }
 
   useEffect(() => {
     async function loadUserFromCookies() {
@@ -40,9 +51,22 @@ export const AuthProvider = ({ children }) => {
         setAuthToken(Cookies.get('accessToken'))
 
         if (myProfileStatus === 'idle') {
-          await dispatch(getMyProfile())
+          await dispatch(getMyProfile({}))
         }
-        if (myProfileStatus === 'rejected') {
+        if (myProfileStatus === 'failed') {
+          if (myProfileError) {
+            if (myProfileError?.reason == 'token_expired') {
+              handleLogout()
+              dispatch(setLoginState(true))
+              dispatch(setOpenModal(true))
+            }
+            if (myProfileError?.reason == 'banned') {
+              handleLogout()
+              dispatch(setWarningMessage(accountBannedMessage))
+              dispatch(setWarningState(true))
+              dispatch(setOpenModal(true))
+            }
+          }
           dispatch(setAuthState(false));
         }
 
@@ -57,7 +81,7 @@ export const AuthProvider = ({ children }) => {
             dispatch(setAuthState(true));
 
             if (myProfileStatus === 'idle') {
-              await dispatch(getMyProfile())
+              await dispatch(getMyProfile({}))
             }
 
           }
@@ -67,7 +91,7 @@ export const AuthProvider = ({ children }) => {
       }
     }
     loadUserFromCookies();
-  }, [dispatch, update_cookie_status, myProfileStatus]);
+  }, [myProfile, Cookies, update_cookie_status, myProfileStatus]);
 
   useEffect(() => {
     if (hash) {

@@ -25,6 +25,9 @@ export interface ContextState {
   profileImagePreview: File | null;
   isConfirm: boolean;
   isLogin: boolean;
+  isWarning: boolean;
+  warningMessage: string;
+  isInfo: boolean;
   isSignup: boolean;
   isVerify: boolean;
   isModalOpen: boolean;
@@ -45,6 +48,9 @@ const initialState: ContextState = {
   isProfileImage: false,
   profileImagePreview: null,
   isConfirm: false,
+  isWarning: false,
+  warningMessage: '',
+  isInfo: false,
   isLogin: false,
   isSignup: false,
   isVerify: false,
@@ -96,6 +102,15 @@ const modalChecker = createSlice({
     },
     setSignupState(state, action) {
       state.isSignup = action.payload;
+    },
+    setWarningState(state, action) {
+      state.isWarning = action.payload;
+    },
+    setWarningMessage(state, action) {
+      state.warningMessage = action.payload;
+    },
+    setInfoState(state, action) {
+      state.isInfo = action.payload;
     },
     setAddingProjectState(state, action) {
       state.isAddingProject = action.payload;
@@ -162,6 +177,9 @@ export const {
   setEditingProjectState,
   setAddingProjectState,
   setProfileImagePreview,
+  setWarningState,
+  setWarningMessage,
+  setInfoState,
   setProfileImageState,
   setConfirmState,
   setLoginState,

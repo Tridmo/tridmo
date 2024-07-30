@@ -96,7 +96,6 @@ function CustomCard({ model, type, link, imgHeight, tagIcon, tagText, withAuthor
     }
   }, [model])
 
-  console.log(images);
   const handleClick = (event: any, interior) => {
     setAnchorEl(event.currentTarget);
     setSelectedInterior(interior)

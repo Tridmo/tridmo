@@ -4,7 +4,7 @@ import { Formik } from 'formik';
 import { toast } from 'react-toastify';
 import { getMyProfile, resetMyProfile, selectMyProfile } from '../../data/me';
 import { useDispatch, useSelector } from 'react-redux';
-import { setLoginState, setSignupState, setVerifyState, setOpenModal, setProfileEditState, setConfirmState, resetConfirmProps, resetConfirmData, ConfirmContextProps, ConfirmData, setConfirmData, setProfileImageState, setProfileImagePreview, setAddingProjectState, setEditingProjectState, selectEditingProject, setProjectsListState } from '../../data/modal_checker';
+import { setLoginState, setSignupState, setVerifyState, setOpenModal, setProfileEditState, setConfirmState, resetConfirmProps, resetConfirmData, ConfirmContextProps, ConfirmData, setConfirmData, setProfileImageState, setProfileImagePreview, setAddingProjectState, setEditingProjectState, selectEditingProject, setProjectsListState, setWarningState, setWarningMessage } from '../../data/modal_checker';
 import { setAuthState } from "../../data/login";
 import { Box, Typography, Grid, Button, TextField, InputAdornment, IconButton, SxProps, FormControlLabel, Checkbox, styled, TooltipProps, Tooltip, tooltipClasses, List, ListItem, ListItemText, ListItemAvatar, Divider, Skeleton } from '@mui/material';
 import Image from 'next/image';
@@ -30,6 +30,9 @@ import { getSavedModels } from '../../data/get_saved_models';
 import { getMyProjects, selectMyProjects } from '../../data/get_my_projects';
 import { selectOneModel } from '../../data/get_one_model';
 import { myInteriorsLimit, projectsLimit, savedModelsLimit } from '../../types/filters';
+import { accountBannedMessage } from '../../variables';
+import { formatMessage } from '../../utils/format_message';
+import { ErrorOutline, Launch, Report } from '@mui/icons-material';
 //Login context
 interface LoginContextProps {
   // setAlertMessage: any
@@ -261,11 +264,17 @@ export const LoginContext = (props: LoginContextProps) => {
             setStatus({ success: true });
             setSubmitting(false);
           } catch (err: any) {
-            setStatus({ success: false });
-            setErrors({ submit: err.message });
-            setSubmitting(false);
-            if (err.response.data.message) {
-              toast.error(err.response.data.message);
+            if (err?.response?.data?.reason == 'banned') {
+              dispatch(setLoginState(false))
+              dispatch(setWarningMessage(accountBannedMessage))
+              dispatch(setWarningState(true))
+            } else {
+              setStatus({ success: false });
+              setErrors({ submit: err.message });
+              setSubmitting(false);
+              if (err.response.data.message) {
+                toast.error(err.response.data.message);
+              }
             }
           }
         }}
@@ -619,7 +628,66 @@ export const SignUpContext = (props: LoginContextProps) => {
 }
 
 
-//Verify your account context
+export const WarningContext = () => {
+
+  const dispatch = useDispatch<any>();
+  const message = useSelector((state: any) => state?.modal_checker?.warningMessage)
+
+  const content = { __html: `${formatMessage(message)}` }
+
+  return (
+    <>
+      <Box>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            color: '#ff6666'
+          }}
+        >
+          <ErrorOutline sx={{ width: '50px', height: '50px', mr: '8px' }} />
+          <SimpleTypography
+            text='Предупреждение'
+            sx={{
+              fontSize: '24px',
+              fontWeight: 500,
+            }}
+          />
+        </Box>
+        <p dangerouslySetInnerHTML={content} />
+        <Box
+          sx={{
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            mt: '24px',
+          }}
+        >
+          <Buttons
+            type="button"
+            name="Закрыть"
+            className='bookmark__btn'
+            sx={{ width: '100%' }}
+            onClick={() => {
+              dispatch(setWarningState(false))
+              dispatch(setWarningMessage(''))
+              dispatch(setOpenModal(false))
+            }}
+          />
+          {/* <Buttons
+            sx={{ width: '49% !important' }}
+            name=""
+            className='signIn__btn'
+          >
+            <Launch sx={{ width: '18px', height: '18px', mr: '6px' }} />
+            <Link href={`mailto:support@demod.uz`}>Служба поддержки</Link>
+          </Buttons> */}
+        </Box>
+      </Box>
+    </>
+  );
+}
 
 export const VerificationContext = (props: LoginContextProps) => {
   interface RenderTypes {
@@ -888,7 +956,7 @@ export const EditProfileContext = (props: LoginContextProps) => {
             setStatus({ success: true });
             dispatch(setProfileEditState(false));
             dispatch(setOpenModal(false));
-            dispatch(getMyProfile());
+            dispatch(getMyProfile({}));
             toast.success(res?.data?.message || 'Успешно сохранено');
           } catch (err: any) {
             setStatus({ success: false });
@@ -1662,7 +1730,7 @@ export const ProfileImageContext = () => {
           dispatch(setProfileImageState(false));
           dispatch(setProfileImagePreview(null));
           dispatch(setOpenModal(false));
-          dispatch(getMyProfile());
+          dispatch(getMyProfile({}));
           toast.success(res?.data?.message || 'Успешно сохранено');
         } catch (err: any) {
           setStatus({ success: false });
