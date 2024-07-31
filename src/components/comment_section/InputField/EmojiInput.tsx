@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useRef, useEffect, useState, useContext } from 'react'
 import { CommentsContext } from '@/context/comments'
 import Picker from 'emoji-picker-react'

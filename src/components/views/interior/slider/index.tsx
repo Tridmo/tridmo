@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useEffect, useRef, useState } from 'react'
 import { Grid, List, styled, ListItem, Breadcrumbs } from '@mui/material';
 import Image from 'next/image';

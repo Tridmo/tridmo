@@ -10,7 +10,7 @@ import { sampleBrand } from '@/data/samples';
 import { selectOneBrand } from '../../../../data/get_one_brand';
 import { IMAGES_BASE_URL } from '../../../../utils/env_vars';
 import { RateReview } from '@mui/icons-material';
-import { chatApi } from '../../../../utils/axios';
+import { chatApi, setChatToken } from '../../../../utils/axios';
 import Cookies from 'js-cookie';
 import { setSelectedConversation } from '../../../../data/chat';
 import { selectChatToken } from '../../../../data/get_chat_token';
@@ -33,13 +33,9 @@ export default function BrandInfo() {
   const token = useSelector(selectChatToken)
 
   async function handleCreateConversation() {
-
+    setChatToken(Cookies.get('chatToken') ? Cookies.get('chatToken') : token ? token : '')
     chatApi.post(`/conversations`, {
       members: [brand?.admin_user_id]
-    }, {
-      headers: {
-        'Authorization': `Bearer ${Cookies.get('chatToken') ? Cookies.get('chatToken') : token ? token : ''}`
-      }
     })
       .then(res => {
         dispatch(setSelectedConversation(res?.data?.id))

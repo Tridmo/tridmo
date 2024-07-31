@@ -1,3 +1,5 @@
+"use client"
+
 import './CommentStructure.scss'
 import { useContext } from 'react'
 import InputField from '../InputField/Index'

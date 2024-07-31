@@ -1,3 +1,5 @@
+"use client"
+
 import React from 'react'
 import './LoginSection.scss'
 import { Box } from '@mui/system'

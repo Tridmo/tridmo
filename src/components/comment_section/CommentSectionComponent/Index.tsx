@@ -1,3 +1,5 @@
+"use client"
+
 import CommentStructure from '../CommentStructure.tsx/Index'
 import InputField from '../InputField/Index'
 import './CommentSection.css'
@@ -7,11 +9,7 @@ import React from 'react'
 import LoginSection from '../LoginSection/LoginSection'
 import NoComments from './NoComments'
 import { CommentsContext } from '@/context/comments'
-import { useSelector } from 'react-redux'
-import { selectMyProfile } from '../../../data/me'
-import { IMAGES_BASE_URL } from '../../../utils/env_vars'
 import { Box } from '@mui/system'
-import { Divider } from '@mui/material'
 
 interface CommentSectionProps {
   overlayStyle?: object

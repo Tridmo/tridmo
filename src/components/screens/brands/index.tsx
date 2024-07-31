@@ -112,7 +112,7 @@ export default function BrandsPage() {
                   {
                     all__brands?.data?.brands && all__brands?.data?.brands?.length != 0
                       ? all__brands?.data?.brands?.map((brand, index: any) =>
-                        <Link key={index} href={`/brands/${brand?.slug}`}>
+                        <Link key={index} href={`/${brand?.slug}`}>
                           <ListItem key={index} alignItems="center"
                             sx={liSx}
                           >

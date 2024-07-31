@@ -1,3 +1,5 @@
+"use client"
+
 import React, { createContext, useEffect, useState } from 'react'
 // const { v4: uuidv4 } = require('uuid')
 import _ from 'lodash'

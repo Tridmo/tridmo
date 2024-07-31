@@ -1,10 +1,14 @@
+"use client"
+
+import dynamic from 'next/dynamic';
 import './InputField.scss'
 import { useContext, useEffect, useState } from 'react'
 import { CommentsContext } from '@/context/comments'
 import React from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import RegularInput from './RegularInput'
-import AdvancedInput from './AdvancedInput'
+const AdvancedInput = dynamic(() => import('@/components/comment_section/InputField/AdvancedInput'), { ssr: false });
+
 
 interface InputFieldProps {
   formStyle?: object

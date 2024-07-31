@@ -1,4 +1,5 @@
-// components/ImageComponent.js
+"use client"
+
 import { Box, SxProps } from '@mui/system';
 import axios from 'axios';
 import { useState, useEffect, CSSProperties, MouseEvent, useMemo } from 'react';

@@ -28,8 +28,9 @@ import { IMAGES_BASE_URL } from '../../../utils/env_vars';
 import { getAllModels } from '../../../data/get_all_models';
 import { setModelNameFilter } from '../../../data/handle_filters';
 import { Close, Chat, ChatOutlined } from '@mui/icons-material';
-import { setSelectedConversation } from '../../../data/chat';
+import { selectChatNotifications, selectChatUnread, setSelectedConversation } from '../../../data/chat';
 import { AppTypeGuid } from '../../../types/weavy';
+import { WyNotificationToasts } from '@weavy/uikit-react';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -85,6 +86,8 @@ const navItemsData = [
 
 
 export default function Navbar() {
+  const dispatch = useDispatch<any>();
+
   const getModelCategoryFilter = useSelector((state: any) => state?.handle_filters?.categories)
   const getModelBrandFilter = useSelector((state: any) => state?.handle_filters?.model_brand)
   const getModelCategoryNameFilter = useSelector((state: any) => state?.handle_filters?.category_name)
@@ -98,6 +101,7 @@ export default function Navbar() {
 
   const isAuthenticated = useSelector((state: any) => state?.auth_slicer?.authState)
 
+  const chatUnread = useSelector(selectChatUnread)
   const userData = useSelector(selectMyProfile)
   const [searchClicked, setSearchClicked] = useState(false)
   const [searchVal, setSearchVal] = useState("")
@@ -105,14 +109,8 @@ export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
 
-
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const dispatch = useDispatch<any>();
-
-  // useEffect(() => {
-  //     setIsAuthenticated(authState);
-  // }, [authState]);
 
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
@@ -157,7 +155,7 @@ export default function Navbar() {
   return (
     <>
       <BasicModal />
-
+      <WyNotificationToasts draggable appearance='internal' />
       <Box sx={{ position: 'relative' }}>
         <Box sx={{ flexGrow: 1, background: "#fff", borderBottom: "1px solid #e0e0e0", marginBottom: 0 }}>
           <Grid container spacing={2} sx={{ maxWidth: "1200px", width: "100%", margin: "0 auto", alignItems: "center", position: "relative" }}>
@@ -328,8 +326,28 @@ export default function Navbar() {
                     </IconButton> */}
                     <Link href={'/chat'}>
                       <IconButton
-                        sx={{ marginRight: "16px", }}
+                        sx={{ position: 'relative', marginRight: "16px", }}
                       >
+                        <Box
+                          sx={{
+                            position: 'absolute',
+                            padding: '4px 6px',
+                            borderRadius: '12px',
+                            bgcolor: '#7210BE',
+                            top: 0,
+                            right: 0,
+                          }}
+                        >
+                          <SimpleTypography
+                            text={String(Number(chatUnread?.private || 0) + Number(chatUnread?.rooms || 0)) || '0'}
+                            sx={{
+                              color: '#fff',
+                              lineHeight: '11px',
+                              fontWeight: 400,
+                              fontSize: '12px',
+                            }}
+                          />
+                        </Box>
                         <ChatOutlined htmlColor='#424242' />
                       </IconButton>
                     </Link>

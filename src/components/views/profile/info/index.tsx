@@ -19,6 +19,7 @@ import { chatApi, setChatToken } from '../../../../utils/axios';
 import { selectChatToken } from '../../../../data/get_chat_token';
 import Cookies from 'js-cookie';
 import { setSelectedConversation } from '../../../../data/chat';
+import { log } from 'console';
 
 interface ProfileProps {
   of: 'designer' | 'own'
@@ -89,15 +90,10 @@ export default function ProfileInfo(props: ProfileProps) {
 
     chatApi.post(`/conversations`, {
       members: [profileInfo?.user_id]
-    }, {
-      headers: {
-        'Authorization': `Bearer ${Cookies.get('chatToken') ? Cookies.get('chatToken') : token ? token : ''}`
-      }
+    }).then(res => {
+      dispatch(setSelectedConversation(res?.data?.id))
+      router.push('/chat')
     })
-      .then(res => {
-        dispatch(setSelectedConversation(res?.data?.id))
-        router.push('/chat')
-      })
   }
 
   if (getProfileStatus == 'succeeded') {

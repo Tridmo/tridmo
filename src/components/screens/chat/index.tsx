@@ -3,22 +3,29 @@
 import { Box, Grid } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectSelectedConversation, setSelectedConversation } from '../../../data/chat';
+import { getChatUnread, selectSelectedConversation, setSelectedConversation } from '../../../data/chat';
+import { WyMessenger } from '@weavy/uikit-react';
 import { selectMyProfile } from '../../../data/me';
-import { tokenFactory } from '../../../utils/chat';
-import { WyMessenger, useWeavy } from '@weavy/uikit-react';
-import { CHAT_SERVER_URL } from '../../../utils/env_vars';
 
 export default function Chat() {
 
+  const dispatch = useDispatch<any>()
   const selectedConversation = useSelector(selectSelectedConversation)
   const selected = selectedConversation;
+  const profile = useSelector(selectMyProfile)
 
   useEffect(() => {
     if (selected == selectedConversation) {
       setSelectedConversation(null)
     }
   }, [selected])
+
+  function handleChatUnread(e) {
+    const x = setTimeout(() => {
+      dispatch(getChatUnread());
+      clearTimeout(x)
+    }, 500)
+  }
 
   return (
     <Box sx={{ background: "#fafafa" }} className="products" >
@@ -32,8 +39,14 @@ export default function Chat() {
             justifyContent: 'center'
           }}
         >
-          <Grid item xs={12}>
+          <Grid item xs={12} id='wy-messenger-container'
+            onClick={handleChatUnread}
+          >
             <WyMessenger
+              uid={`${profile?.username}-messenger`}
+              notifications='button-list'
+              notificationsBadge='count'
+              name='Чат'
               style={{ height: '80dvh' }}
               noMeetings
               noPolls

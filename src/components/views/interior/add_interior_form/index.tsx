@@ -1,4 +1,4 @@
-"us client"
+"use client"
 import Buttons from "@/components/buttons";
 import FileInput, { FileValidations } from "@/components/inputs/file_input";
 import SimpleInp from "@/components/inputs/simple_input";

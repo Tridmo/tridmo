@@ -932,7 +932,7 @@ export const EditProfileContext = (props: LoginContextProps) => {
         ) => {
           try {
 
-            if (_values.username) {
+            if (_values.username && _values.username != profile?.username) {
               const res = await axios.get(`users/check/${_values.username}`);
               if (res.data.data.exists) {
                 setStatus({ success: false });
@@ -1540,6 +1540,7 @@ export const ProjectsContext = (props: LoginContextProps) => {
                                 {
                                   imagesArr?.map((img, i) =>
                                     <Box
+                                      key={i}
                                       sx={{
                                         position: 'absolute',
                                         bottom: `${i != 0 ? (i * 4) : i}px`,

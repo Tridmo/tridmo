@@ -120,7 +120,7 @@ export default function ModelInfo() {
         <Box sx={{ marginLeft: "24px" }}>
           <SimpleTypography className='brand__name' text="Имя бренда" />
 
-          <Link href={`/brands/${simpleModel?.brand?.slug}`}>
+          <Link href={`/${simpleModel?.brand?.slug}`}>
             <SimpleTypography sx={{ marginBottom: '15px' }} className='brand__title' text={simpleModel?.brand?.name} />
           </Link>
 

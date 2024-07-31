@@ -262,7 +262,7 @@ export function ProjectModelsList({ project }) {
 
                         <ListItemText sx={{ ...widthControl }} >
                           <Link
-                            href={`/brands/${project_model['model.brand.slug']}`}
+                            href={`/${project_model['model.brand.slug']}`}
                           >
                             <SimpleTypography
                               text={project_model['model.brand.name']}

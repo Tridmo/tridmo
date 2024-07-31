@@ -6,7 +6,7 @@ import { getUpdatedAccessToken } from '../../data/re-update_access_token'
 import Cookies from 'js-cookie'
 const AuthContext = createContext({});
 import { getMyProfile, selectMyProfile } from '../../data/me';
-import { getChatToken } from "../../data/get_chat_token";
+import { getChatToken, selectChatToken } from "../../data/get_chat_token";
 import { setAuthToken } from "../../utils/axios";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import useHash from "../hooks/use_hash";
@@ -20,6 +20,7 @@ import { getSavedModels } from '../../data/get_saved_models'
 import { myInteriorsLimit, projectsLimit, savedModelsLimit } from '../../types/filters'
 import { getMyProjects } from '../../data/get_my_projects'
 import { accountBannedMessage } from "../../variables";
+import { tokenFactory } from "../../utils/chat";
 
 
 export const AuthProvider = ({ children }) => {
@@ -29,6 +30,7 @@ export const AuthProvider = ({ children }) => {
   const myProfileStatus = useSelector((state: any) => state?.profile_me?.status)
   const myProfileError = useSelector((state: any) => state?.profile_me?.error)
   const tokenStatus = useSelector((state: any) => state?.get_chat_token?.status)
+  const chatToken = useSelector(selectChatToken)
 
   const pathname = usePathname()
   const router = useRouter();
@@ -53,6 +55,10 @@ export const AuthProvider = ({ children }) => {
         if (myProfileStatus === 'idle') {
           await dispatch(getMyProfile({}))
         }
+        if (myProfile && (!Cookies.get('chatToken') || !chatToken)) {
+          dispatch(getChatToken())
+          await tokenFactory()
+        }
         if (myProfileStatus === 'failed') {
           if (myProfileError) {
             if (myProfileError?.reason == 'token_expired') {
@@ -70,7 +76,6 @@ export const AuthProvider = ({ children }) => {
           dispatch(setAuthState(false));
         }
 
-        dispatch(getChatToken())
         dispatch(setAuthState(true));
       }
 
