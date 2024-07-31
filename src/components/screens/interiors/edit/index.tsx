@@ -38,7 +38,7 @@ export default function EditInterior() {
           m={'32px 0'}
         >
           <Grid item width={'760px'}>
-            <AddInteriorForm editing />
+            <AddInteriorForm editing interior={interior} />
           </Grid>
           <Grid item width={'400px'}>
             <AddInteriorRequirements />

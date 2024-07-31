@@ -204,7 +204,12 @@ export default function FileInput(props: InputAdornmentsProps) {
   }
 
   React.useEffect(() => {
-    if (uploadedFiles.length == 0 && !props?.initialPreviews && !props?.initialPreviews?.length) {
+    console.log(uploadedFiles.length == 0);
+    console.log(!props?.initialPreviews?.length);
+    console.log(props?.initialPreviews);
+
+    if (uploadedFiles.length == 0 && !props?.initialPreviews?.length) {
+      console.log(uploadedFiles);
       resetUploadsCount()
     }
     if (
@@ -224,7 +229,7 @@ export default function FileInput(props: InputAdornmentsProps) {
       }
       setInitialsLength(props?.initialPreviews?.length)
     }
-  }, [props?.initialPreviews])
+  }, [])
 
   function handleClick() {
     const fileInput = hiddenFileInput.current?.querySelector('input[type="file"]');

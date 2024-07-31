@@ -63,18 +63,17 @@ const labelStyle: CSSProperties = {
 }
 
 
-export function AddInteriorForm({ editing }: { editing?: boolean }) {
+export function AddInteriorForm({ editing, interior }: { editing?: boolean, interior?: any }) {
   // const dispatch = useDispatch<any>()
   // const stylesData = useSelector(selectAllStyles)
-  const interior = useSelector(selectOneInterior)
   const categoriesData = useSelector(selectInteriorCategories);
   const router = useRouter()
 
   const initials = {
-    name: editing && interior?.name ? interior?.name : '',
-    description: editing && interior?.description ? interior?.description : '',
-    style_id: editing && interior?.style_id ? interior?.style_id : '',
-    category_id: editing && interior?.category_id ? interior?.category_id : '',
+    name: !!editing && interior?.name ? interior?.name : '',
+    description: !!editing && interior?.description ? interior?.description : '',
+    style_id: !!editing && interior?.style_id ? interior?.style_id : '',
+    category_id: !!!!editing && interior?.category_id ? interior?.category_id : '',
     cover: '',
     images: [],
     removed_images: [],
@@ -92,7 +91,7 @@ export function AddInteriorForm({ editing }: { editing?: boolean }) {
     >
       <Box sx={{ marginBottom: '40px' }}>
         <SimpleTypography
-          text={editing ? "Редактировать работу" : "Добавить работу"}
+          text={!!editing ? "Редактировать работу" : "Добавить работу"}
           sx={{
             fontSize: '30px',
             fontWeight: '500',
@@ -110,7 +109,7 @@ export function AddInteriorForm({ editing }: { editing?: boolean }) {
 
           validationSchema={
             Yup.object().shape(
-              editing ?
+              !!editing ?
                 {
                   name: Yup.string().max(255).optional(),
                   description: Yup.string().max(255).optional(),
@@ -137,7 +136,7 @@ export function AddInteriorForm({ editing }: { editing?: boolean }) {
 
               const formData = new FormData()
 
-              if (editing) {
+              if (!!editing) {
                 if (_values.name) formData.append('name', _values.name)
                 if (_values.description) formData.append('description', _values.description)
                 if (_values.style_id) formData.append('style_id', _values.style_id)
@@ -161,7 +160,7 @@ export function AddInteriorForm({ editing }: { editing?: boolean }) {
                 _values.images.forEach(i => formData.append('images', i))
               }
 
-              const res = editing
+              const res = !!editing
                 ? await instance.put(
                   `/interiors/${interior?.id}`,
                   formData
@@ -176,7 +175,7 @@ export function AddInteriorForm({ editing }: { editing?: boolean }) {
               setSubmitting(false);
               resetForm()
 
-              router.push(`/interiors/${editing ? interior?.slug : res?.data?.data?.interior?.slug}`)
+              router.push(`/interiors/${!!editing ? interior?.slug : res?.data?.data?.interior?.slug}`)
 
             } catch (err: any) {
               setStatus({ success: false });
@@ -306,7 +305,7 @@ export function AddInteriorForm({ editing }: { editing?: boolean }) {
                           setFieldValue('cover', files[0])
                         }}
                         initialPreviews={
-                          editing && interior?.images ?
+                          (!!editing && !!interior?.images) ?
                             interior?.images?.filter(i => i?.is_main == true).map(i => `${IMAGES_BASE_URL}/${i?.image_src}`) : []
                         }
                       />
@@ -326,7 +325,7 @@ export function AddInteriorForm({ editing }: { editing?: boolean }) {
                         limit={imagesCountLimit}
                         onChange={(files, removed) => {
                           setFieldValue('images', files)
-                          if (editing && interior?.images && removed && removed?.length) {
+                          if (!!editing && interior?.images && removed && removed?.length) {
                             const removed_images: any[] = [];
                             removed.forEach(r => {
                               const img = interior?.images?.find(i => i?.image_src == r.split(`${IMAGES_BASE_URL}/`)[1])
@@ -346,7 +345,7 @@ export function AddInteriorForm({ editing }: { editing?: boolean }) {
                 </Grid>
                 <Box sx={{ marginTop: '40px', width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
                   {
-                    editing ?
+                    !!editing ?
                       <Buttons
                         name={"Отмена"}
                         type='button'
@@ -356,7 +355,7 @@ export function AddInteriorForm({ editing }: { editing?: boolean }) {
                       : null
                   }
                   <Buttons
-                    name={editing ? "Сохранить" : "Загрузить"}
+                    name={!!editing ? "Сохранить" : "Загрузить"}
                     childrenFirst={true}
                     type='submit'
                     startIcon={isSubmitting}
