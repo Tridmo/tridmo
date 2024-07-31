@@ -204,12 +204,7 @@ export default function FileInput(props: InputAdornmentsProps) {
   }
 
   React.useEffect(() => {
-    console.log(uploadedFiles.length == 0);
-    console.log(!props?.initialPreviews?.length);
-    console.log(props?.initialPreviews);
-
     if (uploadedFiles.length == 0 && !props?.initialPreviews?.length) {
-      console.log(uploadedFiles);
       resetUploadsCount()
     }
     if (
