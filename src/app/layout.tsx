@@ -29,6 +29,7 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <head>
+        <script defer data-domain="demod.uz" src="https://plausible.io/js/script.js"></script>
       </head>
       <body className={inter.className}>
         <Providers>
