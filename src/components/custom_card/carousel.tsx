@@ -28,20 +28,12 @@ export const Carousel = ({
   displayDots?: boolean,
 }) => {
 
-  if (slides.length < 2) {
-    console.error("Please provide more slides")
-    return null
-  }
-
   const [visibleSlide, setVisibleSlide] = useState(1)
   const [hasTransitionClass, setHasTransitionClass] = useState(true)
   const [stateSlides, setStateSlides] = useState<any[]>([])
   const [leftAndRightDisabled, setLeftAndRightDisabled] = useState(false)
   const intervalId = useRef<any>(null)
 
-  // useEffect with an empty array as the second parameter
-  // will run only once, when the component mounts 
-  // this makes it an ideal place to trigger this functionality
   useEffect(() => {
     const slidesWithClones = [...slides]
     slidesWithClones.unshift(slidesWithClones[slidesWithClones.length - 1])
@@ -54,13 +46,6 @@ export const Carousel = ({
     }
   }, [stateSlides])
 
-  // Monitor changes for the visibleSlide value and react accordingly
-  // We need to loop back to the first slide when scrolling right
-  // from the last slide (and vice-versa for the other direction)
-  // And we also need to disable the animations (by removing the
-  // transition class from the relevant element) in order to give
-  // the impression that the carousel is scrolling infinitely 
-  // during our slide-cloning/swapping mechanism
   useEffect(() => {
     if (visibleSlide == stateSlides.length - 1) {
       setLeftAndRightDisabled(true)
@@ -91,12 +76,6 @@ export const Carousel = ({
     }
   }, [visibleSlide])
 
-  // Whenever the left and right arrows are disabled
-  // We want to enable them again after a specific 
-  // period of time, this is to prevent problematic
-  // spamming of these controls during our clone 
-  // slide-cloning/swapping mechanism
-  // Probably a better way to handle this though
   useEffect(() => {
     if (leftAndRightDisabled) {
       setTimeout(() => {
