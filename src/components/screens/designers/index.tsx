@@ -12,6 +12,7 @@ import { selectAllDesigners } from '../../../data/get_all_designers';
 import EmptyData from '../../views/empty_data';
 import { selectMyProfile } from '../../../data/me';
 import { IMAGES_BASE_URL } from '../../../utils/env_vars';
+import { dataItemIndex } from '../../../utils/utils';
 
 
 export default function DesignersPage() {
@@ -145,7 +146,13 @@ export default function DesignersPage() {
                         <ListItemText sx={{ maxWidth: 56, marginRight: '16px' }}>
 
                           <SimpleTypography
-                            text={index + 1}
+                            text={
+                              dataItemIndex<string>(
+                                all__designers?.data?.pagination?.limit,
+                                all__designers?.data?.pagination?.current,
+                                index + 1
+                              )
+                            }
                             sx={{
                               textAlign: 'center',
                               color: '#B3B3B3',

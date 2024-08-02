@@ -24,7 +24,7 @@ export default function Designers() {
 
   React.useEffect(() => {
     if (getDesignersStatus === "idle") {
-      dispatch(getAllDesigners({ limit: designersLimit, orderBy: 'rating' }))
+      dispatch(getAllDesigners({ limit: designersLimit }))
     }
     if (getProfileStatus === "idle") {
       dispatch(getMyProfile({}))

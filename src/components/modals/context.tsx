@@ -893,9 +893,9 @@ export const EditProfileContext = (props: LoginContextProps) => {
         initialValues={{
           full_name: profile?.full_name || '',
           username: profile?.username || '',
-          // birth_date: '',
           address: profile?.address || '',
           telegram: profile?.telegram || '',
+          instagram: profile?.instagram || '',
           phone: profile?.phone?.split('+998')[1] || '',
           portfolio_link: profile?.portfolio_link || '',
           submit: null
@@ -914,14 +914,10 @@ export const EditProfileContext = (props: LoginContextProps) => {
               usernameRegex,
               'Имя пользователя может содержать только буквы, цифры, символы подчеркивания (_), тире (-) и точки (.).'
             ),
-          // birth_date: Yup.date().max(new Date()).optional(),
           address: Yup.string().optional(),
           telegram: Yup.string().optional(),
+          instagram: Yup.string().optional(),
           phone: Yup.string().optional(),
-          // .matches(
-          //   phoneRegex,
-          //   'Телефон должен начинаться с +998'
-          // ),
           portfolio_link: Yup.string().optional(),
         })}
 
@@ -947,6 +943,7 @@ export const EditProfileContext = (props: LoginContextProps) => {
             if (_values.username != profile?.username) formData.append('username', _values.username)
             if (_values.address != profile?.address) formData.append('address', _values.address)
             if (_values.telegram != profile?.telegram) formData.append('telegram', _values.telegram)
+            if (_values.instagram != profile?.instagram) formData.append('instagram', _values.instagram)
             if (_values.phone != profile?.phone) formData.append('phone', `${_values.phone}`)
             if (_values.portfolio_link != profile?.portfolio_link) formData.append('portfolio_link', _values.portfolio_link)
 
@@ -1028,20 +1025,6 @@ export const EditProfileContext = (props: LoginContextProps) => {
                       />
                     </Box>
 
-                    {/* <Box sx={formControlSx}>
-                      <SimpleInp
-                        error={Boolean(touched.birth_date && errors.birth_date)}
-                        helperText={touched.birth_date && errors.birth_date}
-                        name="birth_date"
-                        type='date'
-                        label='Дата рождения'
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        value={values.birth_date || profile?.birth_date}
-                        placeholderText='birth_date'
-                      />
-                    </Box> */}
-
                     <Box sx={formControlSx}>
                       <SimpleInp
                         error={Boolean(touched.address && errors.address)}
@@ -1084,6 +1067,20 @@ export const EditProfileContext = (props: LoginContextProps) => {
 
                     <Box sx={formControlSx}>
                       <SimpleInp
+                        error={Boolean(touched.instagram && errors.instagram)}
+                        helperText={touched.instagram && errors.instagram}
+                        name="instagram"
+                        type="text"
+                        label='Инстаграм'
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.instagram}
+                        placeholderText='username'
+                      />
+                    </Box>
+
+                    <Box sx={formControlSx}>
+                      <SimpleInp
                         // startAdornment={
                         //   <InputAdornment sx={{ ml: '7px' }} position="start">
                         //     <SimpleTypography sx={{ fontWeight: '400', fontSize: '14px' }} text='+998' />
@@ -1111,7 +1108,7 @@ export const EditProfileContext = (props: LoginContextProps) => {
                         onBlur={handleBlur}
                         onChange={handleChange}
                         value={values.portfolio_link}
-                        placeholderText='https://'
+                        placeholderText='https://example.com'
                       />
                     </Box>
 

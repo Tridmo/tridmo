@@ -13,6 +13,7 @@ import { getMyInteriors } from '../../data/get_my_interiors';
 import { getSavedModels } from '../../data/get_saved_models';
 import { getMyProjects } from '../../data/get_my_projects';
 import { current } from '@reduxjs/toolkit';
+import { brandModelsLimit, brandsLimit, designersLimit, interiorsLimit, modelsLimit, myInteriorsLimit, projectsLimit, savedModelsLimit } from '../../types/filters';
 
 const SimplePagination = styled(Pagination)(
   ({ theme }: ThemeProps) =>
@@ -153,6 +154,7 @@ export default function BasicPagination({ dataSource, dataId, count, page, ...pr
     if (dataSource == 'models') {
       dispatch(setPageFilter({ p: 'models_page', n: page }))
       dispatch(getAllModels({
+        limit: modelsLimit,
         brand: getModelBrandFilter,
         categories: getModelCategoryFilter,
         colors: getModelColorFilter,
@@ -167,8 +169,8 @@ export default function BasicPagination({ dataSource, dataId, count, page, ...pr
     if (dataSource == 'interiors') {
       dispatch(setPageFilter({ p: 'interiors_page', n: page }))
       dispatch(getAllInteriors({
+        limit: interiorsLimit,
         categories: getModelCategoryFilter,
-        colors: getModelColorFilter,
         styles: getModelStyleFilter,
         page: page,
       }))
@@ -176,6 +178,7 @@ export default function BasicPagination({ dataSource, dataId, count, page, ...pr
     if (dataSource == 'brand_models') {
       dispatch(setPageFilter({ p: 'brand_models_page', n: page }))
       dispatch(getBrandModels({
+        limit: brandModelsLimit,
         brand_id: dataId,
         page: page,
         ...(!!getBrandModelsCategory ? { categories: getBrandModelsCategory } : {})
@@ -183,27 +186,27 @@ export default function BasicPagination({ dataSource, dataId, count, page, ...pr
     }
     if (dataSource == 'brands') {
       dispatch(setPageFilter({ p: 'brands_page', n: page }))
-      dispatch(getAllBrands({ orderBy: 'models_count', page: page }))
+      dispatch(getAllBrands({ limit: brandsLimit, orderBy: 'models_count', page: page }))
     }
     if (dataSource == 'designers') {
       dispatch(setPageFilter({ p: 'designers_page', n: page }))
-      dispatch(getAllDesigners({ page }))
+      dispatch(getAllDesigners({ page, limit: designersLimit }))
     }
     if (dataSource == 'designer_interiors') {
       dispatch(setPageFilter({ p: 'designer_interiors_page', n: page }))
-      dispatch(getAuthorInteriors({ author: dataId, page: page }))
+      dispatch(getAuthorInteriors({ author: dataId, page: page, limit: myInteriorsLimit }))
     }
     if (dataSource == 'my_interiors') {
       dispatch(setPageFilter({ p: 'my_interiors_page', n: page }))
-      dispatch(getMyInteriors({ page }))
+      dispatch(getMyInteriors({ page, limit: myInteriorsLimit }))
     }
     if (dataSource == 'saved_models') {
       dispatch(setPageFilter({ p: 'saved_models_page', n: page }))
-      dispatch(getSavedModels({ page }))
+      dispatch(getSavedModels({ page, limit: myInteriorsLimit }))
     }
     if (dataSource == 'projects') {
       dispatch(setPageFilter({ p: 'projects_page', n: page }))
-      dispatch(getMyProjects({ page }))
+      dispatch(getMyProjects({ page, limit: projectsLimit }))
     }
   }
 

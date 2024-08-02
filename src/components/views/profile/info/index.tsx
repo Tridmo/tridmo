@@ -352,30 +352,48 @@ export default function ProfileInfo(props: ProfileProps) {
                   </TableCell>
                 </TableRow>
 
-                {
-                  props?.of == 'own' ?
-                    <TableRow
-                      sx={tRowSx}
-                    >
-                      <TableCell sx={tCellSx} component="th" scope="row">
+                <TableRow
+                  sx={tRowSx}
+                >
+                  <TableCell sx={tCellSx} component="th" scope="row">
+                    <SimpleTypography
+                      text={"Телеграм"}
+                      className="table__text"
+                    />
+                  </TableCell>
+                  <TableCell sx={tCellSx} align="right">
+                    {
+                      !!profileInfo?.telegram ?
                         <SimpleTypography
-                          text={"Телеграм"}
-                          className="table__text"
+                          text={profileInfo?.telegram}
+                          className="table__text_info"
                         />
-                      </TableCell>
-                      <TableCell sx={tCellSx} align="right">
-                        {
-                          !!profileInfo?.telegram ?
-                            <SimpleTypography
-                              text={profileInfo?.telegram}
-                              className="table__text_info"
-                            />
-                            : props.of == 'own' && <AddButton />
-                        }
-                      </TableCell>
-                    </TableRow>
-                    : null
-                }
+                        : props.of == 'own' && <AddButton />
+                    }
+                  </TableCell>
+                </TableRow>
+
+
+                <TableRow
+                  sx={tRowSx}
+                >
+                  <TableCell sx={tCellSx} component="th" scope="row">
+                    <SimpleTypography
+                      text={"Инстаграм"}
+                      className="table__text"
+                    />
+                  </TableCell>
+                  <TableCell sx={tCellSx} align="right">
+                    {
+                      !!profileInfo?.instagram ?
+                        <SimpleTypography
+                          text={profileInfo?.instagram}
+                          className="table__text_info"
+                        />
+                        : props.of == 'own' && <AddButton />
+                    }
+                  </TableCell>
+                </TableRow>
 
               </TableBody>
             </Table>
