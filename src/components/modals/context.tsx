@@ -891,8 +891,7 @@ export const EditProfileContext = (props: LoginContextProps) => {
     <>
       <Formik
         initialValues={{
-          first_name: profile?.full_name?.split(' ')[0] || '',
-          last_name: profile?.full_name?.split(' ')[1] || '',
+          full_name: profile?.full_name || '',
           username: profile?.username || '',
           // birth_date: '',
           address: profile?.address || '',
@@ -944,13 +943,12 @@ export const EditProfileContext = (props: LoginContextProps) => {
 
             const formData = new FormData()
 
-            if (_values.first_name || _values.last_name) formData.append('full_name', `${_values.first_name || profile?.full_name?.split(' ')[0]} ${_values.last_name || profile?.full_name?.split(' ')[1]}`)
-            if (_values.username) formData.append('username', _values.username)
-            // if (_values.birth_date) formData.append('birth_date', _values.birth_date)
-            if (_values.address) formData.append('address', _values.address)
-            if (_values.telegram) formData.append('telegram', _values.telegram)
-            if (_values.phone) formData.append('phone', `+998${_values.phone}`)
-            if (_values.portfolio_link) formData.append('portfolio_link', _values.portfolio_link)
+            if (_values.full_name != profile?.full_name) formData.append('full_name', _values.full_name)
+            if (_values.username != profile?.username) formData.append('username', _values.username)
+            if (_values.address != profile?.address) formData.append('address', _values.address)
+            if (_values.telegram != profile?.telegram) formData.append('telegram', _values.telegram)
+            if (_values.phone != profile?.phone) formData.append('phone', `${_values.phone}`)
+            if (_values.portfolio_link != profile?.portfolio_link) formData.append('portfolio_link', _values.portfolio_link)
 
             const res = await instance.put(`users/profile`, formData);
             setStatus({ success: true });
@@ -983,7 +981,7 @@ export const EditProfileContext = (props: LoginContextProps) => {
 
                 <Grid container
                   sx={{
-                    width: '100%',
+                    width: '600px',
                     display: 'flex',
                     alignItems: 'flex-start',
                     justifyContent: 'space-between'
@@ -1001,35 +999,19 @@ export const EditProfileContext = (props: LoginContextProps) => {
                       borderRight: '1px solid #E0E0E0'
                     }}
                   >
-                    <Box sx={{ display: "flex", ...formControlSx }}>
-                      <Box sx={{ paddingRight: "8px", width: "50%" }}>
-                        <SimpleInp
-                          error={Boolean(touched.first_name && errors.first_name)}
-                          helperText={touched.first_name && errors.first_name}
-                          name="first_name"
-                          type="first_name"
-                          label="Имя"
-                          autoComplete="off"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          value={values.first_name}
-                          placeholderText='Имя'
-                        />
-                      </Box>
-                      <Box sx={{ paddingLeft: "8px", width: "50%" }}>
-                        <SimpleInp
-                          error={Boolean(touched.last_name && errors.last_name)}
-                          helperText={touched.last_name && errors.last_name}
-                          name="last_name"
-                          type="surname"
-                          label="Фамилия"
-                          autoComplete="off"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          value={values.last_name}
-                          placeholderText='Фамилия'
-                        />
-                      </Box>
+                    <Box sx={{ ...formControlSx }}>
+                      <SimpleInp
+                        error={Boolean(touched.full_name && errors.full_name)}
+                        helperText={touched.full_name && errors.full_name}
+                        name="full_name"
+                        type="full_name"
+                        label="Ф.И.О"
+                        autoComplete="off"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.full_name}
+                        placeholderText='Имя'
+                      />
                     </Box>
 
                     <Box sx={formControlSx}>
@@ -1102,11 +1084,11 @@ export const EditProfileContext = (props: LoginContextProps) => {
 
                     <Box sx={formControlSx}>
                       <SimpleInp
-                        startAdornment={
-                          <InputAdornment sx={{ ml: '7px' }} position="start">
-                            <SimpleTypography sx={{ fontWeight: '400', fontSize: '14px' }} text='+998' />
-                          </InputAdornment>
-                        }
+                        // startAdornment={
+                        //   <InputAdornment sx={{ ml: '7px' }} position="start">
+                        //     <SimpleTypography sx={{ fontWeight: '400', fontSize: '14px' }} text='+998' />
+                        //   </InputAdornment>
+                        // }
                         error={Boolean(touched.phone && errors.phone)}
                         helperText={touched.phone && errors.phone}
                         name="phone"
