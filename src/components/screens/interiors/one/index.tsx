@@ -246,6 +246,45 @@ export default function OneInterior() {
     }
   }
 
+  function handleDeleteComment(comIdToDelete, afterDelete: Function) {
+
+    const modalContent: ConfirmContextProps = {
+      message: `Вы уверены, что хотите удалить этот комментарий?`,
+      actions: {
+        on_click: {
+          args: [comIdToDelete],
+          func: async (checked: boolean, id: number) => {
+            dispatch(setConfirmProps({ is_loading: true }))
+            instance.delete(`comments/${comIdToDelete}`)
+              .then(async res => {
+                if (res?.data?.success) {
+                  await afterDelete()
+                  toast.success(res?.data?.message)
+                  dispatch(setConfirmState(false))
+                  dispatch(setOpenModal(false))
+                  dispatch(resetConfirmProps())
+                  dispatch(resetConfirmData())
+                }
+              })
+              .catch(err => {
+                console.log(err);
+                toast.error(err?.response?.data?.message)
+              })
+              .finally(() => {
+                dispatch(setConfirmProps({ is_loading: false }))
+              })
+
+          }
+        }
+      }
+    }
+    dispatch(resetConfirmProps())
+    dispatch(setConfirmProps(modalContent))
+    dispatch(setConfirmState(true))
+    dispatch(setOpenModal(true))
+
+  }
+
   function handleClickDelete() {
     const modalContent: ConfirmContextProps = {
       message: `Вы уверены, что хотите удалить интерьер «${interior?.name}»?`,
@@ -591,21 +630,6 @@ export default function OneInterior() {
                 </>
                 :
                 <>
-                  {/* <Box margin={'0 0 0 16px'}>
-                    <Buttons
-                      name={isSaved ? 'Сохранено' : 'Сохранить'}
-                      className='bookmark__btn'
-                      childrenFirst={true}
-                      onClick={handleSave}
-                    >
-                      <Image
-                        alt='bookmark'
-                        width={18}
-                        height={18}
-                        src={isSaved ? '/icons/bookmark-full.svg' : '/icons/bookmark-line.svg'}
-                      />
-                    </Buttons>
-                  </Box> */}
                   <Box margin={'0 0 0 16px'}>
                     <Buttons
                       name={`Нравиться  (${likesCount})`}
@@ -682,6 +706,12 @@ export default function OneInterior() {
               marginBottom: '24px',
               letterSpacing: '-0.02em'
             }}
+            submitBtnStyle={{
+              width: '120px'
+            }}
+            cancelBtnStyle={{
+              width: '120px'
+            }}
             currentUser={commentCurrentUser}
             advancedInput={false}
             logIn={{
@@ -690,41 +720,50 @@ export default function OneInterior() {
             }}
             commentData={comments}
             onSubmitAction={
-              (data, context) => {
-                instance.post(
-                  '/comments',
+              (data) => {
+                instance.post('/comments',
                   {
                     text: data.text,
-                    entity_source: 'interior',
+                    entity_source: 'interiors',
                     entity_id: interior?.id,
                   }
                 ).then(async res => {
-                  const com = res.data?.data?.comment
-                  await context.onSubmit(com.text, com.id, com.created_at)
+                  if (res?.data?.success) await data?.afterSubmit(res?.data?.data?.comment)
                 }).catch(err => {
-                  alert('Something went wrong! Try again later')
+                  toast.error(err?.response?.data?.message)
                 })
               }}
             onReplyAction={
-              (data, context) => {
+              (data) => {
                 instance.post(
                   '/comments',
                   {
                     text: data.text,
                     parent_id: data.repliedToCommentId,
-                    entity_source: 'interior',
+                    entity_source: 'interiors',
                     entity_id: interior?.id,
                   }
                 ).then(async res => {
-                  const com = res.data?.data?.comment
-                  await context.onReply(com.text, com.id, com.parent_id, com.id, com.created_at)
+                  if (res?.data?.success) await data.afterReply(res?.data?.data?.comment)
                 }).catch(err => {
-                  alert('Something went wrong! Try again later')
+                  toast.error(err?.response?.data?.message)
                 })
               }
             }
-            currentData={(data: any) => {
-            }}
+            onEditAction={
+              (data) => {
+                instance.put(`/comments/${data?.comment_id}`, { text: data.text, })
+                  .then(async res => {
+                    if (res?.data?.success) await data?.afterEdit()
+                  }).catch(err => {
+                    toast.error(err?.response?.data?.message)
+                  })
+              }
+            }
+            onDeleteAction={
+              (data) => handleDeleteComment(data.comIdToDelete, data.afterDelete)
+            }
+            currentData={(data: any) => { }}
             removeEmoji={true}
           />
         </Box>

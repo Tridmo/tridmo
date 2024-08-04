@@ -55,11 +55,21 @@ const CommentStructure = ({
             <MenuItem
               onClick={() => globalStore.handleAction(info.comment_id, true)}
             >
-              edit
+              Изменить
             </MenuItem>
-            <MenuItem>
-              <DeleteModal comment_id={info.comment_id} parentId={parentId} />
+            <MenuItem
+              onClick={async () => {
+                globalStore.onDeleteAction &&
+                  (await globalStore.onDeleteAction({
+                    comIdToDelete: info.comment_id,
+                    parentOfDeleteId: parentId,
+                    afterDelete: async () => await globalStore.onDelete(info.comment_id, parentId),
+                  }))
+              }}
+            >
+              Удалить
             </MenuItem>
+
           </Menu>
         )}
       </div>

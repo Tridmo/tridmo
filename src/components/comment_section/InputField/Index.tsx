@@ -38,6 +38,7 @@ const InputField = ({
   imgDiv
 }: InputFieldProps) => {
   const [text, setText] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     if (fillerText) {
@@ -51,7 +52,6 @@ const InputField = ({
     const textToSend = advText ? advText : text
 
     return (
-      await globalStore.onEdit(textToSend, comment_id, parentId),
       globalStore.onEditAction &&
       (await globalStore.onEditAction({
         user_id: globalStore.currentUserData.currentUserId,
@@ -62,7 +62,12 @@ const InputField = ({
           : null,
         fullName: globalStore.currentUserData.currentUserFullName,
         text: textToSend,
-        parentOfEditedCommentId: parentId
+        parentOfEditedCommentId: parentId,
+        afterEdit: async () => {
+          await globalStore.onEdit(textToSend, comment_id, parentId)
+          setText('')
+          setIsLoading(false)
+        }
       }))
     )
   }
@@ -71,7 +76,6 @@ const InputField = ({
     const textToSend = advText ? advText : text
 
     return (
-      // await globalStore.onReply(textToSend, comment_id, parentId, replyUuid),
       globalStore.onReplyAction &&
       (await globalStore.onReplyAction({
         user_id: globalStore.currentUserData.currentUserId,
@@ -83,15 +87,19 @@ const InputField = ({
         fullName: globalStore.currentUserData.currentUserFullName,
         text: textToSend,
         parentOfRepliedCommentId: parentId,
-        comment_id: replyUuid
-      }, globalStore))
+        comment_id: replyUuid,
+        afterReply: async (newComment?) => {
+          await globalStore.onReply(textToSend, comment_id, parentId, replyUuid, newComment?.created_at || new Date())
+          setText('')
+          setIsLoading(false)
+        }
+      }))
     )
   }
   const submitMode = async (createUuid: string, advText?: string) => {
     const textToSend = advText ? advText : text
 
     return (
-      // await globalStore.onSubmit(textToSend, createUuid),
       globalStore.onSubmitAction &&
       (await globalStore.onSubmitAction({
         user_id: globalStore.currentUserData.currentUserId,
@@ -102,8 +110,13 @@ const InputField = ({
           : null,
         fullName: globalStore.currentUserData.currentUserFullName,
         text: textToSend,
-        replies: []
-      }, globalStore))
+        replies: [],
+        afterSubmit: async (newComment?) => {
+          await globalStore.onSubmit(textToSend, createUuid, newComment?.created_at || new Date())
+          setText('')
+          setIsLoading(false)
+        }
+      }))
     )
   }
 
@@ -111,12 +124,12 @@ const InputField = ({
     event.preventDefault()
     const createUuid = uuidv4()
     const replyUuid = uuidv4()
+    setIsLoading(true)
     mode === 'editMode'
       ? editMode(advText)
       : mode === 'replyMode'
         ? replyMode(replyUuid, advText)
         : submitMode(createUuid, advText)
-    setText('')
   }
 
   return (
@@ -139,6 +152,7 @@ const InputField = ({
           comment_id={comment_id}
           imgDiv={imgDiv}
           imgStyle={imgStyle}
+          loading={isLoading}
           customImg={customImg}
         />
       ) : (
@@ -154,6 +168,7 @@ const InputField = ({
           submitBtnStyle={submitBtnStyle}
           handleSubmit={handleSubmit}
           text={text}
+          loading={isLoading}
           setText={setText}
         />
       )}

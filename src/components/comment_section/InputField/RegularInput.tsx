@@ -18,6 +18,7 @@ interface RegularInputProps {
   submitBtnStyle?: object
   imgStyle?: object
   imgDiv?: object
+  loading?: boolean
   handleSubmit: Function
   text: string
   setText: Function
@@ -35,6 +36,7 @@ const RegularInput = ({
   submitBtnStyle,
   handleSubmit,
   text,
+  loading,
   setText
 }: RegularInputProps) => {
   const globalStore: any = useContext(CommentsContext)
@@ -103,11 +105,9 @@ const RegularInput = ({
       }}>
         {mode &&
           <Buttons
+            disabled={loading}
             className='borderless__btn'
-            sx={globalStore.cancelBtnStyle ||
-            {
-              ...cancelBtnStyle,
-            }
+            sx={globalStore.cancelBtnStyle || { ...cancelBtnStyle }
             }
             type='button'
             onClick={() =>
@@ -121,9 +121,11 @@ const RegularInput = ({
         }
 
         <Buttons
-          className={text != '' ? 'login__btn' : 'login__btn--disabled'}
+          startIcon={loading}
+          loadingColor='#fff'
+          className={text != '' || loading ? 'login__btn' : 'login__btn--disabled'}
           type='submit'
-          disabled={text != '' ? false : true}
+          disabled={text == ''}
           sx={globalStore.submitBtnStyle ||
           {
             ...submitBtnStyle,

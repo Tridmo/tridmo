@@ -19,8 +19,17 @@ const DeleteModal = ({ comment_id, parentId }: DeleteModalProps) => {
 
   return (
     <div>
-      <div style={{ width: '100%' }} onClick={onOpenModal}>
-        delete
+      <div style={{ width: '100%' }}
+        onClick={async () => {
+          globalStore.onDeleteAction &&
+            (await globalStore.onDeleteAction({
+              comIdToDelete: comment_id,
+              parentOfDeleteId: parentId,
+              afterDelete: async () => await globalStore.onDelete(comment_id, parentId),
+            }))
+        }}
+      >
+        Удалить
       </div>
       <Modal open={open} onClose={onCloseModal} center>
         <h2>Are you sure?</h2>
@@ -29,11 +38,11 @@ const DeleteModal = ({ comment_id, parentId }: DeleteModalProps) => {
           <button
             className='delete'
             onClick={async () => (
-              await globalStore.onDelete(comment_id, parentId),
               globalStore.onDeleteAction &&
               (await globalStore.onDeleteAction({
                 comIdToDelete: comment_id,
-                parentOfDeleteId: parentId
+                parentOfDeleteId: parentId,
+                afterDelete: async () => await globalStore.onDelete(comment_id, parentId),
               }))
             )}
           >

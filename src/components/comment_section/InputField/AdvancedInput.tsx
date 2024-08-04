@@ -8,6 +8,7 @@ import { Editor } from 'react-draft-wysiwyg'
 import draftToHtml from 'draftjs-to-html'
 import htmlToDraft from 'html-to-draftjs'
 import { CommentsContext } from '@/context/comments'
+import Buttons from '../../buttons'
 
 interface AdvancedInputProps {
   formStyle?: object
@@ -19,6 +20,7 @@ interface AdvancedInputProps {
   imgStyle?: object
   imgDiv?: object
   customImg?: string
+  loading?: boolean
   text: string
 }
 
@@ -32,6 +34,7 @@ const AdvancedInput = ({
   imgDiv,
   imgStyle,
   customImg,
+  loading,
   text
 }: AdvancedInputProps) => {
   const [html, setHtml] = useState('<p></p>')
@@ -176,10 +179,14 @@ const AdvancedInput = ({
             }}
           /> */}
           <div className='advanced-btns'>
-            {mode && (
-              <button
-                className='advanced-cancel cancelBtn'
-                style={globalStore.cancelBtnStyle || cancelBtnStyle}
+            {mode &&
+              <Buttons
+                className='borderless__btn'
+                sx={globalStore.cancelBtnStyle ||
+                {
+                  ...cancelBtnStyle,
+                }
+                }
                 type='button'
                 onClick={() =>
                   mode === 'editMode'
@@ -187,23 +194,25 @@ const AdvancedInput = ({
                     : globalStore.handleAction(comment_id, false)
                 }
               >
-                Cancel
-              </button>
-            )}
-            <button
-              className='advanced-post postBtn'
+                Отмена
+              </Buttons>
+            }
+
+            <Buttons
+              startIcon={loading}
+              className={text != '' ? 'login__btn' : 'login__btn--disabled'}
               type='submit'
-              disabled={editText === '<p></p>' ? true : false}
-              style={globalStore.submitBtnStyle || submitBtnStyle}
-              onClick={async (e) =>
-                editText != '<p></p>'
-                  ? (await handleSubmit(e, editText),
-                    setEditor(EditorState.createEmpty()))
-                  : null
+              disabled={text != '' ? false : true}
+              sx={globalStore.submitBtnStyle ||
+              {
+                ...submitBtnStyle,
+                marginLeft: '5px'
               }
+              }
+              onClick={(e) => (text ? handleSubmit(e) : null)}
             >
-              Post
-            </button>
+              Отправить
+            </Buttons>
           </div>
         </form>
       </div>

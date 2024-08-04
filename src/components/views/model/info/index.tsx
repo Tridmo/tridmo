@@ -16,6 +16,7 @@ import { sampleModel } from '@/data/samples';
 import { IMAGES_BASE_URL } from '../../../../utils/env_vars';
 import instance from '@/utils/axios';
 import { selectMyProfile } from '../../../../data/me';
+import { modelStatuses } from '../../../../types/variables';
 
 
 export default function ModelInfo() {
@@ -58,15 +59,6 @@ export default function ModelInfo() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleDownloadAfterRes = async (id: string, is_free?: boolean, product_id?: string) => {
-
-    await instance.post(`products/download/${product_id}`)
-      .then((res) => (
-        router.push(res?.data?.data?.url)
-      ))
-
-  }
-
 
   function DownloadHandler() {
 
@@ -94,8 +86,8 @@ export default function ModelInfo() {
   return (
     <Grid
       className='products__info' item
-      xs={12} md={6}
-      sx={{ marginTop: "20px", maxWidth: '45.5% !important' }}
+      xs={5.2} md={5.2}
+      sx={{ marginTop: "20px" }}
     >
 
       <SimpleTypography
@@ -293,12 +285,7 @@ export default function ModelInfo() {
               </TableCell>
               <TableCell sx={TcStyle}>
                 <SimpleTypography
-                  text={
-                    simpleModel?.availability == 1 ? 'Доступно'
-                      : simpleModel?.availability == 2 ? 'Не доступно'
-                        : simpleModel?.availability == 3 ? 'Для заказа'
-                          : ""
-                  }
+                  text={modelStatuses[simpleModel?.availability]}
                   className="table__text"
                 />
               </TableCell>
@@ -312,7 +299,7 @@ export default function ModelInfo() {
               </TableCell>
               <TableCell sx={TcStyle}>
                 <SimpleTypography
-                  text={simpleModel?.furniture_cost}
+                  text={simpleModel?.furniture_cost || 'Не указан'}
                   className="table__text"
                 />
               </TableCell>
@@ -359,13 +346,13 @@ export default function ModelInfo() {
 
           <Buttons
             onClick={simpleModel?.availability != 2 ? DownloadHandler : () => { }}
-            name={`Скачать`}
             startIcon={isSubmitting}
-            endIcon={undefined}
             type="button"
             disabled={isSubmitting || simpleModel?.availability == 2}
             className={isSubmitting || simpleModel?.availability == 2 ? "download__model--disabled" : "download__model--model"}
-          />
+          >
+            Скачать
+          </Buttons>
 
         </Grid>
         <Grid />

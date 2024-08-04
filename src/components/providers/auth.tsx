@@ -21,6 +21,7 @@ import { myInteriorsLimit, projectsLimit, savedModelsLimit } from '../../types/f
 import { getMyProjects } from '../../data/get_my_projects'
 import { accountBannedMessage } from "../../variables";
 import { tokenFactory } from "../../utils/chat";
+import { getNotifications, selectNotificationsStatus } from "../../data/get_notifications";
 
 
 export const AuthProvider = ({ children }) => {
@@ -31,6 +32,7 @@ export const AuthProvider = ({ children }) => {
   const myProfileError = useSelector((state: any) => state?.profile_me?.error)
   const tokenStatus = useSelector((state: any) => state?.get_chat_token?.status)
   const chatToken = useSelector(selectChatToken)
+  const notifications_status = useSelector(selectNotificationsStatus);
 
   const pathname = usePathname()
   const router = useRouter();
@@ -45,6 +47,15 @@ export const AuthProvider = ({ children }) => {
     router.push(pathname)
     router.refresh();
   }
+
+  useEffect(() => {
+    if (myProfile) {
+      if (notifications_status === 'idle') {
+        dispatch(getNotifications());
+      }
+    }
+  }, [myProfile, notifications_status]);
+
 
   useEffect(() => {
     async function loadUserFromCookies() {

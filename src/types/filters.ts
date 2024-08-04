@@ -10,3 +10,4 @@ export const projectsLimit = 6;
 export const myInteriorsLimit = 12;
 export const savedModelsLimit = 12;
 export const brandModelsLimit = 12;
+export const notificationsLimit = 16;

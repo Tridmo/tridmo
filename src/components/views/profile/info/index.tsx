@@ -10,11 +10,11 @@ import { sampleUser } from '@/data/samples';
 import { selectDesignerProfile } from '../../../../data/get_designer';
 import { selectMyProfile } from '../../../../data/me';
 import { IMAGES_BASE_URL } from '../../../../utils/env_vars';
-import { setProfileEditState, setOpenModal, setProfileImageState, setProfileImagePreview, setAddingProjectState } from '../../../../data/modal_checker';
+import { setProfileEditState, setOpenModal, setProfileImageState, setProfileImagePreview, setAddingProjectState, setLoginState } from '../../../../data/modal_checker';
 import formatDate from '../../../../utils/format_date';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { readFile } from '../../../inputs/file_input';
-import { Add, RateReview } from '@mui/icons-material';
+import { Add, OpenInNew, RateReview } from '@mui/icons-material';
 import { chatApi, setChatToken } from '../../../../utils/axios';
 import { selectChatToken } from '../../../../data/get_chat_token';
 import Cookies from 'js-cookie';
@@ -64,13 +64,13 @@ const tCellSx: SxProps = {
 
 export default function ProfileInfo(props: ProfileProps) {
   const router = useRouter()
+  const isAuthenticated = useSelector((state: any) => state?.auth_slicer?.authState)
   const getProfileStatus = useSelector((state: any) => props?.of == 'designer' ? state?.get_designer?.status : state?.get_profile?.status)
   const dispatch = useDispatch()
-
   const profileInfo = useSelector(props?.of == 'designer' ? selectDesignerProfile : selectMyProfile)
   const token = useSelector(selectChatToken)
-
   const hiddenFileInput = useRef<HTMLInputElement>(null);
+  const [conversationLoading, setConversationLoading] = useState<boolean>(false);
 
   function handleClick() {
     const fileInput = hiddenFileInput.current?.querySelector('input[type="file"]');
@@ -79,6 +79,10 @@ export default function ProfileInfo(props: ProfileProps) {
     }
   };
 
+  function getSocialLink(url: string, target: string, connector: string = '/') {
+    return target ? (target.startsWith(url) ? target : `${url}${connector}${target}`) : ''
+  }
+
   async function handleProfileImageChange(e) {
     dispatch(setProfileImageState(true))
     dispatch(setOpenModal(true))
@@ -86,14 +90,23 @@ export default function ProfileInfo(props: ProfileProps) {
   }
 
   async function handleCreateConversation() {
-    setChatToken(Cookies.get('chatToken') || token)
+    if (isAuthenticated) {
+      setConversationLoading(true)
+      setChatToken(Cookies.get('chatToken') || token)
 
-    chatApi.post(`/conversations`, {
-      members: [profileInfo?.user_id]
-    }).then(res => {
-      dispatch(setSelectedConversation(res?.data?.id))
-      router.push('/chat')
-    })
+      chatApi.post(`/conversations`, {
+        members: [profileInfo?.user_id]
+      }).then(res => {
+        dispatch(setSelectedConversation(res?.data?.id))
+        router.push('/chat')
+        setConversationLoading(false)
+      })
+    }
+    else {
+      dispatch(setLoginState(true))
+      dispatch(setOpenModal(true))
+    }
+
   }
 
   if (getProfileStatus == 'succeeded') {
@@ -363,12 +376,8 @@ export default function ProfileInfo(props: ProfileProps) {
                   </TableCell>
                   <TableCell sx={tCellSx} align="right">
                     {
-                      !!profileInfo?.telegram ?
-                        <SimpleTypography
-                          text={profileInfo?.telegram}
-                          className="table__text_info"
-                        />
-                        : props.of == 'own' && <AddButton />
+                      props.of == 'own' && !profileInfo?.telegram ? <AddButton />
+                        : <OpenButton href={getSocialLink('https://t.me', profileInfo?.telegram)} />
                     }
                   </TableCell>
                 </TableRow>
@@ -385,12 +394,8 @@ export default function ProfileInfo(props: ProfileProps) {
                   </TableCell>
                   <TableCell sx={tCellSx} align="right">
                     {
-                      !!profileInfo?.instagram ?
-                        <SimpleTypography
-                          text={profileInfo?.instagram}
-                          className="table__text_info"
-                        />
-                        : props.of == 'own' && <AddButton />
+                      props.of == 'own' && !profileInfo?.instagram ? <AddButton />
+                        : <OpenButton href={getSocialLink('https://instagram.com', profileInfo?.instagram)} />
                     }
                   </TableCell>
                 </TableRow>
@@ -403,41 +408,9 @@ export default function ProfileInfo(props: ProfileProps) {
             {
               props?.of == 'designer'
                 ? <>
-                  <Grid item md={12} xs={12} mb={'10px'}>
-                    {
-                      profileInfo?.telegram
-                        ? <Link target="_blank" href={`https://t.me/${profileInfo?.telegram}`}>
-                          <Buttons
-                            sx={{ width: '100%' }}
-                            className='bookmark__btn'
-                            name="Связаться через Telegram"
-                            childrenFirst={true}
-                          >
-                            <Image
-                              width={19}
-                              height={23}
-                              alt="web"
-                              src={"/icons/telegram-logo.svg"}
-                            />
-                          </Buttons>
-                        </Link>
-                        : <Buttons
-                          sx={{ width: '100%' }}
-                          className='bookmark__btn--disabled'
-                          name="Связаться через Telegram"
-                          childrenFirst={true}
-                        >
-                          <Image
-                            width={19}
-                            height={23}
-                            alt="web"
-                            src={"/icons/telegram-logo.svg"}
-                          />
-                        </Buttons>
-                    }
-                  </Grid>
                   <Grid item md={12} xs={12}>
                     <Buttons
+                      startIcon={conversationLoading}
                       onClick={() => handleCreateConversation()}
                       sx={{ width: '100%' }}
                       className='upload__btn'
@@ -734,8 +707,9 @@ function AddButton() {
     <Buttons
       sx={{
         height: 'auto !important',
+        width: '154px',
+        px: '7.5px !important',
         borderRadius: '28px !important',
-        padding: '7.5px 34.5px !important',
         borderWidth: '1.7px !important'
       }}
       className='bookmark__btn'
@@ -759,5 +733,32 @@ function AddButton() {
         }}
       />
     </Buttons>
+  )
+}
+
+function OpenButton({ href }) {
+  return (
+    <Link target='_blank' href={href}>
+      <Buttons
+        sx={{
+          height: 'auto !important',
+          minWidth: '154px',
+          borderRadius: '28px !important',
+          px: '7.5px!important',
+          borderWidth: '1.7px !important'
+        }}
+        className='bookmark__btn'
+        childrenFirst={true}
+      >
+        <OpenInNew sx={{ width: '16px', height: '16px', mr: '8px' }} />
+        <SimpleTypography
+          text="Открыть"
+          sx={{
+            fontSize: '14px',
+            lineHeight: '17px'
+          }}
+        />
+      </Buttons>
+    </Link>
   )
 }

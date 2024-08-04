@@ -31,6 +31,7 @@ import { Close, Chat, ChatOutlined } from '@mui/icons-material';
 import { selectChatNotifications, selectChatUnread, setSelectedConversation } from '../../../data/chat';
 import { AppTypeGuid } from '../../../types/weavy';
 import { WyNotificationToasts } from '@weavy/uikit-react';
+import { selectNotificationCounts, selectNotificationCountsStatus, selectNotifications, selectNotificationsStatus } from '../../../data/get_notifications';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -100,6 +101,8 @@ export default function Navbar() {
   const getModelOrder = useSelector((state: any) => state?.handle_filters?.model_order)
 
   const isAuthenticated = useSelector((state: any) => state?.auth_slicer?.authState)
+  const notificationCountsStatus = useSelector(selectNotificationCountsStatus);
+  const notificationCounts = useSelector(selectNotificationCounts);
 
   const chatUnread = useSelector(selectChatUnread)
   const userData = useSelector(selectMyProfile)
@@ -312,18 +315,42 @@ export default function Navbar() {
               {
                 isAuthenticated ?
                   <>
-                    {/* <IconButton
+                    <IconButton
                       onClick={openRightBar}
                       aria-label="menu"
                       sx={{ marginRight: "16px", backgroundColor: false ? 'rgba(0, 0, 0, 0.04)' : 'transparent' }}
                     >
+                      <Box
+                        sx={{
+                          position: 'absolute',
+                          padding: '4px 6px',
+                          borderRadius: '12px',
+                          bgcolor: '#7210BE',
+                          top: 0,
+                          right: 0,
+                        }}
+                      >
+                        <SimpleTypography
+                          text={
+                            notificationCountsStatus === 'succeeded' ?
+                              notificationCounts?.data?.unread_count || '0'
+                              : '0'
+                          }
+                          sx={{
+                            color: '#fff',
+                            lineHeight: '11px',
+                            fontWeight: 400,
+                            fontSize: '12px',
+                          }}
+                        />
+                      </Box>
                       <Image
                         src="/icons/bell-icon.svg"
                         alt='Bell'
                         width={21}
                         height={21}
                       ></Image>
-                    </IconButton> */}
+                    </IconButton>
                     <Link href={'/chat'}>
                       <IconButton
                         sx={{ position: 'relative', marginRight: "16px", }}

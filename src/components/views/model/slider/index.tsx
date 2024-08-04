@@ -163,11 +163,11 @@ const SimpleSlider = ({ name }: any) => {
               flexDirection: "column-reverse"
             }
           }
+          item={name === "slider" ? false : true}
           container={name === "slider" ? true : false}
           spacing={name === "slider" ? 2 : 1}
-          item
-          md={name === "slider" ? 6 : 12}
-          xs={12}
+          md={name === "slider" ? 6.7 : 12}
+          xs={name === "slider" ? 6.7 : 12}
           className="products__slider"
         >
           <Grid
@@ -175,7 +175,7 @@ const SimpleSlider = ({ name }: any) => {
             sx={name === "slider" ?
               {
                 padding: "0 !important",
-                margin: "0 16px 0 18px !important",
+                margin: "0 14px  !important",
                 height: `${wdth}px !important`,
                 maxWidth: '56px !important'
               }
@@ -185,8 +185,8 @@ const SimpleSlider = ({ name }: any) => {
                 justifyContent: "center"
               }}
             item
+            xs={name === "slider" ? 2 : 12}
             md={name === "slider" ? 2 : 12}
-            xs={12}
           >
             <List
               className='products__small-items'
@@ -233,8 +233,8 @@ const SimpleSlider = ({ name }: any) => {
               }
             }
             item
-            xs={12}
             md={name === "slider" ? 10 : 12}
+            xs={name === "slider" ? 10 : 12}
             onMouseEnter={() => setSliderBtnHover(1)}
             onMouseLeave={() => setSliderBtnHover(0)}
           >

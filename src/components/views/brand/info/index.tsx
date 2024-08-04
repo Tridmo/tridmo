@@ -9,11 +9,13 @@ import { useRouter } from 'next/navigation';
 import { sampleBrand } from '@/data/samples';
 import { selectOneBrand } from '../../../../data/get_one_brand';
 import { IMAGES_BASE_URL } from '../../../../utils/env_vars';
-import { RateReview } from '@mui/icons-material';
+import { Instagram, RateReview } from '@mui/icons-material';
 import { chatApi, setChatToken } from '../../../../utils/axios';
 import Cookies from 'js-cookie';
 import { setSelectedConversation } from '../../../../data/chat';
 import { selectChatToken } from '../../../../data/get_chat_token';
+import { setLoginState, setOpenModal } from '../../../../data/modal_checker';
+import { useState } from 'react';
 
 
 export default function BrandInfo() {
@@ -31,16 +33,26 @@ export default function BrandInfo() {
   const dispatch = useDispatch<any>();
   const brand = useSelector(selectOneBrand);
   const token = useSelector(selectChatToken)
+  const isAuthenticated = useSelector((state: any) => state?.auth_slicer?.authState)
+  const [conversationLoading, setConversationLoading] = useState<boolean>(false);
 
   async function handleCreateConversation() {
-    setChatToken(Cookies.get('chatToken') ? Cookies.get('chatToken') : token ? token : '')
-    chatApi.post(`/conversations`, {
-      members: [brand?.admin_user_id]
-    })
-      .then(res => {
-        dispatch(setSelectedConversation(res?.data?.id))
-        router.push('/chat')
+    if (isAuthenticated) {
+      setConversationLoading(true)
+      setChatToken(Cookies.get('chatToken') ? Cookies.get('chatToken') : token ? token : '')
+      chatApi.post(`/conversations`, {
+        members: [brand?.admin_user_id]
       })
+        .then(res => {
+          dispatch(setSelectedConversation(res?.data?.id))
+          router.push('/chat')
+          setConversationLoading(false)
+        })
+    }
+    else {
+      dispatch(setLoginState(true))
+      dispatch(setOpenModal(true))
+    }
   }
 
   return (
@@ -107,7 +119,7 @@ export default function BrandInfo() {
           </Link>
         </Grid>
         <Grid item sx={{ width: '100%' }}>
-          <Link style={{ width: '100%' }} href={`tel:${brand?.phone}`}>
+          <Link target='_blank' style={{ width: '100%' }} href={`tel:${brand?.phone}`}>
             <Buttons className='brand__box' name="">
               <Image
                 width={19}
@@ -122,24 +134,27 @@ export default function BrandInfo() {
             </Buttons>
           </Link>
         </Grid>
-        <Grid item sx={{ width: '100%' }}>
-          <Link style={{ width: '100%' }} href={`mailto:${brand?.email}`}>
-            <Buttons className='brand__box' name="">
-              <Image
-                width={19}
-                height={23}
-                alt="Email"
-                src={"/icons/mail.svg"}
-              />
-              <Box sx={{ marginLeft: "11px" }}>
-                <SimpleTypography className='brand__name' text="Электрон Почта" />
-                <SimpleTypography className='brand__box--text' text={`${brand?.email}`} />
-              </Box>
-            </Buttons>
-          </Link>
-        </Grid>
+        {
+          !!brand?.instagram &&
+          <Grid item sx={{ width: '100%' }}>
+            <Link target='_blank' style={{ width: '100%' }} href={brand?.instagram ? (brand?.instagram?.startsWith('https://instagram.com/') ? brand?.instagram : `https://instagram.com/${brand?.instagram}`) : ''}>
+              <Buttons className='brand__box' name="">
+                <Instagram sx={{
+                  width: '19px',
+                  height: '23px',
+                  color: '#424242'
+                }} />
+                <Box sx={{ marginLeft: "11px" }}>
+                  <SimpleTypography className='brand__name' text="Инстаграм" />
+                  <SimpleTypography className='brand__box--text' text={brand?.instagram?.startsWith('https://instagram.com/') ? brand?.instagram?.split('https://instagram.com/')[1] : brand?.instagram || ''} />
+                </Box>
+              </Buttons>
+            </Link>
+          </Grid>
+        }
         <Grid item sx={{ mt: '24px', width: '100%' }}>
           <Buttons
+            startIcon={conversationLoading}
             disabled={!brand?.admin_user_id}
             onClick={() => handleCreateConversation()}
             sx={{ width: '100%' }}

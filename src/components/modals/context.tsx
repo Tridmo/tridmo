@@ -170,7 +170,6 @@ export const ConfirmContext = () => {
         ></Buttons>
 
         <Buttons
-          name='Да'
           sx={{ width: '48%' }}
           className='confirm__btn'
           startIcon={loading}
@@ -179,7 +178,9 @@ export const ConfirmContext = () => {
           onClick={async () => {
             await confirm_props?.actions?.on_click.func(checked, ...confirm_props?.actions?.on_click.args)
           }}
-        ></Buttons>
+        >
+          Да
+        </Buttons>
       </Grid>
     </Grid >
   );
@@ -390,8 +391,7 @@ export const SignUpContext = (props: LoginContextProps) => {
             .max(255, 'Слишком длинная фамилия.')
             .min(2, 'Слишком короткая фамилия - минимум 2 символа.'),
           company_name: Yup.string()
-            .max(64, 'Слишком длинное название компании')
-            .min(5, 'Слишком короткая название компании - минимум 5 символа.'),
+            .max(64, 'Слишком длинное название компании'),
           email: Yup.string()
             .min(4, "Слишком короткий email.")
             .max(50, "Слишком длинный email.")

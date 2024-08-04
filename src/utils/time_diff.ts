@@ -18,22 +18,23 @@ export default function getTimeDifference(created_at: string): string {
 
   if (differenceInSeconds < 60) {
     return differenceInSeconds < 1
-      ? `just now`
-      : `${differenceInSeconds} second${differenceInSeconds === 1 ? '' : 's'} ago`
+      ? `только что`
+      : `${differenceInSeconds} секунд${differenceInSeconds === 1 ? 'а' : ''} назад`
   } else if (differenceInSeconds < 3600) {
     const minutes = Math.floor(differenceInSeconds / 60);
-    return `${minutes} minute${minutes === 1 ? '' : 's'} ago`;
+    return `${minutes} минут${minutes === 1 ? 'а' : ''} назад`;
   } else if (differenceInSeconds < 86400) {
     const hours = Math.floor(differenceInSeconds / 3600);
-    return `${hours} hour${hours === 1 ? '' : 's'} ago`;
-  } else if (differenceInSeconds < 2592000) { // 30 days
+    return `${hours} час${hours === 1 ? '' : 'ов'} назад`;
+  } else if (differenceInSeconds < 2592000) { // 30 дней
     const days = Math.floor(differenceInSeconds / 86400);
-    return `${days} day${days === 1 ? '' : 's'} ago`;
-  } else if (differenceInSeconds < 31536000) { // 365 days
+    return `${days} д${days === 1 ? 'ень' : (days >= 2 && days <= 4) ? 'ня' : 'ней'} назад`;
+  } else if (differenceInSeconds < 31536000) { // 365 дней
     const months = Math.floor(differenceInSeconds / 2592000);
-    return `${months} month${months === 1 ? '' : 's'} ago`;
+    return `${months} месяц${months === 1 ? '' : 'ев'} назад`;
   } else {
     const years = Math.floor(differenceInSeconds / 31536000);
-    return `${years} year${years === 1 ? '' : 's'} ago`;
+    return `${years} год${years === 1 ? '' : 'а'} назад`;
   }
+
 }
