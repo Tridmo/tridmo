@@ -80,7 +80,7 @@ export default function ProfileInfo(props: ProfileProps) {
   };
 
   function getSocialLink(url: string, target: string, connector: string = '/') {
-    return target ? (target.startsWith(url) ? target : `${url}${connector}${target}`) : ''
+    return target ? (target.startsWith(url) ? target : `${url}${connector}${target}`) : url
   }
 
   async function handleProfileImageChange(e) {

@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { sampleBrand } from '@/data/samples';
 import { selectOneBrand } from '../../../../data/get_one_brand';
 import { IMAGES_BASE_URL } from '../../../../utils/env_vars';
-import { Instagram, RateReview } from '@mui/icons-material';
+import { Instagram, Language, PhoneOutlined, PlaceOutlined, RateReview, WebOutlined } from '@mui/icons-material';
 import { chatApi, setChatToken } from '../../../../utils/axios';
 import Cookies from 'js-cookie';
 import { setSelectedConversation } from '../../../../data/chat';
@@ -35,6 +35,19 @@ export default function BrandInfo() {
   const token = useSelector(selectChatToken)
   const isAuthenticated = useSelector((state: any) => state?.auth_slicer?.authState)
   const [conversationLoading, setConversationLoading] = useState<boolean>(false);
+
+  function getSocialLink(url: string, target: string, connector: string = '/') {
+    return target ? (target.startsWith(url) ? target : `${url}${connector}${target}`) : url
+  }
+
+  function getSocialLinkUsername(url: string, target: string) {
+    return target ? (target.startsWith(url) ? target.split(url)[1] : target) : ''
+  }
+
+  function getUrlDomen(url: string) {
+    let domen = url.replace('http://', '').replace('https://', '')
+    return domen;
+  }
 
   async function handleCreateConversation() {
     if (isAuthenticated) {
@@ -99,12 +112,11 @@ export default function BrandInfo() {
             rel="noopener noreferrer"
           >
             <Buttons className='brand__box' name="">
-              <Image
-                width={19}
-                height={23}
-                alt="Location"
-                src={"/icons/location.svg"}
-              />
+              <PlaceOutlined sx={{
+                width: '23px',
+                height: '23px',
+                color: '#424242'
+              }} />
               <Box sx={{ marginLeft: "11px" }}>
                 <SimpleTypography
                   className='brand__name'
@@ -121,12 +133,11 @@ export default function BrandInfo() {
         <Grid item sx={{ width: '100%' }}>
           <Link target='_blank' style={{ width: '100%' }} href={`tel:${brand?.phone}`}>
             <Buttons className='brand__box' name="">
-              <Image
-                width={19}
-                height={23}
-                alt="Phone number"
-                src={"/icons/phone.svg"}
-              />
+              <PhoneOutlined sx={{
+                width: '23px',
+                height: '23px',
+                color: '#424242'
+              }} />
               <Box sx={{ marginLeft: "11px" }}>
                 <SimpleTypography className='brand__name' text="Номер телефона" />
                 <SimpleTypography className='brand__box--text' text={`${brand?.phone}`} />
@@ -137,16 +148,34 @@ export default function BrandInfo() {
         {
           !!brand?.instagram &&
           <Grid item sx={{ width: '100%' }}>
-            <Link target='_blank' style={{ width: '100%' }} href={brand?.instagram ? (brand?.instagram?.startsWith('https://instagram.com/') ? brand?.instagram : `https://instagram.com/${brand?.instagram}`) : ''}>
+            <Link target='_blank' style={{ width: '100%' }} href={getSocialLink('https://instagram.com/', brand?.instagram)}>
               <Buttons className='brand__box' name="">
                 <Instagram sx={{
-                  width: '19px',
+                  width: '23px',
                   height: '23px',
                   color: '#424242'
                 }} />
                 <Box sx={{ marginLeft: "11px" }}>
                   <SimpleTypography className='brand__name' text="Инстаграм" />
-                  <SimpleTypography className='brand__box--text' text={brand?.instagram?.startsWith('https://instagram.com/') ? brand?.instagram?.split('https://instagram.com/')[1] : brand?.instagram || ''} />
+                  <SimpleTypography className='brand__box--text' text={getSocialLinkUsername('https://instagram.com/', brand?.instagram)} />
+                </Box>
+              </Buttons>
+            </Link>
+          </Grid>
+        }
+        {
+          !!brand?.site_link &&
+          <Grid item sx={{ width: '100%' }}>
+            <Link target='_blank' style={{ width: '100%' }} href={brand?.site_link || ''}>
+              <Buttons className='brand__box' name="">
+                <Language sx={{
+                  width: '23px',
+                  height: '23px',
+                  color: '#424242'
+                }} />
+                <Box sx={{ marginLeft: "11px" }}>
+                  <SimpleTypography className='brand__name' text="Веб-сайт" />
+                  <SimpleTypography className='brand__box--text' text={getUrlDomen(brand?.site_link || '')} />
                 </Box>
               </Buttons>
             </Link>
