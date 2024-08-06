@@ -541,6 +541,20 @@ export default function OneInterior() {
               justifyContent: 'flex-end'
             }}
           >
+            <Box margin={'0 0 0 16px'}
+              sx={{ display: 'flex' }}
+            >
+              <VisibilityOutlined
+                sx={{
+                  width: '20px',
+                  color: '#424242',
+                }}
+              />
+              <SimpleTypography
+                text={interior?.views}
+                sx={{ ml: '6px' }}
+              />
+            </Box>
             <Box margin={'0 0 0 16px'}>
               <Buttons
                 id="basic-menu"

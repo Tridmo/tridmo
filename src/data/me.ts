@@ -68,7 +68,6 @@ const myProfile = createSlice({
 
 export const { resetMyProfile } = myProfile.actions;
 export const reducer = myProfile.reducer;
-export const selectMyProfile = (state: any) => {
-  return state?.profile_me?.data[0]?.data?.user
-}
+export const selectMyProfile = (state: any) => state?.profile_me?.data[0]?.data?.user
+export const selectMyProfileStatus = (state: any) => state?.profile_me?.status
 export default myProfile

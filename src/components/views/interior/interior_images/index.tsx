@@ -1,6 +1,6 @@
 "use client"
 
-import { Box, SxProps } from '@mui/system';
+import { Box, height, SxProps, width } from '@mui/system';
 import axios from 'axios';
 import { useState, useEffect, CSSProperties, MouseEvent, useMemo } from 'react';
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectOneInterior } from '@/data/get_one_interior';
 import { IMAGES_BASE_URL } from '@/utils/env_vars';
 import { setShowInteriorImagesModal } from '@/data/loader';
-import Image from 'next/image';
+import NextImage from 'next/image';
 import { selectToggleAddingTags, selectToggleShowTags } from '../../../../data/toggle_tags';
 import SimpleInp from '../../../inputs/simple_input';
 import Buttons from '../../../buttons';
@@ -26,24 +26,13 @@ import { selectMyProfile } from '../../../../data/me';
 import { ConfirmContextProps, resetConfirmData, resetConfirmProps, setConfirmProps, setConfirmState, setOpenModal } from '../../../../data/modal_checker';
 
 const imageStyle: CSSProperties = {
+  width: '100%',
+  height: 'auto',
   verticalAlign: 'top',
   overflowClipMargin: 'content-box',
   overflow: 'clip',
-  objectFit: 'cover',
-  width: '100%',
-  height: '100%'
+  objectFit: 'contain',
 }
-// useEffect(() => {
-//     const getImageSize = () => {
-//         const img = new Image();
-//         img.src = imageUrl;
-//         img.onload = () => {
-//             setImageSize({ width: img.naturalWidth, height: img.naturalHeight });
-//         };
-//     };
-
-//     getImageSize();
-// }, [imageUrl]);
 
 interface NewTag {
   id: string;
@@ -87,8 +76,31 @@ export default function InteriorImages() {
   const addingTags = useSelector(selectToggleAddingTags)
   const currentUser = useSelector(selectMyProfile);
 
+  const [images, setImages] = useState<any[]>([])
   const [newTags, setNewTags] = useState<NewTag[]>([])
   const [loadingTagId, setLoadingTagId] = useState<string>('')
+  const [loadingImages, setLoadingImages] = useState<boolean>(false)
+
+  useEffect(() => {
+    const getImages = async () => {
+      const arr: any[] = [];
+      await Promise.all(
+        interior?.images?.map(async (img) => {
+          try {
+            const sizes = await getImageSize(img.image_src);
+            arr.push({ ...img, ...sizes });
+          } catch (error) {
+            console.log('GET IMAGE ERROR: ', error);
+          }
+        })
+      );
+      setImages(arr);
+    };
+
+    if (interior) {
+      getImages();
+    }
+  }, [interior]);
 
   useMemo(() => {
     if (addingTags == false) {
@@ -96,6 +108,19 @@ export default function InteriorImages() {
     }
   }, [addingTags])
 
+  const getImageSize = (src): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = `${IMAGES_BASE_URL}/${src}`;
+      img.onload = () => {
+        resolve({
+          width: img.width,
+          height: img.height,
+        });
+      };
+      img.onerror = reject;
+    });
+  };
   function handleClick(event, index) {
     const target = event.target;
     const classList = [...target.classList]
@@ -246,7 +271,7 @@ export default function InteriorImages() {
 
   return (
 
-    interior?.images?.map((img, n) => {
+    images?.map((img, n) => {
       if (!img?.is_main) {
         return (
           <Box key={n}
@@ -258,7 +283,6 @@ export default function InteriorImages() {
               onClick={(e) => handleClick(e, n)}
               sx={{
                 width: '1200px',
-                height: '1200px',
                 display: 'flex',
                 justifyContent: 'center',
                 position: 'relative',
@@ -323,7 +347,7 @@ export default function InteriorImages() {
                                       t.loading ?
                                         <CircularProgress size="1rem" />
                                         : <>
-                                          <Image
+                                          <NextImage
                                             alt='cover'
                                             src={t.model ? t.model.cover : t.not_found ? '/img/empty-box.svg' : ''}
                                             width={50}
@@ -434,7 +458,7 @@ export default function InteriorImages() {
                                 justifyContent: 'flex-start'
                               }}
                             >
-                              <Image
+                              <NextImage
                                 src={`${IMAGES_BASE_URL}/${t?.model?.cover[0]?.image_src}`}
                                 alt="icon"
                                 width={80}
@@ -485,7 +509,7 @@ export default function InteriorImages() {
                   })
                   : null
               }
-              <Image
+              <NextImage
                 className={'image'}
                 unoptimized
                 src={`${IMAGES_BASE_URL}/${img?.image_src}`}

@@ -1,4 +1,4 @@
-import { Box, FormControlLabel, Checkbox } from '@mui/material'
+import { Box, FormControlLabel, Checkbox, Divider } from '@mui/material'
 import { useEffect, useState } from 'react'
 import Skeleton from '@mui/material/Skeleton';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,11 +10,12 @@ import { getInteriorCategories, selectInteriorCategories } from '../../../data/c
 import { getAllInteriors } from '../../../data/get_all_interiors';
 
 const SkletonData = ['', '', '', '', '', '']
-interface stylesProps {
+interface catProps {
   id: string,
-  created_at: string,
   name: string,
-  updated_at: string,
+  type: string,
+  section: string,
+  created_at: string,
 }
 function InteriorCategories() {
   const router = useRouter();
@@ -42,12 +43,13 @@ function InteriorCategories() {
   useEffect(() => {
     if (CategoriesStatus === "succeeded") {
       let arr = new Array();
-      CategoriesData?.forEach((category: stylesProps) => {
+      CategoriesData?.forEach((category: catProps) => {
         arr.push({
           id: category?.id,
-          created_at: category?.created_at,
           name: category?.name,
-          updated_at: category?.updated_at,
+          type: category?.type,
+          section: category?.section,
+          created_at: category?.created_at,
           is__Selected: getCategoryFilter?.includes((category.id).toString()) || getCategoryFilter?.includes(category.id) || getCategoryFilter == category?.id,
         })
       })
@@ -94,11 +96,11 @@ function InteriorCategories() {
     return (
       <Box>
 
-        <SimpleTypography className='section__title' text="Категории"></SimpleTypography>
-
-        <Box sx={{ paddingBottom: '18px', display: "flex", flexDirection: "column" }}>
+        <Box sx={{ pb: '18px', display: "flex", flexDirection: "column" }}>
+          <SimpleTypography className='section__title' text="Категории"></SimpleTypography>
           {
             customCategories?.map((item: any, index: number) => (
+              item?.section != 'architecture' &&
               <FormControlLabel
                 key={item.id}
                 label={item?.name}
@@ -113,6 +115,28 @@ function InteriorCategories() {
             ))
           }
 
+        </Box>
+
+        <Divider />
+
+        <Box sx={{ py: '18px', display: "flex", flexDirection: "column" }}>
+          <SimpleTypography className='section__title' text="Архитектура"></SimpleTypography>
+          {
+            customCategories?.map((item: any, index: number) => (
+              item?.section == 'architecture' &&
+              <FormControlLabel
+                key={item.id}
+                label={item?.name}
+                control={
+                  <Checkbox
+                    onClick={(event: any) => { handleChange(event, item?.id) }}
+                    checked={item?.is__Selected}
+                    indeterminate={false}
+                  />
+                }
+              />
+            ))
+          }
         </Box>
       </Box>
     )

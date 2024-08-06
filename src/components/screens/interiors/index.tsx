@@ -53,9 +53,6 @@ export default function InteriorsPage() {
               <Box className='models-page__filters--box'>
                 <InteriorCategories />
               </Box>
-              {/* <Box className='models-page__filters--box'>
-                                <InteriorStyles />
-                            </Box> */}
 
             </Box>
           </Suspense>

@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }) => {
       if (Cookies.get('accessToken')) {
         setAuthToken(Cookies.get('accessToken'))
 
-        if (myProfileStatus === 'idle') {
+        if (myProfileStatus === 'idle' && !myProfile) {
           await dispatch(getMyProfile({}))
         }
         if (myProfile && (!Cookies.get('chatToken') || !chatToken)) {
@@ -90,24 +90,24 @@ export const AuthProvider = ({ children }) => {
         dispatch(setAuthState(true));
       }
 
-      if (Cookies.get('refreshToken')) {
-        if (update_cookie_status === "idle" && !Cookies.get('accessToken')) {
-          dispatch(getUpdatedAccessToken())
-          if (update_cookie_status === 'succeeded') {
-            dispatch(setAuthState(true));
+      // if (Cookies.get('refreshToken')) {
+      //   if (update_cookie_status === "idle" && !Cookies.get('accessToken')) {
+      //     dispatch(getUpdatedAccessToken())
+      //     if (update_cookie_status === 'succeeded') {
+      //       dispatch(setAuthState(true));
 
-            if (myProfileStatus === 'idle') {
-              await dispatch(getMyProfile({}))
-            }
+      //       if (myProfileStatus === 'idle') {
+      //         await dispatch(getMyProfile({}))
+      //       }
 
-          }
-        }
-      } else {
-        dispatch(setAuthState(false));
-      }
+      //     }
+      //   }
+      // } else {
+      //   dispatch(setAuthState(false));
+      // }
     }
     loadUserFromCookies();
-  }, [myProfile, Cookies, update_cookie_status, myProfileStatus]);
+  }, [myProfile, Cookies, myProfileStatus]);
 
   useEffect(() => {
     if (hash) {
