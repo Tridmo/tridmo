@@ -278,27 +278,49 @@ export const ButtonStyles = (theme) => `
         position: absolute;
         z-index: 10;
         top:50%;
-        right:0;
+        right:1%;
         transform: translateY(-50%);
         min-width: 44px;  
         height:44px;
         padding:0;
-        background: rgba(250, 250, 250, 0.6);
-        border-radius: 4px;
+        border-radius: 22px;
+        background: rgba(250, 250, 250, 0.3);
+        &:hover {
+          background: rgba(250, 250, 250, 0.6);
+        }
       }
       
       &.MuiButton-slider__left--arrow{
         position: absolute;
         z-index: 10;
         top:50%;
-        left:0;
+        left:1%;
         transform: translateY(-50%);
         min-width: 44px;
         height:44px;
         padding:0;
-        border-radius: 4px;
-        background: rgba(250, 250, 250, 0.6);
+        border-radius: 22px;
+        background: rgba(250, 250, 250, 0.3);
+        &:hover {
+          background: rgba(250, 250, 250, 0.6);
+        }
       }
+      
+      &.MuiButton-slider_close__button{
+        position: absolute;
+        z-index: 10;
+        top: 1%;
+        right: 1%;
+        min-width: 44px;
+        height:44px;
+        padding:0;
+        border-radius: 22px;
+        background: rgba(250, 250, 250, 0.3);
+        &:hover {
+          background: rgba(250, 250, 250, 0.6);
+        }
+      }
+
       &.MuiButton-explore__btn{
         border: 1.7px solid #B3B3B3;
         border-radius: 4px;

@@ -335,7 +335,6 @@ export default function OneInterior() {
             justifyContent: 'space-between'
           }}
         >
-          <InteriorImagesModal mainImageWidth={800} />
 
           {/* TAGS MENU */}
           <TagsDropDown
@@ -659,7 +658,15 @@ export default function OneInterior() {
           </Grid>
         </Grid>
 
-        <Box sx={{ width: '100%', minHeight: '1200px' }}>
+        <Box sx={{
+          width: '100%',
+          minHeight: '80dvh',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+        >
           <InteriorImages />
         </Box>
 

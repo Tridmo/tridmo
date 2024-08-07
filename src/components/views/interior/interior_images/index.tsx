@@ -24,6 +24,7 @@ import { selectInteriorTags, setInteriorTags } from '../../../../data/get_interi
 import Link from 'next/link';
 import { selectMyProfile } from '../../../../data/me';
 import { ConfirmContextProps, resetConfirmData, resetConfirmProps, setConfirmProps, setConfirmState, setOpenModal } from '../../../../data/modal_checker';
+import InteriorImagesModal from './images_modal';
 
 const imageStyle: CSSProperties = {
   width: '100%',
@@ -77,6 +78,7 @@ export default function InteriorImages() {
   const currentUser = useSelector(selectMyProfile);
 
   const [images, setImages] = useState<any[]>([])
+  const [selectedImageIndex, setSelectedImageIndex] = useState<any>()
   const [newTags, setNewTags] = useState<NewTag[]>([])
   const [loadingTagId, setLoadingTagId] = useState<string>('')
   const [loadingImages, setLoadingImages] = useState<boolean>(false)
@@ -88,7 +90,7 @@ export default function InteriorImages() {
         interior?.images?.map(async (img) => {
           try {
             const sizes = await getImageSize(img.image_src);
-            arr.push({ ...img, ...sizes });
+            arr[img?.index] = { ...img, ...sizes };
           } catch (error) {
             console.log('GET IMAGE ERROR: ', error);
           }
@@ -134,7 +136,11 @@ export default function InteriorImages() {
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
 
-        setNewTags(prev => [...prev, { id: v4(), x, y, img: interior?.images[index]?.id }])
+        setNewTags(prev => [...prev, { id: v4(), x, y, img: images[index]?.id }])
+      }
+      else {
+        setSelectedImageIndex(index)
+        dispatch(setShowInteriorImagesModal(true, index - 1))
       }
     }
   }
@@ -271,257 +277,263 @@ export default function InteriorImages() {
 
   return (
 
-    images?.map((img, n) => {
-      if (!img?.is_main) {
-        return (
-          <Box key={n}
-            className={'image_parent_wrapper__box'}
-            sx={{ marginBottom: '20px', cursor: 'pointer' }}
-          >
-            <Box
-              className={'image_wrapper__box'}
-              onClick={(e) => handleClick(e, n)}
-              sx={{
-                width: '1200px',
-                display: 'flex',
-                justifyContent: 'center',
-                position: 'relative',
-                transition: 'all 0.4s ease',
-              }}>
-              {
-                newTags?.length
-                  ? newTags?.map(t => {
-                    if (t.img == img.id)
-                      return (
-                        <Box
-                          key={t.id}
-                          className={'add_tag_wrapper__box'}
-                          sx={{
-                            top: t.y - (t.model || t.not_found || t.loading ? 113 : 56),
-                            left: t.x,
-                            width: '345px',
-                            minHeight: `${t.model || t.not_found || t.loading ? 113 : 56}px`,
-                            ...tagStyle
-                          }}
-                        >
-                          <Box
-                            sx={{
-                              width: '100%',
-                              display: 'flex',
-                              alignItems: 'flex-start',
-                              justifyContent: 'flex-start',
-                            }}
-                          >
-                            <Box
-                              sx={{
-                                width: '100%',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'flex-start',
-                                justifyContent: 'flex-start',
-                              }}
-                            >
-                              <SearchInput
-                                className={'add_tag__input'}
-                                placeHolder='https://demod.uz/models/...'
-                                search={(val) => handleGetModel(val, t.id)}
-                                searchDelay={500}
-                                onChange={(val) => handleInputChange(val, t.id)}
-                                sx={{
-                                  borderTopLeftRadius: '20px'
-                                }}
-                              />
-                              {
-                                t.model || t.not_found || t.loading
-                                  ? <Box
-                                    sx={{
-                                      width: '100%',
-                                      minHeight: '50px',
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      justifyContent: t.loading ? 'center' : 'flex-start',
-                                      mt: '7px',
-                                    }}
-                                  >
-                                    {
-                                      t.loading ?
-                                        <CircularProgress size="1rem" />
-                                        : <>
-                                          <NextImage
-                                            alt='cover'
-                                            src={t.model ? t.model.cover : t.not_found ? '/img/empty-box.svg' : ''}
-                                            width={50}
-                                            height={50}
-                                          />
-                                          <SimpleTypography
-                                            sx={{ ml: '7px' }}
-                                            text={t.model ? t.model.name : t.not_found ? 'Модель не найдена' : ''}
-                                          />
-                                        </>
-                                    }
-                                  </Box>
-                                  : null
-                              }
-                            </Box>
-                            <Box
-                              className={'add_tag_buttons_wrapper__box'}
-                              sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'flex-end',
-                                justifyContent: 'flex-start',
-                                ml: '7px',
-                              }}
-                            >
-                              <IconButton
-                                className={'icon_button add_tag__button'}
-                                onClick={() => handleRemoceNewEmptyTag(t.id)}
-                              >
-                                <Close />
-                              </IconButton>
-                              {
-                                t.model ?
-                                  <Buttons
-                                    className={'icon_button add_tag__button'}
-                                    disabled={!Boolean(t.model) || loadingTagId == t.id}
-                                    onClick={() => handleTagCreate(t.id)}
-                                    startIcon={loadingTagId == t.id}
-                                  >
-                                    <CheckOutlined />
-                                  </Buttons>
-                                  : null
-                              }
-                            </Box>
-                          </Box>
-                        </Box>
-                      )
-                  })
-                  : null
-              }
+    <>
+      <InteriorImagesModal mainImageWidth={800} images={images} selectedSlide={selectedImageIndex} />
 
-              {
-                showTags && interiorTags?.length
-                  ? interiorTags?.map((t, i) => {
-                    if (t.interior_image_id == img.id)
-                      return (
-                        <Box
-                          key={t.id}
-                          className={'add_tag_wrapper__box'}
-                          onMouseEnter={(e) => handleTagMouseEnter(e, t)}
-                          onMouseLeave={(e) => handleTagMouseLeave(e, t)}
-                          sx={{
-                            ...tagStyle,
-                            opacity: 0.7,
-                            padding: '7px 14px',
-                            top: t.y - 46,
-                            left: t.x - 0,
-                            minHeight: `46px`,
-                            width: '46px',
-                            height: '46px',
-                            borderRadius: '23px',
-                            borderBottomLeftRadius: '0',
-                            transition: 'all 0.4s ease',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-
-                            '&:hover': {
-                              opacity: 1,
-                              width: isAuthenticated && interior?.author?.id == currentUser?.user_id ? '320px' : '250px',
-                              height: '94px',
-                              top: t.y - 94,
-                              left: t.x - 0,
-                              minHeight: '94px',
-                              borderRadius: '32px 32px 32px 0',
-                            }
-                          }}
-                        >
-                          <Box
-                            className={'tag_inner_content'}
-                            sx={{
-                              textDecoration: "none",
-                              display: "none",
-                              width: '100%',
-                              alignItems: "center",
-                              justifyContent: 'space-between',
-                              opacity: 0,
-                              transition: 'all 0.4s ease',
-                            }}
-                          >
-                            <Link
-                              href={`/models/${t?.model?.slug}`}
-                              target='_blank'
-                              style={{
-                                textDecoration: 'none',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'flex-start'
+      {
+        images?.map((img, n) => {
+          if (!img?.is_main) {
+            return (
+              <Box key={n}
+                className={'image_parent_wrapper__box'}
+                sx={{ marginBottom: '20px', cursor: 'pointer' }}
+              >
+                <Box
+                  className={'image_wrapper__box'}
+                  onClick={(e) => handleClick(e, n)}
+                  sx={{
+                    width: '1000px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    position: 'relative',
+                    transition: 'all 0.4s ease',
+                  }}>
+                  {
+                    newTags?.length
+                      ? newTags?.map(t => {
+                        if (t.img == img.id)
+                          return (
+                            <Box
+                              key={t.id}
+                              className={'add_tag_wrapper__box'}
+                              sx={{
+                                top: t.y - (t.model || t.not_found || t.loading ? 113 : 56),
+                                left: t.x,
+                                width: '345px',
+                                minHeight: `${t.model || t.not_found || t.loading ? 113 : 56}px`,
+                                ...tagStyle
                               }}
                             >
-                              <NextImage
-                                src={`${IMAGES_BASE_URL}/${t?.model?.cover[0]?.image_src}`}
-                                alt="icon"
-                                width={80}
-                                height={80}
-                              />
                               <Box
                                 sx={{
+                                  width: '100%',
                                   display: 'flex',
-                                  flexDirection: 'column',
                                   alignItems: 'flex-start',
-                                  justifyContent: 'center',
-                                  marginLeft: '10px',
-                                  maxWidth: '130px',
+                                  justifyContent: 'flex-start',
                                 }}
                               >
-                                <SimpleTypography sx={{ width: '100% !important', marginLeft: '0px !important' }} className='card__title drow-down__text' text={t?.model?.name} />
-                                <SimpleTypography sx={{ width: '100% !important', marginLeft: '0px !important' }} className='card__title drow-down__text' text={`${t?.model?.style?.name}, ${t?.model?.brand?.name}`} />
-                              </Box>
-                            </Link>
-                            {
-                              isAuthenticated && interior?.author?.id == currentUser?.user_id
-                                ? <Box
+                                <Box
                                   sx={{
+                                    width: '100%',
                                     display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    paddingLeft: '10px',
-                                    borderLeft: '1.6px solid #E0E0E0'
+                                    flexDirection: 'column',
+                                    alignItems: 'flex-start',
+                                    justifyContent: 'flex-start',
                                   }}
                                 >
-                                  <Buttons className='delete__tag'
-                                    onClick={(e) => handleDeleteTag(t.id)}
-                                    disabled={loadingTagId == t.id}
-                                    startIcon={loadingTagId == t.id}
-                                  >
-                                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                      <path d="M1.66634 4.33398H12.333V13.0007C12.333 13.1775 12.2628 13.347 12.1377 13.4721C12.0127 13.5971 11.8432 13.6673 11.6663 13.6673H2.33301C2.1562 13.6673 1.98663 13.5971 1.8616 13.4721C1.73658 13.347 1.66634 13.1775 1.66634 13.0007V4.33398ZM2.99967 5.66732V12.334H10.9997V5.66732H2.99967ZM4.99967 7.00065H6.33301V11.0007H4.99967V7.00065ZM7.66634 7.00065H8.99967V11.0007H7.66634V7.00065ZM3.66634 2.33398V1.00065C3.66634 0.82384 3.73658 0.654271 3.8616 0.529246C3.98663 0.404222 4.1562 0.333984 4.33301 0.333984H9.66634C9.84315 0.333984 10.0127 0.404222 10.1377 0.529246C10.2628 0.654271 10.333 0.82384 10.333 1.00065V2.33398H13.6663V3.66732H0.333008V2.33398H3.66634ZM4.99967 1.66732V2.33398H8.99967V1.66732H4.99967Z" fill="#686868" />
-                                    </svg>
-                                  </Buttons>
+                                  <SearchInput
+                                    className={'add_tag__input'}
+                                    placeHolder='https://demod.uz/models/...'
+                                    search={(val) => handleGetModel(val, t.id)}
+                                    searchDelay={500}
+                                    onChange={(val) => handleInputChange(val, t.id)}
+                                    sx={{
+                                      borderTopLeftRadius: '20px'
+                                    }}
+                                  />
+                                  {
+                                    t.model || t.not_found || t.loading
+                                      ? <Box
+                                        sx={{
+                                          width: '100%',
+                                          minHeight: '50px',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: t.loading ? 'center' : 'flex-start',
+                                          mt: '7px',
+                                        }}
+                                      >
+                                        {
+                                          t.loading ?
+                                            <CircularProgress size="1rem" />
+                                            : <>
+                                              <NextImage
+                                                alt='cover'
+                                                src={t.model ? t.model.cover : t.not_found ? '/img/empty-box.svg' : ''}
+                                                width={50}
+                                                height={50}
+                                              />
+                                              <SimpleTypography
+                                                sx={{ ml: '7px' }}
+                                                text={t.model ? t.model.name : t.not_found ? 'Модель не найдена' : ''}
+                                              />
+                                            </>
+                                        }
+                                      </Box>
+                                      : null
+                                  }
                                 </Box>
-                                : null
-                            }
+                                <Box
+                                  className={'add_tag_buttons_wrapper__box'}
+                                  sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'flex-end',
+                                    justifyContent: 'flex-start',
+                                    ml: '7px',
+                                  }}
+                                >
+                                  <IconButton
+                                    className={'icon_button add_tag__button'}
+                                    onClick={() => handleRemoceNewEmptyTag(t.id)}
+                                  >
+                                    <Close />
+                                  </IconButton>
+                                  {
+                                    t.model ?
+                                      <Buttons
+                                        className={'icon_button add_tag__button'}
+                                        disabled={!Boolean(t.model) || loadingTagId == t.id}
+                                        onClick={() => handleTagCreate(t.id)}
+                                        startIcon={loadingTagId == t.id}
+                                      >
+                                        <CheckOutlined />
+                                      </Buttons>
+                                      : null
+                                  }
+                                </Box>
+                              </Box>
+                            </Box>
+                          )
+                      })
+                      : null
+                  }
 
-                          </Box>
-                          <SimpleTypography classNames={`ind${t.id}`} text={i + 1} />
-                        </Box>
-                      )
-                  })
-                  : null
-              }
-              <NextImage
-                className={'image'}
-                unoptimized
-                src={`${IMAGES_BASE_URL}/${img?.image_src}`}
-                alt="Diesign image"
-                width={0}
-                height={0}
-                style={imageStyle}
-              />
-            </Box>
-          </Box>
-        )
+                  {
+                    showTags && interiorTags?.length
+                      ? interiorTags?.map((t, i) => {
+                        if (t.interior_image_id == img.id)
+                          return (
+                            <Box
+                              key={t.id}
+                              className={'add_tag_wrapper__box'}
+                              onMouseEnter={(e) => handleTagMouseEnter(e, t)}
+                              onMouseLeave={(e) => handleTagMouseLeave(e, t)}
+                              sx={{
+                                ...tagStyle,
+                                opacity: 0.7,
+                                padding: '7px 14px',
+                                top: t.y - 46,
+                                left: t.x - 0,
+                                minHeight: `46px`,
+                                width: '46px',
+                                height: '46px',
+                                borderRadius: '23px',
+                                borderBottomLeftRadius: '0',
+                                transition: 'all 0.4s ease',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+
+                                '&:hover': {
+                                  opacity: 1,
+                                  width: isAuthenticated && interior?.author?.id == currentUser?.user_id ? '320px' : '250px',
+                                  height: '94px',
+                                  top: t.y - 94,
+                                  left: t.x - 0,
+                                  minHeight: '94px',
+                                  borderRadius: '32px 32px 32px 0',
+                                }
+                              }}
+                            >
+                              <Box
+                                className={'tag_inner_content'}
+                                sx={{
+                                  textDecoration: "none",
+                                  display: "none",
+                                  width: '100%',
+                                  alignItems: "center",
+                                  justifyContent: 'space-between',
+                                  opacity: 0,
+                                  transition: 'all 0.4s ease',
+                                }}
+                              >
+                                <Link
+                                  href={`/models/${t?.model?.slug}`}
+                                  target='_blank'
+                                  style={{
+                                    textDecoration: 'none',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'flex-start'
+                                  }}
+                                >
+                                  <NextImage
+                                    src={`${IMAGES_BASE_URL}/${t?.model?.cover[0]?.image_src}`}
+                                    alt="icon"
+                                    width={80}
+                                    height={80}
+                                  />
+                                  <Box
+                                    sx={{
+                                      display: 'flex',
+                                      flexDirection: 'column',
+                                      alignItems: 'flex-start',
+                                      justifyContent: 'center',
+                                      marginLeft: '10px',
+                                      maxWidth: '130px',
+                                    }}
+                                  >
+                                    <SimpleTypography sx={{ width: '100% !important', marginLeft: '0px !important' }} className='card__title drow-down__text' text={t?.model?.name} />
+                                    <SimpleTypography sx={{ width: '100% !important', marginLeft: '0px !important' }} className='card__title drow-down__text' text={`${t?.model?.style?.name}, ${t?.model?.brand?.name}`} />
+                                  </Box>
+                                </Link>
+                                {
+                                  isAuthenticated && interior?.author?.id == currentUser?.user_id
+                                    ? <Box
+                                      sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        paddingLeft: '10px',
+                                        borderLeft: '1.6px solid #E0E0E0'
+                                      }}
+                                    >
+                                      <Buttons className='delete__tag'
+                                        onClick={(e) => handleDeleteTag(t.id)}
+                                        disabled={loadingTagId == t.id}
+                                        startIcon={loadingTagId == t.id}
+                                      >
+                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                          <path d="M1.66634 4.33398H12.333V13.0007C12.333 13.1775 12.2628 13.347 12.1377 13.4721C12.0127 13.5971 11.8432 13.6673 11.6663 13.6673H2.33301C2.1562 13.6673 1.98663 13.5971 1.8616 13.4721C1.73658 13.347 1.66634 13.1775 1.66634 13.0007V4.33398ZM2.99967 5.66732V12.334H10.9997V5.66732H2.99967ZM4.99967 7.00065H6.33301V11.0007H4.99967V7.00065ZM7.66634 7.00065H8.99967V11.0007H7.66634V7.00065ZM3.66634 2.33398V1.00065C3.66634 0.82384 3.73658 0.654271 3.8616 0.529246C3.98663 0.404222 4.1562 0.333984 4.33301 0.333984H9.66634C9.84315 0.333984 10.0127 0.404222 10.1377 0.529246C10.2628 0.654271 10.333 0.82384 10.333 1.00065V2.33398H13.6663V3.66732H0.333008V2.33398H3.66634ZM4.99967 1.66732V2.33398H8.99967V1.66732H4.99967Z" fill="#686868" />
+                                        </svg>
+                                      </Buttons>
+                                    </Box>
+                                    : null
+                                }
+
+                              </Box>
+                              <SimpleTypography classNames={`ind${t.id}`} text={i + 1} />
+                            </Box>
+                          )
+                      })
+                      : null
+                  }
+                  <NextImage
+                    className={'image'}
+                    unoptimized
+                    src={`${IMAGES_BASE_URL}/${img?.image_src}`}
+                    alt="Diesign image"
+                    width={0}
+                    height={0}
+                    style={imageStyle}
+                  />
+                </Box>
+              </Box>
+            )
+          }
+        })
       }
-    })
+    </>
   );
 };
