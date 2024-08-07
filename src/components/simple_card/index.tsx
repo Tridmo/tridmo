@@ -173,8 +173,8 @@ export default function SimpleCard(props: InputProps) {
               item
             >
               <CustomCardSkeleton
-                type={props?.route}
-                link={`/${props?.route}`}
+                type={'models'}
+                link={`/models`}
                 key={index}
                 model={model}
                 imgHeight={props?.cardImgHeight || '208px'}
@@ -190,9 +190,7 @@ export default function SimpleCard(props: InputProps) {
     if (models__status === "succeeded" || top_models__status === "succeeded") {
 
       const top_length = landingModelsLimit - top_models?.length;
-      console.log('EEEEEEEE', top_models?.length, models?.length, top_length);
       const models_sliced = models?.slice(0, top_length);
-      console.log('UUUUU', models_sliced);
 
       const data = top_models?.concat(models_sliced)
 
@@ -218,8 +216,8 @@ export default function SimpleCard(props: InputProps) {
                 item
               >
                 <CustomCard
-                  type={props?.route}
-                  link={`/${props?.route}/${model?.slug}`}
+                  type={'models'}
+                  link={`/models/${model?.slug}`}
                   key={index}
                   model={model}
                   imgHeight={props?.cardImgHeight || '208px'}
