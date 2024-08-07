@@ -12,6 +12,7 @@ import { searchInteriors, setSearchVal } from '../../../data/search_interior'
 import Sorts from '../../views/sorts'
 import InteriorCategories from '../../views/categories/interior_categories'
 import InteriorStyles from '../../views/styles/interior_styles'
+import { dataItemIndex } from '../../../utils/utils'
 
 
 export default function InteriorsPage() {
@@ -44,7 +45,7 @@ export default function InteriorsPage() {
   }, [keyword])
 
   return (
-    <Box sx={{ width: '1200px', minHeight: 829, display: "block", margin: "0 auto" }}>
+    <Box sx={{ width: '1200px', minHeight: '80dvh', display: "block", margin: "0 auto 32px auto" }}>
       <Grid spacing={2} container sx={{ marginTop: "32px", marginLeft: 0 }} >
         <Grid item className='models-page__filters' md={2.2} xs={12} sx={matches ? { paddingRight: "10px", borderRight: "1px solid #b3b3b3", transform: `translate(-50%,${IsFilterOpen ? "-50%" : "-200%"})` } : { paddingRight: "10px", borderRight: "1px solid #b3b3b3", }}>
 
@@ -68,7 +69,29 @@ export default function InteriorsPage() {
               : null
           }
 
-          <Sorts route={'interiors'} />
+          <Sorts route={'interiors'} dataCount={
+            <Box
+              sx={{ padding: "0 !important", display: "flex", alignItems: "baseline" }}
+            >
+              <SimpleTypography
+                text={`Показаны ${dataItemIndex<string>(
+                  all__interiors?.data?.pagination?.limit,
+                  all__interiors?.data?.pagination?.current,
+                  1
+                )}–${dataItemIndex<string>(
+                  all__interiors?.data?.pagination?.limit,
+                  all__interiors?.data?.pagination?.current,
+                  all__interiors?.data?.interiors?.length
+                )
+                  } из`}
+                className='pagenation__desc'
+              />
+
+              <SimpleTypography
+                text={`${all__interiors?.data?.pagination?.data_count} интерьеров`}
+                className='pagenation__desc--bold' />
+            </Box>
+          } />
 
           {/* ---- MODEL CARDS ---- */}
 
@@ -76,33 +99,18 @@ export default function InteriorsPage() {
 
           {/* ---- MODEL CARDS ---- */}
 
-        </Grid>
-      </Grid>
-      <Grid spacing={2} container sx={{ width: '100%', margin: "0 auto", padding: "17px 0 32px 0" }}>
-        <Grid
-          sx={{ padding: "0 0 0 223px !important", display: "flex", alignItems: "baseline" }}
-          item
-          xs={6}
-        >
-          <SimpleTypography
-            text={`Показаны ${all__interiors?.data?.pagination?.current + 1}–${all__interiors?.data?.pagination?.limit} из`}
-            className='pagenation__desc'
-          />
+          <Grid spacing={2} container sx={{ width: '100%', margin: "0 auto", padding: "32px 0 0 0" }}>
+            <Grid item xs={12}
+              sx={{ padding: "0 !important", display: "flex", justifyContent: "center" }}
+            >
+              <Pagination
+                dataSource='interiors'
+                count={all__interiors?.data?.pagination?.pages}
+                page={parseInt(all__interiors?.data?.pagination?.current) + 1}
+              />
+            </Grid>
+          </Grid>
 
-          <SimpleTypography
-            text={`${all__interiors?.data?.pagination?.data_count} товаров`}
-            className='pagenation__desc--bold' />
-        </Grid>
-        <Grid
-          item
-          xs={6}
-          sx={{ padding: "0 !important", display: "flex", justifyContent: "flex-end" }}
-        >
-          <Pagination
-            dataSource='interiors'
-            count={all__interiors?.data?.pagination?.pages}
-            page={parseInt(all__interiors?.data?.pagination?.current) + 1}
-          />
         </Grid>
       </Grid>
     </Box>

@@ -19,6 +19,7 @@ import { getAllStyles } from '../../../data/get_all_styles'
 import { setModelNameFilter } from '../../../data/handle_filters'
 import { useNavigate } from 'react-router-dom'
 import { modelsLimit } from '../../../types/filters'
+import { dataItemIndex } from '../../../utils/utils'
 
 export default function ModelsPage() {
   const IsFilterOpen = useSelector((state: any) => state?.modal_checker?.isFilterModal)
@@ -96,9 +97,7 @@ export default function ModelsPage() {
   }
 
   return (
-    <Box sx={{ width: '1200px', minHeight: 829, display: "block", margin: "0 auto" }}>
-
-      {/* <ModelCrumb name={"3D models"} /> */}
+    <Box sx={{ width: '1200px', minHeight: 829, display: "block", margin: "0 auto 32px auto" }}>
 
       <Grid spacing={2} container sx={{ marginTop: "32px", marginLeft: 0 }} >
         <Grid item className='models-page__filters' md={2.2} xs={12} sx={matches ? { paddingRight: "10px", borderRight: "1px solid #b3b3b3", transform: `translate(-50%,${IsFilterOpen ? "-50%" : "-200%"})` } : { paddingRight: "10px", borderRight: "1px solid #b3b3b3", }}>
@@ -136,7 +135,29 @@ export default function ModelsPage() {
               : null
           }
 
-          <Sorts route={'models'} />
+          <Sorts route={'models'} dataCount={
+            <Box
+              sx={{ padding: "0 !important", display: "flex", alignItems: "baseline" }}
+            >
+              <SimpleTypography
+                text={`Показаны ${dataItemIndex<string>(
+                  all__models?.data?.pagination?.limit,
+                  all__models?.data?.pagination?.current,
+                  1
+                )}–${dataItemIndex<string>(
+                  all__models?.data?.pagination?.limit,
+                  all__models?.data?.pagination?.current,
+                  all__models?.data?.interiors?.length
+                )
+                  } из`}
+                className='pagenation__desc'
+              />
+
+              <SimpleTypography
+                text={`${all__models?.data?.pagination?.data_count} моделей`}
+                className='pagenation__desc--bold' />
+            </Box>
+          } />
 
           {/* ---- MODEL CARDS ---- */}
 
@@ -144,49 +165,18 @@ export default function ModelsPage() {
 
           {/* ---- MODEL CARDS ---- */}
 
-        </Grid>
-      </Grid>
-      <Grid spacing={2} container sx={{ width: '100%', margin: "0 auto", padding: "17px 0 32px 0" }}>
-        <Grid
-          sx={{ padding: "0 0 0 223px !important", display: "flex", alignItems: "baseline" }}
-          item
-          xs={6}
-        >
-          <SimpleTypography
-            text={`Показаны ${all__models?.data?.pagination?.current + 1}–${all__models?.data?.pagination?.limit} из`}
-            className='pagenation__desc'
-          />
+          <Grid spacing={2} container sx={{ width: '100%', margin: "0 auto", padding: "32px 0 0 0" }}>
+            <Grid item xs={12}
+              sx={{ padding: "0 !important", display: "flex", justifyContent: "center" }}
+            >
+              <Pagination
+                dataSource='models'
+                count={all__models?.data?.pagination?.pages}
+                page={parseInt(all__models?.data?.pagination?.current) + 1}
+              />
+            </Grid>
+          </Grid>
 
-          <SimpleTypography
-            text={`${all__models?.data?.pagination?.data_count} товаров`}
-            className='pagenation__desc--bold' />
-        </Grid>
-        <Grid
-          item
-          xs={6}
-          sx={{ padding: "0 !important", display: "flex", justifyContent: "flex-end" }}
-        >
-          <Pagination
-            dataSource='models'
-            count={all__models?.data?.pagination?.pages}
-            page={parseInt(all__models?.data?.pagination?.current) + 1}
-          // page={page}
-          // pageArray={pageArray}
-          // pagesCount={pagesCount}
-          // increment={(e, data) => {
-          //   props.setPage(page + 1);
-          // }}
-          // changePage={(e, data) => {
-          //   setPage(data);
-          // }}
-          // decrement={(e, data) => {
-          //   setPage(page - 1);
-          // }}
-          // const handleChange = (event, value) => {
-          //   props.changePage(event,value)
-          // };
-          // count={props.pagesCount} page={+props.page} onChange={handleChange}
-          />
         </Grid>
       </Grid>
     </Box>

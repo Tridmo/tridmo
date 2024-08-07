@@ -36,12 +36,22 @@ export default function BrandInfo() {
   const isAuthenticated = useSelector((state: any) => state?.auth_slicer?.authState)
   const [conversationLoading, setConversationLoading] = useState<boolean>(false);
 
-  function getSocialLink(url: string, target: string, connector: string = '/') {
-    return target ? (target.startsWith(url) ? target : `${url}${connector}${target}`) : url
+  function getSocialLink(urls: string[], target: string, connector: string = '/') {
+    const has = urls.find(url => target.startsWith(url))
+    return target ? (
+      !!has
+        ? target
+        : `${urls[0]}${connector}${target}`
+    ) : urls[0]
   }
 
-  function getSocialLinkUsername(url: string, target: string) {
-    return target ? (target.startsWith(url) ? target.split(url)[1] : target) : ''
+  function getSocialLinkUsername(urls: string[], target: string) {
+    const has = urls.find(url => target.startsWith(url))
+    return target ? (
+      !!has
+        ? target.split(has)[1]
+        : target
+    ) : ''
   }
 
   function getUrlDomen(url: string) {
@@ -148,7 +158,7 @@ export default function BrandInfo() {
         {
           !!brand?.instagram &&
           <Grid item sx={{ width: '100%' }}>
-            <Link target='_blank' style={{ width: '100%' }} href={getSocialLink('https://instagram.com/', brand?.instagram)}>
+            <Link target='_blank' style={{ width: '100%' }} href={getSocialLink(['https://instagram.com/', 'https://www.instagram.com/'], brand?.instagram)}>
               <Buttons className='brand__box' name="">
                 <Instagram sx={{
                   width: '23px',
@@ -157,7 +167,7 @@ export default function BrandInfo() {
                 }} />
                 <Box sx={{ marginLeft: "11px" }}>
                   <SimpleTypography className='brand__name' text="Инстаграм" />
-                  <SimpleTypography className='brand__box--text' text={getSocialLinkUsername('https://instagram.com/', brand?.instagram)} />
+                  <SimpleTypography className='brand__box--text' text={getSocialLinkUsername(['https://instagram.com/', 'https://www.instagram.com/'], brand?.instagram)} />
                 </Box>
               </Buttons>
             </Link>

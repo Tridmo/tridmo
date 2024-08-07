@@ -79,16 +79,6 @@ export default function LandingPage() {
 
   const topModels = useSelector(selectTopModels)
 
-  const getModelCategoryFilter = useSelector((state: any) => state?.handle_filters?.categories)
-  const getModelBrandFilter = useSelector((state: any) => state?.handle_filters?.model_brand)
-  const getModelCategoryNameFilter = useSelector((state: any) => state?.handle_filters?.category_name)
-  const getModelColorFilter = useSelector((state: any) => state?.handle_filters?.colors)
-  const getModelStyleFilter = useSelector((state: any) => state?.handle_filters?.styles)
-  const getModelPageFilter = useSelector((state: any) => state?.handle_filters?.page)
-  const getModelTopFilter = useSelector((state: any) => state?.handle_filters?.model_top)
-  const getModelNameFilter = useSelector((state: any) => state?.handle_filters?.model_name)
-  const getModelOrderBy = useSelector((state: any) => state?.handle_filters?.model_orderby)
-  const getModelOrder = useSelector((state: any) => state?.handle_filters?.model_order)
 
   function handleSearch(e) {
     e.preventDefault()
@@ -96,15 +86,7 @@ export default function LandingPage() {
     const newUrl = `/models/?name=${searchVal}`
     router.push(newUrl)
     dispatch(getAllModels({
-      brand: getModelBrandFilter,
-      categories: getModelCategoryFilter,
-      colors: getModelColorFilter,
-      styles: getModelStyleFilter,
       name: searchVal,
-      top: getModelTopFilter,
-      page: getModelPageFilter,
-      orderBy: getModelOrderBy,
-      order: getModelOrder,
     }))
   }
 
@@ -358,7 +340,7 @@ export default function LandingPage() {
 
             {/* 3D MODELS MAP */}
 
-            <SimpleCard cols={5} route={"models"} sliced={15} />
+            <SimpleCard cols={5} route={"landing_models"} />
 
           </Grid>
         </Box>
@@ -488,7 +470,7 @@ export default function LandingPage() {
 
             {/* INTERIORS MAP */}
 
-            <SimpleCard cols={4} route={"interiors"} sliced={8} />
+            <SimpleCard cols={4} route={"interiors"} sliced={12} />
 
           </Grid>
         </Box>

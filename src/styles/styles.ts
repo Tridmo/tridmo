@@ -693,7 +693,7 @@ export const TypographyStyles = (theme) => `
       }
 
       &.MuiTypography-card__title-brand {
-        min-width: 74px;
+        min-width: 56px;
         padding: 4px;
         background-color: #FAFAFA;
         border: 1px solid #B3B3B3;
@@ -702,7 +702,7 @@ export const TypographyStyles = (theme) => `
         font-size: 12px;
         line-height: 14px;
         letter-spacing: -0.02em;
-        text-align: start;
+        text-align: center;
         color: #141414;
       }
 

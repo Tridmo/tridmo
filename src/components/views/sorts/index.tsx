@@ -42,7 +42,7 @@ const filtersWrapStyle = {
   marginBottom: "20px"
 }
 
-function Sorts({ route, ...props }) {
+function Sorts({ route, dataCount = <></>, ...props }) {
 
   const sortsData =
     route == 'models' ?
@@ -132,9 +132,10 @@ function Sorts({ route, ...props }) {
     <Box sx={filtersWrapStyle}>
       <Grid container sx={{ margin: 0 }}>
         <Grid item xs={10} sx={{ display: "flex", alignItems: 'center' }}>
-          <SimpleTypography className='filters__title' text="Фильтры:" />
+          <SimpleTypography className='filters__title' text="Порядок:" />
           <Box
             sx={{
+              mr: '8px',
               maxWidth: { xs: 320, sm: 540 },
               bgcolor: 'background.paper',
               border: '1px solid #E0E0E0'
@@ -164,6 +165,9 @@ function Sorts({ route, ...props }) {
                 ))
               }
             </Box>
+          </Box>
+          <Box>
+            {dataCount}
           </Box>
         </Grid>
       </Grid>

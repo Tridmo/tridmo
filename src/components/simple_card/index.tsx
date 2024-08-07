@@ -20,6 +20,8 @@ import { selectBrandModels } from '../../data/get_brand_models';
 import { selectSavedModels } from '../../data/get_saved_models';
 import { selectSavedInteriors } from '../../data/get_saved_interiors';
 import { selectMyProjects } from '../../data/get_my_projects';
+import { selectLandingModels, selectLandingModels_status, selectLandingTopModels, selectLandingTopModels_status } from '../../data/get_landingpage_models';
+import { landingModelsLimit } from '../../types/filters';
 type InputProps = {
   route: string,
   sliced?: number,
@@ -101,6 +103,103 @@ export default function SimpleCard(props: InputProps) {
         data_sliced?.length > 0 ?
           <Grid className="models__card--wrap" container spacing={3} sx={{ width: "100%", margin: "0" }}>
             {data_sliced?.map((model: any, index: any) => (
+              <Grid
+                className='models__card'
+                sx={{
+                  [`&:not(:nth-of-type(${props?.cols}n))`]: {
+                    padding: "0 9.5px 0 0 !important",
+                  },
+                  [`&:nth-of-type(${props?.cols}n)`]: {
+                    padding: "0 0 0 0 !important",
+                  },
+                  marginBottom: "10px"
+                }}
+                key={index}
+                md={12 / props?.cols}
+                sm={12 / (props?.cols - 2)}
+                xs={12 / (props?.cols - 4)}
+                item
+              >
+                <CustomCard
+                  type={props?.route}
+                  link={`/${props?.route}/${model?.slug}`}
+                  key={index}
+                  model={model}
+                  imgHeight={props?.cardImgHeight || '208px'}
+                  tagIcon={model?.top ? '/icons/star.svg' : ''}
+                />
+              </Grid>
+            ))
+            }
+          </Grid >
+
+          : <EmptyData />
+      )
+    }
+  }
+
+  if (props?.route == 'landing_models') {
+
+    const models = useSelector(selectLandingModels)
+    const top_models = useSelector(selectLandingTopModels)
+    const models__status = useSelector(selectLandingModels_status)
+    const top_models__status = useSelector(selectLandingTopModels_status)
+
+    if (models__status === "failed" || top_models__status === "failed") {
+      return (
+        <SimpleTypography text='Извините, ошибка сетевого подключения:('></SimpleTypography>
+      )
+    }
+    if (models__status === "loading" || top_models__status === "loading") {
+      return (
+
+        <Grid className="models__card--wrap" container spacing={3} sx={{ width: "100%", margin: "0" }}>
+          {fakeModels?.map((model: any, index: any) => (
+            <Grid
+              className='models__card'
+              sx={{
+                [`&:not(:nth-of-type(${props?.cols}n))`]: {
+                  padding: "0 9.5px 0 0 !important",
+                },
+                [`&:nth-of-type(${props?.cols}n)`]: {
+                  padding: "0 0 0 0 !important",
+                },
+                marginBottom: "10px"
+              }}
+              key={index}
+              md={12 / props?.cols}
+              sm={12 / (props?.cols - 2)}
+              xs={12 / (props?.cols - 4)}
+              item
+            >
+              <CustomCardSkeleton
+                type={props?.route}
+                link={`/${props?.route}`}
+                key={index}
+                model={model}
+                imgHeight={props?.cardImgHeight || '208px'}
+                tagIcon={model?.top ? '/icons/star.svg' : ''}
+              />
+            </Grid>
+          ))}
+        </Grid>
+
+      )
+    }
+
+    if (models__status === "succeeded" || top_models__status === "succeeded") {
+
+      const top_length = landingModelsLimit - top_models?.length;
+      console.log('EEEEEEEE', top_models?.length, models?.length, top_length);
+      const models_sliced = models?.slice(0, top_length);
+      console.log('UUUUU', models_sliced);
+
+      const data = top_models?.concat(models_sliced)
+
+      return (
+        data?.length > 0 ?
+          <Grid className="models__card--wrap" container spacing={3} sx={{ width: "100%", margin: "0" }}>
+            {data?.map((model: any, index: any) => (
               <Grid
                 className='models__card'
                 sx={{

@@ -42,6 +42,7 @@ import { reducer as get_chat_conversations } from '../data/get_chat_conversation
 import { reducer as get_chat_messages } from '../data/get_chat_messages';
 import { reducer as get_my_projects } from '../data/get_my_projects';
 import { reducer as get_one_project } from '../data/get_one_project';
+import { reducer as get_landingpage_models } from '../data/get_landingpage_models';
 import { reducer as chat } from '../data/chat';
 
 
@@ -90,6 +91,7 @@ const rootReducer = combineReducers({
   chat: chat,
   get_my_projects: get_my_projects,
   get_one_project: get_one_project,
+  get_landingpage_models: get_landingpage_models,
 });
 
 export default rootReducer;
