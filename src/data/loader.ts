@@ -36,8 +36,18 @@ const Loader = createSlice({
         state.selected_interior_image = action.payload[1];
       },
     },
-    setShowImageViewer(state, action) {
-      state.show_image_viewer = action.payload;
+    setShowImageViewer: {
+      prepare(...args) {
+        return {
+          payload: args,
+          meta: {},
+          error: null
+        }
+      },
+      reducer(state, action) {
+        state.show_image_viewer = action.payload[0];
+        state.selected_interior_image = action.payload[1];
+      },
     },
   },
 });

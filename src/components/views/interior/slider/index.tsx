@@ -5,7 +5,7 @@ import { Grid, List, styled, ListItem } from '@mui/material';
 import Image from 'next/image';
 import Buttons from '../../../buttons';
 import { useDispatch, useSelector } from 'react-redux';
-import { setShowModelsModal } from '../../../../data/loader'
+import { setShowImageViewer, setShowInteriorImagesModal, setShowModelsModal } from '../../../../data/loader'
 import { Box, SxProps } from '@mui/system';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { IMAGES_BASE_URL } from '../../../../utils/env_vars';
@@ -41,6 +41,7 @@ const SimpleListItem = styled(ListItem)(
 
 const SimpleImage = styled(Image)(
   ({ theme }) => `
+          cursor: zoom-in;
           position: relative !important;
           inset: 0px;
           box-sizing: border-box;
@@ -69,6 +70,7 @@ const SimpleSlider = ({ mainWidth, images }: { images: any[]; mainWidth: number 
 
   const [sliderCount, setSliderCount] = React.useState(selectedSlide)
   const [sliderTransition, setSliderTransition] = React.useState(0.4)
+  const show = useSelector((state: any) => state?.loader?.show_image_viewer)
 
   function SliderRightHandler() {
     if (sliderCount < images?.length - 2) {
@@ -84,6 +86,11 @@ const SimpleSlider = ({ mainWidth, images }: { images: any[]; mainWidth: number 
 
   const ButtonHover = {
     opacity: sliderBtnHover
+  }
+
+  function showViewer(image) {
+    // dispatch(setShowInteriorImagesModal(false))
+    dispatch(setShowImageViewer(true, image))
   }
 
   if ("succeeded") {
@@ -156,7 +163,7 @@ const SimpleSlider = ({ mainWidth, images }: { images: any[]; mainWidth: number 
                   >
                     <Box
                       sx={{
-                        width: '92%',
+                        width: '90%',
                         height: '100%',
                         display: 'flex',
                         justifyContent: 'center',
@@ -164,6 +171,7 @@ const SimpleSlider = ({ mainWidth, images }: { images: any[]; mainWidth: number 
                       }}
                     >
                       <SimpleImage
+                        onClick={() => showViewer(slide)}
                         alt=''
                         layout='fill'
                         sx={{ objectFit: 'contain' }}

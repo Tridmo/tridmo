@@ -25,6 +25,7 @@ import Link from 'next/link';
 import { selectMyProfile } from '../../../../data/me';
 import { ConfirmContextProps, resetConfirmData, resetConfirmProps, setConfirmProps, setConfirmState, setOpenModal } from '../../../../data/modal_checker';
 import InteriorImagesModal from './images_modal';
+import ImageViewerModal from './zoom_viewer';
 
 const imageStyle: CSSProperties = {
   width: '100%',
@@ -279,6 +280,7 @@ export default function InteriorImages() {
 
     <>
       <InteriorImagesModal mainImageWidth={800} images={images} selectedSlide={selectedImageIndex} />
+      <ImageViewerModal />
 
       {
         images?.map((img, n) => {

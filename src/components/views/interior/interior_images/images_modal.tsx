@@ -33,7 +33,7 @@ export default function InteriorImagesModal({ mainImageWidth, selectedSlide, ima
   return (
     <Modal
       open={show}
-      onClose={() => { dispatch(setShowInteriorImagesModal(false)) }}
+      onClose={handleCloseModal}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
       closeAfterTransition
