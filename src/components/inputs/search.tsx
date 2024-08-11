@@ -16,7 +16,7 @@ type InputProps = {
   clic?: any,
   value?: string;
   sx?: SxProps,
-  onChange?: (searchValue: string) => void | any,
+  onChange?: any,
   search?: (searchValue: string) => void | any,
   searchDelay?: number,
   withButton?: boolean,
@@ -26,16 +26,17 @@ type InputProps = {
 export default function SearchInput(props: InputProps) {
 
   const [searchTerm, setSearchTerm] = useState('')
+  const [searchInit, setSearchInit] = useState(false)
 
-  if (props?.search) {
-    useEffect(() => {
+  useMemo(() => {
+    if (props?.search && searchInit) {
       const delayDebounceFn = setTimeout(() => {
         props?.search ? props?.search(searchTerm) : null
-      }, props?.searchDelay || 1000)
+      }, 10)
 
       return () => clearTimeout(delayDebounceFn)
-    }, [searchTerm])
-  }
+    }
+  }, [searchTerm, searchInit])
 
   return (
     <Box
@@ -72,8 +73,11 @@ export default function SearchInput(props: InputProps) {
         sx={{ flex: 1, padding: 0, fontSize: '16px' }}
         placeholder={props?.placeHolder}
         onChange={(e) => {
-          setSearchTerm(e.target.value)
-          if (props?.onChange) props?.onChange(e.target.value)
+          clearTimeout('setTermTimeout')
+          const setTermTimeout = setTimeout(() => {
+            setSearchInit(true)
+            setSearchTerm(e.target.value)
+          }, props?.searchDelay || 1000)
         }}
         inputProps={{
           'style': { padding: '0', fontSize: '16px' }
