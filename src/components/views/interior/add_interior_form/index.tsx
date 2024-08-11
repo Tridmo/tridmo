@@ -291,7 +291,7 @@ export function AddInteriorForm({ editing, interior }: { editing?: boolean, inte
                       justifyContent: 'flex-start',
                     }}
                   >
-                    <Box sx={{ ...formControlSx }}>
+                    {/* <Box sx={{ ...formControlSx }}>
                       <FileInput
                         labelElement={<label data-shrink='true' style={labelStyle}> Обложка </label>}
                         error={Boolean(touched.cover && errors.cover)}
@@ -309,7 +309,7 @@ export function AddInteriorForm({ editing, interior }: { editing?: boolean, inte
                             interior?.images?.filter(i => i?.is_main == true).map(i => `${IMAGES_BASE_URL}/${i?.image_src}`) : []
                         }
                       />
-                    </Box>
+                    </Box> */}
 
                     <Box sx={{ ...formControlSx }}>
                       <FileInput
@@ -324,6 +324,7 @@ export function AddInteriorForm({ editing, interior }: { editing?: boolean, inte
                         multiple
                         limit={imagesCountLimit}
                         onChange={(files, removed) => {
+                          setFieldValue('cover', files[0])
                           setFieldValue('images', files)
                           if (!!editing && interior?.images && removed && removed?.length) {
                             const removed_images: any[] = [];
@@ -337,6 +338,14 @@ export function AddInteriorForm({ editing, interior }: { editing?: boolean, inte
                         initialPreviews={
                           interior?.images?.filter(i => i?.is_main == false).map(i => `${IMAGES_BASE_URL}/${i?.image_src}`)
                         }
+                      />
+                      <SimpleTypography
+                        text="Первое изображение также будет загружено в качестве основной обложки."
+                        sx={{
+                          mt: '8px',
+                          fontWeight: '400',
+                          fontSize: '14px'
+                        }}
                       />
                     </Box>
 

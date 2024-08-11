@@ -31,6 +31,8 @@ import { VisibilityOutlined, VisibilityOffOutlined, Favorite, FavoriteBorder } f
 import { selectInteriorTags, setInteriorTags } from '../../../../data/get_interior_tags';
 import { getSavedInteriors } from '../../../../data/get_saved_interiors';
 import { getCategories } from '../../../../data/categories';
+import { getMyInteriors } from '../../../../data/get_my_interiors';
+import { getAllInteriors } from '../../../../data/get_all_interiors';
 
 const TagsDropDown = styled(Menu)(
   ({ theme }: ThemeProps) => `
@@ -297,11 +299,13 @@ export default function OneInterior() {
               .then(res => {
                 if (res?.data?.success) {
                   toast.success(res?.data?.message)
-                  dispatch(getCategories())
+                  dispatch(getMyInteriors())
+                  dispatch(getAllInteriors({}))
                   dispatch(setConfirmState(false))
                   dispatch(setOpenModal(false))
                   dispatch(resetConfirmProps())
                   dispatch(resetConfirmData())
+                  router.push('/interiors')
                 }
                 else {
                   toast.success(res?.data?.message)
@@ -680,6 +684,10 @@ export default function OneInterior() {
               lineHeight: '37.7px',
               marginBottom: '24px'
             }}
+          />
+          <SimpleTypography
+            text={interior?.description}
+            className="product__info--desc"
           />
 
           {

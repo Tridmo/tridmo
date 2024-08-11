@@ -9,7 +9,7 @@ import Link from 'next/link';
 import Buttons from '../../../buttons';
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/navigation';
-import axios from '@/utils/axios';
+import axios, { chatApi, setChatToken } from '@/utils/axios';
 import { toast } from "react-toastify"
 import { setLoginState, setOpenModal, setSignupState } from '@/data/modal_checker';
 import { sampleModel } from '@/data/samples';
@@ -17,6 +17,9 @@ import { IMAGES_BASE_URL } from '../../../../utils/env_vars';
 import instance from '@/utils/axios';
 import { selectMyProfile } from '../../../../data/me';
 import { modelStatuses } from '../../../../types/variables';
+import { selectChatToken } from '../../../../data/get_chat_token';
+import { setSelectedConversation } from '../../../../data/chat';
+import { RateReview } from '@mui/icons-material';
 
 
 export default function ModelInfo() {
@@ -56,9 +59,10 @@ export default function ModelInfo() {
   const isAuthenticated = useSelector((state: any) => state?.auth_slicer?.authState)
   const DownloadLink = useSelector((state: any) => state?.download_product)
   const downloadStatus = useSelector((state: any) => state?.auth_slicer?.authState)
+  const token = useSelector(selectChatToken)
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [conversationLoading, setConversationLoading] = useState<boolean>(false);
 
   function DownloadHandler() {
 
@@ -77,6 +81,25 @@ export default function ModelInfo() {
           setIsSubmitting(false)
         })
     } else {
+      dispatch(setLoginState(true))
+      dispatch(setOpenModal(true))
+    }
+  }
+
+  async function handleCreateConversation() {
+    if (isAuthenticated) {
+      setConversationLoading(true)
+      setChatToken(Cookies.get('chatToken') ? Cookies.get('chatToken') : token ? token : '')
+      chatApi.post(`/conversations`, {
+        members: [simpleModel?.brand?.admin_user_id]
+      })
+        .then(res => {
+          dispatch(setSelectedConversation(res?.data?.id))
+          router.push('/chat')
+          setConversationLoading(false)
+        })
+    }
+    else {
       dispatch(setLoginState(true))
       dispatch(setOpenModal(true))
     }
@@ -110,19 +133,39 @@ export default function ModelInfo() {
           src={`${IMAGES_BASE_URL}/${simpleModel?.brand?.logo}`}
         />
         <Box sx={{ marginLeft: "24px" }}>
-          <SimpleTypography className='brand__name' text="Имя бренда" />
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Box>
+              <SimpleTypography className='brand__name' text="Имя бренда" />
 
-          <Link href={`/${simpleModel?.brand?.slug}`}>
-            <SimpleTypography sx={{ marginBottom: '15px' }} className='brand__title' text={simpleModel?.brand?.name} />
-          </Link>
+              <Link href={`/${simpleModel?.brand?.slug}`}>
+                <SimpleTypography sx={{ marginBottom: '15px' }} className='brand__title' text={simpleModel?.brand?.name} />
+              </Link>
+            </Box>
+
+            <Buttons
+              startIcon={conversationLoading}
+              disabled={!simpleModel?.brand?.admin_user_id}
+              onClick={() => handleCreateConversation()}
+              sx={{ p: '3px 9px !important' }}
+              className='upload__btn'
+              name="Написать"
+              childrenFirst={true}
+            >
+            </Buttons>
+          </Box>
 
           <Grid container spacing={1}
             sx={{
               display: 'flex',
-              width: '100% !important'
             }}
           >
-            <Grid item sx={{ width: '100% !important' }}>
+            <Grid item xs={12} sx={{ width: '100% !important' }}>
               <Link
                 target="_blank"
                 href={`http://maps.google.com/?q=${simpleModel?.brand?.address}`}
@@ -150,7 +193,7 @@ export default function ModelInfo() {
               </Link>
             </Grid>
 
-            <Grid item sx={{ width: '100% !important' }}>
+            <Grid item xs={12} sx={{ width: '100% !important' }}>
               <Link
                 href={`tel:${simpleModel?.brand?.phone}`}
                 style={{ width: '100% !important' }}
@@ -217,11 +260,11 @@ export default function ModelInfo() {
                   className="table__text"
                 />
                 <SimpleTypography
-                  text={`Высота: ${simpleModel?.height} см`}
+                  text={`Длина: ${simpleModel?.length} см`}
                   className="table__text"
                 />
                 <SimpleTypography
-                  text={`Длина: ${simpleModel?.length} см`}
+                  text={`Высота: ${simpleModel?.height} см`}
                   className="table__text"
                 />
               </TableCell>
