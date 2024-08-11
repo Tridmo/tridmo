@@ -22,16 +22,16 @@ import { getSavedInteriors } from '../../data/get_saved_interiors'
 import { getSavedModels } from '../../data/get_saved_models'
 import { myInteriorsLimit, projectsLimit, savedModelsLimit } from '../../types/filters'
 import { getMyProjects } from '../../data/get_my_projects'
+import { getNotificationCounts } from '../../data/get_notifications'
 
 const NavigationContext = createContext({})
 
 export function NavigationEvents() {
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
   const dispatch = useDispatch<any>();
-  const router = useRouter();
-  const params = useParams();
-  const hash = useHash();
+
+  useEffect(() => {
+    dispatch(getNotificationCounts())
+  }, [])
 
   return (
     <NavigationContext.Provider value={{}} />
