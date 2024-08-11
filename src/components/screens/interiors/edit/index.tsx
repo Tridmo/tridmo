@@ -29,7 +29,7 @@ export default function EditInterior() {
 
   return (
     <Box sx={{ background: "#fafafa" }} className="products" >
-      <Box className='products__container' sx={{ maxWidth: "1200px", width: "100%", margin: "0 auto !important", alignItems: "center", }}>
+      <Box className='products__container' sx={{ maxWidth: "1200px", minHeight: '80dvh', width: "100%", margin: "0 auto !important", alignItems: "center", }}>
         <Grid
           container
           display={'flex'}
