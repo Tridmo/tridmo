@@ -699,8 +699,8 @@ export const TypographyStyles = (theme) => `
         font-weight: 400;
         text-overflow: ellipsis;
         text-align: start;
-        font-size: 14px;
-        line-height: 18px;
+        font-size: 12px;
+        line-height: 16px;
         display: inline-block;
         align-items: center;
         color: ${theme.colors.gray[700]};
@@ -715,14 +715,13 @@ export const TypographyStyles = (theme) => `
       }
 
       &.MuiTypography-card__title-brand {
-        min-width: 56px;
-        padding: 4px;
+        padding: 3px;
         background-color: #FAFAFA;
         border: 1px solid #B3B3B3;
         border-radius: 4px;
         font-weight: 400;
-        font-size: 12px;
-        line-height: 14px;
+        font-size: 10px;
+        line-height: 13px;
         letter-spacing: -0.02em;
         text-align: center;
         color: #141414;

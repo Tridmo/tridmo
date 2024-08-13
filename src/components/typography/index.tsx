@@ -12,6 +12,7 @@ type TypographyProps = {
   className?: string,
   classNames?: string,
   id?: string,
+  title?: string,
   children?: any,
   paragraph?: any,
 };
@@ -29,6 +30,7 @@ const SimpleTypography = (props: TypographyProps) => {
       className={`MuiTypography-${props?.className} ${props?.classNames}`}
       variant={props?.variant}
       paragraph={props?.paragraph}
+      title={props?.title || ''}
     >
       {props?.text}
       {props?.children}

@@ -422,6 +422,7 @@ function CustomCard({ model, type, link, imgHeight, tagIcon, tagText, withAuthor
                       :
                       <SimpleTypography
                         text={model?.name}
+                        title={model?.name}
                         className='card__title'
                       />
                 }
