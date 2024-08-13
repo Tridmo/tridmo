@@ -78,17 +78,18 @@ export default function InteriorsPage() {
                   all__interiors?.data?.pagination?.limit,
                   all__interiors?.data?.pagination?.current,
                   1
-                )}–${dataItemIndex<string>(
-                  all__interiors?.data?.pagination?.limit,
-                  all__interiors?.data?.pagination?.current,
-                  all__interiors?.data?.interiors?.length
-                )
+                ) || 0
+                  }–${dataItemIndex<string>(
+                    all__interiors?.data?.pagination?.limit,
+                    all__interiors?.data?.pagination?.current,
+                    all__interiors?.data?.interiors?.length
+                  ) || 0
                   } из`}
                 className='pagenation__desc'
               />
 
               <SimpleTypography
-                text={`${all__interiors?.data?.pagination?.data_count} интерьеров`}
+                text={`${all__interiors?.data?.pagination?.data_count || 0} интерьеров`}
                 className='pagenation__desc--bold' />
             </Box>
           } />

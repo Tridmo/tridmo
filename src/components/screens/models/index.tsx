@@ -144,17 +144,18 @@ export default function ModelsPage() {
                   all__models?.data?.pagination?.limit,
                   all__models?.data?.pagination?.current,
                   1
-                )}–${dataItemIndex<string>(
-                  all__models?.data?.pagination?.limit,
-                  all__models?.data?.pagination?.current,
-                  all__models?.data?.interiors?.length
-                )
+                ) || 0
+                  }–${dataItemIndex<string>(
+                    all__models?.data?.pagination?.limit,
+                    all__models?.data?.pagination?.current,
+                    all__models?.data?.models?.length
+                  ) || 0
                   } из`}
                 className='pagenation__desc'
               />
 
               <SimpleTypography
-                text={`${all__models?.data?.pagination?.data_count} моделей`}
+                text={`${all__models?.data?.pagination?.data_count || 0} моделей`}
                 className='pagenation__desc--bold' />
             </Box>
           } />
