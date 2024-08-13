@@ -688,6 +688,7 @@ export default function OneInterior() {
           <SimpleTypography
             text={interior?.description}
             className="product__info--desc"
+            sx={{ width: '100% !important', maxWidth: '100% !important' }}
           />
 
           {
