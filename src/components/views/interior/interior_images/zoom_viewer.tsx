@@ -86,7 +86,7 @@ export default function ImageViewerModal({ mainImageWidth, selectedSlide }: { im
           <SimpleImage
             alt=''
             onClick={handleCloseModal}
-            layout='fill'
+            fill
             sx={{ objectFit: 'contain' }}
             src={`${IMAGES_BASE_URL}/${image?.image_src}`}
             priority={true}

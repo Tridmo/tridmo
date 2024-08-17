@@ -66,12 +66,14 @@ export default function DesignerProfile({ username, ...props }) {
                     flexBasis: 'auto !important'
                   }}
                 >
-                  <BasicPagination
-                    dataSource='designer_interiors'
-                    dataId={username}
-                    count={designerWorks?.data?.pagination?.pages}
-                    page={parseInt(designerWorks?.data?.pagination?.current) + 1}
-                  />
+                  <React.Suspense>
+                    <BasicPagination
+                      dataSource='designer_interiors'
+                      dataId={username}
+                      count={designerWorks?.data?.pagination?.pages}
+                      page={parseInt(designerWorks?.data?.pagination?.current) + 1}
+                    />
+                  </React.Suspense>
                 </Grid>
               ) : null}
             </Grid>

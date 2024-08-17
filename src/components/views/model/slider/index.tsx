@@ -290,7 +290,8 @@ const SimpleSlider = ({ name }: any) => {
                   >
                     <SimpleImage
                       alt=''
-                      layout='fill'
+                      sizes='100%'
+                      fill
                       sx={{ objectFit: name == 'slider' ? 'cover' : 'contain' }}
                       src={`${IMAGES_BASE_URL}/${slide?.image_src}`}
                       priority={true}
@@ -459,7 +460,6 @@ const SimpleSlider = ({ name }: any) => {
                       loader={myLoader}
                       width={wdth}
                       height={wdth}
-                      // layout='fill'
                       sx={{ objectFit: 'contain' }}
                       priority={true}
                       src={`/img/card-loader.jpg`}

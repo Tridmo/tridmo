@@ -97,7 +97,7 @@ export default function OneBrand() {
                 </Box>
 
                 <Box sx={{ mt: '16px' }}>
-                  <SimpleCard route='brand_models' cols={4} cardImgHeight={168} />
+                  <SimpleCard route='brand_models' cols={4} cardImgHeight={'168px'} />
                 </Box>
 
               </Box>
@@ -113,12 +113,14 @@ export default function OneBrand() {
                     flexBasis: 'auto !important'
                   }}
                 >
-                  <BasicPagination
-                    dataSource='brand_models'
-                    dataId={brand?.id}
-                    count={brandModels?.data?.pagination?.pages}
-                    page={parseInt(brandModels?.data?.pagination?.current) + 1}
-                  />
+                  <React.Suspense>
+                    <BasicPagination
+                      dataSource='brand_models'
+                      dataId={brand?.id}
+                      count={brandModels?.data?.pagination?.pages}
+                      page={parseInt(brandModels?.data?.pagination?.current) + 1}
+                    />
+                  </React.Suspense>
                 </Grid>
               ) : null}
 

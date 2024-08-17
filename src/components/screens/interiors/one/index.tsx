@@ -305,7 +305,7 @@ export default function OneInterior() {
                   dispatch(setOpenModal(false))
                   dispatch(resetConfirmProps())
                   dispatch(resetConfirmData())
-                  router.push('/interiors')
+                  router.push('/interiors/?page=1')
                 }
                 else {
                   toast.success(res?.data?.message)

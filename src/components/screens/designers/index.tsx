@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react'
+import React, { Suspense } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectAllModels } from '../../../data/get_all_models';
 import { Avatar, Divider, List, ListItem, ListItemAvatar, ListItemText, Box, Grid, SxProps, Skeleton } from '@mui/material'
@@ -143,7 +143,7 @@ export default function DesignersPage() {
                       <ListItem key={user?.id} alignItems="center"
                         sx={liSx}
                       >
-                        <ListItemText sx={{ maxWidth: 56, marginRight: '16px' }}>
+                        <ListItemText sx={{ marginRight: '16px', ...widthControl }}>
 
                           <SimpleTypography
                             text={
@@ -157,7 +157,7 @@ export default function DesignersPage() {
                               textAlign: 'center',
                               color: '#B3B3B3',
                               fontWeight: 500,
-                              fontSize: '22px',
+                              fontSize: '18px',
                               lineHeight: '26px',
                               letterSpacing: '-0.02em'
                             }}
@@ -276,47 +276,9 @@ export default function DesignersPage() {
                       }
                     </Link>
                   )
-                  : null
+                  : <EmptyData sx={{ marginTop: '8px' }} />
               }
             </List>
-            {
-              !all__designers?.data?.designers || all__designers?.data?.designers?.length == 0
-                ? <EmptyData sx={{ marginTop: '8px' }} />
-                : null
-            }
-            {
-              all__designers?.data?.pagination?.pages > 1
-                ? <Grid spacing={2} container sx={{ width: '100%', margin: "0 auto", padding: "17px 0 32px 0" }}>
-                  <Grid
-                    item
-                    xs={12}
-                    sx={{ padding: "0 !important", display: "flex", justifyContent: "center" }}
-                  >
-                    <BasicPagination
-                      dataSource='designers'
-                      count={all__designers?.data?.pagination?.pages}
-                      page={parseInt(all__designers?.data?.pagination?.current) + 1}
-                    // page={page}
-                    // pageArray={pageArray}
-                    // pagesCount={pagesCount}
-                    // increment={(e, data) => {
-                    //   props.setPage(page + 1);
-                    // }}
-                    // changePage={(e, data) => {
-                    //   setPage(data);
-                    // }}
-                    // decrement={(e, data) => {
-                    //   setPage(page - 1);
-                    // }}
-                    // const handleChange = (event, value) => {
-                    //   props.changePage(event,value)
-                    // };
-                    // count={props.pagesCount} page={+props.page} onChange={handleChange}
-                    />
-                  </Grid>
-                </Grid>
-                : null
-            }
           </>
           :
           <>
@@ -327,43 +289,26 @@ export default function DesignersPage() {
                 key={-1}
                 sx={liHeaderSx}
               >
-                <Box
-                  sx={{ ...liHeaderTextSx, textAlign: 'center !important', minWidth: '30px', marginRight: '16px' }}
-                >
-                  <Skeleton
-                    variant="rectangular"
-                    width={20}
-                    height={20}
-                  />
-                </Box>
-                <Box
-                  sx={{ ...liHeaderTextSx, minWidth: '590px', }}
-                >
-                  <Skeleton
-                    variant="rectangular"
-                    width={56}
-                    height={20}
-                  />
-                </Box>
-                <Box
-                  sx={{ ...liHeaderTextSx, minWidth: '300px', }}
-
-                >
-                  <Skeleton
-                    variant="rectangular"
-                    width={56}
-                    height={20}
-                  />
-                </Box>
-                <Box
-                  sx={{ ...liHeaderTextSx, minWidth: '180px', }}
-                >
-                  <Skeleton
-                    variant="rectangular"
-                    width={56}
-                    height={20}
-                  />
-                </Box>
+                <SimpleTypography
+                  text='№'
+                  sx={{ ...liHeaderTextSx, marginRight: '16px', ...widthControl }}
+                />
+                <SimpleTypography
+                  text='Профиль'
+                  sx={{ ...liHeaderTextSx, ...widthControl, textAlign: 'start !important', }}
+                />
+                <SimpleTypography
+                  text='Галерея'
+                  sx={{ ...liHeaderTextSx, ...widthControl, }}
+                />
+                <SimpleTypography
+                  text='Бирки'
+                  sx={{ ...liHeaderTextSx, ...widthControl, }}
+                />
+                <SimpleTypography
+                  text='Рейтинг'
+                  sx={{ ...liHeaderTextSx, ...widthControl, }}
+                />
               </ListItem>
               {
                 fakeDesigners?.map((i) =>
@@ -372,52 +317,77 @@ export default function DesignersPage() {
                       sx={liSx}
                     >
 
-                      <ListItemText sx={{ maxWidth: 30, marginRight: '16px' }}>
+                      <Box sx={{ ...widthControl, marginRight: '16px', display: 'flex', justifyContent: 'center' }}>
                         <Skeleton
                           variant="rectangular"
                           width={20}
                           height={20}
                         />
-                      </ListItemText>
+                      </Box>
 
-                      <ListItemAvatar
-                        sx={liAvatarWrapper}
+                      <Box
+                        sx={{
+                          ...widthControl,
+                          m: 0,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'flex-start'
+                        }}
                       >
-                        <Skeleton
-                          variant="rounded"
-                          sx={liAvatarSx}
-                        />
-                      </ListItemAvatar>
+                        <ListItemAvatar sx={liAvatarWrapper}>
+                          <Skeleton
+                            variant="rounded"
+                            sx={liAvatarSx}
+                          />
+                        </ListItemAvatar>
+                        <ListItemText className='username' sx={{ margin: '0 8px', minWidth: '880px' }}>
 
+                          <Skeleton
+                            variant="rectangular"
+                            width={100}
+                            height={20}
+                            sx={{ marginBottom: '5px' }}
+                          />
 
-                      <ListItemText className='brand_name' sx={{ marginLeft: '24px', minWidth: '470px' }} >
-                        <Skeleton
-                          variant="rectangular"
-                          width={100}
-                          height={20}
-                          sx={{ marginBottom: '5px' }}
-                        />
-                        <Skeleton
-                          variant="rectangular"
-                          width={80}
-                          height={18}
-                        />
-                      </ListItemText>
+                          <Box
+                            sx={{
+                              display: 'flex'
+                            }}
+                          >
+                            <Skeleton
+                              variant="rectangular"
+                              width={80}
+                              height={18}
+                            />
 
-                      <ListItemText sx={{ minWidth: '300px' }} >
+                          </Box>
+
+                        </ListItemText>
+                      </Box>
+
+                      <Box sx={{ ...widthControl, display: 'flex', justifyContent: 'center' }} >
                         <Skeleton
                           variant="rectangular"
                           width={56}
                           height={20}
                         />
-                      </ListItemText>
-                      <ListItemText sx={{ minWidth: '180px' }}>
+                      </Box>
+
+                      <Box sx={{ ...widthControl, display: 'flex', justifyContent: 'center' }}>
                         <Skeleton
                           variant="rectangular"
                           width={56}
                           height={20}
                         />
-                      </ListItemText>
+                      </Box>
+
+                      <Box sx={{ ...widthControl, display: 'flex', justifyContent: 'center' }}>
+                        <Skeleton
+                          variant="rectangular"
+                          width={56}
+                          height={20}
+                        />
+                      </Box>
                     </ListItem>
                   </Box>
                 )
@@ -425,6 +395,21 @@ export default function DesignersPage() {
             </List>
           </>
       }
+      <Grid spacing={2} container sx={{ width: '100%', margin: "0 auto", padding: "17px 0 32px 0" }}>
+        <Grid
+          item
+          xs={12}
+          sx={{ padding: "0 !important", display: "flex", justifyContent: "center" }}
+        >
+          <Suspense>
+            <BasicPagination
+              dataSource='designers'
+              count={all__designers?.data?.pagination?.pages}
+              page={parseInt(all__designers?.data?.pagination?.current) + 1}
+            />
+          </Suspense>
+        </Grid>
+      </Grid>
     </Box>
   )
 }

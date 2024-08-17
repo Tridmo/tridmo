@@ -173,7 +173,7 @@ const SimpleSlider = ({ mainWidth, images }: { images: any[]; mainWidth: number 
                       <SimpleImage
                         onClick={() => showViewer(slide)}
                         alt=''
-                        layout='fill'
+                        fill
                         sx={{ objectFit: 'contain' }}
                         src={`${IMAGES_BASE_URL}/${slide?.image_src}`}
                         priority={true}

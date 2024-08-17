@@ -14,6 +14,7 @@ import { getSavedModels } from '../../data/get_saved_models';
 import { getMyProjects } from '../../data/get_my_projects';
 import { current } from '@reduxjs/toolkit';
 import { brandModelsLimit, brandsLimit, designersLimit, interiorsLimit, modelsLimit, myInteriorsLimit, projectsLimit, savedModelsLimit } from '../../types/filters';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 const SimplePagination = styled(Pagination)(
   ({ theme }: ThemeProps) =>
@@ -120,6 +121,9 @@ interface PaginationProps {
 
 export default function BasicPagination({ dataSource, dataId, count, page, ...props }: PaginationProps) {
   const dispatch = useDispatch<any>();
+  const searchParams = useSearchParams()
+  const pathname = usePathname()
+  const router = useRouter()
 
   // ---- model filters selector ----- //
   const getModelCategoryFilter = useSelector((state: any) => state?.handle_filters?.categories)
@@ -135,21 +139,16 @@ export default function BasicPagination({ dataSource, dataId, count, page, ...pr
   // ---- brand-models filters selector ----- //
   const getBrandModelsCategory = useSelector((state: any) => state?.handle_filters?.brand_models_category)
 
-  // ---- pages ---- //
-  // const getModelsPageFilter = useSelector((state: any) => state?.handle_filters?.models_page)
-  // const getInteriorsPageFilter = useSelector((state: any) => state?.handle_filters?.interiors_page)
-  // const getMyInteriorsPageFilter = useSelector((state: any) => state?.handle_filters?.my_interiors_page)
-  // const getProjectsPageFilter = useSelector((state: any) => state?.handle_filters?.projects_page)
-  // const getSavedModelsPageFilter = useSelector((state: any) => state?.handle_filters?.saved_models_page)
-  // const getDesignersPageFilter = useSelector((state: any) => state?.handle_filters?.designers_page)
-  // const getBrandsPageFilter = useSelector((state: any) => state?.handle_filters?.brands_page)
-
+  const getInteriorCategoryFilter = useSelector((state: any) => state?.handle_filters?.interior_categories)
+  const getInteriorPageFilter = useSelector((state: any) => state?.handle_filters?.interiors_page)
 
   const handleChange = (e: any, page: any) => {
 
-    console.log(count);
-    console.log(page);
-
+    const current = new URLSearchParams(Array.from(searchParams.entries()));
+    current.set('page', page)
+    const search = current.toString();
+    const query = search ? `?${search}` : "";
+    router.replace(`${pathname}${query}`);
 
     if (dataSource == 'models') {
       dispatch(setPageFilter({ p: 'models_page', n: page }))
@@ -170,8 +169,7 @@ export default function BasicPagination({ dataSource, dataId, count, page, ...pr
       dispatch(setPageFilter({ p: 'interiors_page', n: page }))
       dispatch(getAllInteriors({
         limit: interiorsLimit,
-        categories: getModelCategoryFilter,
-        styles: getModelStyleFilter,
+        categories: getInteriorCategoryFilter,
         page: page,
       }))
     }

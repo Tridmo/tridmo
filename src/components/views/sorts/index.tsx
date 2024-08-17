@@ -7,10 +7,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { flatten } from "lodash";
 import { useDispatch } from 'react-redux';
-import { setCategoryFilter, setColorFilter, setOrderByFilter, setStyleFilter } from '../../../data/handle_filters'
+import { set_interiors_order, set_interiors_orderby, setCategoryFilter, setColorFilter, setModelOrderBy, setOrderByFilter, setStyleFilter } from '../../../data/handle_filters'
 import { getAllModels } from '../../../data/get_all_models';
 import { getAllInteriors } from '../../../data/get_all_interiors';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { modelOrderBy } from '../../../types/filters';
 const FiltersItem = styled(Box)(
   ({ theme }: ThemeProps) => `
         background: #F5F5F5;
@@ -83,11 +84,11 @@ function Sorts({ route, dataCount = <></>, ...props }) {
   const router = useRouter();
 
   const keyword = searchParams.get('name') as string
+  const page = searchParams.get('page') as string
   const [sorts, setSorts] = useState(sortsData);
 
   const getCategoryFilter = useSelector((state: any) => state?.handle_filters?.categories)
   const getModelBrandFilter = useSelector((state: any) => state?.handle_filters?.model_brand)
-  const getCategoryNameFilter = useSelector((state: any) => state?.handle_filters?.category_name)
   const getColorFilter = useSelector((state: any) => state?.handle_filters?.colors)
   const getStyleFilter = useSelector((state: any) => state?.handle_filters?.styles)
   const getPageFilter = useSelector((state: any) => state?.handle_filters?.page)
@@ -95,6 +96,12 @@ function Sorts({ route, dataCount = <></>, ...props }) {
   const getModelNameFilter = useSelector((state: any) => state?.handle_filters?.model_name)
   const getModelOrderBy = useSelector((state: any) => state?.handle_filters?.model_orderby)
   const getModelOrder = useSelector((state: any) => state?.handle_filters?.model_order)
+
+  const getInteriorCategoryFilter = useSelector((state: any) => state?.handle_filters?.interior_categories)
+  const getInteriorNameFilter = useSelector((state: any) => state?.handle_filters?.interiors_name)
+  const getInteriorOrder = useSelector((state: any) => state?.handle_filters?.interiors_order)
+  const getInteriorOrderBy = useSelector((state: any) => state?.handle_filters?.interiors_orderby)
+  const getInteriorPageFilter = useSelector((state: any) => state?.handle_filters?.interiors_page)
 
 
   function handleChange(selected: number) {
@@ -109,18 +116,20 @@ function Sorts({ route, dataCount = <></>, ...props }) {
         styles: getStyleFilter,
         name: keyword || getModelNameFilter,
         top: getModelTopFilter,
-        page: getPageFilter,
-        orderBy: getModelOrderBy,
-        order: getModelOrder,
+        page: page || getPageFilter,
+        orderBy: sorts[selected].orderBy,
+        order: getModelOrder || 'desc',
       }))
+      dispatch(setModelOrderBy(sorts[selected].orderBy as modelOrderBy))
     }
     else if (route == 'interiors') {
       dispatch(getAllInteriors({
-        categories: getCategoryFilter,
-        styles: getStyleFilter,
-        page: getPageFilter,
+        categories: getInteriorCategoryFilter,
+        page: page || getInteriorPageFilter,
         orderBy: sorts[selected].orderBy,
+        order: getInteriorOrder || 'desc'
       }))
+      dispatch(set_interiors_orderby(sorts[selected].orderBy))
     }
 
     setSorts(

@@ -173,7 +173,7 @@ export default function ModelInfo() {
                 style={{ width: '100% !important' }}
               >
                 <Buttons className='brand__box' sx={{ width: '100% !important' }} name="">
-                  <Image
+                  <img
                     width={19}
                     height={23}
                     alt="Location"
@@ -199,7 +199,7 @@ export default function ModelInfo() {
                 style={{ width: '100% !important' }}
               >
                 <Buttons className='brand__box' sx={{ width: '100% !important' }} name="">
-                  <Image
+                  <img
                     width={19}
                     height={23}
                     alt="Phone number"
@@ -360,7 +360,7 @@ export default function ModelInfo() {
             disabled={true}
           >
             <Box sx={{ width: "100%", display: "flex", alignItems: "center" }}>
-              <Image
+              <img
                 width={24}
                 height={26.67}
                 alt="Models"

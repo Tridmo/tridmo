@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Box, ListItem } from '@mui/material';
 import SimpleTypography from '../typography';
 import Image from 'next/image';
@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { setCategoryFilter, setCategoryNameFilter, setColorFilter, setStyleFilter } from '../../data/handle_filters';
 import { getAllModels } from '../../data/get_all_models';
+import { modelsLimit } from '../../types/filters';
 
 interface breadCrumbProps {
   route?: string | undefined,
@@ -19,18 +20,32 @@ interface breadCrumbProps {
 export default function IconBreadcrumbs(props: breadCrumbProps) {
   const router = useRouter()
   const dispatch = useDispatch<any>()
+
+  const getModelCategoryFilter = useSelector((state: any) => state?.handle_filters?.categories)
+  const getModelBrandFilter = useSelector((state: any) => state?.handle_filters?.model_brand)
+  const getModelCategoryNameFilter = useSelector((state: any) => state?.handle_filters?.category_name)
+  const getModelColorFilter = useSelector((state: any) => state?.handle_filters?.colors)
+  const getModelStyleFilter = useSelector((state: any) => state?.handle_filters?.styles)
+  const getModelPageFilter = useSelector((state: any) => state?.handle_filters?.models_page)
+  const getModelTopFilter = useSelector((state: any) => state?.handle_filters?.model_top)
+  const getModelNameFilter = useSelector((state: any) => state?.handle_filters?.model_name)
+  const getModelOrderBy = useSelector((state: any) => state?.handle_filters?.model_orderby)
+  const getModelOrder = useSelector((state: any) => state?.handle_filters?.model_order)
+
+
   const handleGoBack = () => {
-
     dispatch(getAllModels({
-      categories: [],
-      colors: [],
-      styles: [],
-      page: 1,
+      brand: getModelBrandFilter,
+      categories: getModelCategoryFilter,
+      colors: getModelColorFilter,
+      styles: getModelStyleFilter,
+      name: getModelNameFilter,
+      top: getModelTopFilter,
+      page: getModelPageFilter,
+      orderBy: getModelOrderBy,
+      order: getModelOrder,
+      limit: modelsLimit
     }))
-
-    dispatch(setStyleFilter({ snex: [] }))
-    dispatch(setColorFilter({ cnex: [] }))
-    dispatch(setCategoryFilter([]))
   }
 
   return (
@@ -45,7 +60,7 @@ export default function IconBreadcrumbs(props: breadCrumbProps) {
 
       <Box sx={{ display: "flex", alignItems: "center" }}>
         <Box sx={{ marginRight: "10px" }} onClick={handleGoBack}>
-          <Link href="/models" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
+          <Link href="/models/?page=1" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
             <Image
               alt="Назад"
               src="/icons/go-back.svg"

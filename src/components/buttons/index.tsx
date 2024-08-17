@@ -14,6 +14,7 @@ import '@/styles/buttons.module.scss'
 import { ThemeProps } from '@/types/theme';
 import CustomCircularProgress from '../circular_progress';
 import { ButtonStyles } from '../../styles/styles';
+import { ArrowDownwardOutlined, ArrowUpwardOutlined } from '@mui/icons-material';
 
 
 const ButtonWrapper = styled(Button)(
@@ -58,8 +59,11 @@ export default function Buttons({ childrenFirst, ...props }: ButtonsProps) {
       endIcon={
         props?.endIcon === "right" ? <ArrowForwardIcon /> :
           props?.endIcon === "left" ? <ArrowBackIcon /> :
-            props?.endIcon === "cart" ? <ShoppingCartCheckoutIcon /> :
-              props?.endIcon === "checkout" ? <OpenInNewIcon /> : null
+            props?.endIcon === "down" ? <ArrowDownwardOutlined /> :
+              props?.endIcon === "up" ? <ArrowUpwardOutlined /> :
+                props?.endIcon === "loading" ? <CustomCircularProgress size="1rem" color={props?.loadingColor} /> :
+                  props?.endIcon === "cart" ? <ShoppingCartCheckoutIcon /> :
+                    props?.endIcon === "checkout" ? <OpenInNewIcon /> : null
       }
       disabled={props?.disabled}
       type={props?.type}

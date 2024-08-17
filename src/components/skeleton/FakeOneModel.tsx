@@ -179,7 +179,7 @@ const FakeSimpleSlider = ({ name }: any) => {
                     unoptimized
                     // width={497}
                     // height={558}
-                    layout='fill'
+                    fill
                     sx={{
                       objectFit: 'fill'
                     }}

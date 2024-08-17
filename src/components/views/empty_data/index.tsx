@@ -1,7 +1,7 @@
 import SimpleTypography from '@/components/typography'
 import { Box, SxProps, styled } from '@mui/material'
 import Image from 'next/image'
-import React from 'react'
+import React, { ReactElement } from 'react'
 
 interface Props {
   containerHeight?: string;
@@ -9,6 +9,7 @@ interface Props {
   border?: boolean;
   sx?: SxProps;
   text?: string;
+  button?: ReactElement;
 }
 
 export default function EmptyData({ boxShadow = true, border = true, ...props }: Props) {
@@ -27,8 +28,8 @@ export default function EmptyData({ boxShadow = true, border = true, ...props }:
 
   return (
     <Container sx={{ ...props?.sx }}>
-      <Box>
-        <Image priority width={160} height={160} alt='box' src='/img/empty-box.svg' />
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Image priority width={props?.button ? 120 : 160} height={props?.button ? 120 : 160} alt='box' src='/img/empty-box.svg' />
         <SimpleTypography
           sx={{
             fontWeight: 400,
@@ -38,6 +39,12 @@ export default function EmptyData({ boxShadow = true, border = true, ...props }:
             textAlign: 'center',
           }}
           text={props?.text || 'Это место пусто'} />
+        {
+          props?.button &&
+          <Box sx={{ mt: '24px' }}>
+            {props?.button}
+          </Box>
+        }
       </Box>
     </Container>
   )

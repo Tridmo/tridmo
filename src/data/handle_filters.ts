@@ -13,6 +13,9 @@ const initialState = {
   brand_order: 'desc',
   categories: [],
   interior_categories: [],
+  interiors_name: '',
+  interiors_order: 'desc',
+  interiors_orderby: 'created_at',
   selected_child: [],
   children_category: [],
   filter_categories: [],
@@ -184,6 +187,19 @@ const handle_filters = createSlice({
       const { ...params } = action.payload;
       state.is_free = params.is_free;
     },
+
+    set_interior_categories: (state: any, action: PayloadAction<any>) => {
+      state.interior_categories = action.payload;
+    },
+    set_interiors_name: (state: any, action: PayloadAction<any>) => {
+      state.interiors_name = action.payload;
+    },
+    set_interiors_order: (state: any, action: PayloadAction<any>) => {
+      state.interiors_order = action.payload;
+    },
+    set_interiors_orderby: (state: any, action: PayloadAction<any>) => {
+      state.interiors_orderby = action.payload;
+    },
     resetFilters: () => ({
       ...initialState
     }),
@@ -229,6 +245,10 @@ export const {
   setOrderByFilter,
   resetFilters,
   setIs_free,
+  set_interior_categories,
+  set_interiors_name,
+  set_interiors_order,
+  set_interiors_orderby,
 } = handle_filters.actions;
 export const reducer = handle_filters.reducer;
 export default handle_filters;

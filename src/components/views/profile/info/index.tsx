@@ -465,20 +465,25 @@ export default function ProfileInfo(props: ProfileProps) {
                   height={16}
                 />
               </Buttons>
-              <Buttons
-                sx={{ width: '48%' }}
-                name="Добавить работу"
-                childrenFirst={true}
-                className="upload__btn"
-                onClick={() => router.push('/interiors/addnew')}
-              >
-                <Image
-                  alt="upload icon"
-                  src='/icons/plus-white.svg'
-                  width={13}
-                  height={13}
-                />
-              </Buttons>
+              <Link href={'/interiors/addnew'} style={{ width: '48%' }}>
+                <Buttons
+                  sx={{
+                    width: '100%',
+                    padding: '0 20px !important',
+                    height: '40px !important'
+                  }}
+                  name="Добавить работу"
+                  childrenFirst={true}
+                  className="upload__btn"
+                >
+                  <Image
+                    alt="upload icon"
+                    src='/icons/plus-white.svg'
+                    width={13}
+                    height={13}
+                  />
+                </Buttons>
+              </Link>
             </Grid>
 
             : null

@@ -49,7 +49,7 @@ export default function ImageViewer(image) {
       <Box sx={style}>
         <SimpleImage
           alt=''
-          layout='fill'
+          fill
           sx={{ objectFit: 'contain' }}
           src={`${IMAGES_BASE_URL}/${image?.image_src}`}
           priority={true}

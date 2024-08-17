@@ -76,12 +76,12 @@ const navItemsData = [
   {
     id: 3,
     text: "Модели",
-    link: "/models"
+    link: "/models/?page=1"
   },
   {
     id: 4,
     text: "Интерьеры",
-    link: "/interiors"
+    link: "/interiors/?page=1"
   },
 ]
 

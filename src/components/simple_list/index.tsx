@@ -63,7 +63,7 @@ export default function SimpleList(props: InputProps) {
                   <Image
                     src={"/img/card-loader.jpg"}
                     // srcSet={`${process.env.NEXT_PUBLIC_BASE_IMG_URL}/${model?.model_images[0]?.image[0]?.src}`}
-                    // layout='fill'
+                    // fill
                     width={282}
                     height={282}
                     alt={model?.title}

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../utils/axios'
+import { myInteriorsLimit } from '../types/filters';
 
 const initialState = {
   data: [],
@@ -23,6 +24,12 @@ export const getAuthorInteriors = createAsyncThunk('/interiors/:author',
         : wrapper?.author
           ? `&author=${wrapper.author}`
           : "";
+
+    send__route +=
+      wrapper?.limit
+        ? (send__route?.includes("/?") ? `&limit=${wrapper?.limit}` : `/?limit=${wrapper?.limit}`)
+        : (send__route?.includes("/?") ? `&limit=${myInteriorsLimit}` : `/?limit=${myInteriorsLimit}`);
+
     send__route += !send__route.includes("/?") && wrapper?.page ? `/?page=${wrapper.page}` : wrapper?.page ? `&page=${wrapper.page}` : "";
 
     const response = await api.get(send__route)

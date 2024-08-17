@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Grid, Box, useMediaQuery } from '@mui/material'
 import SimpleCard from '../../simple_card'
 import SimpleTypography from '../../typography'
-import Pagination from '../../pagination/pagination'
+import BasicPagination from '../../pagination/pagination'
 import Categories from '../../views/categories/model_categories'
 import { getAllModels, selectAllModels } from '../../../data/get_all_models';
 import Style from '../../views/styles/model_styles'
@@ -16,7 +16,7 @@ import Buttons from '../../buttons'
 import Sorts from '../../views/sorts'
 import ModelCrumb from '../../breadcrumbs/model_crumb'
 import { getAllStyles } from '../../../data/get_all_styles'
-import { setModelNameFilter } from '../../../data/handle_filters'
+import { setModelNameFilter, setPageFilter } from '../../../data/handle_filters'
 import { useNavigate } from 'react-router-dom'
 import { modelsLimit } from '../../../types/filters'
 import { dataItemIndex } from '../../../utils/utils'
@@ -25,32 +25,24 @@ export default function ModelsPage() {
   const IsFilterOpen = useSelector((state: any) => state?.modal_checker?.isFilterModal)
   const searchedModels = useSelector((state: any) => state?.search_models?.data)
   const matches = useMediaQuery('(max-width:600px)');
-
   const searchParams = useSearchParams();
   const dispatch = useDispatch<any>();
   const router = useRouter();
-
-
-  // ---- intial staters ---- //
-
   const getModelStatus = useSelector((state: any) => state?.get_all_models?.status);
   const getColorStatus = useSelector((state: any) => state?.get_all_colors?.status);
   const StyleStatus = useSelector((state: any) => state?.get_all_styles?.status)
   const all__models = useSelector(selectAllModels)
-
-  // ---- filters selector ----- //
-
   const getModelCategoryFilter = useSelector((state: any) => state?.handle_filters?.categories)
   const getModelBrandFilter = useSelector((state: any) => state?.handle_filters?.model_brand)
   const getModelCategoryNameFilter = useSelector((state: any) => state?.handle_filters?.category_name)
   const getModelColorFilter = useSelector((state: any) => state?.handle_filters?.colors)
   const getModelStyleFilter = useSelector((state: any) => state?.handle_filters?.styles)
-  const getModelPageFilter = useSelector((state: any) => state?.handle_filters?.page)
+  const getModelPageFilter = useSelector((state: any) => state?.handle_filters?.models_page)
   const getModelTopFilter = useSelector((state: any) => state?.handle_filters?.model_top)
   const getModelNameFilter = useSelector((state: any) => state?.handle_filters?.model_name)
   const getModelOrderBy = useSelector((state: any) => state?.handle_filters?.model_orderby)
   const getModelOrder = useSelector((state: any) => state?.handle_filters?.model_order)
-
+  const page = searchParams.get('page') as string
   const [keyword, setKeyword] = useState(getModelNameFilter)
 
   useEffect(() => {
@@ -59,6 +51,7 @@ export default function ModelsPage() {
 
   useEffect(() => {
     if (getModelStatus === "idle") {
+      dispatch(setPageFilter({ p: 'models_page', n: parseInt(page) }))
       dispatch(getAllModels({
         brand: getModelBrandFilter,
         categories: getModelCategoryFilter,
@@ -66,7 +59,7 @@ export default function ModelsPage() {
         styles: getModelStyleFilter,
         name: getModelNameFilter,
         top: getModelTopFilter,
-        page: getModelPageFilter,
+        page: searchParams.get('page') || getModelPageFilter,
         orderBy: getModelOrderBy,
         order: getModelOrder,
         limit: modelsLimit
@@ -170,11 +163,13 @@ export default function ModelsPage() {
             <Grid item xs={12}
               sx={{ padding: "0 !important", display: "flex", justifyContent: "center" }}
             >
-              <Pagination
-                dataSource='models'
-                count={all__models?.data?.pagination?.pages}
-                page={parseInt(all__models?.data?.pagination?.current) + 1}
-              />
+              <Suspense>
+                <BasicPagination
+                  dataSource='models'
+                  count={all__models?.data?.pagination?.pages}
+                  page={parseInt(all__models?.data?.pagination?.current) + 1}
+                />
+              </Suspense>
             </Grid>
           </Grid>
 

@@ -169,27 +169,29 @@ export default function Profile() {
                   flexBasis: 'auto !important'
                 }}
               >
-                {
-                  cardsName == 'my_interiors' ?
-                    <BasicPagination
-                      dataSource={'my_interiors'}
-                      count={interiors?.data?.pagination?.pages}
-                      page={parseInt(interiors?.data?.pagination?.current) + 1}
-                    />
-                    : cardsName == 'saved_models' ?
+                <React.Suspense>
+                  {
+                    cardsName == 'my_interiors' ?
                       <BasicPagination
-                        dataSource={'saved_models'}
-                        count={savedModels?.data?.pagination?.pages}
-                        page={parseInt(savedModels?.data?.pagination?.current) + 1}
+                        dataSource={'my_interiors'}
+                        count={interiors?.data?.pagination?.pages}
+                        page={parseInt(interiors?.data?.pagination?.current) + 1}
                       />
-                      : cardsName == 'projects' ?
+                      : cardsName == 'saved_models' ?
                         <BasicPagination
-                          dataSource={'projects'}
-                          count={projects?.data?.pagination?.pages}
-                          page={parseInt(projects?.data?.pagination?.current) + 1}
+                          dataSource={'saved_models'}
+                          count={savedModels?.data?.pagination?.pages}
+                          page={parseInt(savedModels?.data?.pagination?.current) + 1}
                         />
-                        : null
-                }
+                        : cardsName == 'projects' ?
+                          <BasicPagination
+                            dataSource={'projects'}
+                            count={projects?.data?.pagination?.pages}
+                            page={parseInt(projects?.data?.pagination?.current) + 1}
+                          />
+                          : null
+                  }
+                </React.Suspense>
               </Grid>
 
             </Grid>

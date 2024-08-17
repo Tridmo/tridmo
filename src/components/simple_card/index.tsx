@@ -22,6 +22,9 @@ import { selectSavedInteriors } from '../../data/get_saved_interiors';
 import { selectMyProjects } from '../../data/get_my_projects';
 import { selectLandingModels, selectLandingModels_status, selectLandingTopModels, selectLandingTopModels_status } from '../../data/get_landingpage_models';
 import { landingModelsLimit } from '../../types/filters';
+import Buttons from '../buttons';
+import { setAddingProjectState, setOpenModal } from '../../data/modal_checker';
+import { useRouter } from 'next/navigation';
 type InputProps = {
   route: string,
   sliced?: number,
@@ -42,6 +45,7 @@ const Label = styled(Paper)(({ theme }: ThemeProps) => ({
 
 export default function SimpleCard(props: InputProps) {
   const dispatch = useDispatch<any>();
+  const router = useRouter();
   const fakeModels = new Array(props?.sliced || 8).fill('');
 
   React.useEffect(() => {
@@ -401,6 +405,7 @@ export default function SimpleCard(props: InputProps) {
                   key={index}
                   model={model}
                   imgHeight={props?.cardImgHeight || '208px'}
+                  brandBox={false}
                   tagIcon={model?.top ? '/icons/star.svg' : ''}
                 />
               </Grid>
@@ -696,7 +701,29 @@ export default function SimpleCard(props: InputProps) {
             }
           </Grid >
 
-          : <EmptyData />
+          : <EmptyData
+            button={
+              <Link href={'/interiors/addnew'} style={{ width: '100%' }}>
+                <Buttons
+                  sx={{
+                    width: '100%',
+                    padding: '0 20px !important',
+                    height: '40px !important'
+                  }}
+                  name="Добавить работу"
+                  childrenFirst={true}
+                  className="upload__btn"
+                >
+                  <Image
+                    alt="upload icon"
+                    src='/icons/plus-white.svg'
+                    width={13}
+                    height={13}
+                  />
+                </Buttons>
+              </Link>
+            }
+          />
       )
     }
   }
@@ -873,7 +900,27 @@ export default function SimpleCard(props: InputProps) {
             }
           </Grid >
 
-          : <EmptyData />
+          : <EmptyData
+            button={
+              <Buttons
+                sx={{ width: '100%' }}
+                name="Создать проект"
+                childrenFirst={true}
+                className="login__btn"
+                onClick={() => {
+                  dispatch(setAddingProjectState(true))
+                  dispatch(setOpenModal(true))
+                }}
+              >
+                <Image
+                  alt="upload icon"
+                  src='/icons/plus-bordered.svg'
+                  width={16}
+                  height={16}
+                />
+              </Buttons>
+            }
+          />
       )
     }
   }

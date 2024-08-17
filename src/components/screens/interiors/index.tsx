@@ -1,18 +1,21 @@
 "use client"
 
-import React, { Suspense, useEffect } from 'react'
+import React, { Suspense, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Grid, Box, useMediaQuery } from '@mui/material'
 import SimpleCard from '../../simple_card'
 import SimpleTypography from '../../typography'
-import Pagination from '../../pagination/pagination'
-import { selectAllInteriors } from '../../../data/get_all_interiors';
+import BasicPagination from '../../pagination/pagination'
+import { getAllInteriors, selectAllInteriors } from '../../../data/get_all_interiors';
 import { useSearchParams } from 'next/navigation'
 import { searchInteriors, setSearchVal } from '../../../data/search_interior'
 import Sorts from '../../views/sorts'
 import InteriorCategories from '../../views/categories/interior_categories'
 import InteriorStyles from '../../views/styles/interior_styles'
 import { dataItemIndex } from '../../../utils/utils'
+import { interiorsLimit } from '../../../types/filters'
+import { getAllStyles } from '../../../data/get_all_styles'
+import { setPageFilter } from '../../../data/handle_filters'
 
 
 export default function InteriorsPage() {
@@ -20,28 +23,31 @@ export default function InteriorsPage() {
   const searchParams = useSearchParams();
   const IsFilterOpen = useSelector((state: any) => state?.modal_checker?.isFilterModal)
   const searchedInteriors = useSelector((state: any) => state?.search_interiors?.data)
+  const StyleStatus = useSelector((state: any) => state?.get_all_styles?.status)
+  const getInteriorsStatus = useSelector((state: any) => state?.get_all_interiors?.status);
+  const getInteriorCategoryFilter = useSelector((state: any) => state?.handle_filters?.interior_categories)
+  const getInteriorPageFilter = useSelector((state: any) => state?.handle_filters?.interiors_page)
   const matches = useMediaQuery('(max-width:600px)');
-
   const all__interiors = useSelector(selectAllInteriors)
-
   const keyword = searchParams.get('name') as string
+  const page = searchParams.get('page') as string
 
-  useEffect(() => {
-    // if(searched__modes__status === "succeeded"){
-    //   searchedInteriors[0]?.data.map((model: any, index: any) => {
-    //     console.log(model);
-    //     if(model.interior){
-    //       setInteriors((old:any) => [...old,model])
-    //     }
-    //   })
-    // }
+  React.useEffect(() => {
+    if (getInteriorsStatus === "idle") {
+      dispatch(setPageFilter({ p: 'interiors_page', n: parseInt(page) }))
+      dispatch(getAllInteriors({
+        categories: getInteriorCategoryFilter,
+        page: page || getInteriorPageFilter,
+        limit: interiorsLimit,
+      }))
+    }
+    if (StyleStatus === "idle") {
+      dispatch(getAllStyles());
+    }
+  }, [getInteriorPageFilter, getInteriorCategoryFilter, StyleStatus, getInteriorsStatus])
 
-    const query = {}
-    Object.keys(searchParams.keys()).forEach(k => query[k] = searchParams.get(k))
-
-    dispatch(searchInteriors(query))
+  useMemo(() => {
     dispatch(setSearchVal(keyword))
-
   }, [keyword])
 
   return (
@@ -104,11 +110,13 @@ export default function InteriorsPage() {
             <Grid item xs={12}
               sx={{ padding: "0 !important", display: "flex", justifyContent: "center" }}
             >
-              <Pagination
-                dataSource='interiors'
-                count={all__interiors?.data?.pagination?.pages}
-                page={parseInt(all__interiors?.data?.pagination?.current) + 1}
-              />
+              <Suspense>
+                <BasicPagination
+                  dataSource='interiors'
+                  count={all__interiors?.data?.pagination?.pages}
+                  page={parseInt(all__interiors?.data?.pagination?.current) + 1}
+                />
+              </Suspense>
             </Grid>
           </Grid>
 

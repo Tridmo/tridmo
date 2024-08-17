@@ -178,7 +178,7 @@ const FakeSimpleSlider = ({ name }: any) => {
                     loader={myLoader}
                     // width={497}
                     // height={558}
-                    layout='fill'
+                    fill
                     unoptimized
                     sx={{
                       objectFit: 'fill'

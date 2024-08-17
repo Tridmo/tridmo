@@ -1,6 +1,6 @@
 "use client"
 
-import React, { CSSProperties } from 'react'
+import React, { CSSProperties, Suspense } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectAllBrands } from '../../../data/get_all_brands';
 import { Avatar, Divider, List, ListItem, ListItemAvatar, ListItemText, Box, Grid, SxProps, Skeleton } from '@mui/material'
@@ -231,27 +231,13 @@ export default function BrandsPage() {
                     xs={12}
                     sx={{ padding: "0 !important", display: "flex", justifyContent: "center" }}
                   >
-                    <BasicPagination
-                      dataSource='brands'
-                      count={all__brands?.data?.pagination?.pages}
-                      page={parseInt(all__brands?.data?.pagination?.current) + 1}
-                    // page={page}
-                    // pageArray={pageArray}
-                    // pagesCount={pagesCount}
-                    // increment={(e, data) => {
-                    //   props.setPage(page + 1);
-                    // }}
-                    // changePage={(e, data) => {
-                    //   setPage(data);
-                    // }}
-                    // decrement={(e, data) => {
-                    //   setPage(page - 1);
-                    // }}
-                    // const handleChange = (event, value) => {
-                    //   props.changePage(event,value)
-                    // };
-                    // count={props.pagesCount} page={+props.page} onChange={handleChange}
-                    />
+                    <Suspense>
+                      <BasicPagination
+                        dataSource='brands'
+                        count={all__brands?.data?.pagination?.pages}
+                        page={parseInt(all__brands?.data?.pagination?.current) + 1}
+                      />
+                    </Suspense>
                   </Grid>
                 </Grid>
                 : null

@@ -43,6 +43,7 @@ type CustomCardProps = {
   settingsBtn?: boolean,
   useButton?: boolean,
   imageSplit?: number,
+  brandBox?: boolean,
 }
 const Label = styled(Paper)(({ theme }: ThemeProps) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -74,7 +75,10 @@ const DropDown = styled(Menu)(
   `
 );
 
-function CustomCard({ model, type, link, imgHeight, tagIcon, tagText, withAuthor, settingsBtn, imageSplit, useButton = false }: CustomCardProps) {
+function CustomCard({ model, type, link, imgHeight, tagIcon, tagText, withAuthor, settingsBtn, imageSplit, useButton = false, brandBox = true }: CustomCardProps) {
+
+
+  console.log(brandBox);
 
   const dispatch = useDispatch<any>()
   const router = useRouter()
@@ -315,7 +319,7 @@ function CustomCard({ model, type, link, imgHeight, tagIcon, tagText, withAuthor
               {
                 !imageSplit ?
                   <LazyLoadImage
-                    src={model.cover ? (model?.cover[0]?.image_src ? `${IMAGES_BASE_URL}/${model?.cover[0]?.image_src}` : '') : ''}
+                    src={model?.cover ? (model?.cover[0]?.image_src ? `${IMAGES_BASE_URL}/${model?.cover[0]?.image_src}` : '') : ''}
                     alt="cover"
                     effect="blur"
                     width={"100%"}
@@ -427,12 +431,11 @@ function CustomCard({ model, type, link, imgHeight, tagIcon, tagText, withAuthor
                       />
                 }
                 {
-                  model?.brand && model?.brand?.name
-                    ? <SimpleTypography
-                      text={`${model?.brand?.name}`}
-                      className='card__title-brand'
-                    />
-                    : null
+                  model?.brand && model?.brand?.name && !!brandBox
+                  && <SimpleTypography
+                    text={`${model?.brand?.name}`}
+                    className='card__title-brand'
+                  />
                 }
               </Label>
             </Box>
@@ -452,7 +455,11 @@ function CustomCard({ model, type, link, imgHeight, tagIcon, tagText, withAuthor
               padding: "12px 12px 0 12px",
               display: "flex",
               flexDirection: "column",
-              justifyContent: "space-between"
+              justifyContent: "space-between",
+
+              '&:hover > .settings': {
+                opacity: 1
+              }
             }}>
               {
                 tagText ?
@@ -482,12 +489,55 @@ function CustomCard({ model, type, link, imgHeight, tagIcon, tagText, withAuthor
                         height={14}
                       />
                     </Box>
-                    : null
+                    : !!settingsBtn ?
+                      <Box
+                        className='settings'
+                        sx={{
+                          transition: 'all 0.4s ease',
+                          opacity: !!open ? 1 : 0,
+                          position: 'absolute',
+                          p: '6px 8px',
+                          backdropFilter: 'blur(2px)',
+                          top: '5px',
+                          right: '5px',
+                          color: '#fff',
+                          backgroundColor: '#00000066',
+                          border: '1px solid #0000001A',
+                          borderRadius: '32px',
+                          zIndex: 10,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+
+                          '&:hover > .settings_icon': {
+                            transform: "rotateZ(60deg)", transitionDuration: "500ms"
+                          }
+                        }}
+                        onClick={(e) => handleClick(e, model)}
+                      >
+                        <Image
+                          className='settings settings_icon'
+                          src={'/icons/settings-icon.svg'}
+                          alt='icon'
+                          width={20}
+                          height={20}
+                        />
+                        <ArrowDropDownIcon
+                          className='settings'
+                          sx={
+                            {
+                              minWidth: "11px", minHeight: "7px", color: "#fff",
+                              ...(!!open ? { transform: "rotateZ(180deg)", transitionDuration: "1000ms" } : {})
+                            }
+                          }
+                        />
+                      </Box>
+                      : null
               }
               {
                 !imageSplit ?
                   <LazyLoadImage
-                    src={model.cover ? (model?.cover[0]?.image_src ? `${IMAGES_BASE_URL}/${model?.cover[0]?.image_src}` : '') : ''}
+                    src={model?.cover ? (model?.cover[0]?.image_src ? `${IMAGES_BASE_URL}/${model?.cover[0]?.image_src}` : '') : ''}
                     alt="cover"
                     effect="blur"
                     width={"100%"}
@@ -568,18 +618,43 @@ function CustomCard({ model, type, link, imgHeight, tagIcon, tagText, withAuthor
                       />
                     </Box>
                     :
-                    <SimpleTypography
-                      text={model?.name}
-                      className='card__title'
-                    />
+                    type == 'projects' ?
+                      <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+                        <SimpleTypography
+                          text={model?.name}
+                          sx={{
+                            fontSize: '16px',
+                            fontWeight: 500,
+                            lineHeight: '22px',
+                            textAlign: 'start',
+                            color: '#141414'
+                          }}
+                        />
+                        <SimpleTypography
+                          text={`${!!model?.project_models[0] ? model?.project_models?.length : 0} ${!!model?.project_models[0] && model?.project_models?.length > 1 ? 'мебели' : 'мебель'}`}
+                          sx={{
+                            fontSize: '14px',
+                            fontWeight: 400,
+                            lineHeight: '20px',
+                            textAlign: 'start',
+                            color: '#848484'
+                          }}
+                        />
+                      </Box>
+                      :
+                      <SimpleTypography
+                        text={model?.name}
+                        title={model?.name}
+                        sx={{ ...(!brandBox || type == 'projects' ? { width: '100% !important' } : {}) }}
+                        className='card__title'
+                      />
                 }
                 {
-                  model?.brand && model?.brand?.name
-                    ? <SimpleTypography
-                      text={`${model?.brand?.name}`}
-                      className='card__title-brand'
-                    />
-                    : null
+                  model?.brand && model?.brand?.name && !!brandBox
+                  && <SimpleTypography
+                    text={`${model?.brand?.name}`}
+                    className='card__title-brand'
+                  />
                 }
               </Label>
             </Box>

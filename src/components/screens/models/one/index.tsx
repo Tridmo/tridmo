@@ -14,21 +14,54 @@ import Buttons from '@/components/buttons';
 import { selectOneModel } from '../../../../data/get_one_model';
 import IconBreadcrumbs from '../../../breadcrumbs';
 import { selectBrandModels } from '../../../../data/get_brand_models';
-import { selectTopModels } from '../../../../data/get_top_models';
+import { getSimilarModels, selectSimilarModels } from '../../../../data/get_all_models';
 
 
 export default function OneModel() {
-  const isAuthenticated = useSelector((state: any) => state?.auth_slicer?.authState)
+  const dispatch = useDispatch<any>()
   const model = useSelector(selectOneModel);
-  const brandModels = useSelector(selectBrandModels)
-  const topModels = useSelector(selectTopModels)
+  // const brandModels = useSelector(selectBrandModels)
+  const similarModelsData = useSelector(selectSimilarModels)
+  const [similarModels, setSimilarModels] = React.useState<any[]>([])
+  const [showLoadButton, setShowLoadButton] = React.useState<boolean>(true)
+  const [loadingMore, setLoadingMore] = React.useState<boolean>(false)
+
+  React.useMemo(() => {
+    if (similarModelsData) {
+      setSimilarModels(prev => {
+        const existingIds = new Set(prev.map((m) => m?.id));
+        const newModels = similarModelsData?.data?.models?.filter((m) => !existingIds.has(m?.id) && m?.id != model?.id);
+        return [...prev, ...newModels];
+      })
+      setLoadingMore(false)
+    }
+  }, [similarModelsData])
+
+  React.useMemo(() => {
+    setShowLoadButton(similarModels.length % 5 == 0);
+  }, [similarModels])
+
+  function fetchMoreSimilarModels(props?: { page?, limit?}) {
+    setLoadingMore(true)
+    dispatch(getSimilarModels({
+      limit: props?.limit || 5,
+      categories: [model?.category_id],
+      exclude_models: [model?.id],
+      page: props?.page || similarModelsData?.data?.pagination?.next + 1,
+    }))
+  }
+
+  function shrinkSimilarModels() {
+    setSimilarModels(prev => prev.slice(0, 5))
+    fetchMoreSimilarModels({ page: 1 })
+  }
 
   return (
     <>
       <Box sx={{ background: "#fafafa" }} className="products">
         <Box className='products__container' sx={{ maxWidth: "1200px", width: "100%", margin: "0 auto !important", alignItems: "center", }}>
           <Box sx={{ marginTop: '32px' }}>
-            <IconBreadcrumbs route={"/models"} breadCrumbsData={model} />
+            <IconBreadcrumbs route={"/models/?page=1"} breadCrumbsData={model} />
           </Box>
 
           <Grid
@@ -46,7 +79,91 @@ export default function OneModel() {
             <ProductInfo />
           </Grid>
 
-          {model?.used_interiors?.length > 0 && model?.used_interiors[0] != null ? (
+          {/* Similar MODELS */}
+          {similarModels?.length > 0 && (
+            <>
+              <Divider sx={{ marginBottom: '32px' }} />
+              <Grid>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: 'flex-start',
+                    mb: '24px',
+                  }}
+                  className="texts__wrap"
+                >
+                  <SimpleTypography
+                    text="Похожие модели"
+                    className="section__title"
+                    variant="h2"
+                  />
+                </Box>
+
+                <Grid sx={{ mb: "24px" }}>
+                  <Grid className="models__card--wrap" container spacing={3} sx={{ width: "100%", margin: "0" }}>
+                    {similarModels?.map((model: any, index: any) => (
+                      <Grid
+                        className='models__card'
+                        sx={{
+                          [`&:not(:nth-of-type(5n))`]: {
+                            padding: "0 9.5px 0 0 !important",
+                          },
+                          [`&:nth-of-type(5n)`]: {
+                            padding: "0 0 0 0 !important",
+                          },
+                          marginBottom: "10px"
+                        }}
+                        key={index}
+                        md={12 / 5}
+                        sm={4}
+                        xs={6}
+                        item
+                      >
+                        <CustomCard
+                          type={'/models'}
+                          link={`/models/${model?.slug}`}
+                          key={index}
+                          model={model}
+                          imgHeight={'208px'}
+                          tagIcon={model?.top ? '/icons/star.svg' : ''}
+                        />
+                      </Grid>
+                    ))
+                    }
+                  </Grid >
+                </Grid>
+
+                <Box
+                  sx={{
+                    width: '100%',
+                    display: "flex",
+                    justifyContent: 'center',
+                    mb: '24px',
+                  }}
+                >
+                  {
+                    showLoadButton ?
+                      <Buttons
+                        onClick={() => fetchMoreSimilarModels()}
+                        name={"Показать больше"}
+                        endIcon={loadingMore ? 'loading' : 'down'}
+                        className={`bordered__btn--explore`}
+                      />
+                      : <Buttons
+                        onClick={shrinkSimilarModels}
+                        name={"Показать меньше"}
+                        endIcon={"up"}
+                        className={`bordered__btn--explore`}
+                      />
+                  }
+                </Box>
+
+              </Grid>
+            </>
+          )}
+
+          {/* INTERIORS */}
+          {model?.used_interiors?.length > 0 && model?.used_interiors[0] != null && (
             <>
               <Box
                 sx={{
@@ -94,180 +211,7 @@ export default function OneModel() {
                 }
               </Grid >
             </>
-          ) : (null)}
-
-          {
-            brandModels?.length > 0 ?
-              <Divider sx={{ marginBottom: '32px' }} />
-              : null
-          }
-
-          {/* BRAND MODELS */}
-          {brandModels?.length > 0 ? (
-            <Grid>
-              {/* 3D MODELS */}
-
-              <Grid
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                }}
-                container
-                spacing={2}
-                className="texts__wrap"
-              >
-                <Grid item xs={10}>
-                  <SimpleTypography
-                    text="Больше товаров бренда"
-                    className="section__title"
-                    variant="h2"
-                  />
-                </Grid>
-
-                <Grid
-                  item
-                  xs={2}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    marginBottom: "12px",
-                  }}
-                >
-                  <Link href={`/${model?.brand?.slug}`}>
-                    <Buttons
-                      name={"Смотреть все"}
-                      endIcon={"right"}
-                      className={`bordered__btn--explore`}
-                    />
-                  </Link>
-                </Grid>
-              </Grid>
-
-              {/* 3D MODELS MAP */}
-
-              <Grid sx={{ mb: "32px" }}>
-                <Grid className="models__card--wrap" container spacing={3} sx={{ width: "100%", margin: "0" }}>
-                  {brandModels?.map((model: any, index: any) => (
-                    <Grid
-                      className='models__card'
-                      sx={{
-                        [`&:not(:nth-of-type(5n))`]: {
-                          padding: "0 9.5px 0 0 !important",
-                        },
-                        [`&:nth-of-type(5n)`]: {
-                          padding: "0 0 0 0 !important",
-                        },
-                        marginBottom: "10px"
-                      }}
-                      key={index}
-                      md={12 / 5}
-                      sm={4}
-                      xs={6}
-                      item
-                    >
-                      <CustomCard
-                        type={'/models'}
-                        link={`/models/${model?.slug}`}
-                        key={index}
-                        model={model}
-                        imgHeight={'208px'}
-                        tagIcon={model?.top ? '/icons/star.svg' : ''}
-                      />
-                    </Grid>
-                  ))
-                  }
-                </Grid >
-              </Grid>
-
-            </Grid>
-          ) : (null)}
-
-          {
-            !(brandModels?.length > 0) && topModels?.length > 0 ?
-              <Divider sx={{ marginBottom: '32px' }} />
-              : null
-          }
-
-          {/* TOP MODELS */}
-          {topModels?.length > 0 ? (
-
-            <Grid>
-              {/* 3D MODELS */}
-
-              <Grid
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                }}
-                container
-                spacing={2}
-                className="texts__wrap"
-              >
-                <Grid item xs={10}>
-                  <SimpleTypography
-                    text="Лучшие 3D модели"
-                    className="section__title"
-                    variant="h2"
-                  />
-                </Grid>
-
-                <Grid
-                  item
-                  xs={2}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    marginBottom: "12px",
-                  }}
-                >
-                  <Link href={`/models`}>
-                    <Buttons
-                      name={"Смотреть все"}
-                      endIcon={"right"}
-                      className={`bordered__btn--explore`}
-                    />
-                  </Link>
-                </Grid>
-              </Grid>
-
-              {/* 3D MODELS MAP */}
-
-              <Grid sx={{ mb: "32px" }}>
-                <Grid className="models__card--wrap" container spacing={3} sx={{ width: "100%", margin: "0" }}>
-                  {topModels?.map((model: any, index: any) => (
-                    <Grid
-                      className='models__card'
-                      sx={{
-                        [`&:not(:nth-of-type(5n))`]: {
-                          padding: "0 9.5px 0 0 !important",
-                        },
-                        [`&:nth-of-type(5n)`]: {
-                          padding: "0 0 0 0 !important",
-                        },
-                        marginBottom: "10px"
-                      }}
-                      key={index}
-                      md={12 / 5}
-                      sm={4}
-                      xs={6}
-                      item
-                    >
-                      <CustomCard
-                        type={'/models'}
-                        link={`/models/${model?.slug}`}
-                        key={index}
-                        model={model}
-                        imgHeight={'208px'}
-                        tagIcon={model?.top ? '/icons/star.svg' : ''}
-                      />
-                    </Grid>
-                  ))
-                  }
-                </Grid >
-              </Grid>
-
-            </Grid>
-          ) : (null)}
+          )}
         </Box>
       </Box>
 

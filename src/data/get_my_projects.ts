@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../utils/axios'
+import { projectsLimit } from '../types/filters';
 
 const initialState = {
   data: [],
@@ -14,7 +15,11 @@ export const getMyProjects = createAsyncThunk('/myprojects',
   }) => {
     let send__route = `/projects`
     send__route += !send__route.includes("/?") && wrapper?.page ? `/?page=${wrapper.page}` : wrapper?.page ? `&page=${wrapper.page}` : "";
-    send__route += !send__route.includes("/?") && wrapper?.limit ? `/?limit=${wrapper.limit}` : wrapper?.limit ? `&page=${wrapper.page}` : "";
+    send__route +=
+      wrapper?.limit
+        ? (send__route?.includes("/?") ? `&limit=${wrapper?.limit}` : `/?limit=${wrapper?.limit}`)
+        : (send__route?.includes("/?") ? `&limit=${projectsLimit}` : `/?limit=${projectsLimit}`);
+
 
     const response = await api.get(send__route, {
       headers: wrapper?.Authorization ? {
