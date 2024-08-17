@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import ConnectionError from '@/components/site_info/connection_error';
 import { Box, Grid } from '@mui/material';
 
@@ -40,28 +40,31 @@ const BgBlur = {
   filter: "blur(10px)"
 }
 
-export default function UserProfile() {
+export default function OneBrandPage() {
   const getBrandStatus = useSelector((state: any) => state?.get_one_brand?.status)
   const getBrandCategoriesStatus = useSelector((state: any) => state?.categories?.brand_status)
   const getProfileStatus = useSelector((state: any) => state?.get_profile?.status)
   const tokenStatus = useSelector((state: any) => state?.get_chat_token?.status)
   const profile = useSelector(selectMyProfile)
   const dispatch = useDispatch<any>()
+  const searchParams = useSearchParams()
   const params = useParams<{ brand_slug: string }>()
   const brand = useSelector(selectOneBrand)
+  // const page = searchParams.get('page') as string
+  const pageFilter = useSelector((state: any) => state?.handle_filters?.brand_models_page)
 
-  React.useMemo(() => {
+  React.useEffect(() => {
     dispatch(getOneBrand(params?.brand_slug))
-  }, [params, dispatch])
+  }, [])
 
-  React.useMemo(() => {
+  React.useEffect(() => {
     if (brand) {
-      dispatch(getBrandModels({ brand_id: brand?.id, limit: brandModelsLimit }))
+      dispatch(getBrandModels({ brand_id: brand?.id, limit: brandModelsLimit, page: pageFilter }))
       dispatch(getBrandCategories(brand?.id))
     }
   }, [brand])
 
-  React.useMemo(() => {
+  React.useEffect(() => {
     if (getProfileStatus === 'idle') {
       dispatch(getProfile())
     }

@@ -91,7 +91,8 @@ export default function BrandInfo() {
       <Image
         width={312}
         height={312}
-        alt="Brand image"
+        priority
+        alt=""
         style={{ objectFit: "cover", border: '1px solid #0000004D' }}
         src={`${IMAGES_BASE_URL}/${brand?.image_src}`}
       />

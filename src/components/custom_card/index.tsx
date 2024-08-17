@@ -77,9 +77,6 @@ const DropDown = styled(Menu)(
 
 function CustomCard({ model, type, link, imgHeight, tagIcon, tagText, withAuthor, settingsBtn, imageSplit, useButton = false, brandBox = true }: CustomCardProps) {
 
-
-  console.log(brandBox);
-
   const dispatch = useDispatch<any>()
   const router = useRouter()
   const [selectedInterior, setSelectedInterior] = React.useState<any>(null);

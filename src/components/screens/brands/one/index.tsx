@@ -7,22 +7,23 @@ import SimpleTypography from '../../../typography';
 import CustomCard from '../../../custom_card';
 import BrandInfo from '@/components/views/brand/info';
 import Image from 'next/image';
-import { selectOneBrand } from '../../../../data/get_one_brand';
+import { getOneBrand, selectOneBrand } from '../../../../data/get_one_brand';
 import { getBrandModels, selectBrandModels } from '../../../../data/get_brand_models';
 import { IMAGES_BASE_URL } from '../../../../utils/env_vars';
 import SimpleCard from '../../../simple_card';
 import BasicPagination from '../../../pagination/pagination';
 import SimpleSelect from '../../../inputs/simple_select';
-import { selectBrandCategories } from '../../../../data/categories';
+import { getBrandCategories, selectBrandCategories } from '../../../../data/categories';
 import { setBrandModelsCategory } from '../../../../data/handle_filters';
+import { useParams, useSearchParams } from 'next/navigation';
+import { brandModelsLimit } from '../../../../types/filters';
 
 
 export default function OneBrand() {
-  const isAuthenticated = useSelector((state: any) => state?.auth_slicer?.authState)
   const dispatch = useDispatch<any>()
-  const brand = useSelector(selectOneBrand);
   const brandModels = useSelector(selectBrandModels)
   const brandCategories = useSelector(selectBrandCategories)
+  const brand = useSelector(selectOneBrand)
 
   const [category, setCategory] = React.useState<string>('')
 
@@ -70,7 +71,7 @@ export default function OneBrand() {
                     <SimpleTypography
                       sx={{ color: '#686868 !important', ml: '4px' }}
                       className="section__title"
-                      text={` (${brandModels?.data?.models?.length})`}
+                      text={` (${brandModels?.data?.pagination?.data_count || 0})`}
                     />
                   </Box>
 
