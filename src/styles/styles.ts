@@ -715,6 +715,7 @@ export const TypographyStyles = (theme) => `
       }
 
       &.MuiTypography-card__title-brand {
+        white-space: nowrap;
         padding: 3px;
         background-color: #FAFAFA;
         border: 1px solid #B3B3B3;
