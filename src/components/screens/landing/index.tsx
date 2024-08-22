@@ -98,7 +98,7 @@ export default function LandingPage() {
             },
             minHeight: 507,
             display: "flex",
-            margin: "0 auto",
+            margin: { xs: "0 16px", lg: "0 auto" },
             alignItems: "center",
           }}
         >
@@ -114,12 +114,11 @@ export default function LandingPage() {
           >
             <Grid>
               <Box
-                width={{ xs: "100%", md: "590px" }}
+                width={{ xs: "90%", md: "590px" }}
                 my={4}
                 display="flex"
                 flexDirection={"column"}
                 justifyContent={"center"}
-                p={2}
               >
                 <SimpleTypography
                   text="Теперь дизайн не только на бумаге."
@@ -131,10 +130,11 @@ export default function LandingPage() {
                   className="hero__desc"
                 />
                 <Grid>
-                  <Box>
+                  <Box width={{ xs: "100%", md: "590px" }}>
                     <form onSubmit={handleSearch}>
                       <SearchInput
                         sx={{
+                          width: "100%",
                           p: "12px 14px",
                         }}
                         startIcon={false}
@@ -148,20 +148,23 @@ export default function LandingPage() {
                 </Grid>
               </Box>
             </Grid>
-            <Grid width={"auto"} margin={{xs: "auto", lg: "0px 44px 0px 0px"}}>
+            <Grid
+              width={"auto"}
+              margin={{ xs: "0", sm: "auto", lg: "0px 44px 0px 0px" }}
+            >
               {topModels && topModels?.data?.models?.length ? (
                 // <IntervalRotateCard
                 //   slides={topModels?.data?.models}
                 //   autoScroll={true}
                 // />
-                <Carousel
-                  slides={topModels?.data?.models}
-                  speed={5000}
-                  slideWidth={354}
-                  slideHeight={396}
-                  manualMode={false}
-                  autoScroll
-                />
+                  <Carousel
+                    slides={topModels?.data?.models}
+                    speed={5000}
+                    slideWidth={354}
+                    slideHeight={396}
+                    manualMode={false}
+                    autoScroll
+                  />
               ) : (
                 <Skeleton variant="rectangular" width={354} height={396} />
               )}
@@ -169,7 +172,14 @@ export default function LandingPage() {
           </Grid>
         </Box>
       </Box>
-      <Box sx={{ width: "100%" }}>
+      <Box
+        sx={{
+          width: {
+            xs: "100%",
+            lg: "1200px",
+          },
+        }}
+      >
         <Box
           sx={{
             width: "1200px",
