@@ -20,6 +20,7 @@ import { getInteriorCategories, selectInteriorCategories } from '../../../../dat
 import { useRouter } from 'next/navigation';
 import { selectOneInterior } from "../../../../data/get_one_interior";
 import { IMAGES_BASE_URL } from "../../../../utils/env_vars";
+import SimpleTextarea from "../../../inputs/textarea";
 
 const supportedFileTypes = 'image/png, image/jpg, image/jpeg, image/webp'
 const imagesCountLimit = 9;
@@ -69,6 +70,8 @@ export function AddInteriorForm({ editing, interior }: { editing?: boolean, inte
   const categoriesData = useSelector(selectInteriorCategories);
   const router = useRouter()
 
+  const descriptionCharLimit = 1000;
+
   const initials = {
     name: !!editing && interior?.name ? interior?.name : '',
     description: !!editing && interior?.description ? interior?.description : '',
@@ -111,16 +114,16 @@ export function AddInteriorForm({ editing, interior }: { editing?: boolean, inte
             Yup.object().shape(
               !!editing ?
                 {
-                  name: Yup.string().max(255).optional(),
-                  description: Yup.string().max(255).optional(),
+                  name: Yup.string().max(255, 'Название должно содержать не более 200 символов').optional(),
+                  description: Yup.string().max(descriptionCharLimit, `Описание должно содержать не более ${descriptionCharLimit} символов`).optional(),
                   style_id: Yup.number().optional(),
                   category_id: Yup.number().optional(),
                   cover: Yup.mixed().optional(),
                   images: Yup.array().of(Yup.mixed()).optional()
                 }
                 : {
-                  name: Yup.string().max(255).required('Название не указано'),
-                  description: Yup.string().max(255).required('Описание не указано'),
+                  name: Yup.string().max(255, 'Название должно содержать не более 200 символов').required('Название не указано'),
+                  description: Yup.string().max(descriptionCharLimit, `Описание должно содержать не более ${descriptionCharLimit} символов`).required('Описание не указано'),
                   style_id: Yup.number().optional(),
                   category_id: Yup.number().required('Категория не указано'),
 
@@ -242,7 +245,8 @@ export function AddInteriorForm({ editing, interior }: { editing?: boolean, inte
                     <Box
                       sx={{ ...formControlSx }}
                     >
-                      <SimpleInp
+                      <SimpleTextarea
+                        characterLimit={descriptionCharLimit}
                         error={Boolean(touched.description && errors.description)}
                         helperText={touched.description && errors.description}
                         name="description"

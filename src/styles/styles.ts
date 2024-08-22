@@ -22,6 +22,15 @@ export const BgBlur = {
   filter: "blur(10px)"
 }
 
+export const MenuProps = {
+  PaperProps: {
+    style: {
+      boxShadow: '0px 0px 20px 0px #00000014',
+      width: 250,
+    },
+  },
+};
+
 export const ButtonStyles = (theme) => `
       text-transform: inherit;
       width:auto;
