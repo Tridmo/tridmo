@@ -1,131 +1,141 @@
-"use client"
+"use client";
 
-import React, { FormEvent, Fragment, useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { Grid, Box, styled, IconButton, Skeleton } from '@mui/material'
-import SimpleCard from '../../simple_card'
-import SimpleTypography from '../../typography'
-import Image from 'next/image'
-import SearchInput from '@/components/inputs/search'
-import { useRouter } from 'next/navigation'
-import { ThemeProps } from '@/types/theme'
-import Link from 'next/link'
-import Buttons from '@/components/buttons'
-import { searchModels } from '../../../data/search_model'
-import { selectTopModels } from '../../../data/get_top_models'
-import { Carousel } from '../../custom_card/carousel'
-import { setModelNameFilter } from '../../../data/handle_filters'
-import { getAllModels } from '../../../data/get_all_models'
+import Buttons from "@/components/buttons";
+import SearchInput from "@/components/inputs/search";
+import { Box, Grid, IconButton, Skeleton } from "@mui/material";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllModels } from "../../../data/get_all_models";
+import { selectTopModels } from "../../../data/get_top_models";
+import { setModelNameFilter } from "../../../data/handle_filters";
+import { Carousel } from "../../custom_card/carousel";
+import SimpleCard from "../../simple_card";
+import SimpleTypography from "../../typography";
 
 const MorePages = [
   {
-    path: '/designers',
-    title: 'Дизайнеры',
-    desc: 'Дизайнеры интерьера, работающие с нами, и их работы.',
+    path: "/designers",
+    title: "Дизайнеры",
+    desc: "Дизайнеры интерьера, работающие с нами, и их работы.",
     imageRounded: true,
     preview: [
-      { image_src: '/img/person1.jpg' },
-      { image_src: '/img/person2.jpg' },
-      { image_src: '/img/person3.jpg' },
-    ]
+      { image_src: "/img/person1.jpg" },
+      { image_src: "/img/person2.jpg" },
+      { image_src: "/img/person3.jpg" },
+    ],
   },
   {
-    path: '/brands',
-    title: 'Бренды',
-    desc: 'Продукция ведущих мебельных брендов Узбекистана.',
+    path: "/brands",
+    title: "Бренды",
+    desc: "Продукция ведущих мебельных брендов Узбекистана.",
     imageRounded: false,
     preview: [
-      { image_src: '/img/brand1.jpg' },
-      { image_src: '/img/brand2.jpg' },
-      { image_src: '/img/brand3.png' },
-    ]
-  }
-]
+      { image_src: "/img/brand1.jpg" },
+      { image_src: "/img/brand2.jpg" },
+      { image_src: "/img/brand3.png" },
+    ],
+  },
+];
 
 const WhyUsDatas = [
   {
     id: 1,
     title: "Разнообразие выбора",
     desc: "На этой платформе вы можете найти множество 3D-моделей и дизайнов на свой вкус.",
-    icon: "/icons/why-us-check.svg"
+    icon: "/icons/why-us-check.svg",
   },
   {
     id: 2,
     title: "Простое решение",
     desc: "Не нужно бояться, что продукцию, использованную в вашем дизайне, не найдут в Узбекистане. Вы будете пользоваться продукцией лучших производителей в Узбекистане.",
-    icon: "/icons/why-us-label.svg"
+    icon: "/icons/why-us-label.svg",
   },
   {
     id: 3,
     title: "Уникальность и удобство",
     desc: "Вы можете выполнить свою работу быстро, комфортно и легко через платформу, не имеющую аналогов на рынке Узбекистана.",
-    icon: "/icons/why-us-cursor.svg"
+    icon: "/icons/why-us-cursor.svg",
   },
   {
     id: 4,
     title: "Экспертная команда",
     desc: "Команда платформы может помочь вам на каждом этапе. Это ещё больше ускорит процесс.",
-    icon: "/icons/why-us-message.svg"
+    icon: "/icons/why-us-message.svg",
   },
-]
-
+];
 
 export default function LandingPage() {
-
   const router = useRouter();
   const dispatch = useDispatch<any>();
-  const [searchClicked, setSearchClicked] = useState(false)
-  const [searchVal, setSearchVal] = useState("")
+  const [searchClicked, setSearchClicked] = useState(false);
+  const [searchVal, setSearchVal] = useState("");
 
-  const topModels = useSelector(selectTopModels)
-
+  const topModels = useSelector(selectTopModels);
 
   function handleSearch(e) {
-    e.preventDefault()
-    dispatch(setModelNameFilter(searchVal))
-    const newUrl = `/models/?name=${searchVal}`
-    router.push(newUrl)
-    dispatch(getAllModels({
-      name: searchVal,
-    }))
+    e.preventDefault();
+    dispatch(setModelNameFilter(searchVal));
+    const newUrl = `/models/?name=${searchVal}`;
+    router.push(newUrl);
+    dispatch(
+      getAllModels({
+        name: searchVal,
+      })
+    );
   }
 
   return (
     <>
-      <Box sx={{ width: '100%', backgroundColor: '#fff' }}>
+      <Box sx={{ width: "100%", backgroundColor: "#fff" }}>
         <Box
           sx={{
-            width: '1200px',
+            width: {
+              xs: "100%",
+              lg: "1200px",
+            },
             minHeight: 507,
             display: "flex",
             margin: "0 auto",
-            alignItems: 'center'
+            alignItems: "center",
           }}
         >
-          <Grid spacing={2} container
+          <Grid
+            spacing={2}
+            container
+            columns={{ xs: 1, sm: 2 }}
             sx={{
               marginLeft: 0,
-              alignItems: 'center',
-              justifyContent: 'space-between'
+              alignItems: "center",
+              justifyContent: "space-between",
             }}
           >
             <Grid>
-              <Box sx={{ width: '590px' }}>
+              <Box
+                width={{ xs: "100%", md: "590px" }}
+                my={4}
+                display="flex"
+                flexDirection={"column"}
+                justifyContent={"center"}
+                p={2}
+              >
                 <SimpleTypography
-                  text='Теперь дизайн не только на бумаге.'
-                  className='hero__title'
-                  variant={'h1'}
+                  text="Теперь дизайн не только на бумаге."
+                  className="hero__title"
+                  variant={"h1"}
                 />
                 <SimpleTypography
-                  text='Единственная площадка для дизайнеров и производителей мебели в Узбекистане.'
-                  className='hero__desc'
+                  text="Единственная площадка для дизайнеров и производителей мебели в Узбекистане."
+                  className="hero__desc"
                 />
                 <Grid>
                   <Box>
                     <form onSubmit={handleSearch}>
                       <SearchInput
                         sx={{
-                          p: '12px 14px'
+                          p: "12px 14px",
                         }}
                         startIcon={false}
                         withButton={true}
@@ -138,155 +148,157 @@ export default function LandingPage() {
                 </Grid>
               </Box>
             </Grid>
-            <Grid sx={{ width: 'auto', mr: '44px' }}>
-              {
-                topModels && topModels?.data?.models?.length ?
-                  // <IntervalRotateCard
-                  //   slides={topModels?.data?.models}
-                  //   autoScroll={true}
-                  // />
-                  <Carousel
-                    slides={topModels?.data?.models}
-                    speed={5000}
-                    slideWidth={354}
-                    slideHeight={396}
-                    manualMode={false}
-                    autoScroll
-                  />
-                  :
-                  <Skeleton
-                    variant='rectangular'
-                    width={354}
-                    height={396}
-                  />
-              }
+            <Grid width={"auto"} margin={{xs: "auto", lg: "0px 44px 0px 0px"}}>
+              {topModels && topModels?.data?.models?.length ? (
+                // <IntervalRotateCard
+                //   slides={topModels?.data?.models}
+                //   autoScroll={true}
+                // />
+                <Carousel
+                  slides={topModels?.data?.models}
+                  speed={5000}
+                  slideWidth={354}
+                  slideHeight={396}
+                  manualMode={false}
+                  autoScroll
+                />
+              ) : (
+                <Skeleton variant="rectangular" width={354} height={396} />
+              )}
             </Grid>
           </Grid>
         </Box>
       </Box>
-      <Box sx={{ width: '100%' }}>
+      <Box sx={{ width: "100%" }}>
         <Box
           sx={{
-            width: '1200px',
+            width: "1200px",
             display: "flex",
             margin: "0 auto",
-            alignItems: 'flex-start'
+            alignItems: "flex-start",
           }}
         >
-          <Grid container
+          <Grid
+            container
             sx={{
               marginLeft: 0,
-              marginTop: '40px',
-              alignItems: 'center',
-              justifyContent: 'space-between'
+              marginTop: "40px",
+              alignItems: "center",
+              justifyContent: "space-between",
             }}
           >
-            {
-              MorePages.map((item, index) =>
-                <Link key={index} href={item?.path}>
-                  <Grid sx={{
-                    backgroundColor: '#fff',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    flexDirection: 'row',
-                    padding: '20px',
-                    width: '590px',
-                    border: '1px solid transparent',
-                    borderRadius: '4px',
-                    boxShadow: '0px 2px 8px 0px #0000000D',
+            {MorePages.map((item, index) => (
+              <Link key={index} href={item?.path}>
+                <Grid
+                  sx={{
+                    backgroundColor: "#fff",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    flexDirection: "row",
+                    padding: "20px",
+                    width: "590px",
+                    border: "1px solid transparent",
+                    borderRadius: "4px",
+                    boxShadow: "0px 2px 8px 0px #0000000D",
 
-                    '&:hover': {
-                      borderColor: '#E0E0E0',
-                      boxShadow: '0px 6px 10px 0px #0000000F',
+                    "&:hover": {
+                      borderColor: "#E0E0E0",
+                      boxShadow: "0px 6px 10px 0px #0000000F",
                     },
-                    '&:hover .landing_section_text .landing_section_name': {
-                      color: '#7210BE !important',
+                    "&:hover .landing_section_text .landing_section_name": {
+                      color: "#7210BE !important",
                     },
-                    '&:hover .preview_images .arrow_button': {
-                      backgroundColor: '#7210BE'
+                    "&:hover .preview_images .arrow_button": {
+                      backgroundColor: "#7210BE",
                     },
-                    '&:hover .preview_images .arrow_button svg path': {
-                      fill: '#fff'
-                    }
-                  }}>
-                    <Box className='landing_section_text' sx={{ maxWidth: 310 }}>
-                      <SimpleTypography
-                        text={item?.title}
-                        className='landing_section_name'
-                        variant={'h2'}
-                      />
-                      <SimpleTypography
-                        text={item?.desc}
-                        className='landing_section_desc'
-                      />
-                    </Box>
-                    <Box
-                      className='preview_images'
+                    "&:hover .preview_images .arrow_button svg path": {
+                      fill: "#fff",
+                    },
+                  }}
+                >
+                  <Box className="landing_section_text" sx={{ maxWidth: 310 }}>
+                    <SimpleTypography
+                      text={item?.title}
+                      className="landing_section_name"
+                      variant={"h2"}
+                    />
+                    <SimpleTypography
+                      text={item?.desc}
+                      className="landing_section_desc"
+                    />
+                  </Box>
+                  <Box
+                    className="preview_images"
+                    sx={{
+                      height: 64,
+                      width: 64 * 3 - (64 - 50),
+                      display: "flex",
+                      alignItems: "center",
+                      flexDirection: "row",
+                      position: "relative",
+                    }}
+                  >
+                    {item?.preview.map((model, index) => (
+                      <Box
+                        key={index}
+                        sx={{
+                          backgroundColor: "#fff",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          width: "64px",
+                          height: "64px",
+                          padding: item?.imageRounded ? "0px" : "6px",
+                          border: item?.imageRounded ? "" : "1px solid #E0E0E0",
+                          borderRadius: item?.imageRounded ? "50%" : "5px",
+                          position: "absolute",
+                          top: 0,
+                          left: `${index * 50}px`,
+                          zIndex: index + 1,
+                        }}
+                      >
+                        <Image
+                          src={model.image_src}
+                          alt="Landing image"
+                          width={item?.imageRounded ? 64 : 52}
+                          height={item?.imageRounded ? 64 : 52}
+                          style={{
+                            borderRadius: item?.imageRounded ? "50%" : "5px",
+                            border: item?.imageRounded ? "1px solid #fff" : "",
+                          }}
+                        />
+                      </Box>
+                    ))}
+                    <IconButton
+                      className="arrow_button"
+                      aria-label="menu"
                       sx={{
-                        height: 64,
-                        width: ((64 * 3) - (64 - 50)),
-                        display: 'flex',
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        position: 'relative'
+                        marginRight: "16px",
+                        backgroundColor: "#F3E5FF",
+                        border: "2px solid #fff",
+                        zIndex: 5,
+                        position: "absolute",
+                        right: "-12%",
                       }}
                     >
-                      {
-                        item?.preview.map((model, index) =>
-
-                          <Box
-                            key={index}
-                            sx={{
-                              backgroundColor: '#fff',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              width: '64px',
-                              height: '64px',
-                              padding: item?.imageRounded ? '0px' : '6px',
-                              border: item?.imageRounded ? '' : '1px solid #E0E0E0',
-                              borderRadius: item?.imageRounded ? '50%' : '5px',
-                              position: 'absolute',
-                              top: 0,
-                              left: `${index * 50}px`,
-                              zIndex: index + 1,
-                            }}
-                          >
-                            <Image
-                              src={model.image_src}
-                              alt='Landing image'
-                              width={item?.imageRounded ? 64 : 52}
-                              height={item?.imageRounded ? 64 : 52}
-                              style={{
-                                borderRadius: item?.imageRounded ? '50%' : '5px',
-                                border: item?.imageRounded ? '1px solid #fff' : '',
-                              }}
-                            />
-                          </Box>
-                        )
-                      }
-                      <IconButton
-                        className='arrow_button'
-                        aria-label="menu"
-                        sx={{
-                          marginRight: "16px",
-                          backgroundColor: '#F3E5FF',
-                          border: '2px solid #fff',
-                          zIndex: 5,
-                          position: 'absolute',
-                          right: '-12%',
-                        }}>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M10.9766 9.99962L6.85156 5.87462L8.0299 4.69629L13.3332 9.99962L8.0299 15.303L6.85156 14.1246L10.9766 9.99962Z" fill="#7210BE" />
-                        </svg>
-
-                      </IconButton>
-                    </Box>
-                  </Grid>
-                </Link>
-              )
-            }
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M10.9766 9.99962L6.85156 5.87462L8.0299 4.69629L13.3332 9.99962L8.0299 15.303L6.85156 14.1246L10.9766 9.99962Z"
+                          fill="#7210BE"
+                        />
+                      </svg>
+                    </IconButton>
+                  </Box>
+                </Grid>
+              </Link>
+            ))}
           </Grid>
         </Box>
         {/* Models */}
@@ -295,8 +307,8 @@ export default function LandingPage() {
             maxWidth: "1200px",
             display: "block",
             margin: "0 auto",
-            alignItems: 'flex-start',
-            marginTop: '64px'
+            alignItems: "flex-start",
+            marginTop: "64px",
           }}
         >
           <Grid container>
@@ -341,17 +353,16 @@ export default function LandingPage() {
             {/* 3D MODELS MAP */}
 
             <SimpleCard cols={5} route={"landing_models"} />
-
           </Grid>
         </Box>
         {/* Why Us */}
         <Box
           sx={{
-            width: '1200px',
+            width: "1200px",
             display: "flex",
             margin: "0 auto",
-            alignItems: 'flex-start',
-            marginTop: '64px',
+            alignItems: "flex-start",
+            marginTop: "64px",
           }}
         >
           <Grid container>
@@ -380,9 +391,13 @@ export default function LandingPage() {
               sx={{ marginTop: "4px", marginBottom: "40px" }}
             >
               {WhyUsDatas.map((item) => (
-                <Grid key={item.id} item md={3} xs={12}
+                <Grid
+                  key={item.id}
+                  item
+                  md={3}
+                  xs={12}
                   sx={{
-                    minHeight: '300px',
+                    minHeight: "300px",
                   }}
                 >
                   <Box
@@ -420,16 +435,15 @@ export default function LandingPage() {
         {/* Inter */}
         <Box
           sx={{
-            width: '1200px',
+            width: "1200px",
             display: "flex",
             margin: "0 auto",
-            alignItems: 'flex-start',
-            marginTop: '64px',
-            mb: '56px',
+            alignItems: "flex-start",
+            marginTop: "64px",
+            mb: "56px",
           }}
         >
           <Grid container>
-
             {/* INTERIORS */}
 
             <Grid
@@ -471,10 +485,9 @@ export default function LandingPage() {
             {/* INTERIORS MAP */}
 
             <SimpleCard cols={4} route={"interiors"} sliced={12} />
-
           </Grid>
         </Box>
       </Box>
     </>
-  )
+  );
 }
