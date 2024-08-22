@@ -84,7 +84,6 @@ export default function SimpleInp(props: InputAdornmentsProps) {
       <TextField
         multiline
         rows={8}
-        maxRows={Infinity}
         sx={props?.sx}
         className={props?.className || ''}
         id={props?.label}
