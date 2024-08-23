@@ -172,14 +172,7 @@ export default function LandingPage() {
           </Grid>
         </Box>
       </Box>
-      <Box
-        sx={{
-          width: {
-            xs: "100%",
-            lg: "1200px",
-          },
-        }}
-      >
+      <Box sx={{ width: "100%" }}>
         <Box
           sx={{
             width: "1200px",
