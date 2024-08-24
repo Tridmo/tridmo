@@ -106,15 +106,15 @@ export default function LandingPage() {
             spacing={2}
             container
             columns={{ xs: 1, sm: 2 }}
+            padding={{ xs: "0 0 30px 0", lg: 0 }}
             sx={{
               marginLeft: 0,
               alignItems: "center",
               justifyContent: "space-between",
             }}
           >
-            <Grid>
+            <Grid width={{ xs: "90%", sm: "590px" }}>
               <Box
-                width={{ xs: "90%", md: "590px" }}
                 my={4}
                 display="flex"
                 flexDirection={"column"}
@@ -157,14 +157,14 @@ export default function LandingPage() {
                 //   slides={topModels?.data?.models}
                 //   autoScroll={true}
                 // />
-                  <Carousel
-                    slides={topModels?.data?.models}
-                    speed={5000}
-                    slideWidth={354}
-                    slideHeight={396}
-                    manualMode={false}
-                    autoScroll
-                  />
+                <Carousel
+                  slides={topModels?.data?.models}
+                  speed={5000}
+                  slideWidth={354}
+                  slideHeight={396}
+                  manualMode={false}
+                  autoScroll
+                />
               ) : (
                 <Skeleton variant="rectangular" width={354} height={396} />
               )}
@@ -175,32 +175,40 @@ export default function LandingPage() {
       <Box sx={{ width: "100%" }}>
         <Box
           sx={{
-            width: "1200px",
+            width: {
+              xs: "100%",
+              lg: "1200px",
+            },
             display: "flex",
             margin: "0 auto",
-            alignItems: "flex-start",
+            padding: { xs: "0 16px", lg: 0 },
+            justifyItems: "center",
           }}
         >
-          <Grid
-            container
-            sx={{
-              marginLeft: 0,
-              marginTop: "40px",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
+          <Box
+            width="100%"
+            marginTop="40px"
+            display={"flex"}
+            flexDirection={{ xs: "column", md: "row" }}
+            justifyContent="space-between"
+            gap={4}
           >
             {MorePages.map((item, index) => (
               <Link key={index} href={item?.path}>
-                <Grid
+                <Box
                   sx={{
-                    backgroundColor: "#fff",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    flexDirection: "row",
+                    width: "100%",
                     padding: "20px",
-                    width: "590px",
+                    display: "flex",
+                    flexDirection: {
+                      xs: "column-reverse",
+                      sm: "row",
+                      md: "column-reverse",
+                      lg: "row",
+                    },
+                    justifyContent: "space-between",
+                    gap: 2,
+                    backgroundColor: "#fff",
                     border: "1px solid transparent",
                     borderRadius: "4px",
                     boxShadow: "0px 2px 8px 0px #0000000D",
@@ -220,7 +228,15 @@ export default function LandingPage() {
                     },
                   }}
                 >
-                  <Box className="landing_section_text" sx={{ maxWidth: 310 }}>
+                  <Box
+                    className="landing_section_text"
+                    sx={{
+                      maxWidth: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 1,
+                    }}
+                  >
                     <SimpleTypography
                       text={item?.title}
                       className="landing_section_name"
@@ -299,10 +315,10 @@ export default function LandingPage() {
                       </svg>
                     </IconButton>
                   </Box>
-                </Grid>
+                </Box>
               </Link>
             ))}
-          </Grid>
+          </Box>
         </Box>
         {/* Models */}
         <Box
