@@ -187,7 +187,7 @@ export default function LandingPage() {
         >
           <Box
             width="100%"
-            marginTop={{xs: "30px", md: "40px"}}
+            marginTop={{ xs: "30px", md: "40px" }}
             display={"flex"}
             flexDirection={{ xs: "column", md: "row" }}
             justifyContent="space-between"
@@ -326,6 +326,7 @@ export default function LandingPage() {
             maxWidth: "1200px",
             display: "block",
             margin: "0 auto",
+            padding: { xs: "0 18px", lg: 0 },
             alignItems: "flex-start",
             marginTop: "64px",
           }}
@@ -354,9 +355,9 @@ export default function LandingPage() {
                 item
                 xs={2}
                 sx={{
-                  display: "flex",
-                  justifyContent: "flex-end",
                   marginBottom: "12px",
+                  display: { xs: "none", sm: "flex" },
+                  justifyContent: "flex-end",
                 }}
               >
                 <Link href={`models`}>
@@ -364,6 +365,7 @@ export default function LandingPage() {
                     name={"Узнайте больше"}
                     endIcon={"right"}
                     className={`bordered__btn--explore`}
+                    sx={{ textWrap: "nowrap" }}
                   />
                 </Link>
               </Grid>
@@ -372,6 +374,21 @@ export default function LandingPage() {
             {/* 3D MODELS MAP */}
 
             <SimpleCard cols={5} route={"landing_models"} />
+
+            <Box width={"100%"}>
+              <Link href={`models`}>
+                <Buttons
+                  name={"Узнайте больше"}
+                  endIcon={"right"}
+                  className={`bordered__btn--explore`}
+                  sx={{
+                    width: "100%",
+                    textWrap: "nowrap",
+                    display: { xs: "flex", sm: "none" },
+                  }}
+                />
+              </Link>
+            </Box>
           </Grid>
         </Box>
         {/* Why Us */}
