@@ -181,13 +181,13 @@ export default function LandingPage() {
             },
             display: "flex",
             margin: "0 auto",
-            padding: { xs: "0 16px", lg: 0 },
+            padding: { xs: "0 18px", lg: 0 },
             justifyItems: "center",
           }}
         >
           <Box
             width="100%"
-            marginTop="40px"
+            marginTop={{xs: "30px", md: "40px"}}
             display={"flex"}
             flexDirection={{ xs: "column", md: "row" }}
             justifyContent="space-between"
