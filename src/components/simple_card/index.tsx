@@ -486,7 +486,7 @@ export default function SimpleCard(props: InputProps) {
                 className='models__card'
                 sx={{
                   [`&:not(:nth-of-type(${props?.cols}n))`]: {
-                    padding: "0 9.5px 0 0 !important",
+                    padding: {xs: 0, md: "0 9.5px 0 0 !important"},
                   },
                   [`&:nth-of-type(${props?.cols}n)`]: {
                     padding: "0 0 0 0 !important",

@@ -457,12 +457,13 @@ export default function LandingPage() {
         {/* Inter */}
         <Box
           sx={{
-            width: "1200px",
-            display: "flex",
+            maxWidth: "1200px",
+            display: "block",
             margin: "0 auto",
+            padding: { xs: "0 18px", lg: 0 },
             alignItems: "flex-start",
             marginTop: "64px",
-            mb: "56px",
+            mb: "56px"
           }}
         >
           <Grid container>
@@ -499,6 +500,11 @@ export default function LandingPage() {
                     name={"Узнайте больше"}
                     endIcon={"right"}
                     className={`bordered__btn--explore`}
+                    sx={{
+                      width: "100%",
+                      textWrap: "nowrap",
+                      display: { xs: "none", sm: "flex" },
+                    }}
                   />
                 </Link>
               </Grid>
@@ -507,6 +513,21 @@ export default function LandingPage() {
             {/* INTERIORS MAP */}
 
             <SimpleCard cols={4} route={"interiors"} sliced={12} />
+
+            <Box width={"100%"}>
+              <Link href={`interiors`}>
+                <Buttons
+                  name={"Узнайте больше"}
+                  endIcon={"right"}
+                  className={`bordered__btn--explore`}
+                  sx={{
+                    width: "100%",
+                    textWrap: "nowrap",
+                    display: { xs: "flex", sm: "none" },
+                  }}
+                />
+              </Link>
+            </Box>
           </Grid>
         </Box>
       </Box>
