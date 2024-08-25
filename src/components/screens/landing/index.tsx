@@ -394,80 +394,66 @@ export default function LandingPage() {
         {/* Why Us */}
         <Box
           sx={{
-            width: "1200px",
-            display: "flex",
+            maxWidth: "1200px",
+            width: "100%",
             margin: "0 auto",
-            alignItems: "flex-start",
-            marginTop: "64px",
+            paddingTop: "64px",
+            paddingBottom: "40px",
+            paddingLeft: "16px",
+            paddingRight: "16px",
           }}
         >
-          <Grid container>
-            <Grid
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-              container
-              spacing={2}
-              className="texts__wrap"
-            >
-              <Grid item xs={10}>
-                <SimpleTypography
-                  text="Почему именно demod?"
-                  className="section__title"
-                  variant="h2"
-                />
-              </Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <SimpleTypography
+                text="Почему именно demod?"
+                className="section__title"
+                variant="h2"
+              />
             </Grid>
-
-            <Grid
-              container
-              spacing={2}
-              className="why-us__wrapper"
-              sx={{ marginTop: "4px", marginBottom: "40px" }}
-            >
-              {WhyUsDatas.map((item) => (
-                <Grid
-                  key={item.id}
-                  item
-                  md={3}
-                  xs={12}
-                  sx={{
-                    minHeight: "300px",
-                  }}
+            {WhyUsDatas.map((item) => (
+              <Grid
+                key={item.id}
+                item
+                md={3}
+                sm={6}
+                xs={12}
+                sx={{
+                  minHeight: "300px",
+                }}
+              >
+                <Box
+                  sx={{ background: "#fff", padding: "16px", height: "100%" }}
+                  className="why-us__card"
                 >
                   <Box
-                    sx={{ background: "#fff", padding: "16px", height: "100%" }}
-                    className="why-us__card"
-                  >
-                    <Box
-                      sx={{
-                        background: "#F3E5FF",
-                        borderRadius: "8px",
-                        width: "48px",
-                        height: "48px",
-                        marginBottom: "13px",
-                        backgroundImage: `url(${item.icon})`,
-                        backgroundRepeat: "no-repeat",
-                        backgroundPosition: "center center",
-                      }}
-                    ></Box>
-                    <SimpleTypography
-                      text={item.title}
-                      className="why-us__title"
-                      variant="h2"
-                    />
-                    <SimpleTypography
-                      text={item.desc}
-                      className="why-us__desc"
-                      variant="p"
-                    />
-                  </Box>
-                </Grid>
-              ))}
-            </Grid>
+                    sx={{
+                      background: "#F3E5FF",
+                      borderRadius: "8px",
+                      width: "48px",
+                      height: "48px",
+                      marginBottom: "13px",
+                      backgroundImage: `url(${item.icon})`,
+                      backgroundRepeat: "no-repeat",
+                      backgroundPosition: "center center",
+                    }}
+                  ></Box>
+                  <SimpleTypography
+                    text={item.title}
+                    className="why-us__title"
+                    variant="h2"
+                  />
+                  <SimpleTypography
+                    text={item.desc}
+                    className="why-us__desc"
+                    variant="body1"
+                  />
+                </Box>
+              </Grid>
+            ))}
           </Grid>
         </Box>
+
         {/* Inter */}
         <Box
           sx={{
