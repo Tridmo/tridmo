@@ -224,7 +224,7 @@ export default function SimpleCard(props: InputProps) {
                   link={`/models/${model?.slug}`}
                   key={index}
                   model={model}
-                  imgHeight={props?.cardImgHeight || '208px'}
+                  imgHeight={props?.cardImgHeight || 'auto'}
                   tagIcon={model?.top ? '/icons/star.svg' : ''}
                 />
               </Grid>
@@ -480,7 +480,7 @@ export default function SimpleCard(props: InputProps) {
 
       return (
         data_sliced?.length > 0 ?
-          <Grid className="models__card--wrap" container spacing={3} sx={{ width: "100%", margin: "0" }}>
+          <Grid className="models__card--wrap" container spacing={3} sx={{ width: "100%", margin: 0, border: "1px solid transparent" }}>
             {data_sliced?.map((model: any, index: any) => (
               <Grid
                 className='models__card'
@@ -491,6 +491,7 @@ export default function SimpleCard(props: InputProps) {
                   [`&:nth-of-type(${props?.cols}n)`]: {
                     padding: "0 0 0 0 !important",
                   },
+                  maxWidth: "100%",
                   marginBottom: "10px"
                 }}
                 key={index}
@@ -504,7 +505,7 @@ export default function SimpleCard(props: InputProps) {
                   link={`/${props?.route}/${model?.slug}`}
                   key={index}
                   model={model}
-                  imgHeight={props?.cardImgHeight || '268px'}
+                  imgHeight={props?.cardImgHeight || 'auto'}
                   withAuthor={props?.withAuthor}
                 />
               </Grid>
