@@ -79,8 +79,13 @@ export default function ProfileInfo(props: ProfileProps) {
     }
   };
 
-  function getSocialLink(url: string, target: string, connector: string = '/') {
-    return target ? (target.startsWith(url) ? target : `${url}${connector}${target}`) : url
+  function getSocialLink(urls: string[], target: string, connector: string = '/') {
+    const has = urls.find(url => target.startsWith(url))
+    return target ? (
+      !!has
+        ? target
+        : `${urls[0]}${connector}${target}`
+    ) : urls[0]
   }
 
   async function handleProfileImageChange(e) {
@@ -365,40 +370,47 @@ export default function ProfileInfo(props: ProfileProps) {
                   </TableCell>
                 </TableRow>
 
-                <TableRow
-                  sx={tRowSx}
-                >
-                  <TableCell sx={tCellSx} component="th" scope="row">
-                    <SimpleTypography
-                      text={"Телеграм"}
-                      className="table__text"
-                    />
-                  </TableCell>
-                  <TableCell sx={tCellSx} align="right">
-                    {
-                      props.of == 'own' && !profileInfo?.telegram ? <AddButton />
-                        : <OpenButton href={getSocialLink('https://t.me', profileInfo?.telegram)} />
-                    }
-                  </TableCell>
-                </TableRow>
+                {
+                  profileInfo?.telegram && (
+                    <TableRow
+                      sx={tRowSx}
+                    >
+                      <TableCell sx={tCellSx} component="th" scope="row">
+                        <SimpleTypography
+                          text={"Телеграм"}
+                          className="table__text"
+                        />
+                      </TableCell>
+                      <TableCell sx={tCellSx} align="right">
+                        {
+                          props.of == 'own' && !profileInfo?.telegram ? <AddButton />
+                            : <OpenButton href={getSocialLink(['https://t.me'], profileInfo?.telegram)} />
+                        }
+                      </TableCell>
+                    </TableRow>
+                  )
+                }
 
-
-                <TableRow
-                  sx={tRowSx}
-                >
-                  <TableCell sx={tCellSx} component="th" scope="row">
-                    <SimpleTypography
-                      text={"Инстаграм"}
-                      className="table__text"
-                    />
-                  </TableCell>
-                  <TableCell sx={tCellSx} align="right">
-                    {
-                      props.of == 'own' && !profileInfo?.instagram ? <AddButton />
-                        : <OpenButton href={getSocialLink('https://instagram.com', profileInfo?.instagram)} />
-                    }
-                  </TableCell>
-                </TableRow>
+                {
+                  profileInfo?.instagram && (
+                    <TableRow
+                      sx={tRowSx}
+                    >
+                      <TableCell sx={tCellSx} component="th" scope="row">
+                        <SimpleTypography
+                          text={"Инстаграм"}
+                          className="table__text"
+                        />
+                      </TableCell>
+                      <TableCell sx={tCellSx} align="right">
+                        {
+                          props.of == 'own' && !profileInfo?.instagram ? <AddButton />
+                            : <OpenButton href={getSocialLink(['https://instagram.com', 'https://www.instagram.com'], profileInfo?.instagram)} />
+                        }
+                      </TableCell>
+                    </TableRow>
+                  )
+                }
 
               </TableBody>
             </Table>
