@@ -1,13 +1,9 @@
+import { Box, keyframes, Modal, SxProps } from '@mui/material';
 import * as React from 'react';
-import { Box, Button, Typography, Modal, keyframes, SxProps } from '@mui/material';
-import Image from 'next/image'
-import { Grid } from '@mui/material';
-import { SignUpContext, LoginContext, VerificationContext, EditProfileContext, ConfirmContext, ProfileImageContext, AddProjectContext, EditProjectContext, ProjectsContext, WarningContext } from './context'
-import { useDispatch, useSelector } from '../../store';
-import { setLoginState, setSignupState, setVerifyState, setOpenModal, setProfileEditState, setConfirmState, setProfileImageState, setProfileImagePreview, setAddingProjectState, setEditingProjectState, setWarningState, setWarningMessage } from '../../data/modal_checker';
-import AlertWrapper from '../alert';
 import LoadingBar from 'react-top-loading-bar';
-import EditProfile from './edit_profile';
+import { setAddingProjectState, setConfirmState, setEditingProjectState, setLoginState, setOpenModal, setProfileEditState, setProfileImagePreview, setProfileImageState, setSignupState, setVerifyState, setWarningMessage, setWarningState } from '../../data/modal_checker';
+import { useDispatch, useSelector } from '../../store';
+import { AddProjectContext, ConfirmContext, EditProfileContext, EditProjectContext, LoginContext, ProfileImageContext, ProjectsContext, SignUpContext, VerificationContext, WarningContext } from './context';
 
 export default function BasicModal(props: { styles?: SxProps }) {
   const [userEmail, setUserEmail] = React.useState('');
@@ -27,12 +23,12 @@ export default function BasicModal(props: { styles?: SxProps }) {
   const isModalOpen = useSelector((state: any) => state?.modal_checker?.isModalOpen);
 
   const style: SxProps = {
-    minWidth: '440px',
+    minWidth: {xs: "360px", sm: "380px", md:'440px'},
     maxWidth: isProfileEditOpen ? '676px' : '440px',
     overflow: "hidden",
     position: 'absolute',
     top: '50%',
-    left: '50%',
+    left: {xs: "48%", sm: "50%"},
     transform: 'translate(-50%, -50%)',
     innerHeight: "226px",
     bgcolor: '#ffff',

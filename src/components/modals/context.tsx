@@ -291,17 +291,18 @@ export const LoginContext = (props: LoginContextProps) => {
           values
         }) => (
           <form onSubmit={handleSubmit}>
-            <Grid style={{ transformOrigin: '0 0 0' }}>
+            <Grid style={{ transformOrigin: '0 0 0', }}>
               <Grid sx={{ display: 'flex', alignItems: "start", justifyContent: "start", flexDirection: "column" }}>
                 <SimpleTypography
                   className="modal__title"
                   variant="h6"
                   text="Вход"
                 />
-                <Grid
+                <Box
                   sx={{
                     display: "flex",
-                    alignItems: "center",
+                    flexDirection: {xs: "column", md: "row"},
+                    alignItems: {xs: "start", md: "center"},
                     justifyContent: "start",
                     marginBottom: "26px"
                   }}>
@@ -311,7 +312,7 @@ export const LoginContext = (props: LoginContextProps) => {
                     text="Еще не зарегистрировались?"
                   />
                   <Buttons
-                    sx={{ marginLeft: '8px' }}
+                    sx={{ marginLeft: {xs: 0, md: '8px'} }}
                     name="Зарегистрироваться"
                     onClick={() => {
                       dispatch(setSignupState(true));
@@ -319,7 +320,7 @@ export const LoginContext = (props: LoginContextProps) => {
                     }}
                     className='underlined__btn'
                   />
-                </Grid>
+                </Box>
                 <Box sx={{ marginBottom: "26px", width: "100%" }}>
                   <EmailInputAdornments
                     error={Boolean(touched.email && errors.email)}
