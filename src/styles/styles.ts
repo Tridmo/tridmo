@@ -689,7 +689,8 @@ export const TypographyStyles = (theme) => `
       transition: all 0.4s ease;
 
       &.MuiTypography-ellipsis__text {
-        width: 100%;
+        width: 96%;
+        max-width: 96%;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;

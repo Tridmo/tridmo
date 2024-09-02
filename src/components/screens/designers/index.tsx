@@ -61,7 +61,7 @@ const liAvatarWrapper: SxProps = {
   maxHeight: { lg: '80px', md: '80px', sm: '60px', xs: '60px' },
   border: '1px solid #E0E0E0',
   borderRadius: '50%',
-  marginRight: '16px'
+  marginRight: { lg: '16px', md: '16px', sm: '16px', xs: '4px' }
 }
 
 const liAvatarSx: SxProps = {
@@ -129,7 +129,7 @@ export default function DesignersPage() {
               >
                 <SimpleTypography
                   text='№'
-                  sx={{ ...liHeaderTextSx, marginRight: '16px', ...widthControl }}
+                  sx={{ ...liHeaderTextSx, marginRight: { lg: '16px', md: '16px', sm: '16px', xs: '8px' }, ...widthControl }}
                 />
                 <SimpleTypography
                   text='Профиль'
@@ -163,7 +163,7 @@ export default function DesignersPage() {
                       <ListItem key={user?.id} alignItems="center"
                         sx={liSx}
                       >
-                        <ListItemText sx={{ marginRight: '16px', ...widthControl }}>
+                        <ListItemText sx={{ marginRight: { lg: '16px', md: '16px', sm: '16px', xs: '8px' }, ...widthControl }}>
 
                           <SimpleTypography
                             text={
@@ -206,6 +206,7 @@ export default function DesignersPage() {
 
                             <SimpleTypography
                               text={user?.company_name}
+                              className='ellipsis__text'
                               sx={{
                                 fontSize: { lg: '22px', md: '20px', sm: '18px', xs: '18px' },
                                 fontWeight: 400,
@@ -223,6 +224,7 @@ export default function DesignersPage() {
                             >
                               <SimpleTypography
                                 text={user?.full_name}
+                                className='ellipsis__text'
                                 sx={{
                                   fontSize: { lg: '18px', md: '18px', sm: '16px', xs: '14px' },
                                   fontWeight: 400,
@@ -342,24 +344,31 @@ export default function DesignersPage() {
               >
                 <SimpleTypography
                   text='№'
-                  sx={{ ...liHeaderTextSx, marginRight: '16px', ...widthControl }}
+                  sx={{ ...liHeaderTextSx, marginRight: { lg: '16px', md: '16px', sm: '16px', xs: '8px' }, ...widthControl }}
                 />
                 <SimpleTypography
                   text='Профиль'
                   sx={{ ...liHeaderTextSx, ...widthControl, textAlign: 'start !important', }}
                 />
-                <SimpleTypography
-                  text='Галерея'
-                  sx={{ ...liHeaderTextSx, ...widthControl, }}
-                />
-                <SimpleTypography
-                  text='Бирки'
-                  sx={{ ...liHeaderTextSx, ...widthControl, }}
-                />
-                <SimpleTypography
-                  text='Рейтинг'
-                  sx={{ ...liHeaderTextSx, ...widthControl, }}
-                />
+                {
+                  !smallScreen ? (
+                    <>
+                      <SimpleTypography
+                        text='Галерея'
+                        sx={{ ...liHeaderTextSx, ...widthControl }}
+                      />
+                      <SimpleTypography
+                        text='Бирки'
+                        sx={{ ...liHeaderTextSx, ...widthControl }}
+                      />
+                      <SimpleTypography
+                        text='Рейтинг'
+                        sx={{ ...liHeaderTextSx, ...widthControl }}
+                      />
+                    </>
+                  )
+                    : <></>
+                }
               </ListItem>
               {
                 fakeDesigners?.map((i) =>
@@ -368,7 +377,7 @@ export default function DesignersPage() {
                       sx={liSx}
                     >
 
-                      <Box sx={{ ...widthControl, marginRight: '16px', display: 'flex', justifyContent: 'center' }}>
+                      <Box sx={{ ...widthControl, marginRight: { lg: '16px', md: '16px', sm: '16px', xs: '8px' }, display: 'flex', justifyContent: 'center' }}>
                         <Skeleton
                           variant="rectangular"
                           width={20}
@@ -391,7 +400,7 @@ export default function DesignersPage() {
                             sx={liAvatarSx}
                           />
                         </ListItemAvatar>
-                        <ListItemText className='username' sx={{ margin: '0 8px', minWidth: '880px' }}>
+                        <ListItemText className='username' sx={{ margin: '0 8px' }}>
 
                           <Skeleton
                             variant="rectangular"
@@ -416,29 +425,58 @@ export default function DesignersPage() {
                         </ListItemText>
                       </Box>
 
-                      <Box sx={{ ...widthControl, display: 'flex', justifyContent: 'center' }} >
-                        <Skeleton
-                          variant="rectangular"
-                          width={56}
-                          height={20}
-                        />
-                      </Box>
+                      {
+                        !smallScreen ? (
 
-                      <Box sx={{ ...widthControl, display: 'flex', justifyContent: 'center' }}>
-                        <Skeleton
-                          variant="rectangular"
-                          width={56}
-                          height={20}
-                        />
-                      </Box>
+                          <>
+                            <Box sx={{ ...widthControl, display: 'flex', justifyContent: 'center' }} >
+                              <Skeleton
+                                variant="rectangular"
+                                width={56}
+                                height={20}
+                              />
+                            </Box>
 
-                      <Box sx={{ ...widthControl, display: 'flex', justifyContent: 'center' }}>
-                        <Skeleton
-                          variant="rectangular"
-                          width={56}
-                          height={20}
-                        />
-                      </Box>
+                            <Box sx={{ ...widthControl, display: 'flex', justifyContent: 'center' }}>
+                              <Skeleton
+                                variant="rectangular"
+                                width={56}
+                                height={20}
+                              />
+                            </Box>
+
+                            <Box sx={{ ...widthControl, display: 'flex', justifyContent: 'center' }}>
+                              <Skeleton
+                                variant="rectangular"
+                                width={56}
+                                height={20}
+                              />
+                            </Box>
+                          </>
+                        )
+                          : (
+                            <Box sx={{ ...widthControl, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
+                              <Skeleton
+                                variant="rectangular"
+                                width={56}
+                                height={16}
+                                sx={{ mb: '2px' }}
+                              />
+                              <Skeleton
+                                variant="rectangular"
+                                width={56}
+                                height={16}
+                                sx={{ mb: '2px' }}
+                              />
+                              <Skeleton
+                                variant="rectangular"
+                                width={56}
+                                height={16}
+                                sx={{ mb: '2px' }}
+                              />
+                            </Box>
+                          )
+                      }
                     </ListItem>
                   </Box>
                 )
