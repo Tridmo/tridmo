@@ -342,7 +342,7 @@ export default function ModelInfo() {
               </TableCell>
               <TableCell sx={TcStyle}>
                 <SimpleTypography
-                  text={simpleModel?.furniture_cost || 'Не указан'}
+                  text={simpleModel?.furniture_cost ? Intl.NumberFormat('uz-UZ').format(simpleModel.furniture_cost) + ' UZS' : 'Не указан'}
                   className="table__text"
                 />
               </TableCell>

@@ -280,7 +280,7 @@ export function ProjectModelsList({ project }) {
 
                         <ListItemText sx={{ ...widthControl }}>
                           <SimpleTypography
-                            text={`${project_model['model.furniture_cost']} UZS`}
+                            text={project_model['model.furniture_cost'] ? Intl.NumberFormat('uz-UZ').format(project_model['model.furniture_cost']) + ' UZS' : 'Не указан'}
                             sx={{
                               fontSize: '14px',
                               fontWeight: 400,
