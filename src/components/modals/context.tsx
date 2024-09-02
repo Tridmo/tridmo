@@ -301,8 +301,8 @@ export const LoginContext = (props: LoginContextProps) => {
                 <Box
                   sx={{
                     display: "flex",
-                    flexDirection: {xs: "column", md: "row"},
-                    alignItems: {xs: "start", md: "center"},
+                    flexDirection: { xs: "column", md: "row" },
+                    alignItems: { xs: "start", md: "center" },
                     justifyContent: "start",
                     marginBottom: "26px"
                   }}>
@@ -312,7 +312,7 @@ export const LoginContext = (props: LoginContextProps) => {
                     text="Еще не зарегистрировались?"
                   />
                   <Buttons
-                    sx={{ marginLeft: {xs: 0, md: '8px'} }}
+                    sx={{ marginLeft: { xs: 0, md: '8px' } }}
                     name="Зарегистрироваться"
                     onClick={() => {
                       dispatch(setSignupState(true));
@@ -1021,7 +1021,7 @@ export const EditProfileContext = (props: LoginContextProps) => {
                         label='Название компании'
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        value={values.username}
+                        value={String(values.username).trim()}
                         placeholderText='username'
                       />
                     </Box>
@@ -1061,7 +1061,7 @@ export const EditProfileContext = (props: LoginContextProps) => {
                         label='Телеграм'
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        value={values.telegram}
+                        value={String(values.telegram).trim()}
                         placeholderText='username'
                       />
                     </Box>
@@ -1075,7 +1075,7 @@ export const EditProfileContext = (props: LoginContextProps) => {
                         label='Инстаграм'
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        value={values.instagram}
+                        value={String(values.instagram).trim()}
                         placeholderText='username'
                       />
                     </Box>
@@ -1094,7 +1094,7 @@ export const EditProfileContext = (props: LoginContextProps) => {
                         label='Номер телефона'
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        value={values.phone}
+                        value={String(values.phone).trim()}
                         placeholderText=''
                       />
                     </Box>
@@ -1108,7 +1108,7 @@ export const EditProfileContext = (props: LoginContextProps) => {
                         label='Сайт'
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        value={values.portfolio_link}
+                        value={String(values.portfolio_link).trim()}
                         placeholderText='https://example.com'
                       />
                     </Box>
