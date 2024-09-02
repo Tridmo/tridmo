@@ -35,7 +35,7 @@ const listSx: SxProps = {
 const liHeaderSx: SxProps = {
   backgroundColor: '#F5F5F5',
   justifyContent: 'flex-start',
-  padding: '12px 24px',
+  padding: { lg: '12px 24px', md: '12px 24px', sm: '10px 12px', xs: '8px 10px' },
   borderTopLeftRadius: '4px',
   borderTopRightRadius: '4px',
 }
