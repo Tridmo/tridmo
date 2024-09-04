@@ -164,10 +164,11 @@ export default function InteriorImages() {
   function handleTagMouseEnter(event, tag) {
     const elem = event.currentTarget.querySelector('.tag_inner_content')!;
     const index = event.currentTarget.querySelector(`.ind${tag.id}`)!;
-    elem['style']['display'] = 'flex';
     index['style']['display'] = 'none';
-    setTimeout(() => {
+    elem['style']['display'] = 'flex';
+    const showTag = setTimeout(() => {
       elem['style']['opacity'] = 1;
+      clearTimeout('showTag')
     }, 300)
   }
   function handleTagMouseLeave(event, tag) {
@@ -175,8 +176,9 @@ export default function InteriorImages() {
     const index = event.currentTarget.querySelector(`.ind${tag.id}`)!;
     elem['style']['display'] = 'none';
     elem['style']['opacity'] = 0;
-    setTimeout(() => {
+    const showIndex = setTimeout(() => {
       index['style']['display'] = 'inline-block';
+      clearTimeout('showIndex')
     }, 300)
   }
 
@@ -458,6 +460,8 @@ export default function InteriorImages() {
                                   justifyContent: 'space-between',
                                   opacity: 0,
                                   transition: 'all 0.4s ease',
+                                  bgcolor: '#fff',
+                                  zIndex: '300',
                                 }}
                               >
                                 <Link
@@ -487,7 +491,7 @@ export default function InteriorImages() {
                                     }}
                                   >
                                     <SimpleTypography sx={{ width: '100% !important', marginLeft: '0px !important' }} className='card__title drow-down__text' text={t?.model?.name} />
-                                    <SimpleTypography sx={{ width: '100% !important', marginLeft: '0px !important' }} className='card__title drow-down__text' text={`${t?.model?.style?.name}, ${t?.model?.brand?.name}`} />
+                                    <SimpleTypography sx={{ width: '100% !important', marginLeft: '0px !important' }} className='card__title drow-down__text' text={`${t?.model?.brand?.name}`} />
                                   </Box>
                                 </Link>
                                 {
@@ -515,7 +519,7 @@ export default function InteriorImages() {
                                 }
 
                               </Box>
-                              <SimpleTypography classNames={`ind${t.id}`} text={i + 1} />
+                              <SimpleTypography sx={{ position: 'absolute' }} classNames={`ind${t.id}`} text={i + 1} />
                             </Box>
                           )
                       })

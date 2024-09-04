@@ -27,7 +27,7 @@ const SimpleTypography = (props: TypographyProps) => {
     // <Button className={`${classes.styles} MuiButton-text-${props.color} MuiButton-bg-${props.color}`}>{props?.name}</Button>
     <TypographyWrapper
       sx={{ ...props?.sx }}
-      className={props?.className ? `MuiTypography-${props?.className} ${props?.classNames || ''}` : ''}
+      className={props?.className ? `MuiTypography-${props?.className}` : `${props?.classNames || ''}`}
       variant={props?.variant}
       paragraph={props?.paragraph}
       title={props?.title || ''}
