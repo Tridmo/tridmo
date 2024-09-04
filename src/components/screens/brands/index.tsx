@@ -3,7 +3,7 @@
 import React, { CSSProperties, Suspense } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectAllBrands } from '../../../data/get_all_brands';
-import { Avatar, Divider, List, ListItem, ListItemAvatar, ListItemText, Box, Grid, SxProps, Skeleton } from '@mui/material'
+import { Avatar, Divider, List, ListItem, ListItemAvatar, ListItemText, Box, Grid, SxProps, Skeleton, useMediaQuery } from '@mui/material'
 import Image from 'next/image';
 import SimpleTypography from '@/components/typography';
 import BasicPagination from '@/components/pagination/pagination';
@@ -11,75 +11,38 @@ import Link from 'next/link';
 import { IMAGES_BASE_URL } from '../../../utils/env_vars';
 import EmptyData from '../../views/empty_data';
 import { dataItemIndex } from '../../../utils/utils';
+import { ContainerStyle, liAvatarSx, liAvatarWrapper, liHeaderSx, liHeaderTextSx, listSx, liSx } from '../../../styles/styles';
 
-
-const liHeaderTextSx = {
-  fontSize: '16px',
-  fontWeight: 500,
-  lineHeight: '22px',
-  letterSpacing: '0em',
-  textAlign: 'center',
-  color: '#686868'
-
-}
-
-const brandImageWrapperSx: SxProps = {
-  backgroundColor: '#fff',
-  border: '1px solid #E0E0E0',
-  borderRadius: '8px',
-  width: '80px',
-  height: '80px',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center'
-}
-
-const brandImageSx: CSSProperties = {
-  width: '100% !important',
-  height: '100% !important',
-  borderRadius: '8px',
-  objectFit: 'contain'
-}
-
-const liSx: SxProps = {
-  justifyContent: 'flex-start',
-  padding: '12px 24px',
-  transition: '0.4s all ease',
-
-  '&:hover': {
-    backgroundColor: '#FAFAFA',
-  },
-  '&:hover .brand_name': {
-    color: '#0646E6 !important',
-  }
-}
-
-const liHeaderSx: SxProps = {
-  backgroundColor: '#F5F5F5',
-  justifyContent: 'flex-start',
-  padding: '12px 24px',
-  borderTopLeftRadius: '4px',
-  borderTopRightRadius: '4px',
-}
-
-const listSx: SxProps = {
-  width: '100%',
-  maxWidth: 1200,
-  bgcolor: 'background.paper',
-  border: '1px solid #E0E0E0',
-  borderRadius: '4px',
-  padding: 0,
-}
 
 export default function BrandsPage() {
   const dispatch = useDispatch<any>();
   const getAllBrandStatus = useSelector((state: any) => state?.get_all_brands?.status)
   const all__brands = useSelector(selectAllBrands)
+  const smallScreen = useMediaQuery('(max-width:768px)');
 
   const fakeBrands = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
+  const widthControl = {
+    '&:nth-of-type(1)': {
+      minWidth: { lg: '56px', md: '56px', sm: '30px', xs: '30px' },
+      maxWidth: { lg: '56px', md: '56px', sm: '30px', xs: '30px' },
+    },
+    '&:nth-of-type(2)': {
+      minWidth: smallScreen ? '60%' : { lg: '40%', md: '40%', sm: '40%', xs: '60%' },
+      maxWidth: smallScreen ? '60%' : { lg: '40%', md: '40%', sm: '40%', xs: '60%' },
+    },
+    '&:nth-of-type(3)': {
+      minWidth: smallScreen ? '30%' : { lg: '25%', md: '25%', sm: '25%', xs: '30%' },
+      maxWidth: smallScreen ? '30%' : { lg: '25%', md: '25%', sm: '25%', xs: '30%' },
+    },
+    '&:nth-of-type(4)': {
+      minWidth: '25%',
+      maxWidth: '25%',
+    },
+  }
+
   return (
-    <Box sx={{ width: '1200px', minHeight: 829, display: "block", margin: "0 auto" }}>
+    <Box sx={ContainerStyle}>
       <SimpleTypography text='Бренды' className='section__title' sx={{ margin: '32px auto !important' }} />
       {
         getAllBrandStatus == 'succeeded' ?
@@ -95,20 +58,34 @@ export default function BrandsPage() {
                   >
                     <SimpleTypography
                       text='№'
-                      sx={{ ...liHeaderTextSx, minWidth: '56px', marginRight: '16px' }}
+                      sx={{ ...liHeaderTextSx, ...widthControl, marginRight: { lg: '16px', md: '16px', sm: '12px', xs: '8px' } }}
                     />
                     <SimpleTypography
                       text='Бренд'
-                      sx={{ ...liHeaderTextSx, textAlign: 'start !important', minWidth: '490px', }}
+                      sx={{ ...liHeaderTextSx, ...widthControl, textAlign: 'start !important' }}
                     />
-                    <SimpleTypography
-                      text='Стиль'
-                      sx={{ ...liHeaderTextSx, textAlign: 'start !important', minWidth: '400px', }}
-                    />
-                    <SimpleTypography
-                      text='Количество моделей'
-                      sx={{ ...liHeaderTextSx, minWidth: '180px', }}
-                    />
+                    {
+                      smallScreen ? (
+                        <>
+                          <SimpleTypography
+                            text='Кол-во моделей'
+                            sx={{ ...liHeaderTextSx, ...widthControl, fontSize: { lg: '20px', md: '18px', sm: '16px', xs: '14px' } }}
+                          />
+                        </>
+                      )
+                        : (
+                          <>
+                            <SimpleTypography
+                              text='Стиль'
+                              sx={{ ...liHeaderTextSx, ...widthControl, textAlign: 'start !important' }}
+                            />
+                            <SimpleTypography
+                              text='Количество моделей'
+                              sx={{ ...liHeaderTextSx, ...widthControl, }}
+                            />
+                          </>
+                        )
+                    }
                   </ListItem>
                   {
                     all__brands?.data?.brands && all__brands?.data?.brands?.length != 0
@@ -118,7 +95,7 @@ export default function BrandsPage() {
                             sx={liSx}
                           >
 
-                            <ListItemText sx={{ maxWidth: 56, marginRight: '16px' }}>
+                            <ListItemText sx={{ ...widthControl, marginRight: { lg: '16px', md: '16px', sm: '12px', xs: '8px' } }}>
                               <SimpleTypography
                                 text={
                                   dataItemIndex<string>(
@@ -130,86 +107,122 @@ export default function BrandsPage() {
                                 sx={{
                                   textAlign: 'center',
                                   color: '#B3B3B3',
-                                  fontWeight: 500,
-                                  fontSize: '22px',
+                                  fontWeight: { lg: '500', md: '500', sm: '400', xs: '400' },
+                                  fontSize: { lg: '22px', md: '20px', sm: '18px', xs: '16px' },
                                   lineHeight: '26px',
                                   letterSpacing: '-0.02em'
                                 }}
                               />
                             </ListItemText>
 
-                            <ListItemAvatar
-                              sx={brandImageWrapperSx}
-                            >
-                              <Image
-                                src={brand?.image_src ? `${IMAGES_BASE_URL}/${brand?.image_src}` : ''}
-                                alt='Landing image'
-                                width={78}
-                                height={78}
-                                style={brandImageSx}
-                              />
-                            </ListItemAvatar>
-
-
-                            <ListItemText className='brand_name' sx={{ marginLeft: '24px', minWidth: '385px' }} >
-                              <SimpleTypography
-                                text={brand?.name}
-                                sx={{
-                                  fontSize: '22px',
-                                  fontWeight: 400,
-                                  lineHeight: '26px',
-                                  letterSpacing: '-0.02em',
-                                  textAlign: 'start',
-                                  color: '#141414'
-                                }}
-                              />
-                              <SimpleTypography
-                                text={
-                                  `${brand?.site_link.includes('https://') || brand?.site_link.includes('http://')
-                                    ? brand?.site_link.split('://')[1].replaceAll('/', '')
-                                    : brand?.site_link
-                                  }`
-                                }
-                                sx={{
-                                  fontSize: '18px',
-                                  fontWeight: 400,
-                                  lineHeight: '24px',
-                                  letterSpacing: '-0.01em',
-                                  textAlign: 'start',
-                                  color: '#848484'
-                                }}
-                              />
-                            </ListItemText>
-
-                            <ListItemText sx={{ minWidth: '400px' }} >
-                              <SimpleTypography
-                                text=''
-                                sx={{
-                                  fontSize: '22px',
-                                  fontWeight: 400,
-                                  lineHeight: '26px',
-                                  letterSpacing: '-0.02em',
-                                  textAlign: 'start',
-                                }}
+                            <ListItemText sx={{
+                              ...widthControl,
+                              m: 0,
+                              '& > span': {
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'flex-start'
+                              }
+                            }} >
+                              <ListItemAvatar
+                                sx={{ ...liAvatarWrapper, borderRadius: '8px' }}
                               >
-                                {
-                                  brand?.styles?.map((s, i) => `${s?.name}${i != brand?.styles?.length - 1 ? ', ' : ''}`)
-                                }
-                              </SimpleTypography>
+                                <Avatar
+                                  src={brand?.image_src ? `${IMAGES_BASE_URL}/${brand?.image_src}` : ''}
+                                  alt='Landing image'
+                                  sx={{
+                                    ...liAvatarSx,
+                                    borderRadius: '8px'
+                                  }}
+                                />
+                              </ListItemAvatar>
 
+                              <ListItemText className='brand_name' sx={{ marginLeft: { lg: '16px', md: '16px', sm: '12px', xs: '8px' } }} >
+                                <SimpleTypography
+                                  text={brand?.name}
+                                  sx={{
+                                    fontSize: { lg: '22px', md: '20px', sm: '18px', xs: '18px' },
+                                    fontWeight: 400,
+                                    lineHeight: '26px',
+                                    letterSpacing: '-0.02em',
+                                    textAlign: 'start',
+                                    color: '#141414'
+                                  }}
+                                />
+                                <SimpleTypography
+                                  text={
+                                    `${brand?.site_link.includes('https://') || brand?.site_link.includes('http://')
+                                      ? brand?.site_link.split('://')[1].replaceAll('/', '')
+                                      : brand?.site_link
+                                    }`
+                                  }
+                                  sx={{
+                                    fontSize: { lg: '18px', md: '18px', sm: '16px', xs: '14px' },
+                                    fontWeight: 400,
+                                    lineHeight: '24px',
+                                    letterSpacing: '-0.01em',
+                                    textAlign: 'start',
+                                    color: '#848484'
+                                  }}
+                                />
+                              </ListItemText>
                             </ListItemText>
-                            <ListItemText sx={{ minWidth: '180px' }}>
-                              <SimpleTypography
-                                text={brand?.models_count}
-                                sx={{
-                                  fontSize: '22px',
-                                  fontWeight: 400,
-                                  lineHeight: '26px',
-                                  letterSpacing: '-0.02em',
-                                  textAlign: 'center',
-                                }}
-                              />
-                            </ListItemText>
+
+                            {
+                              smallScreen ? (
+                                <>
+                                  <ListItemText sx={{ ...widthControl }} >
+
+                                    <SimpleTypography
+                                      text={brand?.models_count}
+                                      sx={{
+                                        fontSize: { lg: '22px', md: '20px', sm: '18px', xs: '16px' },
+                                        fontWeight: 400,
+                                        lineHeight: '26px',
+                                        letterSpacing: '-0.02em',
+                                        textAlign: 'center',
+                                      }}
+                                    />
+
+                                  </ListItemText>
+                                </>
+                              )
+                                : (
+                                  <>
+                                    <ListItemText sx={{ ...widthControl }} >
+                                      <SimpleTypography
+                                        text=''
+                                        sx={{
+                                          fontSize: { lg: '22px', md: '20px', sm: '18px', xs: '16px' },
+                                          fontWeight: 400,
+                                          lineHeight: '26px',
+                                          letterSpacing: '-0.02em',
+                                          textAlign: 'start',
+                                        }}
+                                      >
+                                        {
+                                          brand?.styles?.map((s, i) => `${s?.name}${i != brand?.styles?.length - 1 ? ', ' : ''}`)
+                                        }
+                                      </SimpleTypography>
+
+                                    </ListItemText>
+
+                                    <ListItemText sx={{ ...widthControl }}>
+                                      <SimpleTypography
+                                        text={brand?.models_count}
+                                        sx={{
+                                          fontSize: { lg: '22px', md: '20px', sm: '18px', xs: '16px' },
+                                          fontWeight: 400,
+                                          lineHeight: '26px',
+                                          letterSpacing: '-0.02em',
+                                          textAlign: 'center',
+                                        }}
+                                      />
+                                    </ListItemText>
+                                  </>
+                                )
+                            }
+
                           </ListItem>
                           {
                             all__brands?.data?.brands?.length && index != all__brands?.data?.brands?.length - 1 ?
@@ -307,11 +320,11 @@ export default function BrandsPage() {
                       </ListItemText>
 
                       <ListItemAvatar
-                        sx={brandImageWrapperSx}
+                        sx={liAvatarWrapper}
                       >
                         <Skeleton
                           variant="rectangular"
-                          sx={brandImageSx}
+                          sx={liAvatarSx}
                         />
                       </ListItemAvatar>
 

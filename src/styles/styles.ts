@@ -1,17 +1,12 @@
+import { SxProps } from "@mui/system";
+
 export const LoaderStyle = {
   // width: "100px !important",
   // height: "100px !important",
   zIndex: "10",
   position: "relative"
 }
-export const ContainerStyle = {
-  display: "flex",
-  justifyContent: "center",
-  maxWidth: "1200px",
-  height: "697px",
-  margin: "0 auto",
-  alignItems: "center",
-}
+
 export const BgBlur = {
   position: "absolute",
   left: "0",
@@ -30,6 +25,69 @@ export const MenuProps = {
     },
   },
 };
+
+export const ContainerStyle = {
+  width: { lg: "1200px", md: '100%', sm: '100%', xs: "90%" },
+  p: { lg: 0, md: '0 24px', sm: '0 24px', xs: '0' },
+  minHeight: '80dvh',
+  display: "block",
+  margin: "0 auto"
+}
+export const liHeaderTextSx = {
+  fontSize: '16px',
+  fontWeight: 500,
+  lineHeight: '22px',
+  letterSpacing: '0em',
+  textAlign: 'center',
+  color: '#686868'
+}
+export const listSx: SxProps = {
+  width: '100%',
+  maxWidth: 1200,
+  bgcolor: 'background.paper',
+  border: '1px solid #E0E0E0',
+  borderRadius: '4px',
+  padding: 0,
+}
+export const liHeaderSx: SxProps = {
+  backgroundColor: '#F5F5F5',
+  justifyContent: 'flex-start',
+  padding: { lg: '12px 24px', md: '12px 24px', sm: '10px 12px', xs: '8px 10px' },
+  borderTopLeftRadius: '4px',
+  borderTopRightRadius: '4px',
+}
+export const liSx: SxProps = {
+  justifyContent: 'flex-start',
+  padding: { lg: '12px 24px', md: '12px 24px', sm: '10px 12px', xs: '8px 10px' },
+  transition: '0.4s all ease',
+
+  '&:hover': {
+    backgroundColor: '#FAFAFA',
+  },
+  '&:hover .username': {
+    color: '#0646E6 !important',
+  }
+}
+export const liAvatarWrapper: SxProps = {
+  backgroundColor: '#fff',
+  minWidth: { lg: '80px', md: '80px', sm: '60px', xs: '60px' },
+  maxWidth: { lg: '80px', md: '80px', sm: '60px', xs: '60px' },
+  minHeight: { lg: '80px', md: '80px', sm: '60px', xs: '60px' },
+  maxHeight: { lg: '80px', md: '80px', sm: '60px', xs: '60px' },
+  border: '1px solid #E0E0E0',
+  borderRadius: '50%',
+  marginRight: { lg: '16px', md: '16px', sm: '16px', xs: '4px' }
+}
+export const liAvatarSx: SxProps = {
+  objectFit: 'cover',
+  width: '100% !important',
+  height: '100% !important',
+  borderRadius: '50%',
+  '& > img': {
+    width: '100% !important',
+    height: '100% !important',
+  }
+}
 
 export const ButtonStyles = (theme) => `
       text-transform: inherit;
