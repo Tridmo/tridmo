@@ -190,7 +190,7 @@ export default function InteriorImages() {
           const model = res?.data?.data?.model;
           arr[tagIndex].model = {
             ...model,
-            cover: model.images ? `${IMAGES_BASE_URL}/${model?.images?.find(i => i.is_main == true)?.image_src}` : '',
+            cover: model.images ? `${IMAGES_BASE_URL}/${model?.cover}` : '',
             brand: model.brand.name
           }
           arr[tagIndex].loading = false;
@@ -525,7 +525,7 @@ export default function InteriorImages() {
                     className={'image'}
                     unoptimized
                     src={`${IMAGES_BASE_URL}/${img?.image_src}`}
-                    alt="Diesign image"
+                    alt=""
                     width={0}
                     height={0}
                     style={imageStyle}
