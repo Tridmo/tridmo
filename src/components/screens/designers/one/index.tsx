@@ -51,7 +51,7 @@ export default function DesignerProfile({ username, ...props }) {
                   variant="h2"
                 />
 
-                <SimpleCard route='designer_interiors' cols={3} cardImgHeight={232} withAuthor={true} />
+                <SimpleCard route='designer_interiors' cols={3} cardImgHeight={'232px'} withAuthor={true} />
 
               </Box>
               {designerWorks?.length > 0 ? (
