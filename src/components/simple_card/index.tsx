@@ -517,8 +517,8 @@ export default function SimpleCard(props: InputProps) {
       const data_sliced = props?.sliced
         ? all__interiors?.data?.interiors?.slice(0, props?.sliced)
         : all__interiors?.data?.interiors;
+        
       const width = window.innerWidth
-      console.log(width, "Widdiiiiiiiiiiiiith!!!!");
       
       return data_sliced?.length > 0 ? (
         <Grid
