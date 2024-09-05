@@ -31,7 +31,7 @@ type InputProps = {
   route: string;
   sliced?: number;
   cols: number;
-  cardImgHeight?: any;
+  cardImgHeight?: { lg?: string, md?: string, sm?: string, xs?: string } | string;
   withAuthor?: boolean;
 };
 const heights = [
@@ -50,7 +50,7 @@ const Label = styled(Paper)(({ theme }: ThemeProps) => ({
 export default function SimpleCard(props: InputProps) {
   const dispatch = useDispatch<any>();
   const router = useRouter();
-  const fakeModels = new Array(props?.sliced || 8).fill("");
+  const fakeModels = (length) => new Array(props?.sliced || length).fill("");
 
   React.useEffect(() => {
     dispatch(setLimitFilter({ limit: 15 }));
@@ -61,6 +61,7 @@ export default function SimpleCard(props: InputProps) {
     const all__models__status = useSelector(
       (state: any) => state?.get_all_models?.status
     );
+    console.log(props?.cardImgHeight);
 
     if (all__models__status === "failed") {
       return (
@@ -72,25 +73,26 @@ export default function SimpleCard(props: InputProps) {
         <Grid
           className="models__card--wrap"
           container
-          spacing={3}
+          columnSpacing={1}
+          rowSpacing={1}
           sx={{ width: "100%", margin: "0" }}
         >
-          {fakeModels?.map((model: any, index: any) => (
+          {fakeModels(15)?.map((model: any, index: any) => (
             <Grid
               className="models__card"
               sx={{
-                [`&:not(:nth-of-type(${props?.cols}n))`]: {
-                  padding: "0 9.5px 0 0 !important",
-                },
-                [`&:nth-of-type(${props?.cols}n)`]: {
-                  padding: "0 0 0 0 !important",
-                },
-                marginBottom: "10px",
+                // [`&:not(:nth-of-type(${props?.cols}n))`]: {
+                //   padding: "0 9.5px 0 0 !important",
+                // },
+                // [`&:nth-of-type(${props?.cols}n)`]: {
+                //   padding: "0 0 0 0 !important",
+                // },
               }}
               key={index}
-              md={12 / props?.cols}
-              sm={12 / (props?.cols - 2)}
-              xs={12 / (props?.cols - 4)}
+              lg={12 / props?.cols}
+              md={12 / (props?.cols - 1)}
+              sm={12 / (props?.cols - 1)}
+              xs={12 / (props?.cols - 3)}
               item
             >
               <CustomCardSkeleton
@@ -116,25 +118,25 @@ export default function SimpleCard(props: InputProps) {
         <Grid
           className="models__card--wrap"
           container
-          spacing={3}
+          spacing={1}
           sx={{ width: "100%", margin: "0" }}
         >
           {data_sliced?.map((model: any, index: any) => (
             <Grid
               className="models__card"
               sx={{
-                [`&:not(:nth-of-type(${props?.cols}n))`]: {
-                  padding: "0 9.5px 0 0 !important",
-                },
-                [`&:nth-of-type(${props?.cols}n)`]: {
-                  padding: "0 0 0 0 !important",
-                },
-                marginBottom: "10px",
+                // [`&:not(:nth-of-type(${props?.cols}n))`]: {
+                //   padding: "0 9.5px 0 0 !important",
+                // },
+                // [`&:nth-of-type(${props?.cols}n)`]: {
+                //   padding: "0 0 0 0 !important",
+                // },
               }}
               key={index}
-              md={12 / props?.cols}
-              sm={12 / (props?.cols - 2)}
-              xs={12 / (props?.cols - 4)}
+              lg={12 / props?.cols}
+              md={12 / (props?.cols - 1)}
+              sm={12 / (props?.cols - 1)}
+              xs={12 / (props?.cols - 3)}
               item
             >
               <CustomCard
@@ -173,7 +175,7 @@ export default function SimpleCard(props: InputProps) {
           spacing={3}
           sx={{ width: "100%", margin: "0" }}
         >
-          {fakeModels?.map((model: any, index: any) => (
+          {fakeModels(8)?.map((model: any, index: any) => (
             <Grid
               className="models__card"
               sx={{
@@ -226,7 +228,7 @@ export default function SimpleCard(props: InputProps) {
                   padding: { xs: "0 5px 0 0 !important", md: "0 9.5px 0 0 !important" },
                 },
                 [`&:nth-of-type(${props?.cols}n)`]: {
-                  padding: {xs: "0 5px 0 0 !important", md: "0 !important"},
+                  padding: { xs: "0 5px 0 0 !important", md: "0 !important" },
                 },
                 marginBottom: "10px",
               }}
@@ -272,7 +274,7 @@ export default function SimpleCard(props: InputProps) {
           spacing={3}
           sx={{ width: "100%", margin: "0" }}
         >
-          {fakeModels?.map((model: any, index: any) => (
+          {fakeModels(8)?.map((model: any, index: any) => (
             <Grid
               className="models__card"
               sx={{
@@ -370,7 +372,7 @@ export default function SimpleCard(props: InputProps) {
           spacing={3}
           sx={{ width: "100%", margin: "0" }}
         >
-          {fakeModels?.map((model: any, index: any) => (
+          {fakeModels(8)?.map((model: any, index: any) => (
             <Grid
               className="models__card"
               sx={{
@@ -479,7 +481,7 @@ export default function SimpleCard(props: InputProps) {
           spacing={3}
           sx={{ width: "100%", margin: "0" }}
         >
-          {fakeModels?.map((model: any, index: any) => (
+          {fakeModels(8)?.map((model: any, index: any) => (
             <Grid
               className="models__card"
               sx={{
@@ -588,7 +590,7 @@ export default function SimpleCard(props: InputProps) {
           spacing={3}
           sx={{ width: "100%", margin: "0" }}
         >
-          {fakeModels?.map((model: any, index: any) => (
+          {fakeModels(8)?.map((model: any, index: any) => (
             <Grid
               className="models__card"
               sx={{
@@ -686,7 +688,7 @@ export default function SimpleCard(props: InputProps) {
           spacing={3}
           sx={{ width: "100%", margin: "0" }}
         >
-          {fakeModels?.map((model: any, index: any) => (
+          {fakeModels(8)?.map((model: any, index: any) => (
             <Grid
               className="models__card"
               sx={{
@@ -808,7 +810,7 @@ export default function SimpleCard(props: InputProps) {
           spacing={3}
           sx={{ width: "100%", margin: "0" }}
         >
-          {fakeModels?.map((model: any, index: any) => (
+          {fakeModels(8)?.map((model: any, index: any) => (
             <Grid
               className="models__card"
               sx={{
@@ -906,7 +908,7 @@ export default function SimpleCard(props: InputProps) {
           spacing={3}
           sx={{ width: "100%", margin: "0" }}
         >
-          {fakeModels?.map((model: any, index: any) => (
+          {fakeModels(8)?.map((model: any, index: any) => (
             <Grid
               className="models__card"
               sx={{

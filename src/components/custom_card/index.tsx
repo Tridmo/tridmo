@@ -36,7 +36,7 @@ type CustomCardProps = {
   type?: any,
   model?: any,
   link?: any,
-  imgHeight?: any,
+  imgHeight?: { lg?: string, md?: string, sm?: string, xs?: string } | string,
   tagText?: string,
   tagIcon?: string,
   withAuthor?: boolean,
@@ -222,7 +222,7 @@ function CustomCard({ model, type, link, imgHeight, tagIcon, tagText, withAuthor
 
       {
         useButton ?
-          <Box key={model?.id} onClick={(e) => handleBoxClick(e, link)} style={{ margin: '0 0 15px 0', textDecoration: "none" }}>
+          <Box key={model?.id} onClick={(e) => handleBoxClick(e, link)} style={{ margin: '0', textDecoration: "none" }}>
             <Box sx={{
               height: "auto",
               width: "100%",
@@ -440,7 +440,7 @@ function CustomCard({ model, type, link, imgHeight, tagIcon, tagText, withAuthor
 
           :
 
-          <Link key={model?.id} href={link ? link : ""} style={{ margin: '0 0 15px 0', textDecoration: "none" }}>
+          <Link key={model?.id} href={link ? link : ""} style={{ margin: '0', textDecoration: "none" }}>
             <Box sx={{
               height: "auto",
               width: "100%",

@@ -2,7 +2,7 @@
 
 import React, { Suspense, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Grid, Box, useMediaQuery } from '@mui/material'
+import { Grid, Box, useMediaQuery, IconButton, SwipeableDrawer } from '@mui/material'
 import SimpleCard from '../../simple_card'
 import SimpleTypography from '../../typography'
 import BasicPagination from '../../pagination/pagination'
@@ -11,7 +11,7 @@ import { getAllModels, selectAllModels } from '../../../data/get_all_models';
 import Style from '../../views/styles/model_styles'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { searchModels, setSearchVal } from '../../../data/search_model'
-import { Close } from '@mui/icons-material'
+import { Close, FilterAlt } from '@mui/icons-material'
 import Buttons from '../../buttons'
 import Sorts from '../../views/sorts'
 import ModelCrumb from '../../breadcrumbs/model_crumb'
@@ -20,17 +20,24 @@ import { setModelNameFilter, setPageFilter } from '../../../data/handle_filters'
 import { useNavigate } from 'react-router-dom'
 import { modelsLimit } from '../../../types/filters'
 import { dataItemIndex } from '../../../utils/utils'
+import { ContainerStyle } from '../../../styles/styles'
+import { getAllBrands, selectAllBrands, selectAllBrands_status } from '../../../data/get_all_brands'
+import BrandsFilter from '../../views/brands/brand_filter'
+import { setFiltersModal } from '../../../data/modal_checker'
+import ModelFilters from '../../views/filters/model_filters'
 
 export default function ModelsPage() {
   const IsFilterOpen = useSelector((state: any) => state?.modal_checker?.isFilterModal)
   const searchedModels = useSelector((state: any) => state?.search_models?.data)
   const matches = useMediaQuery('(max-width:600px)');
+  const mdScreen = useMediaQuery('(max-width:960px)');
   const searchParams = useSearchParams();
   const dispatch = useDispatch<any>();
   const router = useRouter();
   const getModelStatus = useSelector((state: any) => state?.get_all_models?.status);
   const getColorStatus = useSelector((state: any) => state?.get_all_colors?.status);
   const StyleStatus = useSelector((state: any) => state?.get_all_styles?.status)
+  const BrandsStatus = useSelector(selectAllBrands_status)
   const all__models = useSelector(selectAllModels)
   const getModelCategoryFilter = useSelector((state: any) => state?.handle_filters?.categories)
   const getModelBrandFilter = useSelector((state: any) => state?.handle_filters?.model_brand)
@@ -69,12 +76,15 @@ export default function ModelsPage() {
       dispatch(getAllStyles());
     }
 
-  }, [dispatch, getModelStatus, StyleStatus, getModelCategoryFilter, getModelNameFilter, getModelColorFilter, getModelPageFilter, getModelStyleFilter])
+    if (BrandsStatus === "idle") {
+      dispatch(getAllBrands());
+    }
+
+  }, [dispatch, getModelStatus, StyleStatus, BrandsStatus, getModelCategoryFilter, getModelNameFilter, getModelColorFilter, getModelPageFilter, getModelStyleFilter])
 
 
   async function clearSearch() {
     dispatch(setModelNameFilter(''))
-    // setKeyword('')
     dispatch(getAllModels({
       brand: getModelBrandFilter,
       categories: getModelCategoryFilter,
@@ -90,30 +100,43 @@ export default function ModelsPage() {
   }
 
   return (
-    <Box sx={{ width: '1200px', minHeight: 829, display: "block", margin: "0 auto 32px auto" }}>
+    <Box sx={ContainerStyle}>
+      <SimpleTypography text='Модели' className='section__title' sx={{ margin: '32px auto !important' }} />
 
-      <Grid spacing={2} container sx={{ marginTop: "32px", marginLeft: 0 }} >
-        <Grid item className='models-page__filters' md={2.2} xs={12} sx={matches ? { paddingRight: "10px", borderRight: "1px solid #b3b3b3", transform: `translate(-50%,${IsFilterOpen ? "-50%" : "-200%"})` } : { paddingRight: "10px", borderRight: "1px solid #b3b3b3", }}>
-
-          <Suspense>
-            <Box className='models-page__filters--child'>
-              <Box className='models-page__filters--box'>
-                <Suspense>
-                  <Categories />
-                </Suspense>
-              </Box>
-              <Box className='models-page__filters--box'>
-
-                <Suspense>
-                  <Style />
-                </Suspense>
-              </Box>
-
+      <Grid spacing={{ lg: 2, md: 2, sm: 0, xs: 0 }} container sx={{ margin: "24px 0 !important" }} >
+        {
+          mdScreen ? (
+            <Box>
+              <React.Fragment>
+                <SwipeableDrawer
+                  anchor={'left'}
+                  open={IsFilterOpen}
+                  onClose={() => dispatch(setFiltersModal(false))}
+                  onOpen={() => dispatch(setFiltersModal(false))}
+                >
+                  <Box sx={{ width: '100%', p: '24px' }}>
+                    <Grid item lg={12} md={12} sm={12} xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <SimpleTypography text='Фильтры' sx={{ fontSize: '28px' }} />
+                      <IconButton onClick={() => dispatch(setFiltersModal(false))}>
+                        <Close />
+                      </IconButton>
+                    </Grid>
+                    <ModelFilters />
+                  </Box>
+                </SwipeableDrawer>
+              </React.Fragment>
             </Box>
-          </Suspense>
-
-        </Grid>
-        <Grid item xs={9.5} style={{ padding: "0 0 0 16px" }} sx={{ minHeight: "100vh" }}>
+          ) : (
+            <Grid item className='models-page__filters' md={2.2} xs={12}
+              sx={{
+                paddingRight: "10px",
+                borderRight: "1px solid #b3b3b3",
+              }}>
+              <ModelFilters />
+            </Grid>
+          )
+        }
+        <Grid item lg={9.5} md={9.5} sm={12} xs={12} sx={{ p: { lg: "0 0 0 16px", md: '0 0 0 16px', sm: '0', xs: '0' }, minHeight: "90dvh" }}>
           {
             keyword ?
               <Box sx={{ borderBottom: '1px solid #e0e0e0', padding: '0 8px 10px', marginBottom: '10px' }}>
@@ -128,34 +151,50 @@ export default function ModelsPage() {
               : null
           }
 
-          <Sorts route={'models'} dataCount={
-            <Box
-              sx={{ padding: "0 !important", display: "flex", alignItems: "baseline" }}
-            >
-              <SimpleTypography
-                text={`Показаны ${dataItemIndex<string>(
-                  all__models?.data?.pagination?.limit,
-                  all__models?.data?.pagination?.current,
-                  1
-                ) || 0
-                  }–${dataItemIndex<string>(
-                    all__models?.data?.pagination?.limit,
-                    all__models?.data?.pagination?.current,
-                    all__models?.data?.models?.length
-                  ) || 0
-                  } из`}
-                className='pagenation__desc'
-              />
-
-              <SimpleTypography
-                text={`${all__models?.data?.pagination?.data_count || 0} моделей`}
-                className='pagenation__desc--bold' />
-            </Box>
-          } />
+          <Grid container sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #e0e0e0', marginBottom: "20px" }}>
+            <Grid item lg={12} md={9} sm={9} xs={9}>
+              <Sorts route={'models'} dataCount={
+                <Grid
+                  sx={{ padding: "0 !important", display: "flex", alignItems: "baseline" }}
+                >
+                  <p>
+                    <SimpleTypography
+                      text={`Показаны ${dataItemIndex<string>(
+                        all__models?.data?.pagination?.limit,
+                        all__models?.data?.pagination?.current,
+                        1
+                      ) || 0
+                        }–${dataItemIndex<string>(
+                          all__models?.data?.pagination?.limit,
+                          all__models?.data?.pagination?.current,
+                          all__models?.data?.models?.length
+                        ) || 0
+                        } из ${all__models?.data?.pagination?.data_count || 0} моделей`}
+                      className='pagenation__desc'
+                    />
+                  </p>
+                </Grid>
+              } />
+            </Grid>
+            {
+              mdScreen && (
+                <Grid md={3} sm={3} sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+                  <Buttons
+                    name={matches ? '' : 'Фильтры'}
+                    childrenFirst
+                    className='bookmark__btn'
+                    onClick={() => dispatch(setFiltersModal(true))}
+                  >
+                    <FilterAlt />
+                  </Buttons>
+                </Grid>
+              )
+            }
+          </Grid>
 
           {/* ---- MODEL CARDS ---- */}
 
-          <SimpleCard cols={5} route={"models"} cardImgHeight={'154px'} />
+          <SimpleCard cols={5} route={"models"} cardImgHeight={{ lg: '154px', md: '208px', sm: '208px', xs: '208px' }} />
 
           {/* ---- MODEL CARDS ---- */}
 

@@ -217,7 +217,7 @@ const Categories = () => {
       <Box >
         <SimpleTypography className='section__title' text="Категории"></SimpleTypography>
 
-        <Box sx={{ paddingBottom: '18px', display: "flex", flexDirection: "column", borderBottom: "1px solid #E0E0E0" }}>
+        <Box sx={{ paddingBottom: '18px', display: "flex", flexDirection: "column" }}>
           {
             categoryData?.map((item: any, index: any) => (
               item?.children?.length > 0 && item?.children[0]
@@ -312,7 +312,7 @@ const Categories = () => {
         <Box sx={{
           overflow: "hidden",
         }}>
-          <Box sx={{ paddingBottom: '18px', borderBottom: "1px solid #E0E0E0" }}>
+          <Box sx={{ paddingBottom: '18px' }}>
             {
               SkletonData.map((item, index): any => (
                 <Skeleton

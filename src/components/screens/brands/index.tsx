@@ -236,25 +236,21 @@ export default function BrandsPage() {
                 </List>
                 : <EmptyData sx={{ marginTop: '8px' }} />
             }
-            {
-              all__brands?.data?.pagination?.pages > 1
-                ? <Grid spacing={2} container sx={{ width: '100%', margin: "0 auto", padding: "17px 0 32px 0" }}>
-                  <Grid
-                    item
-                    xs={12}
-                    sx={{ padding: "0 !important", display: "flex", justifyContent: "center" }}
-                  >
-                    <Suspense>
-                      <BasicPagination
-                        dataSource='brands'
-                        count={all__brands?.data?.pagination?.pages}
-                        page={parseInt(all__brands?.data?.pagination?.current) + 1}
-                      />
-                    </Suspense>
-                  </Grid>
-                </Grid>
-                : null
-            }
+            <Grid spacing={2} container sx={{ width: '100%', margin: "0 auto", padding: "17px 0 32px 0" }}>
+              <Grid
+                item
+                xs={12}
+                sx={{ padding: "0 !important", display: "flex", justifyContent: "center" }}
+              >
+                <Suspense>
+                  <BasicPagination
+                    dataSource='brands'
+                    count={all__brands?.data?.pagination?.pages}
+                    page={parseInt(all__brands?.data?.pagination?.current) + 1}
+                  />
+                </Suspense>
+              </Grid>
+            </Grid>
           </>
 
           :

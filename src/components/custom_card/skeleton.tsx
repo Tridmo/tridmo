@@ -27,7 +27,7 @@ type CustomCardProps = {
   type?: any,
   model?: any,
   link?: any,
-  imgHeight?: any,
+  imgHeight?: { lg?: string, md?: string, sm?: string, xs?: string } | string,
   tagText?: string,
   tagIcon?: string,
   withAuthor?: boolean,
@@ -47,7 +47,7 @@ export default function CustomCardSkeleton({ model, link, imgHeight, tagIcon, ta
 
 
   return (
-    <Box key={Math.random()} sx={{ margin: '0 0 15px 0', textDecoration: "none" }}>
+    <Box key={Math.random()} sx={{ margin: '0', textDecoration: "none" }}>
       <Box sx={{
         height: "auto",
         width: "100%",
@@ -74,7 +74,9 @@ export default function CustomCardSkeleton({ model, link, imgHeight, tagIcon, ta
         <Skeleton
           variant="rectangular"
           width={'100%'}
-          height={imgHeight || `208px`}
+          sx={{
+            height: imgHeight || `208px`,
+          }}
         />
         <Label
           sx={{

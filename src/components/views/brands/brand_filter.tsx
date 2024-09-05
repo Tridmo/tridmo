@@ -1,36 +1,32 @@
-import { Box, FormControlLabel, Checkbox } from '@mui/material'
+import { Box, FormControlLabel, Checkbox, Radio } from '@mui/material'
 import { useEffect, useState } from 'react'
 import Skeleton from '@mui/material/Skeleton';
-import { selectAllColors } from '../../../data/get_all_colors'
-import { getAllStyles, selectAllStyles } from '../../../data/get_all_styles'
 import { useDispatch, useSelector } from 'react-redux';
 import SimpleTypography from '../../typography'
 import { getAllModels } from '../../../data/get_all_models';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { setStyleFilter } from '../../../data/handle_filters';
+import { getAllBrands, selectAllBrands, selectAllBrands_status } from '../../../data/get_all_brands';
+import { setModelBrandFilter } from '../../../data/handle_filters';
 
 const SkletonData = ['', '', '', '', '', '']
-interface stylesProps {
+interface Props {
   id: string,
-  created_at: string,
   name: string,
-  updated_at: string,
+  is__Selected: boolean,
 }
-function Style() {
+export default function BrandsFilter() {
   const pathname = usePathname();
   const dispatch = useDispatch<any>();
-  const StylesData = useSelector(selectAllStyles);
-  const StylesStatus = useSelector((state: any) => state?.get_all_styles?.status)
-  const [custom__styles, setCustom__styles] = useState<any>([]);
+  const brands_data = useSelector(selectAllBrands);
+  const brands_status = useSelector(selectAllBrands_status)
+  const [custom__styles, setCustom__styles] = useState<Props[]>([]);
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const keyword = searchParams.get('name') as string
 
-
   const getModelCategoryFilter = useSelector((state: any) => state?.handle_filters?.categories)
   const getModelBrandFilter = useSelector((state: any) => state?.handle_filters?.model_brand)
-  const getModelCategoryNameFilter = useSelector((state: any) => state?.handle_filters?.category_name)
   const getModelColorFilter = useSelector((state: any) => state?.handle_filters?.colors)
   const getModelStyleFilter = useSelector((state: any) => state?.handle_filters?.styles)
   const getModelPageFilter = useSelector((state: any) => state?.handle_filters?.page)
@@ -40,22 +36,25 @@ function Style() {
   const getModelOrder = useSelector((state: any) => state?.handle_filters?.model_order)
 
   useEffect(() => {
-    if (StylesStatus == 'idle') {
-      dispatch(getAllStyles())
+    if (brands_status == 'idle') {
+      dispatch(getAllBrands())
     }
-  }, [StylesData, StylesStatus, dispatch])
+  }, [brands_data, brands_status, dispatch])
 
   useEffect(() => {
-    if (StylesStatus === "succeeded") {
+    if (brands_status === "succeeded") {
       if (router) {
         let arr = new Array();
-        StylesData?.data?.forEach((color: stylesProps) => {
+        arr.push({
+          id: '',
+          name: 'Все',
+          is__Selected: true,
+        })
+        brands_data?.data?.brands?.forEach((brand: Props) => {
           arr.push({
-            id: color?.id,
-            created_at: color?.created_at,
-            name: color?.name,
-            updated_at: color?.updated_at,
-            is__Selected: getModelStyleFilter?.includes((color.id).toString()) || getModelStyleFilter?.includes(color.id) || getModelStyleFilter == color?.id,
+            id: brand?.id,
+            name: brand?.name,
+            is__Selected: getModelBrandFilter == brand?.id,
           })
         })
 
@@ -63,29 +62,26 @@ function Style() {
         // setIsInitialized(true);
       }
     }
-  }, [StylesData, StylesStatus, router, getModelStyleFilter]);
+  }, [brands_data, brands_status, router, getModelStyleFilter]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>, id: string) => {
     let arr = [...custom__styles];
-    let res: any[] = [];
+    let res: string = '';
     for (let i = 0; i < arr?.length; i++) {
-      if (arr[i].id === id && event.target.checked) {
-        arr[i].is__Selected = true;
-      } else if (arr[i].id === id && !event.target.checked) {
+      if (arr[i].id !== id || (arr[i].id === id && !event.target.checked)) {
         arr[i].is__Selected = false;
       }
-    }
-    for (let i = 0; i < arr?.length; i++) {
-      if (arr[i].is__Selected) {
-        res.push(arr[i]?.id)
+      else if (arr[i].id === id && event.target.checked) {
+        arr[i].is__Selected = true;
+        res = arr[i].id
       }
     }
-    dispatch(setStyleFilter({ snex: res }))
+    dispatch(setModelBrandFilter(res))
     dispatch(getAllModels({
-      brand: getModelBrandFilter,
+      brand: res,
       categories: getModelCategoryFilter,
       colors: getModelColorFilter,
-      styles: res,
+      styles: getModelStyleFilter,
       name: keyword || getModelNameFilter,
       top: getModelTopFilter,
       page: getModelPageFilter,
@@ -96,10 +92,10 @@ function Style() {
     setCustom__styles(arr);
   };
 
-  if (StylesStatus === "succeeded") {
+  if (brands_status === "succeeded") {
     return (
       <Box>
-        <SimpleTypography text="Стиль" className="section__title" />
+        <SimpleTypography text="Бренд" className="section__title" />
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           {
             custom__styles?.map((item: any, index: number) => (
@@ -107,10 +103,10 @@ function Style() {
                 key={item.id}
                 label={item?.name}
                 control={
-                  <Checkbox
+                  <Radio
                     onClick={(event: any) => { handleChange(event, item?.id) }}
                     checked={item?.is__Selected}
-                    indeterminate={false}
+                  // indeterminate={false}
                   />
                 }
               />
@@ -124,7 +120,7 @@ function Style() {
   else {
     return (
       <Box>
-        <SimpleTypography text="Стиль" className="section__title" />
+        <SimpleTypography text="Бренд" className="section__title" />
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           {
             SkletonData.map((item, index): any => (
@@ -145,5 +141,3 @@ function Style() {
 
 
 }
-
-export default Style

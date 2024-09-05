@@ -1,6 +1,6 @@
 "use client"
 
-import { Box, Grid, styled } from '@mui/material'
+import { Box, Grid, styled, useMediaQuery } from '@mui/material'
 import { ThemeProps } from '../../../types/theme';
 import SimpleTypography from '../../typography'
 import { useCallback, useEffect, useState } from 'react';
@@ -12,6 +12,9 @@ import { getAllModels } from '../../../data/get_all_models';
 import { getAllInteriors } from '../../../data/get_all_interiors';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { modelOrderBy } from '../../../types/filters';
+import Buttons from '../../buttons';
+import { setFiltersModal } from '../../../data/modal_checker';
+import { FilterAlt } from '@mui/icons-material';
 const FiltersItem = styled(Box)(
   ({ theme }: ThemeProps) => `
         background: #F5F5F5;
@@ -38,9 +41,7 @@ const FiltersItem = styled(Box)(
 
 const filtersWrapStyle = {
   width: "100%",
-  borderBottom: '1px solid #e0e0e0',
-  padding: "0 8px 10px",
-  marginBottom: "20px"
+  paddingLeft: "8px",
 }
 
 function Sorts({ route, dataCount = <></>, ...props }) {
@@ -82,6 +83,8 @@ function Sorts({ route, dataCount = <></>, ...props }) {
   const searchParams = useSearchParams();
   const dispatch = useDispatch<any>();
   const router = useRouter();
+  const xsScreen = useMediaQuery('(max-width:600px)');
+  const mdScreen = useMediaQuery('(max-width:960px)');
 
   const keyword = searchParams.get('name') as string
   const page = searchParams.get('page') as string
@@ -139,9 +142,12 @@ function Sorts({ route, dataCount = <></>, ...props }) {
 
   return (
     <Box sx={filtersWrapStyle}>
-      <Grid container sx={{ margin: 0 }}>
-        <Grid item xs={10} sx={{ display: "flex", alignItems: 'center' }}>
-          <SimpleTypography className='filters__title' text="Порядок:" />
+      <Grid container sx={{ width: '100%', margin: 0 }}>
+        <Grid item lg={12} md={12} sm={12} xs={12} sx={{ display: "flex", alignItems: 'center' }}>
+          {
+            (!mdScreen || !xsScreen) &&
+            <SimpleTypography className='filters__title' text="Порядок:" />
+          }
           <Box
             sx={{
               mr: '8px',
