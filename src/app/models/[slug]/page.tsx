@@ -54,16 +54,6 @@ export default function OneProduct() {
 
   const selectedModel = useSelector(selectOneModel);
 
-  React.useEffect(() => {
-    if (selectedModel) {
-      dispatch(getSimilarModels({
-        categories: [selectedModel?.category_id],
-        exclude_models: [selectedModel?.id],
-        limit: 5
-      }))
-    }
-  }, [selectedModel])
-
   // React.useEffect(() => {
   //   if (getTopModelsStatus == "idle") {
   //     dispatch(getTopModels({ limit: 5 }))
