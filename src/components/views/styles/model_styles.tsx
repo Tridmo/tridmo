@@ -99,7 +99,7 @@ function Style() {
   if (StylesStatus === "succeeded") {
     return (
       <Box>
-        <SimpleTypography text="Стиль" className="section__title" />
+        <SimpleTypography text="Стиль" className="section__title" sx={{marginTop: "16px"}}/>
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           {
             custom__styles?.map((item: any, index: number) => (

@@ -53,24 +53,26 @@ export default function ModelsPage() {
   const [keyword, setKeyword] = useState(getModelNameFilter)
 
   useEffect(() => {
-    setKeyword(getModelNameFilter)
-  }, [getModelNameFilter])
+    setKeyword(getModelNameFilter);
+  }, [getModelNameFilter]);
 
   useEffect(() => {
     if (getModelStatus === "idle") {
-      dispatch(setPageFilter({ p: 'models_page', n: parseInt(page) }))
-      dispatch(getAllModels({
-        brand: getModelBrandFilter,
-        categories: getModelCategoryFilter,
-        colors: getModelColorFilter,
-        styles: getModelStyleFilter,
-        name: getModelNameFilter,
-        top: getModelTopFilter,
-        page: searchParams.get('page') || getModelPageFilter,
-        orderBy: getModelOrderBy,
-        order: getModelOrder,
-        limit: modelsLimit
-      }))
+      dispatch(setPageFilter({ p: "models_page", n: parseInt(page) }));
+      dispatch(
+        getAllModels({
+          brand: getModelBrandFilter,
+          categories: getModelCategoryFilter,
+          colors: getModelColorFilter,
+          styles: getModelStyleFilter,
+          name: getModelNameFilter,
+          top: getModelTopFilter,
+          page: searchParams.get("page") || getModelPageFilter,
+          orderBy: getModelOrderBy,
+          order: getModelOrder,
+          limit: modelsLimit,
+        })
+      );
     }
     if (StyleStatus === "idle") {
       dispatch(getAllStyles());
@@ -98,6 +100,41 @@ export default function ModelsPage() {
     }))
     window.history.replaceState({ ...window.history.state, as: '/models', url: '/models' }, '', '/models');
   }
+
+  const getAllBrandStatus = useSelector(
+    (state: any) => state?.get_all_brands?.status
+  );
+  const all__brands = useSelector(selectAllBrands);
+  const smallScreen = useMediaQuery("(max-width:768px)");
+
+  const fakeBrands = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+  const widthControl = {
+    "&:nth-of-type(1)": {
+      minWidth: { lg: "56px", md: "56px", sm: "30px", xs: "30px" },
+      maxWidth: { lg: "56px", md: "56px", sm: "30px", xs: "30px" },
+    },
+    "&:nth-of-type(2)": {
+      minWidth: smallScreen
+        ? "60%"
+        : { lg: "40%", md: "40%", sm: "40%", xs: "60%" },
+      maxWidth: smallScreen
+        ? "60%"
+        : { lg: "40%", md: "40%", sm: "40%", xs: "60%" },
+    },
+    "&:nth-of-type(3)": {
+      minWidth: smallScreen
+        ? "30%"
+        : { lg: "25%", md: "25%", sm: "25%", xs: "30%" },
+      maxWidth: smallScreen
+        ? "30%"
+        : { lg: "25%", md: "25%", sm: "25%", xs: "30%" },
+    },
+    "&:nth-of-type(4)": {
+      minWidth: "25%",
+      maxWidth: "25%",
+    },
+  };
 
   return (
     <Box sx={ContainerStyle}>
@@ -198,22 +235,31 @@ export default function ModelsPage() {
 
           {/* ---- MODEL CARDS ---- */}
 
-          <Grid spacing={2} container sx={{ width: '100%', margin: "0 auto", padding: "32px 0 0 0" }}>
-            <Grid item xs={12}
-              sx={{ padding: "0 !important", display: "flex", justifyContent: "center" }}
+          <Grid
+            spacing={2}
+            container
+            sx={{ width: "100%", margin: "0 auto", padding: "32px 0 0 0" }}
+          >
+            <Grid
+              item
+              xs={12}
+              sx={{
+                padding: "0 !important",
+                display: "flex",
+                justifyContent: "center",
+              }}
             >
               <Suspense>
                 <BasicPagination
-                  dataSource='models'
+                  dataSource="models"
                   count={all__models?.data?.pagination?.pages}
                   page={parseInt(all__models?.data?.pagination?.current) + 1}
                 />
               </Suspense>
             </Grid>
           </Grid>
-
         </Grid>
       </Grid>
     </Box>
-  )
+  );
 }
