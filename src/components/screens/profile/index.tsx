@@ -153,7 +153,7 @@ export default function Profile() {
 
                 <SimpleCard
                   route={cardsName}
-                  cardImgHeight={232}
+                  cardImgHeight={'232px'}
                   cols={3}
                 />
 
