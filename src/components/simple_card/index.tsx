@@ -517,7 +517,9 @@ export default function SimpleCard(props: InputProps) {
       const data_sliced = props?.sliced
         ? all__interiors?.data?.interiors?.slice(0, props?.sliced)
         : all__interiors?.data?.interiors;
-
+      const width = window.innerWidth
+      console.log(width, "Widdiiiiiiiiiiiiith!!!!");
+      
       return data_sliced?.length > 0 ? (
         <Grid
           className="models__card--wrap"
@@ -530,10 +532,10 @@ export default function SimpleCard(props: InputProps) {
               className="models__card"
               sx={{
                 [`&:not(:nth-of-type(${props?.cols}n))`]: {
-                  padding: { xs: 0, md: "0 9.5px 0 0 !important" },
+                  padding: { xs: "0 5px 0 0 !important", md: "0 9.5px 0 0 !important" },
                 },
                 [`&:nth-of-type(${props?.cols}n)`]: {
-                  padding: "0 0 0 0 !important",
+                  padding: {xs: "0 5px 0 0 !important", md: "0 !important"},
                 },
                 maxWidth: "100%",
                 marginBottom: "10px",
@@ -549,7 +551,7 @@ export default function SimpleCard(props: InputProps) {
                 link={`/${props?.route}/${model?.slug}`}
                 key={index}
                 model={model}
-                imgHeight={props?.cardImgHeight || "auto"}
+                imgHeight={props?.cardImgHeight || width < 900 ? "100%": "256px"}
                 withAuthor={props?.withAuthor}
               />
             </Grid>
