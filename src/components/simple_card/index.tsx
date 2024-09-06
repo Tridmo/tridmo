@@ -31,7 +31,7 @@ type InputProps = {
   route: string;
   sliced?: number;
   cols: number;
-  cardImgHeight?: { lg?: string, md?: string, sm?: string, xs?: string } | string;
+  cardImgHeight?: { xl?: string; lg?: string, md?: string, sm?: string, xs?: string } | string | null;
   withAuthor?: boolean;
 };
 const heights = [
@@ -541,7 +541,8 @@ export default function SimpleCard(props: InputProps) {
                 marginBottom: "10px",
               }}
               key={index}
-              md={12 / props?.cols}
+              lg={12 / props?.cols}
+              md={12 / (props?.cols - 1)}
               sm={12 / (props?.cols - 2)}
               xs={12 / (props?.cols - 4)}
               item

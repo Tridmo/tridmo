@@ -138,7 +138,7 @@ export default function ModelsPage() {
 
   return (
     <Box sx={ContainerStyle}>
-      <SimpleTypography text='Модели' className='section__title' sx={{ margin: '32px auto !important' }} />
+      <SimpleTypography text='Модели' className='section__title' sx={{width: "100%", marginTop: "32px !important", marginBottom: {md: "32px !important", lg: "0 !important"},textAlign: "start" }} />
 
       <Grid spacing={{ lg: 2, md: 2, sm: 0, xs: 0 }} container sx={{ margin: "24px 0 !important" }} >
         {
