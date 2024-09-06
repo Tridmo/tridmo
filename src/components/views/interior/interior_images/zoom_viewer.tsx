@@ -2,7 +2,6 @@
 
 import { Box, Modal, styled, ListItem, Fade } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import SimpleSlider from '../slider';
 import { setShowInteriorImagesModal, setShowImageViewer } from '@/data/loader';
 import Buttons from '../../../buttons';
 import Image from 'next/image';

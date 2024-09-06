@@ -16,9 +16,9 @@ import { setLoginState, setOpenModal, setProjectsListState } from '../../../../d
 import { toast } from 'react-toastify';
 import { getSavedModels } from '../../../../data/get_saved_models';
 
-const mainWidth = 558;
+const mainWidth = 720;
 
-const SimpleListItem = styled(ListItem)(
+const CustomListItem = styled(ListItem)(
   ({ theme }) => `
         width: 56px;
         height: 56px;   
@@ -28,18 +28,6 @@ const SimpleListItem = styled(ListItem)(
 
         &.MuiListItem-slider__item--active{
             border-color: #7210be;
-        }
-
-      
-
-        &.MuiListItem-slider__big--item{
-            width: 100%;
-            height: ${mainWidth}px;
-            border: none;
-
-            &:hover{
-                
-            }
         }
   `
 );
@@ -68,7 +56,7 @@ const myLoader = () => {
 
 const fakeModelImages = [1, 2, 3, 4, 5]
 
-const SimpleSlider = ({ name }: any) => {
+export default function SimpleSliderModal() {
   const [sliderBtnHover, setSliderBtnHover] = useState(0)
   const dispatch = useDispatch<any>()
 
@@ -78,57 +66,40 @@ const SimpleSlider = ({ name }: any) => {
   const simple_model_status = useSelector((state: any) => state?.get_one_model?.status);
 
   const matches = useMediaQuery('(max-width:600px)');
+  const imageResizeLg = useMediaQuery('(max-width:1440px)');
+  const imageResizeSm = useMediaQuery('(max-width:1060px)');
+  const imageResizeXs = useMediaQuery('(max-width:768px)');
+  const imageResizeXxs = useMediaQuery('(max-width:660px)');
+  const imageResizeXxxs = useMediaQuery('(max-width:600px)');
+  const imageResizeXxxxs = useMediaQuery('(max-width:540px)');
+  const imageResizeXxxxxs = useMediaQuery('(max-width:460px)');
   const [sliderCount, setSliderCount] = React.useState(0)
   const [sliderTransition, setSliderTransition] = React.useState(0.4)
   const [isSaved, setIsSaved] = useState<any>(false)
+
+  const wdth =
+    imageResizeXxxxxs ? 360
+      : imageResizeXxxxs ? 420
+        : imageResizeXxxs ? 480
+          : imageResizeXxs ? 540
+            : imageResizeXs ? 600
+              : imageResizeSm ? 660
+                : imageResizeLg ? 720
+                  : 1200;
+
+  const CustomListItemBig = styled(ListItem)(
+    ({ theme }) => `
+                      width: 100%;
+                      height: ${wdth}px;
+                      border: none;
+                `
+  );
 
   useEffect(() => {
     if (simpleModel && isAuthenticated && currentUser) {
       setIsSaved(simpleModel?.is_saved)
     }
   }, [isAuthenticated, currentUser, simpleModel])
-
-  function handleListProjects() {
-    dispatch(setProjectsListState(true))
-    dispatch(setOpenModal(true))
-  }
-
-  const handleSave = () => {
-
-    if (!isAuthenticated) {
-      dispatch(setLoginState(true))
-      dispatch(setOpenModal(true))
-      return;
-    }
-
-    if (!isSaved) {
-      setIsSaved(true)
-      instance.post(
-        '/saved/models',
-        { model_id: simpleModel?.id }
-      ).then(res => {
-        setIsSaved(res?.data?.success)
-        dispatch(getSavedModels())
-        // toast.success(res?.data?.message)
-      }).catch(err => {
-        setIsSaved(false)
-        // toast.error(err?.response?.data?.message)
-      })
-    }
-    else if (isSaved) {
-      setIsSaved(false)
-      instance.delete(
-        '/saved/models/' + simpleModel?.id
-      ).then(res => {
-        setIsSaved(!res?.data?.success)
-        dispatch(getSavedModels())
-        // toast.success(res?.data?.message)
-      }).catch(err => {
-        setIsSaved(true)
-        // toast.error(err?.response?.data?.message)
-      })
-    }
-  };
 
   function SliderRightHandler() {
     if (sliderCount < simpleModel?.images?.length - 1) {
@@ -142,8 +113,6 @@ const SimpleSlider = ({ name }: any) => {
     }
   }
 
-  const wdth = name === "slider" && !matches ? mainWidth : name !== "slider" ? 720 : window.innerWidth
-
   const ButtonHover = {
     opacity: sliderBtnHover
   }
@@ -152,50 +121,34 @@ const SimpleSlider = ({ name }: any) => {
     return (
       <>
         <Grid
-          sx={
-            name === "slider" ? {
-              display: "flex",
-              flexDirection: "unset",
-              marginTop: "20px",
-              maxWidth: '55.5% !important',
-            } : {
-              display: "flex",
-              flexDirection: "column-reverse"
-            }
-          }
-          item={name === "slider" ? false : true}
-          container={name === "slider" ? true : false}
-          spacing={name === "slider" ? 2 : 1}
-          md={name === "slider" ? 6.7 : 12}
-          xs={name === "slider" ? 6.7 : 12}
+          sx={{
+            width: '100%',
+            display: "flex",
+            flexDirection: "column-reverse"
+          }}
+          item
+          spacing={1}
           className="products__slider"
         >
           <Grid
             className='products__small--wrap'
-            sx={name === "slider" ?
-              {
-                padding: "0 !important",
-                margin: "0 14px  !important",
-                height: `${wdth}px !important`,
-                maxWidth: '56px !important'
-              }
-              : {
-                padding: "11px !important",
-                display: "flex",
-                justifyContent: "center"
-              }}
+            sx={{
+              padding: "11px !important",
+              display: "flex",
+              justifyContent: "center"
+            }}
             item
-            xs={name === "slider" ? 2 : 12}
-            md={name === "slider" ? 2 : 12}
+            xs={12}
+            md={12}
           >
             <List
               className='products__small-items'
-              sx={{ display: `${name === "slider" ? "block" : "flex"}`, paddingTop: 0 }}
+              sx={{ display: `${"flex"}`, paddingTop: 0 }}
             >
               {
                 simpleModel?.images?.map((slide: any, index: number) => (
-                  <SimpleListItem
-                    sx={name === "slider" ? { margin: "0 0 8px 0" } : { margin: "0 8px 0 0" }}
+                  <CustomListItem
+                    sx={{ margin: "0 8px 0 0" }}
                     className={`${sliderCount == index ? "MuiListItem-slider__item--active products__small--item" : "products__small--item"}`}
                     onClick={() => setSliderCount(index)}
                     key={index}
@@ -211,7 +164,7 @@ const SimpleSlider = ({ name }: any) => {
                       alt="slider"
                       src={`${IMAGES_BASE_URL}/${slide?.image_src}`}
                     />
-                  </SimpleListItem>
+                  </CustomListItem>
                 ))
               }
 
@@ -219,22 +172,13 @@ const SimpleSlider = ({ name }: any) => {
           </Grid>
 
           <Grid
-            sx={name === "slider" ?
-              {
-                overflow: "hidden",
-                position: "relative",
-                padding: "0 !important",
-                minWidth: `${wdth}px !important`,
-                maxHeight: `${wdth}px !important`
-              }
-              : {
-                padding: "0 !important",
-                overflow: "hidden"
-              }
-            }
+            sx={{
+              padding: "0 !important",
+              overflow: "hidden"
+            }}
             item
-            md={name === "slider" ? 10 : 12}
-            xs={name === "slider" ? 10 : 12}
+            md={12}
+            xs={12}
             onMouseEnter={() => setSliderBtnHover(1)}
             onMouseLeave={() => setSliderBtnHover(0)}
           >
@@ -269,16 +213,16 @@ const SimpleSlider = ({ name }: any) => {
               </Buttons>
             </Box>
             <List sx={{
-              transform: `translateX(-${sliderCount * wdth}px)`,
+              transform: `translateX(-${sliderCount * 90}vw)`,
               padding: "0 !important",
               display: "flex",
               position: 'relative',
-              width: `${simpleModel?.images?.length * wdth}px`,
+              width: `${simpleModel?.images?.length * 90}vw`,
               transition: `all ${sliderTransition}s ease`
             }}>
               {
                 simpleModel?.images?.map((slide: any, index: number) => (
-                  <SimpleListItem
+                  <CustomListItemBig
                     className="MuiListItem-slider__big--item"
                     onClick={(e) => { dispatch(setShowModelsModal(true)) }}
                     key={index}
@@ -292,62 +236,16 @@ const SimpleSlider = ({ name }: any) => {
                       alt=''
                       sizes='100%'
                       fill
-                      sx={{ objectFit: name == 'slider' ? 'cover' : 'contain' }}
+                      sx={{ objectFit: 'contain' }}
                       src={`${IMAGES_BASE_URL}/${slide?.image_src}`}
                       priority={true}
                     />
-                  </SimpleListItem>
+                  </CustomListItemBig>
                 ))
               }
 
             </List>
           </Grid>
-
-          {
-            name === "slider" ?
-              <>
-                {
-                  !!isAuthenticated && (
-                    <Buttons
-                      name={'Добавить в проект'}
-                      className='bookmark__btn'
-                      childrenFirst={true}
-                      onClick={handleListProjects}
-                      sx={{
-                        marginLeft: '90px',
-                      }}
-                    >
-                      <Image
-                        alt='icon'
-                        width={18}
-                        height={18}
-                        src={'/icons/plus-bordered-gray.svg'}
-                      />
-                    </Buttons>
-                  )
-                }
-
-                <Buttons
-                  name={isSaved ? 'Сохранено' : 'Сохранить'}
-                  className='bookmark__btn'
-                  childrenFirst={true}
-                  onClick={handleSave}
-                  sx={{
-                    marginLeft: '18px',
-                    // position: 'absolute'
-                  }}
-                >
-                  <Image
-                    alt='bookmark'
-                    width={18}
-                    height={18}
-                    src={isSaved ? '/icons/bookmark-full.svg' : '/icons/bookmark-line.svg'}
-                  />
-                </Buttons>
-              </>
-
-              : null
-          }
 
         </Grid>
       </>
@@ -356,42 +254,33 @@ const SimpleSlider = ({ name }: any) => {
     return (
       <>
         <Grid
-          sx={
-            name === "slider" ? {
-              display: "flex",
-              flexDirection: "unset",
-              marginTop: "20px"
-            } : {
-              display: "flex",
-              flexDirection: "column-reverse"
-            }
-          }
-          container={name === "slider" ? true : false}
-          spacing={name === "slider" ? 2 : 1}
+          sx={{
+            display: "flex",
+            flexDirection: "column-reverse"
+          }}
+          spacing={1}
           item
-          xs={name === "slider" ? 6 : 12}
+          xs={12}
         >
           <Grid
-            sx={name === "slider" ? { padding: "0 0 0 18px !important" } :
-              {
-                padding: "11px !important",
-                display: "flex",
-                justifyContent: "center"
-              }
-            }
-            xs={name === "slider" ? 2 : 12}
+            sx={{
+              padding: "11px !important",
+              display: "flex",
+              justifyContent: "center"
+            }}
+            xs={12}
             item
           >
             <List
               sx={{
                 padding: "0 !important",
-                display: `${name === "slider" ? "block" : "flex"}`
+                display: `${"flex"}`
               }}
             >
               {
                 fakeModelImages.map((slide: any, index: number) => (
-                  <SimpleListItem
-                    sx={name === "slider" ? { margin: "0 0 8px 0" } : { margin: "0 8px 0 0" }}
+                  <CustomListItem
+                    sx={{ margin: "0 8px 0 0" }}
                     className={`${sliderCount == index ? "MuiListItem-slider__item--active" : ""}`}
                     onClick={() => setSliderCount(index)}
                     key={index}
@@ -403,17 +292,16 @@ const SimpleSlider = ({ name }: any) => {
                       alt="slider"
                       src={`/img/card-loader.jpg`}
                     />
-                  </SimpleListItem>
+                  </CustomListItem>
                 ))
               }
 
             </List>
           </Grid>
           <Grid
-            sx={name === "slider" ?
-              { overflow: "hidden", position: "relative", padding: "0 0 18px 0 !important" } : { padding: "0 !important", overflow: "hidden" }}
+            sx={{ padding: "0 !important", overflow: "hidden" }}
             item
-            xs={name === "slider" ? 10 : 12}
+            xs={12}
           >
             <Buttons
               onClick={SliderRightHandler}
@@ -442,30 +330,30 @@ const SimpleSlider = ({ name }: any) => {
               />
             </Buttons>
             <List sx={{
-              transform: `translateX(-${sliderCount * wdth}px)`,
+              transform: `translateX(-${sliderCount * 90}vw)`,
               padding: "0 !important",
               display: "flex",
               position: 'relative',
-              width: `${simpleModel?.images?.length * wdth}px`,
+              width: `${simpleModel?.images?.length * 90}vw`,
               transition: `all ${sliderTransition}s ease`
             }}>
               {
                 fakeModelImages.map((slide: any, index: number) => (
-                  <SimpleListItem
+                  <CustomListItemBig
                     className="MuiListItem-slider__big--item"
                     onClick={(e) => { dispatch(setShowModelsModal(true)) }}
                     key={index}
                   >
                     <SimpleImage
                       loader={myLoader}
-                      width={wdth}
-                      height={wdth}
+                      sizes='100%'
+                      fill
                       sx={{ objectFit: 'contain' }}
                       priority={true}
                       src={`/img/card-loader.jpg`}
                       alt="card-loader"
                     />
-                  </SimpleListItem>
+                  </CustomListItemBig>
                 ))
               }
 
@@ -476,5 +364,3 @@ const SimpleSlider = ({ name }: any) => {
     )
   }
 }
-
-export default SimpleSlider
