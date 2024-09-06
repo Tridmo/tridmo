@@ -245,7 +245,7 @@ export default function Navbar() {
                   />
                   <SimpleTypography
                     className="drow-down__text"
-                    text="Мой профил"
+                    text="Мой профилъ"
                   />
                 </Link>
               </MenuItem>
@@ -609,9 +609,9 @@ export default function Navbar() {
                               sx={
                                 open
                                   ? {
-                                      color: "#7210BE !important",
-                                      marginLeft: "6px",
-                                    }
+                                    color: "#7210BE !important",
+                                    marginLeft: "6px",
+                                  }
                                   : { marginLeft: "6px" }
                               }
                               className={"user__name"}
@@ -620,17 +620,17 @@ export default function Navbar() {
                               sx={
                                 !open
                                   ? {
-                                      minWidth: "11px",
-                                      minHeight: "7px",
-                                      color: "black",
-                                    }
+                                    minWidth: "11px",
+                                    minHeight: "7px",
+                                    color: "black",
+                                  }
                                   : {
-                                      minWidth: "11px",
-                                      minHeight: "7px",
-                                      color: "#7210BE",
-                                      transform: "rotateZ(180deg)",
-                                      transitionDuration: "1000ms",
-                                    }
+                                    minWidth: "11px",
+                                    minHeight: "7px",
+                                    color: "#7210BE",
+                                    transform: "rotateZ(180deg)",
+                                    transitionDuration: "1000ms",
+                                  }
                               }
                             />
                           </Box>
