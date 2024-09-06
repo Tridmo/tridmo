@@ -100,7 +100,7 @@ function InteriorCategories() {
           <SimpleTypography className='section__title' text="Категории"></SimpleTypography>
           {
             customCategories?.map((item: any, index: number) => (
-              item?.section != 'architecture' &&
+              item?.section != 'others' &&
               <FormControlLabel
                 key={item.id}
                 label={item?.name}
@@ -120,10 +120,10 @@ function InteriorCategories() {
         <Divider />
 
         <Box sx={{ py: '18px', display: "flex", flexDirection: "column" }}>
-          <SimpleTypography className='section__title' text="Архитектура"></SimpleTypography>
+          <SimpleTypography className='section__title' text="Другие"></SimpleTypography>
           {
             customCategories?.map((item: any, index: number) => (
-              item?.section == 'architecture' &&
+              item?.section == 'others' &&
               <FormControlLabel
                 key={item.id}
                 label={item?.name}
