@@ -2,39 +2,51 @@ import Providers from "@/components/providers";
 import RightBar from "@/components/right_bar";
 import Footer from "@/components/views/footer";
 import Navbar from "@/components/views/navbar";
-import '@/styles/carousel.module.css';
+import "@/styles/carousel.module.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import React from 'react';
+import React from "react";
 import "./globals.css";
 
-
-import { Box } from '@mui/system';
-import AlertWrapper from '../components/alert';
+import { Box } from "@mui/system";
+import NextTopLoader from "nextjs-toploader";
+import AlertWrapper from "../components/alert";
 
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
 export const metadata: Metadata = {
-  title: "Demod"
+  title: "Demod",
 };
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <html lang="ru">
       <head>
-        <script defer data-domain="demod.uz" src="https://plausible.io/js/script.js"></script>
+        <script
+          defer
+          data-domain="demod.uz"
+          src="https://plausible.io/js/script.js"
+        ></script>
       </head>
       <body className={inter.className}>
         <Providers>
-          <Box sx={{ position: 'realtive' }}>
+          <NextTopLoader
+            color="#7210BE"
+            initialPosition={0.08}
+            crawlSpeed={200}
+            height={3}
+            crawl={true}
+            showSpinner={false}
+            speed={200}
+            shadow="0 0 10px #2299DD,0 0 5px #2299DD"
+          />
+          <Box sx={{ position: "realtive" }}>
             {/* <TopLoading /> */}
             <AlertWrapper />
           </Box>
-
           <Navbar />
           <RightBar />
           {children}
