@@ -1,3 +1,4 @@
+import { Close } from "@mui/icons-material";
 import EmojiPeopleIcon from "@mui/icons-material/EmojiPeople";
 import HomeIcon from "@mui/icons-material/Home";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -6,7 +7,6 @@ import StorefrontIcon from "@mui/icons-material/Storefront";
 import {
   Drawer,
   IconButton,
-  Link,
   List,
   ListItem,
   ListItemButton,
@@ -14,6 +14,8 @@ import {
   ListItemText,
 } from "@mui/material";
 import { Box } from "@mui/system";
+import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 
 const navItemsData = [
@@ -52,12 +54,33 @@ export default function MobileMode() {
 
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
+      <Box
+        sx={{
+          padding: "12px 12px",
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <Link href="/">
+          <Image
+            className="header__logo"
+            alt="logo"
+            priority={true}
+            src="/logos/logo.svg"
+            width={123}
+            height={32}
+          />
+        </Link>
+        <IconButton onClick={() => toggleDrawer(false)}>
+          <Close />
+        </IconButton>
+      </Box>
       <List>
         {navItemsData.map((item) => (
           <ListItem key={item.id} disablePadding>
             <Link
               href={item.link}
-              style={{ textDecoration: "none", color: "#333" }}
+              style={{ textDecoration: "none" }}
             >
               <ListItemButton>
                 <ListItemIcon>{item.icon}</ListItemIcon>
@@ -69,6 +92,9 @@ export default function MobileMode() {
       </List>
     </Box>
   );
+
+  const container =
+    window !== undefined ? () => window.document.body : undefined;
 
   return (
     <Box sx={{ display: { xs: "flex", md: "none" } }}>
