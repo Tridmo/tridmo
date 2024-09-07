@@ -39,6 +39,7 @@ import { setAuthState } from "../../../data/login";
 import { switch_on } from "../../../data/toggle_cart";
 import { IMAGES_BASE_URL } from "../../../utils/env_vars";
 import SimpleTypography from "../../typography";
+import MobileMode from "./mobile_mode";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -205,7 +206,7 @@ export default function Navbar() {
             background: "#fff",
             borderBottom: "1px solid #e0e0e0",
             marginBottom: 0,
-            padding: { xs: "0 18px", md: 0 },
+            padding: { xs: "0 18px", lg: 0 },
           }}
         >
           <Grid
@@ -333,6 +334,8 @@ export default function Navbar() {
               }}
               className="header__actions"
             >
+              <MobileMode />
+              
               <Box
                 className="header__nav"
                 component={"nav"}
