@@ -27,7 +27,8 @@ interface ProfileProps {
 const wrapperSx: SxProps = {
   display: 'flex',
   flexDirection: 'column',
-  width: '400px',
+  maxWidth: "400px",
+  width: '100%',
 }
 const tableWrapperSx: SxProps = {
   backgroundColor: '#fff',
@@ -459,9 +460,9 @@ export default function ProfileInfo(props: ProfileProps) {
 
         {
           props?.of == 'own'
-            ? <Grid container sx={{ width: '100%', justifyContent: "space-between" }}>
+            ? <Grid container sx={{ width: '100%', paddingInline: {xs: "24px", md: 0 }, justifyContent: "space-between" }}>
               <Buttons
-                sx={{ width: '48%' }}
+                sx={{ width: '48%', height: "auto !important", padding: "8px 20px !important"}}
                 name="Создать проект"
                 childrenFirst={true}
                 className="login__btn"
@@ -480,9 +481,8 @@ export default function ProfileInfo(props: ProfileProps) {
               <Link href={'/interiors/addnew'} style={{ width: '48%' }}>
                 <Buttons
                   sx={{
-                    width: '100%',
-                    padding: '0 20px !important',
-                    height: '40px !important'
+                    width: '100%', height: "auto !important",
+                    padding: '8px 20px !important',
                   }}
                   name="Добавить работу"
                   childrenFirst={true}
@@ -698,7 +698,7 @@ export default function ProfileInfo(props: ProfileProps) {
 
         {
           props?.of == 'own'
-            ? <Grid container sx={{ width: '100%', justifyContent: "space-between" }}>
+            ? <Grid container sx={{ width: '100%', paddingInline: {xs: "24px", md: 0}, justifyContent: "space-between" }}>
               <Grid item md={12} xs={12}>
                 <Skeleton
                   variant="rectangular"

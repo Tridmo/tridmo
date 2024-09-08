@@ -83,7 +83,7 @@ export default function UserProfile() {
   if (getProfileStatus === "succeeded") {
     return (
       <>
-        <Box sx={{ background: "#fafafa" }}>
+        <Box sx={{ background: "#fafafa", padding: { xs: "0 18px", lg: 0 } }}>
           <Profile />
         </Box>
       </>
@@ -91,7 +91,7 @@ export default function UserProfile() {
   } else if (getProfileStatus === "failed") {
     return (
       <>
-        <Box sx={{ background: "#fafafa" }}>
+        <Box sx={{ background: "#fafafa", padding: { xs: "0 18px", lg: 0 } }}>
           <ConnectionError />
         </Box>
       </>
@@ -99,7 +99,7 @@ export default function UserProfile() {
   } else {
     return (
       <>
-        <Box sx={{ background: "#fafafa", position: "relative" }}>
+        <Box sx={{ background: "#fafafa", position: "relative", padding: { xs: "0 18px", lg: 0 } }}>
           <Box sx={BgBlur} />
           <Box>
             <Box sx={ContainerStyle}>

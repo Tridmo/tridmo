@@ -21,6 +21,7 @@ import { selectMyInteriors } from '../../../data/get_my_interiors';
 import { selectSavedInteriors } from '../../../data/get_saved_interiors';
 import { selectSavedModels } from '../../../data/get_saved_models';
 import { selectMyProjects } from '../../../data/get_my_projects';
+import MobileMode from './mobile_mode';
 
 
 export default function Profile() {
@@ -77,25 +78,26 @@ export default function Profile() {
 
   return (
     <>
-      <Box sx={{ background: "#fafafa" }} className="products">
-        <Box className='products__container' sx={{ maxWidth: "1200px", width: "100%", margin: "0 auto 32px auto !important", alignItems: "center", }}>
-          <Grid container sx={{ marginTop: "32px", marginLeft: 0 }} >
+      <Box sx={{ minHeight: "77vh", background: "#fafafa" }} className="products">
+        <Box className='products__container' sx={{ maxWidth: "1200px", width: "100%", margin: "0 auto 32px auto !important", alignItems: "center",}}>
+          <Grid container sx={{ marginTop: "32px", marginLeft: 0, position: "relative" }} >
 
-            <Grid item xs={4} sx={{ paddingRight: "10px" }}>
+
+            <MobileMode children={<ProfileInfo of='own' />}/>
+            <Grid item xs={4} sx={{ display: { xs: "none", md: "flex" } }}>
               <ProfileInfo of='own' />
             </Grid >
 
-            <Grid item xs={8}
-              style={{
-                paddingLeft: "40px",
+            <Grid item xs={11} md={8}
+              sx={{
+                paddingLeft: {xs: "20px", lg: "40px"},
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'space-between',
               }}
             >
-              <Box sx={{ width: '100%' }}>
-
+              <Box sx={{ width: "100%", marginBottom: "16px" }}>
                 <Box
                   sx={{ mb: '16px' }}
                 >
