@@ -1,5 +1,7 @@
 import { SxProps } from "@mui/system";
 
+export const primaryColor = '#7210BE';
+
 export const LoaderStyle = {
   // width: "100px !important",
   // height: "100px !important",

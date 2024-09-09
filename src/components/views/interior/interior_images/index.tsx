@@ -296,7 +296,7 @@ export default function InteriorImages() {
                   className={'image_wrapper__box'}
                   onClick={(e) => handleClick(e, n)}
                   sx={{
-                    width: '1000px',
+                    width: '100%',
                     display: 'flex',
                     justifyContent: 'center',
                     position: 'relative',
