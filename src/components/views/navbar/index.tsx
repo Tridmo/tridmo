@@ -24,7 +24,7 @@ import SearchInput from "../../inputs/search";
 import BasicModal from "@/components/modals/login_modal";
 import { selectGetOrders } from "@/data/get_orders";
 import { ThemeProps } from "@/types/theme";
-import { Close } from "@mui/icons-material";
+import { ChatOutlined, Close, ControlPointOutlined, PersonOutlineOutlined, SearchOutlined } from "@mui/icons-material";
 import { WyNotificationToasts } from "@weavy/uikit-react";
 import Cookies from "js-cookie";
 import Link from "next/link";
@@ -260,12 +260,7 @@ export default function Navbar() {
                     alignItems: "center",
                   }}
                 >
-                  <Image
-                    src="/icons/plus-round.svg"
-                    alt="heart icon"
-                    width={17}
-                    height={17}
-                  />
+                  <ControlPointOutlined />
                   <SimpleTypography
                     className="drow-down__text"
                     text="Добавить работу"
@@ -299,7 +294,7 @@ export default function Navbar() {
               className="header__logo--wrapper"
               item
               md={2.5}
-              xs={4}
+              xs={3}
               sx={{
                 padding: "0 !important",
                 paddingLeft: "0 !important",
@@ -325,7 +320,7 @@ export default function Navbar() {
             <Grid
               item
               md={9.5}
-              xs={8}
+              xs={9}
               sx={{
                 display: "flex",
                 padding: "16px 0 !important",
@@ -334,8 +329,6 @@ export default function Navbar() {
               }}
               className="header__actions"
             >
-              <MobileMode />
-              
               <Box
                 className="header__nav"
                 component={"nav"}
@@ -370,57 +363,18 @@ export default function Navbar() {
                 </Box>
               </Box>
 
-              <Item
-                sx={{
-                  display: { xs: "flex", md: "none" },
-                  padding: "0",
-                  marginRight: "10px",
-                  width: "20px",
-                  height: "20px",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  transition: "all 0.4s ease",
-                  borderRadius: "4px",
-                  "&:hover": { background: "#F5F5F5" },
-                }}
-                onClick={AccountHandler}
-              >
-                <Button
-                  type="button"
-                  disableRipple
-                  className="header__user"
-                  sx={{
-                    display: "flex",
-                    position: "relative",
-                    "&:hover": {
-                      backgroundColor: "transparent",
-                    },
-                  }}
-                >
-                  <Box sx={{ display: "flex", position: "relative" }}>
-                    <Image
-                      alt="bag"
-                      priority={true}
-                      src="/icons/user-line.svg"
-                      width={18}
-                      height={20}
-                    />
-                  </Box>
-                </Button>
-              </Item>
-
-              <Box sx={{ overflow: "hidden" }}>
+              <Box sx={{ overflow: "hidden", transform: 'translate(39px, 0)' }}>
                 <Box
                   sx={{
-                    width: searchClicked ? { xs: "200px", md: "300px" } : 0,
+                    width: searchClicked ? { xs: "200px", md: "260px" } : 0,
                     visibility: searchClicked ? "visible" : "hidden",
-                    transition: "all 0.4s ease",
+                    transition: "all 0.2s ease",
                   }}
                 >
                   <form onSubmit={handleSearch}>
                     <SearchInput
                       sx={{
-                        width: { xs: "200px", md: "300px" },
+                        width: '100%',
                       }}
                       value={searchVal}
                       className="search__input--models"
@@ -432,6 +386,7 @@ export default function Navbar() {
                   </form>
                 </Box>
               </Box>
+
               <IconButton
                 onClick={() => {
                   if (searchClicked) setSearchVal("");
@@ -439,10 +394,6 @@ export default function Navbar() {
                 }}
                 aria-label="menu"
                 sx={{
-                  position: {
-                    xs: searchClicked ? "absolute" : "relative",
-                    md: "relative",
-                  },
                   marginRight: "0px",
                   transition: "all 0.4s ease",
                 }}
@@ -450,27 +401,27 @@ export default function Navbar() {
                 {searchClicked ? (
                   <Close />
                 ) : (
-                  <Image
-                    src="/icons/search-icon.svg"
-                    alt="Search icon"
-                    width={21}
-                    height={21}
-                  ></Image>
+                  <SearchOutlined sx={{ color: "#424242" }} />
                 )}
               </IconButton>
-              {/* {
-                !searchClicked ?
-                  : null
-              } */}
 
-              {/* {isAuthenticated ? (
+              {/* <IconButton
+                onClick={AccountHandler}
+                sx={{
+                  display: { xs: "flex", md: "none" },
+                }}
+              >
+                <PersonOutlineOutlined sx={{ color: '#424242' }} />
+              </IconButton> */}
+
+              {isAuthenticated ? (
                 <>
                   <IconButton
                     onClick={openRightBar}
                     aria-label="menu"
                     sx={{
-                      display: { xs: "none", md: "block" },
-                      marginRight: "16px",
+                      display: { xs: "none", md: "flex" },
+                      marginRight: "8px",
                       backgroundColor: false
                         ? "rgba(0, 0, 0, 0.04)"
                         : "transparent",
@@ -514,9 +465,9 @@ export default function Navbar() {
                   <Link href={"/chat"}>
                     <IconButton
                       sx={{
-                        display: { xs: "none", md: "block" },
+                        display: { xs: "none", md: "flex" },
                         position: "relative",
-                        marginRight: "16px",
+                        marginRight: "8px",
                       }}
                     >
                       <Box
@@ -537,7 +488,7 @@ export default function Navbar() {
                           text={
                             String(
                               Number(chatUnread?.private || 0) +
-                                Number(chatUnread?.rooms || 0)
+                              Number(chatUnread?.rooms || 0)
                             ) || "0"
                           }
                           sx={{
@@ -552,7 +503,9 @@ export default function Navbar() {
                     </IconButton>
                   </Link>
                 </>
-              ) : null} */}
+              ) : null}
+
+              <MobileMode />
 
               <Box
                 sx={{
@@ -573,15 +526,15 @@ export default function Navbar() {
                           display: { xs: "none", md: "flex" },
                         }}
                       >
-                        <Buttons
+                        <IconButton
                           id="basic-menu"
                           aria-controls={"basic-menu"}
                           aria-haspopup="true"
                           aria-expanded={true}
                           onClick={handleClick}
                           sx={{
-                            padding: "0 !important",
                             display: "flex",
+                            height: 'auto',
                             alignItems: "center",
                             justifyContent: "center",
                             "&:hover": { background: "#F5F5F5" },
@@ -601,7 +554,7 @@ export default function Navbar() {
                                   : "/img/avatar.png"
                               }
                             />
-                            <SimpleTypography
+                            {/* <SimpleTypography
                               text={
                                 userData?.full_name ? (
                                   userData?.full_name?.split(" ")[0]
@@ -618,8 +571,8 @@ export default function Navbar() {
                                   : { marginLeft: "6px" }
                               }
                               className={"user__name"}
-                            />
-                            <KeyboardArrowDownIcon
+                            /> */}
+                            {/* <KeyboardArrowDownIcon
                               sx={
                                 !open
                                   ? {
@@ -635,9 +588,9 @@ export default function Navbar() {
                                     transitionDuration: "1000ms",
                                   }
                               }
-                            />
+                            /> */}
                           </Box>
-                        </Buttons>
+                        </IconButton>
                       </Item>
                     </>
                   ) : (
@@ -646,7 +599,7 @@ export default function Navbar() {
                     >
                       <Box sx={{ marginRight: "16px" }}>
                         <Buttons
-                          name="Регистрация "
+                          name="Регистрация"
                           onClick={() => {
                             dispatch(setSignupState(true));
                             dispatch(setOpenModal(true));
