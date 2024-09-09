@@ -260,7 +260,12 @@ export default function Navbar() {
                     alignItems: "center",
                   }}
                 >
-                  <ControlPointOutlined />
+                  <Image
+                    src="/icons/plus-round.svg"
+                    alt="logout icon"
+                    width={17}
+                    height={17}
+                  />
                   <SimpleTypography
                     className="drow-down__text"
                     text="Добавить работу"
