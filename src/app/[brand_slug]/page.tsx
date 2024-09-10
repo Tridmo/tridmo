@@ -50,7 +50,7 @@ export default function OneBrandPage() {
   const searchParams = useSearchParams()
   const params = useParams<{ brand_slug: string }>()
   const brand = useSelector(selectOneBrand)
-  // const page = searchParams.get('page') as string
+  const page = searchParams.get('page') as string
   const pageFilter = useSelector((state: any) => state?.handle_filters?.brand_models_page)
 
   React.useEffect(() => {
@@ -59,7 +59,7 @@ export default function OneBrandPage() {
 
   React.useEffect(() => {
     if (brand) {
-      dispatch(getBrandModels({ brand_id: brand?.id, limit: brandModelsLimit, page: pageFilter }))
+      dispatch(getBrandModels({ brand_id: brand?.id, limit: brandModelsLimit, page: page || pageFilter }))
       dispatch(getBrandCategories(brand?.id))
     }
   }, [brand])

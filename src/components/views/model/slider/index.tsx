@@ -67,7 +67,7 @@ const SimpleSlider = () => {
   const isAuthenticated = useSelector((state: any) => state?.auth_slicer?.authState)
   const simple_model_status = useSelector((state: any) => state?.get_one_model?.status);
 
-  const xsScreen = useMediaQuery('(max-width:600px)');
+  const xsScreen = useMediaQuery('(max-width:768px)');
   const buttonReplace = useMediaQuery('(max-width:1280px)');
   const imageResizeSm = useMediaQuery('(max-width:1060px)');
   const imageResizeXs = useMediaQuery('(max-width:548px)');
@@ -154,7 +154,7 @@ const SimpleSlider = () => {
   }
 
   const ButtonHover = {
-    opacity: sliderBtnHover
+    opacity: xsScreen ? 1 : sliderBtnHover
   }
 
   if (simple_model_status == "succeeded") {
@@ -232,7 +232,7 @@ const SimpleSlider = () => {
             sm={10}
             xs={10}
             onMouseEnter={() => setSliderBtnHover(1)}
-            onMouseLeave={() => setSliderBtnHover(0)}
+            onMouseLeave={() => setSliderBtnHover(xsScreen ? 1 : 0)}
           >
             <Box sx={ButtonHover}>
               <Buttons

@@ -66,6 +66,7 @@ export default function SimpleSliderModal() {
   const simple_model_status = useSelector((state: any) => state?.get_one_model?.status);
 
   const matches = useMediaQuery('(max-width:600px)');
+  const imageResizeLlg = useMediaQuery('(max-width:2560px)');
   const imageResizeLg = useMediaQuery('(max-width:1440px)');
   const imageResizeSm = useMediaQuery('(max-width:1060px)');
   const imageResizeXs = useMediaQuery('(max-width:768px)');
@@ -85,12 +86,12 @@ export default function SimpleSliderModal() {
             : imageResizeXs ? 600
               : imageResizeSm ? 660
                 : imageResizeLg ? 720
-                  : 1200;
+                  : imageResizeLlg ? 760
+                    : 780;
 
   const CustomListItemBig = styled(ListItem)(
     ({ theme }) => `
                       width: 100%;
-                      height: ${wdth}px;
                       border: none;
                 `
   );
@@ -114,7 +115,7 @@ export default function SimpleSliderModal() {
   }
 
   const ButtonHover = {
-    opacity: sliderBtnHover
+    opacity: imageResizeXs ? 1 : sliderBtnHover
   }
 
   if (simple_model_status == "succeeded") {
@@ -180,7 +181,7 @@ export default function SimpleSliderModal() {
             md={12}
             xs={12}
             onMouseEnter={() => setSliderBtnHover(1)}
-            onMouseLeave={() => setSliderBtnHover(0)}
+            onMouseLeave={() => setSliderBtnHover(imageResizeXs ? 1 : 0)}
           >
             <Box sx={ButtonHover}>
               <Buttons
@@ -227,6 +228,7 @@ export default function SimpleSliderModal() {
                     onClick={(e) => { dispatch(setShowModelsModal(true)) }}
                     key={index}
                     sx={{
+                      height: { lg: '80dvh', md: '80dvh', sm: '60dvh', xs: '50dvh' },
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center'
@@ -343,6 +345,9 @@ export default function SimpleSliderModal() {
                     className="MuiListItem-slider__big--item"
                     onClick={(e) => { dispatch(setShowModelsModal(true)) }}
                     key={index}
+                    sx={{
+                      height: { lg: '80dvh', md: '80dvh', sm: '60dvh', xs: '50dvh' }
+                    }}
                   >
                     <SimpleImage
                       loader={myLoader}
