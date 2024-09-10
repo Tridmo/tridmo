@@ -17,7 +17,7 @@ export default function MobileMode({ children }) {
         display: { xs: "flex", md: "none" },
         position: "fixed",
         bottom: "10%",
-        left: 15,
+        left: 24,
         zIndex: 10
       }}
     >
