@@ -27,7 +27,7 @@ interface ProfileProps {
 const wrapperSx: SxProps = {
   display: 'flex',
   flexDirection: 'column',
-  maxWidth: "400px",
+  maxWidth: {xs: "100%", md: "400px"},
   width: '100%',
 }
 const tableWrapperSx: SxProps = {
@@ -220,7 +220,7 @@ export default function ProfileInfo(props: ProfileProps) {
                 fontSize: '16px',
                 fontWeight: '600',
                 textAlign: 'left',
-              }} text={profileInfo?.designs_count} />
+              }} text={profileInfo.designs_count ? profileInfo.designs_count : 0} />
             </Box>
           </Box>
 

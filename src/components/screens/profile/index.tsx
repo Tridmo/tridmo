@@ -22,6 +22,7 @@ import { selectSavedInteriors } from '../../../data/get_saved_interiors';
 import { selectSavedModels } from '../../../data/get_saved_models';
 import { selectMyProjects } from '../../../data/get_my_projects';
 import MobileMode from './mobile_mode';
+import ProfileMobileMode from '@/components/profile_mobile_mode/profile-mobile-mode';
 
 
 export default function Profile() {
@@ -82,13 +83,12 @@ export default function Profile() {
         <Box className='products__container' sx={{ maxWidth: "1200px", width: "100%", margin: "0 auto 32px auto !important", alignItems: "center",}}>
           <Grid container sx={{ marginTop: "32px", marginLeft: 0, position: "relative" }} >
 
-
-            <MobileMode children={<ProfileInfo of='own' />}/>
-            <Grid item xs={4} sx={{ display: { xs: "none", md: "flex" } }}>
+            <ProfileMobileMode of='own'/>
+            <Grid item md={4} sx={{ display: { xs: "none", md: "flex" } }}>
               <ProfileInfo of='own' />
             </Grid >
 
-            <Grid item xs={11} md={8}
+            <Grid item xs={12} md={8}
               sx={{
                 paddingLeft: {xs: "20px", lg: "40px"},
                 display: 'flex',
