@@ -1,5 +1,5 @@
 import { ChevronRight, Close } from "@mui/icons-material";
-import { Drawer, IconButton } from "@mui/material";
+import { Drawer, IconButton, SwipeableDrawer } from "@mui/material";
 import { Box } from "@mui/system";
 import { useState } from "react";
 
@@ -31,10 +31,11 @@ export default function MobileMode({ children }) {
       >
         <ChevronRight />
       </IconButton>
-      <Drawer
+      <SwipeableDrawer
         open={open}
         anchor="left"
         onClose={toggleDrawer(false)}
+        onOpen={toggleDrawer(true)}
       >
         <IconButton
           onClick={toggleDrawer(false)}
@@ -43,7 +44,7 @@ export default function MobileMode({ children }) {
           <Close />
         </IconButton>
         {children}
-      </Drawer>
+      </SwipeableDrawer>
     </Box>
   );
 }

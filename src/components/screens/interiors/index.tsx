@@ -104,7 +104,7 @@ export default function InteriorsPage() {
                 anchor={"left"}
                 open={IsFilterOpen}
                 onClose={() => dispatch(setFiltersModal(false))}
-                onOpen={() => dispatch(setFiltersModal(false))}
+                onOpen={() => dispatch(setFiltersModal(true))}
               >
                 <Box sx={{ width: "100%", padding: "24px" }}>
                   <Grid
@@ -210,21 +210,18 @@ export default function InteriorsPage() {
                   >
                     <p>
                       <SimpleTypography
-                        text={`Показаны ${
-                          dataItemIndex<string>(
-                            all__interiors?.data?.pagination?.limit,
-                            all__interiors?.data?.pagination?.current,
-                            1
-                          ) || 0
-                        }–${
-                          dataItemIndex<string>(
+                        text={`Показаны ${dataItemIndex<string>(
+                          all__interiors?.data?.pagination?.limit,
+                          all__interiors?.data?.pagination?.current,
+                          1
+                        ) || 0
+                          }–${dataItemIndex<string>(
                             all__interiors?.data?.pagination?.limit,
                             all__interiors?.data?.pagination?.current,
                             all__interiors?.data?.models?.length
                           ) || 0
-                        } из ${
-                          all__interiors?.data?.pagination?.data_count || 0
-                        } моделей`}
+                          } из ${all__interiors?.data?.pagination?.data_count || 0
+                          } моделей`}
                         className="pagenation__desc"
                       />
                     </p>
@@ -265,8 +262,8 @@ export default function InteriorsPage() {
             cardImgHeight={
               mdScreen
                 ? {
-                    xs: "156px",
-                  }
+                  xs: "156px",
+                }
                 : null
             }
           />

@@ -641,7 +641,7 @@ export default function OneInterior() {
                     childrenFirst={true}
                   >
                     {
-                      addingTags ? <LibraryAdd sx={{ color: primaryColor }} /> : <LibraryAddOutlined sx={{ mr: mdScreen ? 0 : '8px' }} />
+                      addingTags ? <LibraryAdd sx={{ color: primaryColor, mr: mdScreen ? 0 : '8px' }} /> : <LibraryAddOutlined sx={{ mr: mdScreen ? 0 : '8px' }} />
                     }
                   </Buttons>
                 </Box>

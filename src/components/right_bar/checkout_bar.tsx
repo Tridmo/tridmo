@@ -166,7 +166,7 @@ const CheckoutBar = () => {
         flexDirection: 'column',
         justifyContent: 'space-between',
         flex: 1,
-        width: '100%',
+        width: { lg: "500px", md: "500px", sm: '65vw', xs: '85vw' },
         height: '100%',
       }}
     >
@@ -178,9 +178,9 @@ const CheckoutBar = () => {
             justifyContent: 'space-between',
           }}
         >
-          <Typography component="h3" sx={{ fontSize: '30px', display: 'inline-block' }}>
+          <Typography component="h3" sx={{ fontSize: { lg: '30px', md: '30px', sm: '24px', xs: '22px' }, display: 'inline-block' }}>
             Уведомления
-            <Typography sx={{ fontSize: '30px', display: 'inline-block', color: '#686868' }}>
+            <Typography sx={{ fontSize: { lg: '26px', md: '26px', sm: '20px', xs: '18px' }, display: 'inline-block', color: '#686868' }}>
               ({`${notifications_status === 'succeeded' ?
                 notificationCounts?.data?.unread_count || '0'
                 : '0'
@@ -372,7 +372,7 @@ const CheckoutBar = () => {
                   </InfiniteScroll>
                 </Box>
               ) : (
-                <Box sx={{ margin: '36px 96px' }}>
+                <Box>
                   <EmptyData text="Нет уведомлений" boxShadow={false} border={false} />
                 </Box>
               )}

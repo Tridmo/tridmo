@@ -138,7 +138,7 @@ export default function ModelsPage() {
 
   return (
     <Box sx={ContainerStyle}>
-      <SimpleTypography text='Модели' className='section__title' sx={{width: "100%", marginTop: "32px !important", marginBottom: {md: "32px !important", lg: "0 !important"},textAlign: "start" }} />
+      <SimpleTypography text='Модели' className='section__title' sx={{ width: "100%", marginTop: "32px !important", marginBottom: { md: "32px !important", lg: "0 !important" }, textAlign: "start" }} />
 
       <Grid spacing={{ lg: 2, md: 2, sm: 0, xs: 0 }} container sx={{ margin: "24px 0 !important" }} >
         {
@@ -149,7 +149,7 @@ export default function ModelsPage() {
                   anchor={'left'}
                   open={IsFilterOpen}
                   onClose={() => dispatch(setFiltersModal(false))}
-                  onOpen={() => dispatch(setFiltersModal(false))}
+                  onOpen={() => dispatch(setFiltersModal(true))}
                 >
                   <Box sx={{ width: '100%', p: '24px' }}>
                     <Grid item lg={12} md={12} sm={12} xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>

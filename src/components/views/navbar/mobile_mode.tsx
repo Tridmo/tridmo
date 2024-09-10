@@ -12,6 +12,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  SwipeableDrawer,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import Cookies from "js-cookie";
@@ -149,7 +150,6 @@ export default function MobileMode() {
             dispatch(setConfirmProps({ is_loading: true }))
             handleLogout()
             router.refresh()
-            router.push('/login')
             dispatch(setConfirmState(false))
             dispatch(setOpenModal(false))
             dispatch(resetConfirmProps())
@@ -191,16 +191,22 @@ export default function MobileMode() {
         {navItemsData.map((item) => (
           <ListItem sx={{ position: 'relative' }} key={item.id} disablePadding>
             {
-              !!item?.link &&
-              <Link
-                href={item.link as string || ''}
-                style={{ textDecoration: "none", position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}
-              />
+              !!item?.link ?
+                <Link
+                  href={item.link as string || ''}
+                  style={{ textDecoration: "none", width: '100%' }}
+                >
+                  <ListItemButton>
+                    <ListItemIcon sx={{ minWidth: '24px', mr: '16px' }}>{item.icon}</ListItemIcon>
+                    <ListItemText primary={item.text} />
+                  </ListItemButton>
+                </Link>
+                :
+                <ListItemButton onClick={() => !!item?.click ? item.click() : null}>
+                  <ListItemIcon sx={{ minWidth: '24px', mr: '16px' }}>{item.icon}</ListItemIcon>
+                  <ListItemText primary={item.text} />
+                </ListItemButton>
             }
-            <ListItemButton onClick={() => !!item?.click ? item?.click() : () => { }}>
-              <ListItemIcon sx={{ minWidth: '24px', mr: '16px' }}>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItemButton>
           </ListItem>
         ))}
       </List>
@@ -219,7 +225,7 @@ export default function MobileMode() {
       >
         <MenuOutlined sx={{ color: '#424242' }} />
       </IconButton>
-      <Drawer open={open} anchor="right" onClose={toggleDrawer(false)}>
+      <SwipeableDrawer open={open} anchor="right" onClose={toggleDrawer(false)} onOpen={toggleDrawer(true)}>
         {DrawerList}
         {
           isAuthenticated && (
@@ -248,7 +254,7 @@ export default function MobileMode() {
             </Buttons>
           )
         }
-      </Drawer>
+      </SwipeableDrawer>
     </Box>
   );
 }
