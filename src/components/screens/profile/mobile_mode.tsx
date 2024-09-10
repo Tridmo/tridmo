@@ -13,10 +13,11 @@ export default function MobileMode({ children }) {
   return (
     <Box
       sx={{
+        height: "fit-content",
         padding: "2px 2px 2px 13px",
         display: { xs: "flex", md: "none" },
-        position: "absolute",
-        bottom: 0,
+        position: "fixed",
+        bottom: "10%",
         left: -10,
         backgroundColor: "white",
         borderRadius: "50%",
@@ -36,7 +37,7 @@ export default function MobileMode({ children }) {
         onClose={toggleDrawer(false)}
       >
         <IconButton
-          onClick={() => toggleDrawer(false)}
+          onClick={toggleDrawer(false)}
           sx={{ position: "absolute", top: 15, right: 15 }}
         >
           <Close />

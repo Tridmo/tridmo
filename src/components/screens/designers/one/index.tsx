@@ -1,22 +1,14 @@
 "use client"
 
-import * as React from 'react'
-import { Box, Divider, Grid } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import ProductInfo from '../../../views/model/info'
+import * as React from 'react';
+import { Box, Grid } from '@mui/material';
+import { useSelector } from 'react-redux';
 import SimpleTypography from '../../../typography';
-import CustomCard from '../../../custom_card';
-import { sampleInterior, sampleModel, sampleUser } from '@/data/samples';
-import Link from 'next/link';
-import Buttons from '@/components/buttons';
 import ProfileInfo from '@/components/views/profile/info';
-import Image from 'next/image';
 import BasicPagination from '@/components/pagination/pagination';
-import EmptyData from '@/components/views/empty_data';
-import { useParams } from 'next/navigation';
-import { getDesignerProfile, selectDesignerProfile } from '../../../../data/get_designer';
 import SimpleCard from '../../../simple_card';
 import { selectAuthorInteriors } from '../../../../data/get_author_interiors';
+import MobileMode from '../../profile/mobile_mode';
 
 
 export default function DesignerProfile({ username, ...props }) {
@@ -28,16 +20,17 @@ export default function DesignerProfile({ username, ...props }) {
   return (
     <>
       <Box sx={{ background: "#fafafa" }} className="products">
-        <Box className='products__container' sx={{ maxWidth: "1200px", width: "100%", margin: "0 auto 32px auto !important", alignItems: "center", }}>
+        <Box className='products__container' sx={{ maxWidth: "1200px", width: "100%", margin: "0 auto 32px auto !important", alignItems: "center", position: "relative", padding: { xs: "0 18px", lg: 0 } }}>
           <Grid container sx={{ marginTop: "32px", marginLeft: 0 }} >
 
-            <Grid item xs={4} sx={{ paddingRight: "10px" }}>
+            <MobileMode children={<ProfileInfo of='designer' />}/>
+            <Grid item xs={4} sx={{ paddingRight: "10px", display: { xs: "none", md: "flex" } }}>
               <ProfileInfo of='designer' />
             </Grid >
 
-            <Grid item xs={8}
-              style={{
-                paddingLeft: "40px",
+            <Grid item xs={12} md={8}
+              sx={{
+                paddingLeft: {lg: "40px"},
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
@@ -51,7 +44,7 @@ export default function DesignerProfile({ username, ...props }) {
                   variant="h2"
                 />
 
-                <SimpleCard route='designer_interiors' cols={3} cardImgHeight={'232px'} withAuthor={true} />
+                <SimpleCard route='designer_interiors' cols={3} cardImgHeight={'auto'} withAuthor={true} />
 
               </Box>
               {designerWorks?.length > 0 ? (

@@ -635,24 +635,25 @@ export default function SimpleCard(props: InputProps) {
           className="models__card--wrap"
           container
           spacing={3}
-          sx={{ width: "100%", margin: "0" }}
+          sx={{ width: "100%", margin: 0, border: "1px solid transparent" }}
         >
           {data_sliced?.map((model: any, index: any) => (
             <Grid
               className="models__card"
               sx={{
                 [`&:not(:nth-of-type(${props?.cols}n))`]: {
-                  padding: "0 9.5px 0 0 !important",
+                  padding: { xs: "0 9.5px 0 0 !important", md: "0 9.5px 0 0 !important" },
                 },
                 [`&:nth-of-type(${props?.cols}n)`]: {
-                  padding: "0 0 0 0 !important",
+                  padding: { xs: "0 9.5px 0 0 !important", md: "0 9.5px 0 0 !important" },
                 },
+                maxWidth: "100%",
                 marginBottom: "10px",
               }}
               key={index}
               md={12 / props?.cols}
-              sm={12 / (props?.cols - 2)}
-              xs={12 / (props?.cols - 4)}
+              sm={12 / (props?.cols - 3)}
+              xs={12 / (props?.cols - 1)}
               item
             >
               <CustomCard
