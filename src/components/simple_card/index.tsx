@@ -377,17 +377,17 @@ export default function SimpleCard(props: InputProps) {
               className="models__card"
               sx={{
                 [`&:not(:nth-of-type(${props?.cols}n))`]: {
-                  padding: "0 9.5px 0 0 !important",
+                  padding: "0 4px 0 4px !important",
                 },
                 [`&:nth-of-type(${props?.cols}n)`]: {
-                  padding: "0 0 0 0 !important",
+                  padding: "0 4px 0 4px !important",
                 },
                 marginBottom: "10px",
               }}
               key={index}
               md={12 / props?.cols}
-              sm={12 / (props?.cols - 2)}
-              xs={12 / (props?.cols - 4)}
+              sm={12 / (props?.cols - 1)}
+              xs={12 / (props?.cols - 2)}
               item
             >
               <CustomCardSkeleton
@@ -421,17 +421,17 @@ export default function SimpleCard(props: InputProps) {
               className="models__card"
               sx={{
                 [`&:not(:nth-of-type(${props?.cols}n))`]: {
-                  padding: "0 9.5px 0 0 !important",
+                  padding: "0 4px 0 4px !important",
                 },
                 [`&:nth-of-type(${props?.cols}n)`]: {
-                  padding: "0 0 0 0 !important",
+                  padding: "0 4px 0 4px !important",
                 },
                 marginBottom: "10px",
               }}
               key={index}
               md={12 / props?.cols}
-              sm={12 / (props?.cols - 2)}
-              xs={12 / (props?.cols - 4)}
+              sm={12 / (props?.cols - 1)}
+              xs={12 / (props?.cols - 2)}
               item
             >
               <CustomCard

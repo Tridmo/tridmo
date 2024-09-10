@@ -14,13 +14,11 @@ export default function MobileMode({ children }) {
     <Box
       sx={{
         height: "fit-content",
-        padding: "2px 2px 2px 13px",
         display: { xs: "flex", md: "none" },
         position: "fixed",
         bottom: "10%",
-        left: -10,
-        backgroundColor: "white",
-        borderRadius: "50%",
+        left: 15,
+        zIndex: 10
       }}
     >
       <IconButton
@@ -28,6 +26,7 @@ export default function MobileMode({ children }) {
         aria-label="open drawer"
         onClick={toggleDrawer(true)}
         edge="start"
+        style={{backgroundColor: "#fff", borderRadius: "50%", padding: "2px", border: "1px solid #ccc"}}
       >
         <ChevronRight />
       </IconButton>
@@ -39,7 +38,7 @@ export default function MobileMode({ children }) {
       >
         <IconButton
           onClick={toggleDrawer(false)}
-          sx={{ position: "absolute", top: 15, right: 15 }}
+          sx={{ position: "absolute", top: -4, right: -4 }}
         >
           <Close />
         </IconButton>

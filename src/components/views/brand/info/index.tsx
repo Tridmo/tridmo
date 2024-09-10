@@ -83,19 +83,22 @@ export default function BrandInfo() {
       className='products__info' item
       sx={{
         maxWidth: '360px',
+        height: 'fit-content',
         p: '24px',
         border: '1px solid #E0E0E0',
         bgcolor: '#fff',
       }}
     >
-      <Image
-        width={312}
-        height={312}
-        priority
-        alt=""
-        style={{ objectFit: "cover", border: '1px solid #0000004D' }}
-        src={`${IMAGES_BASE_URL}/${brand?.image_src}`}
-      />
+      <Box maxWidth={312} maxHeight={312}>
+        <Image
+          width={0}
+          height={0}
+          priority
+          alt={brand?.name}
+          style={{width: "100%", height: "100%", objectFit: "cover", border: '1px solid #0000004D' }}
+          src={`${IMAGES_BASE_URL}/${brand?.image_src}`}
+        />
+      </Box>
 
       <SimpleTypography
         text={brand?.name}
