@@ -33,6 +33,8 @@ import Sorts from "../../views/sorts";
 export default function InteriorsPage() {
   const dispatch = useDispatch<any>();
   const searchParams = useSearchParams();
+  const matches = useMediaQuery('(max-width:743px)');
+
   const IsFilterOpen = useSelector(
     (state: any) => state?.modal_checker?.isFilterModal
   );
@@ -191,61 +193,57 @@ export default function InteriorsPage() {
               paddingBottom: { xs: "10px", sm: 0 },
             }}
           >
-            <Grid
-              item
-              lg={12}
-              md={9}
-              sm={width < 900 ? 9 : width < 700 ? 9 : 12}
-              xs={12}
-            >
-              <Sorts
-                route={"interiors"}
-                dataCount={
-                  <Grid
-                    sx={{
-                      padding: "0 !important",
-                      display: "flex",
-                      alignItems: "baseline",
-                    }}
-                  >
-                    <p>
-                      <SimpleTypography
-                        text={`Показаны ${dataItemIndex<string>(
+            <Grid item lg={12} md={12} sm={12} xs={12}>
+              <Sorts route={'interiors'} dataCount={
+                <>
+                  <p style={{ margin: matches ? '0 0 auto 0' : 'auto 0' }}>
+                    <SimpleTypography
+                      text={`Показаны ${dataItemIndex<string>(
+                        all__interiors?.data?.pagination?.limit,
+                        all__interiors?.data?.pagination?.current,
+                        1
+                      ) || 0
+                        }–${dataItemIndex<string>(
                           all__interiors?.data?.pagination?.limit,
                           all__interiors?.data?.pagination?.current,
-                          1
+                          all__interiors?.data?.models?.length
                         ) || 0
-                          }–${dataItemIndex<string>(
-                            all__interiors?.data?.pagination?.limit,
-                            all__interiors?.data?.pagination?.current,
-                            all__interiors?.data?.models?.length
-                          ) || 0
-                          } из ${all__interiors?.data?.pagination?.data_count || 0
-                          } моделей`}
-                        className="pagenation__desc"
-                      />
-                    </p>
-                  </Grid>
-                }
-              />
+                        } из ${all__interiors?.data?.pagination?.data_count || 0
+                        } моделей`}
+                      className="pagenation__desc"
+                    />
+                  </p>
+                  {
+                    matches &&
+                    <Buttons
+                      name={'Фильтры'}
+                      childrenFirst
+                      className='bookmark__btn'
+                      onClick={() => dispatch(setFiltersModal(true))}
+                    >
+                      <FilterAlt />
+                    </Buttons>
+
+                  }
+                </>
+              } />
             </Grid>
 
-            {mdScreen && (
+            {(mdScreen && !matches) && (
               <Grid
                 md={3}
-                sm={12}
                 sx={{
-                  width: "100vw !important",
+                  width: '100%',
                   marginBottom: 1,
-                  display: "flex",
+                  display: { md: "flex", sm: 'flex', xs: 'none' },
                   justifyContent: "flex-end",
                   alignItems: "center",
                 }}
               >
                 <Buttons
-                  name={smScreen ? "Фильтры" : width < 650 ? "" : "Фильтры"}
+                  name={'Фильтры'}
                   childrenFirst
-                  className="bookmark__btn"
+                  className='bookmark__btn'
                   onClick={() => dispatch(setFiltersModal(true))}
                 >
                   <FilterAlt />

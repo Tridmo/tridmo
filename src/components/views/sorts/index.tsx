@@ -1,6 +1,6 @@
 "use client"
 
-import { Box, Grid, styled, useMediaQuery } from '@mui/material'
+import { Box, Grid, MenuItem, styled, useMediaQuery } from '@mui/material'
 import { ThemeProps } from '../../../types/theme';
 import SimpleTypography from '../../typography'
 import { useCallback, useEffect, useState } from 'react';
@@ -15,10 +15,9 @@ import { modelOrderBy } from '../../../types/filters';
 import Buttons from '../../buttons';
 import { setFiltersModal } from '../../../data/modal_checker';
 import { FilterAlt } from '@mui/icons-material';
-const FiltersItem = styled(Box)(
+const FiltersItem = styled(MenuItem)(
   ({ theme }: ThemeProps) => `
         background: #F5F5F5;
-        padding: 8px 16px;
         display:flex;
         align-items: center;
         justify-content: center;
@@ -39,10 +38,6 @@ const FiltersItem = styled(Box)(
   `
 );
 
-const filtersWrapStyle = {
-  width: "100%",
-  paddingLeft: "8px",
-}
 
 function Sorts({ route, dataCount = <></>, ...props }) {
 
@@ -83,6 +78,7 @@ function Sorts({ route, dataCount = <></>, ...props }) {
   const searchParams = useSearchParams();
   const dispatch = useDispatch<any>();
   const router = useRouter();
+  const matches = useMediaQuery('(max-width:743px)');
   const xsScreen = useMediaQuery('(max-width:600px)');
   const mdScreen = useMediaQuery('(max-width:960px)');
 
@@ -141,49 +137,57 @@ function Sorts({ route, dataCount = <></>, ...props }) {
   };
 
   return (
-    <Box sx={filtersWrapStyle}>
-      <Grid container sx={{ width: '100%', margin: 0 }}>
-        <Grid item lg={12} md={12} sm={12} xs={12} sx={{ display: "flex", alignItems: 'center' }}>
-          {
-            (!mdScreen || !xsScreen) &&
+    <Box sx={{
+      width: "100%",
+      paddingLeft: "8px",
+    }}>
+      <Grid container sx={{ width: '100%', margin: 0, display: "flex", alignItems: 'center' }}>
+        {
+          (!mdScreen || !xsScreen) &&
+          <Grid item>
             <SimpleTypography className='filters__title' text="Порядок:" />
-          }
+          </Grid>
+        }
+        <Grid item
+          sx={{
+            width: 'auto',
+            mr: '8px',
+            bgcolor: 'background.paper',
+          }}
+        >
           <Box
             sx={{
-              mr: '8px',
-              maxWidth: { xs: 320, sm: 540 },
-              bgcolor: 'background.paper',
-              border: '1px solid #E0E0E0'
+              border: '1px solid #E0E0E0',
+              p: 0, m: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-start'
             }}
           >
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-start'
-              }}
-            >
-              {
-                sorts?.map((item, index) => (
-                  <FiltersItem key={index}
-                    onClick={() => handleChange(index)}
-                    sx={
-                      item.isSelected ? { backgroundColor: '#FAFAFA' } : {}
-                    }
-                  >
-                    <SimpleTypography
-                      sx={{ color: item.isSelected ? '#141414 !important' : '#686868 !important' }}
-                      className='filters__item--text'
-                      text={item.title}
-                    />
-                  </FiltersItem>
-                ))
-              }
-            </Box>
+            {
+              sorts?.map((item, index) => (
+                <FiltersItem key={index}
+                  onClick={() => handleChange(index)}
+                  sx={{
+                    p: { lg: '8px 16px', md: '8px 16px', sm: '8px 16px', xs: '8px 8px' },
+                    ...(item.isSelected ? { backgroundColor: '#FAFAFA' } : {})
+                  }}
+                >
+                  <SimpleTypography
+                    sx={{ color: item.isSelected ? '#141414 !important' : '#686868 !important' }}
+                    className='filters__item--text'
+                    text={item.title}
+                  />
+                </FiltersItem>
+              ))
+            }
           </Box>
-          <Box>
-            {dataCount}
-          </Box>
+        </Grid>
+        <Grid
+          lg={3.8} md={3.8} sm={matches ? 12 : 3.8} xs={12}
+          sx={{ m: matches ? '8px 0' : '0', p: "0 !important", display: "flex", alignItems: matches ? "baseline" : 'flex-end', justifyContent: 'space-between' }}
+        >
+          {dataCount}
         </Grid>
       </Grid>
     </Box>
