@@ -161,6 +161,231 @@ function CustomCard({ model, type, link, imgHeight, tagIcon, tagText, withAuthor
     dispatch(setOpenModal(true))
   }
 
+  const CardInside = () => (
+    <Box sx={{
+      height: "auto",
+      width: "100%",
+      border: " 1px solid #e0e0e0",
+      background: "#fff",
+      position: "relative",
+      cursor: "pointer",
+      transition: "all 0.4s ease",
+      padding: "12px 12px 0 12px",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-between",
+
+      '&:hover > .settings': {
+        opacity: 1
+      }
+    }}>
+      {
+        tagText ?
+          <SimpleTypography text={tagText || ""} className='card__sale' />
+          : tagIcon ?
+            <Box
+              sx={{
+                position: 'absolute',
+                width: '24px',
+                height: '24px',
+                top: '5px',
+                right: '5px',
+                color: '#fff',
+                backgroundColor: '#7210be',
+                border: '1.5px solid #fff',
+                borderRadius: '3px',
+                zIndex: 10,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Image
+                src={tagIcon}
+                alt='icon'
+                width={14}
+                height={14}
+              />
+            </Box>
+            : !!settingsBtn ?
+              <Box
+                className='settings'
+                sx={{
+                  transition: 'all 0.4s ease',
+                  opacity: !!open ? 1 : 0,
+                  position: 'absolute',
+                  p: '6px 8px',
+                  backdropFilter: 'blur(2px)',
+                  top: '5px',
+                  right: '5px',
+                  color: '#fff',
+                  backgroundColor: '#00000066',
+                  border: '1px solid #0000001A',
+                  borderRadius: '32px',
+                  zIndex: 10,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+
+                  '&:hover > .settings_icon': {
+                    transform: "rotateZ(60deg)", transitionDuration: "500ms"
+                  }
+                }}
+                onClick={(e) => handleClick(e, model)}
+              >
+                <Image
+                  className='settings settings_icon'
+                  src={'/icons/settings-icon.svg'}
+                  alt='icon'
+                  width={20}
+                  height={20}
+                />
+                <ArrowDropDownIcon
+                  className='settings'
+                  sx={
+                    {
+                      minWidth: "11px", minHeight: "7px", color: "#fff",
+                      ...(!!open ? { transform: "rotateZ(180deg)", transitionDuration: "1000ms" } : {})
+                    }
+                  }
+                />
+              </Box>
+              : null
+      }
+      {
+        !imageSplit ?
+          <LazyLoadImage
+            src={model?.cover ? (model?.cover[0]?.image_src ? `${IMAGES_BASE_URL}/${model?.cover[0]?.image_src}` : '') : ''}
+            alt="cover"
+            effect="blur"
+            width={"100%"}
+            placeholderSrc={"/img/card-loader.jpg"}
+            height={imgHeight || `208px`}
+            delayTime={500}
+            style={{ objectFit: "cover" }}
+          />
+          :
+          <Grid container
+            rowGap={'4px'}
+            columnGap={'4px'}
+            sx={{
+              width: '100%'
+            }}
+          >
+            {
+              images.map((i, index) => (
+                i?.src && i?.src != null ?
+                  <Grid item key={index}
+                    lg={5.85}
+                    md={5.85}
+                    sm={5.85}
+                    xs={2.85}
+                    sx={{
+                      // width: '49%',
+                      height: imgHeight || '171px',
+                      border: '2px solid #F5F5F5',
+                    }}
+                  >
+                    <LazyLoadImage
+                      style={{
+                        objectFit: "cover"
+                      }}
+                      src={i?.src}
+                      alt="cover"
+                      effect="blur"
+                      width={"100%"}
+                      height={`100%`}
+                      placeholderSrc={"/img/card-loader.jpg"}
+                      delayTime={500}
+                    />
+                  </Grid>
+                  :
+                  <Grid item key={index}
+                    lg={5.85}
+                    md={5.85}
+                    sm={5.85}
+                    xs={2.85}
+                    sx={{
+                      // width: '49%',
+                      height: imgHeight || '171px',
+                      bgcolor: '#F5F5F5',
+                      border: '2px solid #F5F5F5'
+                    }}
+                  ></Grid>
+              ))
+            }
+          </Grid>
+      }
+      <Label
+        sx={{
+          width: "100%",
+          display: "flex",
+          alignItems: 'center',
+          justifyContent: "space-between",
+          padding: "13px 0"
+        }}
+      >
+        {
+          withAuthor
+            ? <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+              <Image
+                src={model?.author?.image_src ? `${IMAGES_BASE_URL}/${model?.author?.image_src}` : '/img/avatar.png'}
+                alt='avatar'
+                width={28}
+                height={28}
+                style={{
+                  borderRadius: '50%'
+                }}
+              />
+              <SimpleTypography
+                sx={{ marginLeft: '8px', display: 'flex', alignItems: 'center', textAlign: 'left' }}
+                text={model?.author?.company_name}
+                className='card__title'
+              />
+            </Box>
+            :
+            type == 'projects' ?
+              <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+                <SimpleTypography
+                  text={model?.name}
+                  sx={{
+                    fontSize: '16px',
+                    fontWeight: 500,
+                    lineHeight: '22px',
+                    textAlign: 'start',
+                    color: '#141414'
+                  }}
+                />
+                <SimpleTypography
+                  text={`${!!model?.project_models[0] ? model?.project_models?.length : 0} ${!!model?.project_models[0] && model?.project_models?.length > 1 ? 'мебели' : 'мебель'}`}
+                  sx={{
+                    fontSize: '14px',
+                    fontWeight: 400,
+                    lineHeight: '20px',
+                    textAlign: 'start',
+                    color: '#848484'
+                  }}
+                />
+              </Box>
+              :
+              <SimpleTypography
+                text={model?.name}
+                title={model?.name}
+                sx={{ ...(!brandBox || type == 'projects' ? { width: '100% !important' } : {}) }}
+                className='card__title'
+              />
+        }
+        {
+          model?.brand && model?.brand?.name && !!brandBox
+          && <SimpleTypography
+            text={`${model?.brand?.name}`}
+            className='card__title-brand'
+          />
+        }
+      </Label>
+    </Box>
+  )
+
   return (
     <>
       <DropDown
@@ -223,445 +448,18 @@ function CustomCard({ model, type, link, imgHeight, tagIcon, tagText, withAuthor
       {
         useButton ?
           <Box key={model?.id} onClick={(e) => handleBoxClick(e, link)} style={{ margin: '0', textDecoration: "none" }}>
-            <Box sx={{
-              height: "auto",
-              width: "100%",
-              border: " 1px solid #e0e0e0",
-              background: "#fff",
-              position: "relative",
-              cursor: "pointer",
-              transition: "all 0.4s ease",
-              padding: "12px 12px 0 12px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-
-              '&:hover > .settings': {
-                opacity: 1
-              }
-            }}>
-              {
-                tagText ?
-                  <SimpleTypography text={tagText || ""} className='card__sale' />
-                  : tagIcon ?
-                    <Box
-                      sx={{
-                        position: 'absolute',
-                        width: '24px',
-                        height: '24px',
-                        top: '5px',
-                        right: '5px',
-                        color: '#fff',
-                        backgroundColor: '#7210be',
-                        border: '1.5px solid #fff',
-                        borderRadius: '3px',
-                        zIndex: 10,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <Image
-                        src={tagIcon}
-                        alt='icon'
-                        width={14}
-                        height={14}
-                      />
-                    </Box>
-                    : !!settingsBtn ?
-                      <Box
-                        className='settings'
-                        sx={{
-                          transition: 'all 0.4s ease',
-                          opacity: !!open ? 1 : 0,
-                          position: 'absolute',
-                          p: '6px 8px',
-                          backdropFilter: 'blur(2px)',
-                          top: '5px',
-                          right: '5px',
-                          color: '#fff',
-                          backgroundColor: '#00000066',
-                          border: '1px solid #0000001A',
-                          borderRadius: '32px',
-                          zIndex: 10,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-
-                          '&:hover > .settings_icon': {
-                            transform: "rotateZ(60deg)", transitionDuration: "500ms"
-                          }
-                        }}
-                        onClick={(e) => handleClick(e, model)}
-                      >
-                        <Image
-                          className='settings settings_icon'
-                          src={'/icons/settings-icon.svg'}
-                          alt='icon'
-                          width={20}
-                          height={20}
-                        />
-                        <ArrowDropDownIcon
-                          className='settings'
-                          sx={
-                            {
-                              minWidth: "11px", minHeight: "7px", color: "#fff",
-                              ...(!!open ? { transform: "rotateZ(180deg)", transitionDuration: "1000ms" } : {})
-                            }
-                          }
-                        />
-                      </Box>
-                      : null
-              }
-              {
-                !imageSplit ?
-                  <LazyLoadImage
-                    src={model?.cover ? (model?.cover[0]?.image_src ? `${IMAGES_BASE_URL}/${model?.cover[0]?.image_src}` : '') : ''}
-                    alt="cover"
-                    effect="blur"
-                    width={"100%"}
-                    placeholderSrc={"/img/card-loader.jpg"}
-                    height={imgHeight || `208px`}
-                    delayTime={500}
-                    style={{ objectFit: "cover" }}
-                  />
-                  :
-                  <Grid container
-                    rowGap={'4px'}
-                    columnGap={'4px'}
-                    sx={{
-                      width: '100%'
-                    }}
-                  >
-                    {
-                      images.map((i, index) => (
-                        i?.src && i?.src != null ?
-                          <Grid item key={index}
-                            sx={{
-                              width: '49%',
-                              height: '171px',
-                              border: '2px solid #F5F5F5',
-                            }}
-                          >
-                            <LazyLoadImage
-                              style={{
-                                objectFit: "cover"
-                              }}
-                              src={i?.src}
-                              alt="cover"
-                              effect="blur"
-                              width={"100%"}
-                              height={`100%`}
-                              placeholderSrc={"/img/card-loader.jpg"}
-                              delayTime={500}
-                            />
-                          </Grid>
-                          :
-                          <Grid item key={index}
-                            sx={{
-                              width: '49%',
-                              height: '171px',
-                              bgcolor: '#F5F5F5',
-                              border: '2px solid #F5F5F5'
-                            }}
-                          ></Grid>
-                      ))
-                    }
-                  </Grid>
-              }
-              <Label
-                sx={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: 'center',
-                  justifyContent: "space-between",
-                  padding: "13px 0"
-                }}
-              >
-                {
-                  withAuthor
-                    ? <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                      <Image
-                        src={model?.author?.image_src ? `${IMAGES_BASE_URL}/${model?.author?.image_src}` : '/img/avatar.png'}
-                        alt='avatar'
-                        width={28}
-                        height={28}
-                        style={{
-                          borderRadius: '50%'
-                        }}
-                      />
-                      <SimpleTypography
-                        sx={{ marginLeft: '8px', display: 'flex', alignItems: 'center', textAlign: 'left' }}
-                        text={model?.author?.company_name}
-                        className='card__title'
-                      />
-                    </Box>
-                    :
-                    type == 'projects' ?
-                      <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-                        <SimpleTypography
-                          text={model?.name}
-                          sx={{
-                            fontSize: '16px',
-                            fontWeight: 500,
-                            lineHeight: '22px',
-                            textAlign: 'start',
-                            color: '#141414'
-                          }}
-                        />
-                        <SimpleTypography
-                          text={`${!!model?.project_models[0] ? model?.project_models?.length : 0} ${!!model?.project_models[0] && model?.project_models?.length > 1 ? 'мебели' : 'мебель'}`}
-                          sx={{
-                            fontSize: '14px',
-                            fontWeight: 400,
-                            lineHeight: '20px',
-                            textAlign: 'start',
-                            color: '#848484'
-                          }}
-                        />
-                      </Box>
-                      :
-                      <SimpleTypography
-                        text={model?.name}
-                        title={model?.name}
-                        className='card__title'
-                      />
-                }
-                {
-                  model?.brand && model?.brand?.name && !!brandBox
-                  && <SimpleTypography
-                    text={`${model?.brand?.name}`}
-                    className='card__title-brand'
-                  />
-                }
-              </Label>
-            </Box>
+            <CardInside />
           </Box>
 
           :
 
           <Link key={model?.id} href={link ? link : ""} style={{ margin: '0', textDecoration: "none" }}>
-            <Box sx={{
-              height: "auto",
-              width: "100%",
-              border: " 1px solid #e0e0e0",
-              background: "#fff",
-              position: "relative",
-              cursor: "pointer",
-              transition: "all 0.4s ease",
-              padding: "12px 12px 0 12px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-
-              '&:hover > .settings': {
-                opacity: 1
-              }
-            }}>
-              {
-                tagText ?
-                  <SimpleTypography text={tagText || ""} className='card__sale' />
-                  : tagIcon ?
-                    <Box
-                      sx={{
-                        position: 'absolute',
-                        width: '24px',
-                        height: '24px',
-                        top: '5px',
-                        right: '5px',
-                        color: '#fff',
-                        backgroundColor: '#7210be',
-                        border: '1.5px solid #fff',
-                        borderRadius: '3px',
-                        zIndex: 10,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <Image
-                        src={tagIcon}
-                        alt='icon'
-                        width={14}
-                        height={14}
-                      />
-                    </Box>
-                    : !!settingsBtn ?
-                      <Box
-                        className='settings'
-                        sx={{
-                          transition: 'all 0.4s ease',
-                          opacity: !!open ? 1 : 0,
-                          position: 'absolute',
-                          p: '6px 8px',
-                          backdropFilter: 'blur(2px)',
-                          top: '5px',
-                          right: '5px',
-                          color: '#fff',
-                          backgroundColor: '#00000066',
-                          border: '1px solid #0000001A',
-                          borderRadius: '32px',
-                          zIndex: 10,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-
-                          '&:hover > .settings_icon': {
-                            transform: "rotateZ(60deg)", transitionDuration: "500ms"
-                          }
-                        }}
-                        onClick={(e) => handleClick(e, model)}
-                      >
-                        <Image
-                          className='settings settings_icon'
-                          src={'/icons/settings-icon.svg'}
-                          alt='icon'
-                          width={20}
-                          height={20}
-                        />
-                        <ArrowDropDownIcon
-                          className='settings'
-                          sx={
-                            {
-                              minWidth: "11px", minHeight: "7px", color: "#fff",
-                              ...(!!open ? { transform: "rotateZ(180deg)", transitionDuration: "1000ms" } : {})
-                            }
-                          }
-                        />
-                      </Box>
-                      : null
-              }
-              {
-                !imageSplit ?
-                  <LazyLoadImage
-                    src={model?.cover ? (model?.cover[0]?.image_src ? `${IMAGES_BASE_URL}/${model?.cover[0]?.image_src}` : '') : ''}
-                    alt="cover"
-                    effect="blur"
-                    width={"100%"}
-                    placeholderSrc={"/img/card-loader.jpg"}
-                    height={imgHeight || `208px`}
-                    delayTime={500}
-                    style={{ objectFit: "cover" }}
-                  />
-                  :
-                  <Grid container
-                    rowGap={'4px'}
-                    columnGap={'4px'}
-                    sx={{
-                      width: '100%'
-                    }}
-                  >
-                    {
-                      images.map((i, index) => (
-                        i?.src && i?.src != null ?
-                          <Grid item key={index}
-                            sx={{
-                              width: '49%',
-                              height: '171px',
-                              border: '2px solid #F5F5F5',
-                            }}
-                          >
-                            <LazyLoadImage
-                              style={{
-                                objectFit: "cover"
-                              }}
-                              src={i?.src}
-                              alt="cover"
-                              effect="blur"
-                              width={"100%"}
-                              height={`100%`}
-                              placeholderSrc={"/img/card-loader.jpg"}
-                              delayTime={500}
-                            />
-                          </Grid>
-                          :
-                          <Grid item key={index}
-                            sx={{
-                              width: '49%',
-                              height: '171px',
-                              bgcolor: '#F5F5F5',
-                              border: '2px solid #F5F5F5'
-                            }}
-                          ></Grid>
-                      ))
-                    }
-                  </Grid>
-              }
-              <Label
-                sx={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: 'center',
-                  justifyContent: "space-between",
-                  padding: "13px 0"
-                }}
-              >
-                {
-                  withAuthor
-                    ? <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                      <Image
-                        src={model?.author?.image_src ? `${IMAGES_BASE_URL}/${model?.author?.image_src}` : '/img/avatar.png'}
-                        alt='avatar'
-                        width={28}
-                        height={28}
-                        style={{
-                          borderRadius: '50%'
-                        }}
-                      />
-                      <SimpleTypography
-                        sx={{ marginLeft: '8px', display: 'flex', alignItems: 'center', textAlign: 'left' }}
-                        text={model?.author?.company_name}
-                        className='card__title'
-                      />
-                    </Box>
-                    :
-                    type == 'projects' ?
-                      <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-                        <SimpleTypography
-                          text={model?.name}
-                          sx={{
-                            fontSize: '16px',
-                            fontWeight: 500,
-                            lineHeight: '22px',
-                            textAlign: 'start',
-                            color: '#141414'
-                          }}
-                        />
-                        <SimpleTypography
-                          text={`${!!model?.project_models[0] ? model?.project_models?.length : 0} ${!!model?.project_models[0] && model?.project_models?.length > 1 ? 'мебели' : 'мебель'}`}
-                          sx={{
-                            fontSize: '14px',
-                            fontWeight: 400,
-                            lineHeight: '20px',
-                            textAlign: 'start',
-                            color: '#848484'
-                          }}
-                        />
-                      </Box>
-                      :
-                      <SimpleTypography
-                        text={model?.name}
-                        title={model?.name}
-                        sx={{ ...(!brandBox || type == 'projects' ? { width: '100% !important' } : {}) }}
-                        className='card__title'
-                      />
-                }
-                {
-                  model?.brand && model?.brand?.name && !!brandBox
-                  && <SimpleTypography
-                    text={`${model?.brand?.name}`}
-                    className='card__title-brand'
-                  />
-                }
-              </Label>
-            </Box>
+            <CardInside />
           </Link>
       }
 
     </>
   )
 }
-
-
 
 export default CustomCard

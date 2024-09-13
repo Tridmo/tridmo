@@ -21,8 +21,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Buttons from "../buttons";
-import SimpleTypography from "../typography";
+import Buttons from "../../../buttons";
+import SimpleTypography from "../../../typography";
 
 interface ProfileProps {
   of: "designer" | "own";
@@ -122,10 +122,10 @@ export default function ProfileMobileMode(props: ProfileProps) {
               <Box sx={{ display: "flex", alignItems: "center", gap: "16px" }}>
                 <Box
                   sx={{
-                    width: "152px",
-                    height: "152px",
+                    width: { lg: '152px', md: '152px', sm: '140px', xs: '112px' },
+                    height: { lg: '152px', md: '152px', sm: '140px', xs: '112px' },
                     position: "relative",
-                    borderRadius: `${152 / 2}px`,
+                    borderRadius: { lg: `${152 / 2}px`, md: `${152 / 2}px`, sm: `${140 / 2}px`, xs: `${112 / 2}px` },
                     bgcolor: "#fff",
                     overflow: "hidden",
 
@@ -135,8 +135,8 @@ export default function ProfileMobileMode(props: ProfileProps) {
                   }}
                 >
                   <Image
-                    width={152}
-                    height={152}
+                    fill
+                    sizes={'100%'}
                     alt="avatar"
                     style={{
                       objectFit: "cover",
@@ -161,8 +161,8 @@ export default function ProfileMobileMode(props: ProfileProps) {
                           bottom: 0,
                           left: 0,
                           rigth: 0,
-                          width: "152px",
-                          height: "40px",
+                          width: { lg: '152px', md: '152px', sm: '140px', xs: '112px' },
+                          height: '40px',
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
@@ -176,7 +176,7 @@ export default function ProfileMobileMode(props: ProfileProps) {
                         <Image
                           width={24}
                           height={24}
-                          alt="avatar"
+                          alt=""
                           src={"/icons/reload-icon.svg"}
                         />
                       </Buttons>
@@ -197,23 +197,23 @@ export default function ProfileMobileMode(props: ProfileProps) {
                 <Box>
                   <SimpleTypography
                     sx={{
-                      fontSize: "25px",
+                      fontSize: { lg: "25px", md: '25px', sm: '22px', xs: '20px' },
                       fontWeight: "500",
                       lineFeight: "26px",
                       letterSpacing: "-0.02em",
-                      textAlign: "center",
+                      textAlign: { lg: "center", md: 'center', sm: 'start', xs: 'start' },
                     }}
                     text={profileInfo?.full_name}
                   />
                   <SimpleTypography
                     sx={{
-                      fontSize: "20px",
+                      fontSize: { lg: "20px", md: '20px', sm: '18px', xs: '16px' },
                       fontWeight: "500",
                       lineFeight: "26px",
                       letterSpacing: "-0.02em",
-                      textAlign: "center",
+                      textAlign: { lg: "center", md: 'center', sm: 'start', xs: 'start' },
                     }}
-                    text={profileInfo?.username}
+                    text={`@${profileInfo?.username}`}
                   />
                   <Box sx={{ display: "flex", alignItems: "center" }}>
                     <SimpleTypography
@@ -245,7 +245,7 @@ export default function ProfileMobileMode(props: ProfileProps) {
               </Box>
               <Box
                 sx={{
-                  marginTop: "16px",
+                  m: "16px 0 8px 0",
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
@@ -255,18 +255,19 @@ export default function ProfileMobileMode(props: ProfileProps) {
                 <SimpleTypography
                   text={"Компания:"}
                   sx={{
-                    fontSize: "16px",
+                    fontSize: { lg: "16px", md: '16px', sm: '15px', xs: '14px' },
                   }}
                 />
                 <SimpleTypography
                   text={profileInfo?.company_name}
                   sx={{
-                    fontSize: "16px",
+                    fontSize: { lg: "16px", md: '16px', sm: '15px', xs: '14px' },
                   }}
                 />
               </Box>
               <Box
                 sx={{
+                  my: "8px",
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
@@ -276,19 +277,20 @@ export default function ProfileMobileMode(props: ProfileProps) {
                 <SimpleTypography
                   text={"Дата регистрации:"}
                   sx={{
-                    fontSize: "16px",
+                    fontSize: { lg: "16px", md: '16px', sm: '15px', xs: '14px' },
                   }}
                 />
                 <SimpleTypography
                   text={formatDate(profileInfo?.created_at)}
                   sx={{
-                    fontSize: "16px",
+                    fontSize: { lg: "16px", md: '16px', sm: '15px', xs: '14px' },
                   }}
                 />
               </Box>
               {props?.of == "own" && (
                 <Box
                   sx={{
+                    my: "8px",
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
@@ -296,15 +298,15 @@ export default function ProfileMobileMode(props: ProfileProps) {
                   }}
                 >
                   <SimpleTypography
-                    text={"Электрон Почта:"}
+                    text={"Э-почта:"}
                     sx={{
-                      fontSize: "16px",
+                      fontSize: { lg: "16px", md: '16px', sm: '15px', xs: '14px' },
                     }}
                   />
                   <SimpleTypography
                     text={profileInfo?.email}
                     sx={{
-                      fontSize: "16px",
+                      fontSize: { lg: "16px", md: '16px', sm: '15px', xs: '14px' },
                     }}
                   />
                 </Box>
@@ -330,14 +332,14 @@ export default function ProfileMobileMode(props: ProfileProps) {
                 <SimpleTypography
                   text={"Адрес:"}
                   sx={{
-                    fontSize: "16px",
+                    fontSize: { lg: "16px", md: '16px', sm: '15px', xs: '14px' },
                   }}
                 />
                 {!!profileInfo?.address ? (
                   <SimpleTypography
                     text={profileInfo?.address}
                     sx={{
-                      fontSize: "16px",
+                      fontSize: { lg: "16px", md: '16px', sm: '15px', xs: '14px' },
                     }}
                   />
                 ) : (
@@ -355,14 +357,14 @@ export default function ProfileMobileMode(props: ProfileProps) {
                 <SimpleTypography
                   text={"Сайт:"}
                   sx={{
-                    fontSize: "16px",
+                    fontSize: { lg: "16px", md: '16px', sm: '15px', xs: '14px' },
                   }}
                 />
                 {!!profileInfo?.portfolio_link ? (
                   <SimpleTypography
                     text={profileInfo?.portfolio_link || ""}
                     sx={{
-                      fontSize: "16px",
+                      fontSize: { lg: "16px", md: '16px', sm: '15px', xs: '14px' },
                     }}
                   />
                 ) : (
@@ -380,14 +382,14 @@ export default function ProfileMobileMode(props: ProfileProps) {
                 <SimpleTypography
                   text={"Телефон:"}
                   sx={{
-                    fontSize: "16px",
+                    fontSize: { lg: "16px", md: '16px', sm: '15px', xs: '14px' },
                   }}
                 />
                 {!!profileInfo?.phone ? (
                   <SimpleTypography
                     text={profileInfo?.phone}
                     sx={{
-                      fontSize: "16px",
+                      fontSize: { lg: "16px", md: '16px', sm: '15px', xs: '14px' },
                     }}
                   />
                 ) : (
@@ -406,7 +408,7 @@ export default function ProfileMobileMode(props: ProfileProps) {
                   <SimpleTypography
                     text={"Инстаграм:"}
                     sx={{
-                      fontSize: "16px",
+                      fontSize: { lg: "16px", md: '16px', sm: '15px', xs: '14px' },
                     }}
                   />
                   {props.of == "own" && !profileInfo?.instagram ? (
@@ -446,7 +448,7 @@ export default function ProfileMobileMode(props: ProfileProps) {
                 </Grid>
               </>
             ) : (
-              <Grid item md={12} xs={12}>
+              <Grid item md={12} xs={12} sx={{ mt: { lg: 0, md: 0, sm: '24px', xs: '24px' } }}>
                 <Buttons
                   sx={{ width: "100%" }}
                   className="bookmark__btn"
@@ -474,7 +476,6 @@ export default function ProfileMobileMode(props: ProfileProps) {
             sx={{
               width: "100%",
               marginY: "16px",
-              paddingInline: { xs: "24px", md: 0 },
               justifyContent: "space-between",
               display: { xs: "flex", md: "none" },
             }}
@@ -483,7 +484,7 @@ export default function ProfileMobileMode(props: ProfileProps) {
               sx={{
                 width: "48%",
                 height: "auto !important",
-                padding: "8px 20px !important",
+                padding: { lg: "8px 20px !important", md: "8px 20px !important", sm: "8px 12px !important", xs: "8px 12px !important" },
               }}
               name="Создать проект"
               childrenFirst={true}
@@ -505,7 +506,7 @@ export default function ProfileMobileMode(props: ProfileProps) {
                 sx={{
                   width: "100%",
                   height: "auto !important",
-                  padding: "8px 20px !important",
+                  padding: { lg: "8px 20px !important", md: "8px 20px !important", sm: "8px 12px !important", xs: "8px 12px !important" },
                 }}
                 name="Добавить работу"
                 childrenFirst={true}

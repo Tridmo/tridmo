@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Buttons from "../../buttons";
 import SearchInput from "../../inputs/search";
 // import { searchModels } from 'src/data/search_model';
-import BasicModal from "@/components/modals/login_modal";
+import BasicModal from "@/components/modals/modal";
 import { selectGetOrders } from "@/data/get_orders";
 import { ThemeProps } from "@/types/theme";
 import { ChatOutlined, Close, ControlPointOutlined, PersonOutlineOutlined, SearchOutlined } from "@mui/icons-material";

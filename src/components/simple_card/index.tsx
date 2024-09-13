@@ -1,7 +1,7 @@
 import SimpleTypography from "@/components/typography";
 import { selectAllModels } from "@/data/get_all_models";
 import { ThemeProps } from "@/types/theme";
-import { Grid, Paper, styled } from "@mui/material";
+import { Grid, Paper, styled, useMediaQuery } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -271,25 +271,17 @@ export default function SimpleCard(props: InputProps) {
         <Grid
           className="models__card--wrap"
           container
-          spacing={3}
+          spacing={1}
           sx={{ width: "100%", margin: "0" }}
         >
           {fakeModels(8)?.map((model: any, index: any) => (
             <Grid
               className="models__card"
-              sx={{
-                [`&:not(:nth-of-type(${props?.cols}n))`]: {
-                  padding: "0 9.5px 0 0 !important",
-                },
-                [`&:nth-of-type(${props?.cols}n)`]: {
-                  padding: "0 0 0 0 !important",
-                },
-                marginBottom: "10px",
-              }}
               key={index}
+              lg={12 / props?.cols}
               md={12 / props?.cols}
-              sm={12 / (props?.cols - 2)}
-              xs={12 / (props?.cols - 4)}
+              sm={12 / props?.cols}
+              xs={12 / (props?.cols - 1)}
               item
             >
               <CustomCardSkeleton
@@ -315,25 +307,17 @@ export default function SimpleCard(props: InputProps) {
         <Grid
           className="models__card--wrap"
           container
-          spacing={3}
+          spacing={1}
           sx={{ width: "100%", margin: "0" }}
         >
           {data_sliced?.map((model: any, index: any) => (
             <Grid
               className="models__card"
-              sx={{
-                [`&:not(:nth-of-type(${props?.cols}n))`]: {
-                  padding: "0 9.5px 0 0 !important",
-                },
-                [`&:nth-of-type(${props?.cols}n)`]: {
-                  padding: "0 0 0 0 !important",
-                },
-                marginBottom: "10px",
-              }}
               key={index}
+              lg={12 / props?.cols}
               md={12 / props?.cols}
-              sm={12 / (props?.cols - 2)}
-              xs={12 / (props?.cols - 4)}
+              sm={12 / props?.cols}
+              xs={12 / (props?.cols - 1)}
               item
             >
               <CustomCard
@@ -478,21 +462,12 @@ export default function SimpleCard(props: InputProps) {
         <Grid
           className="models__card--wrap"
           container
-          spacing={3}
+          spacing={1}
           sx={{ width: "100%", margin: "0" }}
         >
           {fakeModels(8)?.map((model: any, index: any) => (
             <Grid
               className="models__card"
-              sx={{
-                [`&:not(:nth-of-type(${props?.cols}n))`]: {
-                  padding: "0 9.5px 0 0 !important",
-                },
-                [`&:nth-of-type(${props?.cols}n)`]: {
-                  padding: "0 0 0 0 !important",
-                },
-                marginBottom: "10px",
-              }}
               key={index}
               md={12 / props?.cols}
               sm={12 / (props?.cols - 2)}
@@ -517,29 +492,19 @@ export default function SimpleCard(props: InputProps) {
       const data_sliced = props?.sliced
         ? all__interiors?.data?.interiors?.slice(0, props?.sliced)
         : all__interiors?.data?.interiors;
-        
+
       const width = window.innerWidth
-      
+
       return data_sliced?.length > 0 ? (
         <Grid
           className="models__card--wrap"
           container
-          spacing={3}
+          spacing={1}
           sx={{ width: "100%", margin: 0, border: "1px solid transparent" }}
         >
           {data_sliced?.map((model: any, index: any) => (
             <Grid
               className="models__card"
-              sx={{
-                [`&:not(:nth-of-type(${props?.cols}n))`]: {
-                  padding: { xs: "0 5px 0 0 !important", md: "0 9.5px 0 0 !important" },
-                },
-                [`&:nth-of-type(${props?.cols}n)`]: {
-                  padding: {xs: "0 5px 0 0 !important", md: "0 !important"},
-                },
-                maxWidth: "100%",
-                marginBottom: "10px",
-              }}
               key={index}
               lg={12 / props?.cols}
               md={12 / (props?.cols - 1)}
@@ -552,7 +517,7 @@ export default function SimpleCard(props: InputProps) {
                 link={`/${props?.route}/${model?.slug}`}
                 key={index}
                 model={model}
-                imgHeight={props?.cardImgHeight || width < 900 ? "100%": "256px"}
+                imgHeight={props?.cardImgHeight || width < 900 ? "100%" : "256px"}
                 withAuthor={props?.withAuthor}
               />
             </Grid>
@@ -689,25 +654,17 @@ export default function SimpleCard(props: InputProps) {
         <Grid
           className="models__card--wrap"
           container
-          spacing={3}
+          spacing={1}
           sx={{ width: "100%", margin: "0" }}
         >
           {fakeModels(8)?.map((model: any, index: any) => (
             <Grid
               className="models__card"
-              sx={{
-                [`&:not(:nth-of-type(${props?.cols}n))`]: {
-                  padding: "0 9.5px 0 0 !important",
-                },
-                [`&:nth-of-type(${props?.cols}n)`]: {
-                  padding: "0 0 0 0 !important",
-                },
-                marginBottom: "10px",
-              }}
               key={index}
+              lg={12 / props?.cols}
               md={12 / props?.cols}
-              sm={12 / (props?.cols - 2)}
-              xs={12 / (props?.cols - 4)}
+              sm={12 / props?.cols}
+              xs={12 / (props?.cols - 1)}
               item
             >
               <CustomCardSkeleton
@@ -733,25 +690,17 @@ export default function SimpleCard(props: InputProps) {
         <Grid
           className="models__card--wrap"
           container
-          spacing={3}
+          spacing={1}
           sx={{ width: "100%", margin: "0" }}
         >
           {data_sliced?.map((model: any, index: any) => (
             <Grid
               className="models__card"
-              sx={{
-                [`&:not(:nth-of-type(${props?.cols}n))`]: {
-                  padding: "0 9.5px 0 0 !important",
-                },
-                [`&:nth-of-type(${props?.cols}n)`]: {
-                  padding: "0 0 0 0 !important",
-                },
-                marginBottom: "10px",
-              }}
               key={index}
+              lg={12 / props?.cols}
               md={12 / props?.cols}
-              sm={12 / (props?.cols - 2)}
-              xs={12 / (props?.cols - 4)}
+              sm={12 / props?.cols}
+              xs={12 / (props?.cols - 1)}
               item
             >
               <CustomCard
@@ -909,21 +858,12 @@ export default function SimpleCard(props: InputProps) {
         <Grid
           className="models__card--wrap"
           container
-          spacing={3}
+          spacing={1}
           sx={{ width: "100%", margin: "0" }}
         >
           {fakeModels(8)?.map((model: any, index: any) => (
             <Grid
               className="models__card"
-              sx={{
-                [`&:not(:nth-of-type(${2}n))`]: {
-                  padding: "0 9.5px 0 0 !important",
-                },
-                [`&:nth-of-type(${2}n)`]: {
-                  padding: "0 0 0 0 !important",
-                },
-                marginBottom: "10px",
-              }}
               key={index}
               md={6}
               sm={12}
@@ -934,7 +874,7 @@ export default function SimpleCard(props: InputProps) {
                 type={props?.route}
                 key={index}
                 model={model}
-                imgHeight={"346px"}
+                imgHeight={props?.cardImgHeight || "171px"}
               />
             </Grid>
           ))}
@@ -951,24 +891,18 @@ export default function SimpleCard(props: InputProps) {
         <Grid
           className="models__card--wrap"
           container
-          spacing={3}
+          rowSpacing={1}
+          columnSpacing={{ lg: 1, md: 1, sm: 1, xs: 0 }}
           sx={{ width: "100%", margin: "0" }}
         >
           {data_sliced?.map((model: any, index: any) => (
             <Grid
               className="models__card"
-              sx={{
-                [`&:not(:nth-of-type(${2}n))`]: {
-                  padding: "0 9.5px 0 0 !important",
-                },
-                [`&:nth-of-type(${2}n)`]: {
-                  padding: "0 0 0 0 !important",
-                },
-                marginBottom: "10px",
-              }}
               key={index}
+              xl={12 / 3}
+              lg={12 / 3}
               md={6}
-              sm={12}
+              sm={6}
               xs={12}
               item
             >
@@ -980,7 +914,7 @@ export default function SimpleCard(props: InputProps) {
                 link={`/projects/${model?.id}`}
                 key={index}
                 model={model}
-                imgHeight={props?.cardImgHeight || "268px"}
+                imgHeight={props?.cardImgHeight || "171"}
                 withAuthor={props?.withAuthor}
               />
             </Grid>

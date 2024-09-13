@@ -27,7 +27,7 @@ interface ProfileProps {
 const wrapperSx: SxProps = {
   display: 'flex',
   flexDirection: 'column',
-  maxWidth: {xs: "100%", md: "400px"},
+  maxWidth: { xs: "100%", md: "400px" },
   width: '100%',
 }
 const tableWrapperSx: SxProps = {
@@ -204,7 +204,7 @@ export default function ProfileInfo(props: ProfileProps) {
               lineFeight: '26px',
               letterSpacing: '-0.02em',
               textAlign: 'center',
-            }} text={profileInfo?.username} />
+            }} text={`@${profileInfo?.username}`} />
 
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               <SimpleTypography sx={{
@@ -460,9 +460,9 @@ export default function ProfileInfo(props: ProfileProps) {
 
         {
           props?.of == 'own'
-            ? <Grid container sx={{ width: '100%', paddingInline: {xs: "24px", md: 0 }, justifyContent: "space-between" }}>
+            ? <Grid container sx={{ width: '100%', paddingInline: { xs: "24px", md: 0 }, justifyContent: "space-between" }}>
               <Buttons
-                sx={{ width: '48%', height: "auto !important", padding: "8px 20px !important"}}
+                sx={{ width: '48%', height: "auto !important", padding: "8px 20px !important" }}
                 name="Создать проект"
                 childrenFirst={true}
                 className="login__btn"
@@ -698,7 +698,7 @@ export default function ProfileInfo(props: ProfileProps) {
 
         {
           props?.of == 'own'
-            ? <Grid container sx={{ width: '100%', paddingInline: {xs: "24px", md: 0}, justifyContent: "space-between" }}>
+            ? <Grid container sx={{ width: '100%', paddingInline: { xs: "24px", md: 0 }, justifyContent: "space-between" }}>
               <Grid item md={12} xs={12}>
                 <Skeleton
                   variant="rectangular"

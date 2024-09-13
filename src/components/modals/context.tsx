@@ -881,7 +881,7 @@ export const EditProfileContext = (props: LoginContextProps) => {
   const profile = useSelector(selectMyProfile)
 
   const formControlSx: SxProps = {
-    width: '90%',
+    width: { lg: '90%', md: '90%', sm: '100%', xs: '100%' },
 
     ':not(:last-child)': {
       marginBottom: '26px'
@@ -894,6 +894,7 @@ export const EditProfileContext = (props: LoginContextProps) => {
         initialValues={{
           full_name: profile?.full_name || '',
           username: profile?.username || '',
+          company_name: profile?.company_name || '',
           address: profile?.address || '',
           telegram: profile?.telegram || '',
           instagram: profile?.instagram || '',
@@ -902,15 +903,15 @@ export const EditProfileContext = (props: LoginContextProps) => {
           submit: null
         }}
         validationSchema={Yup.object().shape({
-          first_name: Yup.string()
-            .max(255, 'Слишком длинное имя.')
-            .min(2, 'Слишком короткое имя - минимум 2 символа.'),
-          last_name: Yup.string()
-            .max(255, 'Слишком длинная фамилия.')
-            .min(2, 'Слишком короткая фамилия - минимум 2 символа.'),
+          full_name: Yup.string()
+            .max(255, 'Очень длинный')
+            .min(2, 'Очень короткий - минимум 2 символа.'),
+          company_name: Yup.string()
+            .max(255, 'Очень длинный')
+            .min(2, 'Очень короткий - минимум 2 символа.'),
           username: Yup.string()
-            .max(255, 'Слишком длинное имя пользователя.')
-            .min(5, 'Слишком короткая имя пользователя - минимум 5 символа.')
+            .max(255, 'Очень длинный')
+            .min(5, 'Очень короткий - минимум 5 символа.')
             .matches(
               usernameRegex,
               'Имя пользователя может содержать только буквы, цифры, символы подчеркивания (_), тире (-) и точки (.).'
@@ -942,6 +943,7 @@ export const EditProfileContext = (props: LoginContextProps) => {
 
             if (_values.full_name != profile?.full_name) formData.append('full_name', _values.full_name)
             if (_values.username != profile?.username) formData.append('username', _values.username)
+            if (_values.company_name != profile?.company_name) formData.append('company_name', _values.company_name)
             if (_values.address != profile?.address) formData.append('address', _values.address)
             if (_values.telegram != profile?.telegram) formData.append('telegram', _values.telegram)
             if (_values.instagram != profile?.instagram) formData.append('instagram', _values.instagram)
@@ -975,12 +977,18 @@ export const EditProfileContext = (props: LoginContextProps) => {
           <form onSubmit={handleSubmit}>
             <Grid style={{ transformOrigin: '0 0 0' }}>
               <Grid sx={{ display: 'flex', alignItems: "start", justifyContent: "start", flexDirection: "column" }}>
-                <SimpleTypography className="modal__title" variant="h6" text="Редактировать профиль" />
+                <SimpleTypography
+                  sx={{ mb: '8px', fontSize: { sm: '24px !important', xs: '24px !important' } }}
+                  className="modal__title"
+                  variant="h6"
+                  text="Редактировать профиль"
+                />
 
                 <Grid container
                   sx={{
-                    width: '600px',
+                    width: { lg: '600px', md: '600px', sm: '100%', xs: '100%' },
                     display: 'flex',
+                    flexDirection: { lg: 'row', md: 'row', sm: 'column', xs: 'column' },
                     alignItems: 'flex-start',
                     justifyContent: 'space-between'
                   }}
@@ -990,11 +998,11 @@ export const EditProfileContext = (props: LoginContextProps) => {
                     item
                     sx={{
                       display: 'flex',
-                      width: '50%',
+                      width: { lg: '50%', md: '50%', sm: '100%', xs: '100%' },
                       flexDirection: 'column',
                       alignItems: 'flex-start',
                       justifyContent: 'flex-start',
-                      borderRight: '1px solid #E0E0E0'
+                      borderRight: { lg: '1px solid #E0E0E0', md: '1px solid #E0E0E0', sm: 'none', xs: 'none' }
                     }}
                   >
                     <Box sx={{ ...formControlSx }}>
@@ -1018,11 +1026,25 @@ export const EditProfileContext = (props: LoginContextProps) => {
                         helperText={touched.username && errors.username}
                         name="username"
                         type="text"
-                        label='Название компании'
+                        label='Имя пользователя'
                         onBlur={handleBlur}
                         onChange={handleChange}
                         value={String(values.username).trim()}
                         placeholderText='username'
+                      />
+                    </Box>
+
+                    <Box sx={formControlSx}>
+                      <SimpleInp
+                        error={Boolean(touched.company_name && errors.company_name)}
+                        helperText={touched.company_name && errors.company_name}
+                        name="company_name"
+                        type="text"
+                        label='Название компании'
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.company_name}
+                        placeholderText='company_name'
                       />
                     </Box>
 
@@ -1045,10 +1067,11 @@ export const EditProfileContext = (props: LoginContextProps) => {
                   <Grid
                     item
                     sx={{
+                      mt: { lg: 0, md: 0, sm: '24px', xs: '24px' },
                       display: 'flex',
-                      width: '50%',
+                      width: { lg: '50%', md: '50%', sm: '100%', xs: '100%' },
                       flexDirection: 'column',
-                      alignItems: 'flex-end',
+                      alignItems: { lg: 'flex-end', md: 'flex-end', sm: 'flex-start', xs: 'flex-start' },
                       justifyContent: 'flex-start',
                     }}
                   >
@@ -1123,11 +1146,12 @@ export const EditProfileContext = (props: LoginContextProps) => {
                     width: '100%',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'flex-end',
+                    justifyContent: { lg: 'flex-end', md: 'flex-end', sm: 'space-between', xs: 'space-between' },
                     mt: '24px',
                   }}
                 >
                   <Buttons
+                    sx={{ width: { lg: 'auto !important', md: 'auto !important', sm: '48% !important', xs: '48% !important' } }}
                     type="button"
                     name="Отмена"
                     disabled={Boolean(errors.submit) || isSubmitting}
@@ -1138,7 +1162,7 @@ export const EditProfileContext = (props: LoginContextProps) => {
                     }}
                   />
                   <Buttons
-                    sx={{ width: 'auto !important', ml: '16px' }}
+                    sx={{ width: { lg: 'auto !important', md: 'auto !important', sm: '48% !important', xs: '48% !important' }, ml: { lg: '16px', md: '16px', sm: 0, xs: 0 } }}
                     type="submit"
                     name="Сохранить"
                     startIcon={isSubmitting}

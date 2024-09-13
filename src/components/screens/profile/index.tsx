@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from 'react'
-import { Box, Divider, Grid } from '@mui/material';
+import { Box, Divider, Grid, useMediaQuery } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import SimpleTypography from '../../typography';
 import CustomCard from '../../custom_card';
@@ -22,7 +22,9 @@ import { selectSavedInteriors } from '../../../data/get_saved_interiors';
 import { selectSavedModels } from '../../../data/get_saved_models';
 import { selectMyProjects } from '../../../data/get_my_projects';
 import MobileMode from './mobile_mode';
-import ProfileMobileMode from '@/components/profile_mobile_mode/profile-mobile-mode';
+import ProfileMobileMode from '@/components/views/profile/info/profile-mobile-mode';
+import { ContainerStyle, primaryColor } from '../../../styles/styles';
+import { Bookmark, BookmarkBorder, BookmarkOutlined, Collections, CollectionsBookmark, CollectionsBookmarkOutlined, CollectionsOutlined, Folder, FolderOpen, FolderOpenOutlined } from '@mui/icons-material';
 
 
 export default function Profile() {
@@ -30,6 +32,13 @@ export default function Profile() {
   const interiors = useSelector(selectMyInteriors)
   const projects = useSelector(selectMyProjects)
   const savedModels = useSelector(selectSavedModels)
+  const xsScreen = useMediaQuery("(max-width:780px)");
+  const imageResizeLg = useMediaQuery("(max-width:1280px)");
+  const imageResizeMd = useMediaQuery("(max-width:1060px)");
+  const imageResizeMmd = useMediaQuery("(max-width:960px)");
+  const imageResizeSm = useMediaQuery("(max-width:720px)");
+  const imageResizeXs = useMediaQuery("(max-width:600px)");
+  const imageResizeXxs = useMediaQuery("(max-width:480px)");
 
   const [interiorsCount, setInteriorsCount] = React.useState<number>(0)
   const [projectsCount, setProjectsCount] = React.useState<number>(0)
@@ -53,6 +62,8 @@ export default function Profile() {
       value: 'my_interiors',
       active: true,
       count: interiorsCount,
+      icon: <CollectionsOutlined />,
+      icon_active: <Collections htmlColor={primaryColor} />,
       on_click: () => {
         setCardsName('my_interiors')
       },
@@ -62,6 +73,8 @@ export default function Profile() {
       value: 'saved_models',
       active: false,
       count: sModelsCount,
+      icon: <BookmarkBorder />,
+      icon_active: <Bookmark htmlColor={primaryColor} />,
       on_click: () => {
         setCardsName('saved_models')
       },
@@ -71,6 +84,8 @@ export default function Profile() {
       value: 'projects',
       active: false,
       count: projectsCount,
+      icon: <FolderOpenOutlined />,
+      icon_active: <Folder htmlColor={primaryColor} />,
       on_click: () => {
         setCardsName('projects')
       },
@@ -78,130 +93,148 @@ export default function Profile() {
   ]
 
   return (
-    <>
-      <Box sx={{ minHeight: "77vh", background: "#fafafa" }} className="products">
-        <Box className='products__container' sx={{ maxWidth: "1200px", width: "100%", margin: "0 auto 32px auto !important", alignItems: "center",}}>
-          <Grid container sx={{ marginTop: "32px", marginLeft: 0, position: "relative" }} >
+    <Box sx={ContainerStyle}>
+      <Grid container sx={{ marginTop: "32px", marginLeft: 0, position: "relative" }} >
 
-            <ProfileMobileMode of='own'/>
-            <Grid item md={4} sx={{ display: { xs: "none", md: "flex" } }}>
-              <ProfileInfo of='own' />
-            </Grid >
+        <ProfileMobileMode of='own' />
+        <Grid item md={4} sx={{ display: { xs: "none", md: "flex" } }}>
+          <ProfileInfo of='own' />
+        </Grid >
 
-            <Grid item xs={12} md={8}
-              sx={{
-                paddingLeft: {xs: "20px", lg: "40px"},
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}
+        <Grid item xs={12} md={8}
+          sx={{
+            paddingLeft: { lg: "40px", md: "40px", sm: 0, xs: 0 },
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Box sx={{ width: "100%", marginBottom: "16px" }}>
+            <Grid
+              container
+              sx={{ mb: '16px', p: 0 }}
             >
-              <Box sx={{ width: "100%", marginBottom: "16px" }}>
-                <Box
-                  sx={{ mb: '16px' }}
-                >
-                  {
-                    topButtons?.map((b, i) => (
-                      <Buttons
-                        key={i}
-                        name={b.text}
-                        onClick={b.on_click}
-                        type='button'
+              {
+                topButtons?.map((b, i) => (
+                  <Grid
+                    item
+                    key={i}
+                    xs={12 / topButtons.length}
+                    sx={{
+                      borderBottom: `2px solid ${cardsName == b.value ? primaryColor : '#A6A6A6'}`,
+                      display: 'flex',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <Buttons
+                      name={xsScreen ? '' : b.text}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        b.on_click()
+                      }}
+                      type='button'
+                      sx={{
+                        width: '100%',
+                        p: { lg: '10px 24px', md: '10px 24px', sm: '10px 12px', xs: '10px 8px' },
+                        color: cardsName == b.value ? primaryColor : '#646464',
+                        borderRadius: 0,
+                        '&:hover': {
+                          background: 'transparent',
+                          color: primaryColor
+                        },
+                        '&:hover div': {
+                          backgroundColor: '#F3E5FF'
+                        },
+                        '&:hover div p': {
+                          color: primaryColor
+                        }
+                      }}
+                    >
+                      {
+                        !!xsScreen && (
+                          cardsName == b.value ? b.icon_active : b.icon
+                        )
+                      }
+                      <Box
                         sx={{
-                          color: cardsName == b.value ? '#7210BE' : '#646464',
-                          borderRadius: 0,
-                          borderBottom: `2px solid ${cardsName == b.value ? '#7210BE' : '#A6A6A6'}`,
-                          height: '60px',
-                          paddingX: '24px',
-                          '&:hover': {
-                            background: 'transparent',
-                            color: '#7210BE'
-                          },
-                          '&:hover div': {
-                            backgroundColor: '#F3E5FF'
-                          },
-                          '&:hover div p': {
-                            color: '#7210BE'
-                          }
+                          padding: '1px 6px 2px 6px',
+                          backgroundColor: cardsName == b.value ? '#F3E5FF' : '#F8F8F8',
+                          borderRadius: '9px',
+                          marginLeft: '6px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          transition: 'all 0.4s ease',
                         }}
                       >
-                        <Box
+                        <SimpleTypography
                           sx={{
-                            padding: '1px 6px 2px 6px',
-                            backgroundColor: cardsName == b.value ? '#F3E5FF' : '#F8F8F8',
-                            borderRadius: '9px',
-                            marginLeft: '6px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            transition: 'all 0.4s ease',
+                            color: cardsName == b.value ? primaryColor : '#A0A0A0',
+                            fontSize: '12px',
+                            fontWeight: 500,
+                            lineHeight: '16px',
                           }}
-                        >
-                          <SimpleTypography
-                            sx={{
-                              color: cardsName == b.value ? '#7210BE' : '#A0A0A0',
-                              fontSize: '12px',
-                              fontWeight: 500,
-                              lineHeight: '16px',
-                            }}
-                            text={`${b.count}`}
-                          />
-                        </Box>
-                      </Buttons>
-                    ))
-                  }
-                </Box>
-
-                <SimpleCard
-                  route={cardsName}
-                  cardImgHeight={'232px'}
-                  cols={3}
-                />
-
-              </Box>
-              <Grid
-                item
-                xs={6}
-                sx={{
-                  padding: "0 !important",
-                  display: "flex",
-                  alignItems: 'center',
-                  justifyContent: "center",
-                  flexBasis: 'auto !important'
-                }}
-              >
-                <React.Suspense>
-                  {
-                    cardsName == 'my_interiors' ?
-                      <BasicPagination
-                        dataSource={'my_interiors'}
-                        count={interiors?.data?.pagination?.pages}
-                        page={parseInt(interiors?.data?.pagination?.current) + 1}
-                      />
-                      : cardsName == 'saved_models' ?
-                        <BasicPagination
-                          dataSource={'saved_models'}
-                          count={savedModels?.data?.pagination?.pages}
-                          page={parseInt(savedModels?.data?.pagination?.current) + 1}
+                          text={`${b.count}`}
                         />
-                        : cardsName == 'projects' ?
-                          <BasicPagination
-                            dataSource={'projects'}
-                            count={projects?.data?.pagination?.pages}
-                            page={parseInt(projects?.data?.pagination?.current) + 1}
-                          />
-                          : null
-                  }
-                </React.Suspense>
-              </Grid>
-
+                      </Box>
+                    </Buttons>
+                  </Grid>
+                ))
+              }
             </Grid>
 
-          </Grid>
-        </Box>
-      </Box>
+            <SimpleCard
+              route={cardsName}
+              cardImgHeight={
+                cardsName == 'projects'
+                  ? (imageResizeXxs ? '80px' : imageResizeXs ? '120px' : imageResizeSm ? '130px' : imageResizeMmd ? '171px' : imageResizeMd ? '120px' : imageResizeLg ? '170px' : '110px')
+                  : (imageResizeXxs ? '200px' : imageResizeSm ? '220px' : imageResizeMd ? '200px' : '232px')
+              }
+              cols={3}
+            />
 
-    </>
+          </Box>
+          <Grid
+            item
+            xs={6}
+            sx={{
+              mb: '32px',
+              padding: "0 !important",
+              display: "flex",
+              alignItems: 'center',
+              justifyContent: "center",
+              flexBasis: 'auto !important'
+            }}
+          >
+            <React.Suspense>
+              {
+                cardsName == 'my_interiors' ?
+                  <BasicPagination
+                    dataSource={'my_interiors'}
+                    count={interiors?.data?.pagination?.pages}
+                    page={parseInt(interiors?.data?.pagination?.current) + 1}
+                  />
+                  : cardsName == 'saved_models' ?
+                    <BasicPagination
+                      dataSource={'saved_models'}
+                      count={savedModels?.data?.pagination?.pages}
+                      page={parseInt(savedModels?.data?.pagination?.current) + 1}
+                    />
+                    : cardsName == 'projects' ?
+                      <BasicPagination
+                        dataSource={'projects'}
+                        count={projects?.data?.pagination?.pages}
+                        page={parseInt(projects?.data?.pagination?.current) + 1}
+                      />
+                      : null
+              }
+            </React.Suspense>
+          </Grid>
+
+        </Grid>
+
+      </Grid>
+    </Box>
   )
 }

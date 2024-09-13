@@ -2,6 +2,12 @@ import { SxProps } from "@mui/system";
 
 export const primaryColor = '#7210BE';
 
+export const xl = '1536px'
+export const lg = '1200px'
+export const md = '900px'
+export const sm = '600px'
+export const xs = '0px'
+
 export const LoaderStyle = {
   // width: "100px !important",
   // height: "100px !important",
@@ -29,7 +35,7 @@ export const MenuProps = {
 };
 
 export const ContainerStyle = {
-  width: { lg: "1200px", md: '100%', sm: '100%', xs: "90%" },
+  width: { lg: "1200px", md: '100%', sm: '100%', xs: "96%" },
   p: { lg: 0, md: '0 24px', sm: '0 24px', xs: '0' },
   minHeight: '80dvh',
   display: "block",
@@ -756,10 +762,10 @@ export const TypographyStyles = (theme) => `
         text-overflow: ellipsis;
       }
 
-      &.MuiTypography-modal__title {
+      .MuiTypography-modal__title {
         font-size: 25px;
-        fontWeight: 500;
-        margin-bottom:12px;
+        font-weight: 500;
+        margin-bottom: 12px;
       }
 
       &.MuiTypography-card__title {
