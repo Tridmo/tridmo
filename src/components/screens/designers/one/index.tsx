@@ -9,6 +9,7 @@ import BasicPagination from '@/components/pagination/pagination';
 import SimpleCard from '../../../simple_card';
 import { selectAuthorInteriors } from '../../../../data/get_author_interiors';
 import MobileMode from '../../profile/mobile_mode';
+import ProfileMobileMode from '@/components/views/profile/info/profile-mobile-mode';
 
 
 export default function DesignerProfile({ username, ...props }) {
@@ -23,8 +24,8 @@ export default function DesignerProfile({ username, ...props }) {
         <Box className='products__container' sx={{ maxWidth: "1200px", width: "100%", margin: "0 auto 32px auto !important", alignItems: "center", position: "relative", padding: { xs: "0 18px", lg: 0 } }}>
           <Grid container sx={{ marginTop: "32px", marginLeft: 0 }} >
 
-            <MobileMode children={<ProfileInfo of='designer' />}/>
-            <Grid item xs={4} sx={{ paddingRight: "10px", display: { xs: "none", md: "flex" } }}>
+            <ProfileMobileMode of='designer' />
+            <Grid item md={4} sx={{ display: { xs: "none", md: "flex" } }}>
               <ProfileInfo of='designer' />
             </Grid >
 

@@ -108,6 +108,7 @@ export default function ProfileMobileMode(props: ProfileProps) {
             gap: "4px",
             backgroundColor: "#fff",
             border: "1px solid #E0E0E0",
+            marginBottom: "20px"
           }}
         >
           <Box
@@ -396,7 +397,7 @@ export default function ProfileMobileMode(props: ProfileProps) {
                   props.of == "own" && <AddButton />
                 )}
               </Box>
-              {!profileInfo?.instagram && (
+              {profileInfo?.instagram || props.of === "own" ? (
                 <Box
                   sx={{
                     display: "flex",
@@ -422,7 +423,7 @@ export default function ProfileMobileMode(props: ProfileProps) {
                     />
                   )}
                 </Box>
-              )}
+              ): null }
             </Box>
           </Box>
           <Grid
@@ -475,7 +476,7 @@ export default function ProfileMobileMode(props: ProfileProps) {
             container
             sx={{
               width: "100%",
-              marginY: "16px",
+              marginBottom: "16px",
               justifyContent: "space-between",
               display: { xs: "flex", md: "none" },
             }}
