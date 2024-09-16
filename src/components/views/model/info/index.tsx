@@ -162,7 +162,7 @@ export default function ModelInfo() {
               }}
             />
           </Grid>
-          <Grid item lg={7} md={7.4} sm={9.6} xs={8.4} sx={{ marginLeft: "16px" }}>
+          <Grid item lg={7} md={7.4} sm={9.6} xs={12} sx={{ marginLeft: {xs: 0, sm: "16px"}}}>
             <Box
               sx={{
                 width: '100%',
