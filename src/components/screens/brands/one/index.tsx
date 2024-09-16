@@ -18,6 +18,7 @@ import { setBrandModelsCategory } from '../../../../data/handle_filters';
 import { useParams, useSearchParams } from 'next/navigation';
 import { brandModelsLimit } from '../../../../types/filters';
 import MobileMode from '../../profile/mobile_mode';
+import BrandMobileMode from './brand-mobile-mode';
 
 
 export default function OneBrand() {
@@ -49,7 +50,7 @@ export default function OneBrand() {
         <Box className='products__container' sx={{ maxWidth: "1200px", width: "100%", margin: "0 auto 32px auto !important", alignItems: "center", position: "relative", padding: { xs: "0 18px", lg: 0 } }}>
           <Grid container sx={{ marginTop: "32px", marginLeft: 0 }} >
 
-            <MobileMode children={<BrandInfo />} />
+            <BrandMobileMode />
             <Grid item xs={4} sx={{ paddingRight: "10px", display: { xs: "none", md: "flex" } }}>
               <BrandInfo />
             </Grid >
