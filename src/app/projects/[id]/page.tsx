@@ -43,12 +43,10 @@ export default function OneProjectPage() {
   } else {
     return (
       <>
-        <Box sx={{ background: "#fafafa", position: "relative" }}>
+        <Box sx={{ background: "#fafafa", position: "relative"}}>
           <Box sx={BgBlur} />
-          <Box>
-            <Box sx={ContainerStyle}>
-              <CircularProgress sx={LoaderStyle} />
-            </Box>
+          <Box sx={ContainerStyle}>
+            <CircularProgress sx={LoaderStyle} />
           </Box>
         </Box>
       </>

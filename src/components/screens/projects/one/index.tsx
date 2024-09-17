@@ -182,7 +182,7 @@ export default function OneProject() {
           minHeight: '3508px'
         }}
       />
-      <Box className='products__container' sx={{ maxWidth: "1200px", width: "100%", margin: "0 auto !important", alignItems: "center", }}>
+      <Box className='products__container' sx={{ maxWidth: "1200px", width: "100%", margin: "0 auto !important", padding: { xs: "0 18px", lg: 0 }, alignItems: "center", }}>
 
         <Grid container
           sx={{
@@ -290,22 +290,19 @@ export default function OneProject() {
             width: '100%',
             display: 'flex',
             alignItems: 'flex-start',
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
+            gap: {xs: 2, md: 0}
           }}
         >
           <Grid item
-            lg={8.3}
             md={8.3}
-            xs={8.3}
-            sm={12}
+            xs={12}
           >
             <ProjectModelsList project={project} />
           </Grid>
           <Grid item
-            lg={3.5}
             md={3.5}
-            xs={3.5}
-            sm={12}
+            xs={12}
           >
             <Box
               sx={{
