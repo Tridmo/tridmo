@@ -24,7 +24,7 @@ export default function OneProjectPage() {
     dispatch(getOneProject(params.id))
   }, [params, dispatch])
 
-  if (getOneProject__status !== "succeeded") {
+  if (getOneProject__status === "succeeded") {
     return (
       <>
         <Box sx={{ background: "#fafafa" }}>
