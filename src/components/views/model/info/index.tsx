@@ -20,6 +20,7 @@ import { modelStatuses } from '../../../../types/variables';
 import { selectChatToken } from '../../../../data/get_chat_token';
 import { setSelectedConversation } from '../../../../data/chat';
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { fontSize } from '@mui/system';
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 const brandBox = {
@@ -137,6 +138,7 @@ export default function ModelInfo() {
         text={simpleModel?.name}
         className="product__info--title"
         variant="h1"
+        sx={{ fontSize: {xs: "1.5rem !important", sm: "1.8rem !important", md: "2.125rem !important"} }}
       />
 
       <SimpleTypography

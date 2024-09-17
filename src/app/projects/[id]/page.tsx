@@ -24,7 +24,7 @@ export default function OneProjectPage() {
     dispatch(getOneProject(params.id))
   }, [params, dispatch])
 
-  if (getOneProject__status === "succeeded") {
+  if (getOneProject__status !== "succeeded") {
     return (
       <>
         <Box sx={{ background: "#fafafa" }}>
@@ -45,7 +45,7 @@ export default function OneProjectPage() {
       <>
         <Box sx={{ background: "#fafafa", position: "relative"}}>
           <Box sx={BgBlur} />
-          <Box sx={ContainerStyle}>
+          <Box sx={{...ContainerStyle, display: "flex", justifyContent: "center", alignItems: "center"}}>
             <CircularProgress sx={LoaderStyle} />
           </Box>
         </Box>

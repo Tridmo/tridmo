@@ -228,14 +228,14 @@ export default function SimpleCard(props: InputProps) {
                   padding: { xs: "0 5px 0 0 !important", md: "0 9.5px 0 0 !important" },
                 },
                 [`&:nth-of-type(${props?.cols}n)`]: {
-                  padding: { xs: "0 5px 0 0 !important", md: "0 !important" },
+                  padding: { xs: "0 5px 0 0 !important", md: "0 9.5px 0 0 !important" },
                 },
                 marginBottom: "10px",
               }}
               key={index}
               md={12 / props?.cols}
-              sm={12 / (props?.cols - 2)}
-              xs={12 / (props?.cols - 3)}
+              sm={12 / (props?.cols - 1)}
+              xs={12 / (props?.cols - 2)}
               item
             >
               <CustomCard
@@ -509,7 +509,7 @@ export default function SimpleCard(props: InputProps) {
               lg={12 / props?.cols}
               md={12 / (props?.cols - 1)}
               sm={12 / (props?.cols - 2)}
-              xs={12 / (props?.cols - 4)}
+              xs={12 / (props?.cols - 2)}
               item
             >
               <CustomCard
@@ -517,7 +517,7 @@ export default function SimpleCard(props: InputProps) {
                 link={`/${props?.route}/${model?.slug}`}
                 key={index}
                 model={model}
-                imgHeight={props?.cardImgHeight || width < 900 ? "100%" : "256px"}
+                imgHeight={props?.cardImgHeight || width < 900 ? "auto" : "256px"}
                 withAuthor={props?.withAuthor}
               />
             </Grid>

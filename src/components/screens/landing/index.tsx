@@ -98,7 +98,8 @@ export default function LandingPage() {
             },
             minHeight: 507,
             display: "flex",
-            margin: { xs: "0 16px", lg: "0 auto" },
+            margin: { xs: "0", lg: "0 auto" },
+            padding: { xs: "0 18px", lg: 0 },
             alignItems: "center",
           }}
         >
