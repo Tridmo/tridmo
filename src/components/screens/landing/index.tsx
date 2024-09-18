@@ -2,7 +2,7 @@
 
 import Buttons from "@/components/buttons";
 import SearchInput from "@/components/inputs/search";
-import { Box, Grid, IconButton, Skeleton } from "@mui/material";
+import { Box, Grid, IconButton, Skeleton, useMediaQuery } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -72,8 +72,9 @@ export default function LandingPage() {
   const dispatch = useDispatch<any>();
   const [searchClicked, setSearchClicked] = useState(false);
   const [searchVal, setSearchVal] = useState("");
-
+  const xsScreen = useMediaQuery('(max-width:480px)');
   const topModels = useSelector(selectTopModels);
+  const width = window.outerWidth
 
   function handleSearch(e) {
     e.preventDefault();
@@ -167,7 +168,7 @@ export default function LandingPage() {
                   autoScroll
                 />
               ) : (
-                <Skeleton variant="rectangular" width={354} height={396} />
+                <Skeleton variant="rectangular" width={322} height={322} />
               )}
             </Grid>
           </Grid>
@@ -190,15 +191,15 @@ export default function LandingPage() {
             width="100%"
             marginTop={{ xs: "30px", md: "40px" }}
             display={"flex"}
-            flexDirection={{ xs: "column", md: "row" }}
+            flexDirection={{ xs: "row", md: "row" }}
             justifyContent="space-between"
-            gap={4}
+            gap={1}
           >
             {MorePages.map((item, index) => (
-              <Link key={index} href={item?.path}>
+              <Link key={index} href={item?.path} style={{ width: "100%" }}>
                 <Box
                   sx={{
-                    width: "100%",
+                    minHeight: { xs: width <= 390 && width >= 370 ? "210px" : width >= 400 ? "200px" : "230px", sm: "fit-content" },
                     padding: "20px",
                     display: "flex",
                     flexDirection: {
@@ -207,7 +208,7 @@ export default function LandingPage() {
                       md: "column-reverse",
                       lg: "row",
                     },
-                    justifyContent: "space-between",
+                    justifyContent: {xs: "flex-end", sm: "space-between", md: "flex-end", lg: "space-between" },
                     gap: 2,
                     backgroundColor: "#fff",
                     border: "1px solid transparent",
@@ -235,24 +236,27 @@ export default function LandingPage() {
                       maxWidth: "100%",
                       display: "flex",
                       flexDirection: "column",
-                      gap: 1,
+                      gap: {xs: 0.5, sm: 1},
                     }}
                   >
                     <SimpleTypography
                       text={item?.title}
                       className="landing_section_name"
-                      variant={"h2"}
+                      variant={{xs: "h6", md: "h2"}}
+                      sx={{fontSize: {xs: "1.1rem !important", md: "1.4rem !important"}}}
+                      
                     />
                     <SimpleTypography
                       text={item?.desc}
                       className="landing_section_desc"
+                      sx={{fontSize: {xs: "0.8rem !important", md: "1rem !important"}}}
                     />
                   </Box>
                   <Box
                     className="preview_images"
                     sx={{
-                      height: 64,
-                      width: 64 * 3 - (64 - 50),
+                      height: { xs: 40, sm: 54, md: 64},
+                      width: {xs: "100%", md: 64 * 3 - (100 - 54)},
                       display: "flex",
                       alignItems: "center",
                       flexDirection: "row",
@@ -267,25 +271,24 @@ export default function LandingPage() {
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
-                          width: "64px",
-                          height: "64px",
+                          width: { xs: "44px", sm: "54px" },
+                          height: { xs: "44px", sm: "54px" },
                           padding: item?.imageRounded ? "0px" : "6px",
-                          border: item?.imageRounded ? "" : "1px solid #E0E0E0",
+                          border: !item?.imageRounded ? "1px solid #E0E0E0" : "",
                           borderRadius: item?.imageRounded ? "50%" : "5px",
                           position: "absolute",
-                          top: 0,
-                          left: `${index * 50}px`,
+                          left: `${index * 30}px`,
                           zIndex: index + 1,
                         }}
                       >
                         <Image
                           src={model.image_src}
                           alt="Landing image"
-                          width={item?.imageRounded ? 64 : 52}
-                          height={item?.imageRounded ? 64 : 52}
+                          width={item?.imageRounded && xsScreen ? 54 : 52}
+                          height={item?.imageRounded && xsScreen ? 54 : 52}
                           style={{
                             borderRadius: item?.imageRounded ? "50%" : "5px",
-                            border: item?.imageRounded ? "1px solid #fff" : "",
+                            border: item?.imageRounded ? "1px solid #fff" : "1px solid #E0E0E0",
                           }}
                         />
                       </Box>
@@ -299,12 +302,12 @@ export default function LandingPage() {
                         border: "2px solid #fff",
                         zIndex: 5,
                         position: "absolute",
-                        right: "-12%",
+                        right: {xs: width <= 390 && width >= 370 ? "-10%" : width <= 400 ? "-20%" : 0, md: "-5%"},
                       }}
                     >
                       <svg
-                        width="20"
-                        height="20"
+                        width="15"
+                        height="15"
                         viewBox="0 0 20 20"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
