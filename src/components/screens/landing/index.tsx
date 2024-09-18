@@ -151,7 +151,7 @@ export default function LandingPage() {
             </Grid>
             <Grid
               width={"auto"}
-              margin={{ xs: "0", sm: "auto", lg: "0px 44px 0px 0px" }}
+              margin={{ xs: "auto", lg: "0px 44px 0px 0px" }}
             >
               {topModels && topModels?.data?.models?.length ? (
                 // <IntervalRotateCard
@@ -161,8 +161,8 @@ export default function LandingPage() {
                 <Carousel
                   slides={topModels?.data?.models}
                   speed={5000}
-                  slideWidth={354}
-                  slideHeight={396}
+                  // slideWidth={354}
+                  // slideHeight={396}
                   manualMode={false}
                   autoScroll
                 />
