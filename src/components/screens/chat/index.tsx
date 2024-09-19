@@ -29,7 +29,7 @@ export default function Chat() {
 
   return (
     <Box sx={{ background: "#fafafa" }} className="products" >
-      <Box className='products__container' sx={{ maxWidth: "1200px", width: "100%", margin: "0 auto !important", alignItems: "center", }}>
+      <Box className='products__container' sx={{ maxWidth: "1200px", width: "100%", padding: { xs: "0 18px", lg: 0 }, margin: "0 auto !important", alignItems: "center", }}>
         <Grid container
           sx={{
             m: '32px 0 32px 0',
