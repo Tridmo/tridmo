@@ -93,102 +93,98 @@ const SimpleSlider = ({ mainWidth, images }: { images: any[]; mainWidth: number 
     dispatch(setShowImageViewer(true, image))
   }
 
-  if ("succeeded") {
-    return (
-      <>
+  return (
+    <>
+      <Grid
+        sx={{
+          width: '100vw',
+          height: '100dvh',
+          display: "flex",
+          flexDirection: "column-reverse"
+        }
+        }
+        item
+        md={12}
+        xs={12}
+        className="products__slider"
+      >
         <Grid
           sx={{
-            width: '100vw',
-            height: '100dvh',
-            display: "flex",
-            flexDirection: "column-reverse"
-          }
-          }
+            padding: "0 !important",
+            overflow: "hidden"
+          }}
           item
-          md={12}
           xs={12}
-          className="products__slider"
+          md={12}
+          onMouseEnter={() => setSliderBtnHover(1)}
+          onMouseLeave={() => setSliderBtnHover(0)}
         >
-
-          <Grid
-            sx={{
-              padding: "0 !important",
-              overflow: "hidden"
-            }}
-            item
-            xs={12}
-            md={12}
-            onMouseEnter={() => setSliderBtnHover(1)}
-            onMouseLeave={() => setSliderBtnHover(0)}
+          {/* <Box sx={ButtonHover}> */}
+          <Buttons
+            onClick={SliderRightHandler}
+            type="button"
+            className="slider__right--arrow"
+            name=""
           >
-            {/* <Box sx={ButtonHover}> */}
-            <Buttons
-              onClick={SliderRightHandler}
-              type="button"
-              className="slider__right--arrow"
-              name=""
-            >
-              <NavigateNext sx={{ color: '#424242' }} />
-            </Buttons>
-            {/* </Box> */}
-            {/* <Box sx={ButtonHover}> */}
-            <Buttons
-              onClick={SliderLeftHandler}
-              type="button"
-              className="slider__left--arrow"
-              name=""
-            >
-              <NavigateBefore sx={{ color: '#424242' }} />
-            </Buttons>
-            {/* </Box> */}
-            <List sx={{
-              transform: `translateX(-${sliderCount * 100}vw)`,
-              padding: "0 !important",
-              display: "flex",
-              position: 'relative',
-              width: `calc(100vw * ${images.length})`,
-              transition: `all ${sliderTransition}s ease`
-            }}>
-              {
-                images?.map((slide: any, index: number) => (
-                  <SimpleListItem
-                    className="MuiListItem-slider__big--item"
-                    onClick={(e) => { dispatch(setShowModelsModal(true)) }}
-                    key={index}
+            <NavigateNext sx={{ color: '#424242' }} />
+          </Buttons>
+          {/* </Box> */}
+          {/* <Box sx={ButtonHover}> */}
+          <Buttons
+            onClick={SliderLeftHandler}
+            type="button"
+            className="slider__left--arrow"
+            name=""
+          >
+            <NavigateBefore sx={{ color: '#424242' }} />
+          </Buttons>
+          {/* </Box> */}
+          <List sx={{
+            transform: `translateX(-${sliderCount * 100}vw)`,
+            padding: "0 !important",
+            display: "flex",
+            position: 'relative',
+            width: `calc(100vw * ${images.length})`,
+            transition: `all ${sliderTransition}s ease`
+          }}>
+            {
+              images?.map((slide: any, index: number) => (
+                <SimpleListItem
+                  className="MuiListItem-slider__big--item"
+                  onClick={(e) => { dispatch(setShowModelsModal(true)) }}
+                  key={index}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  <Box
                     sx={{
+                      width: '90%',
+                      height: '100%',
                       display: 'flex',
+                      justifyContent: 'center',
                       alignItems: 'center',
-                      justifyContent: 'center'
                     }}
                   >
-                    <Box
-                      sx={{
-                        width: '90%',
-                        height: '100%',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <SimpleImage
-                        onClick={() => showViewer(slide)}
-                        alt=''
-                        fill
-                        sx={{ objectFit: 'contain' }}
-                        src={`${IMAGES_BASE_URL}/${slide?.image_src}`}
-                        priority={true}
-                      />
-                    </Box>
-                  </SimpleListItem>
-                ))
-              }
-
-            </List>
-          </Grid>
+                    <SimpleImage
+                      onClick={() => showViewer(slide)}
+                      alt=''
+                      fill
+                      sx={{ objectFit: 'contain' }}
+                      src={`${IMAGES_BASE_URL}/${slide?.image_src}`}
+                      priority={true}
+                    />
+                  </Box>
+                </SimpleListItem>
+              ))
+            }
+          </List>
         </Grid>
-      </>
-    )
-  }
+      </Grid>
+    </>
+  )
 }
 
 export default SimpleSlider
