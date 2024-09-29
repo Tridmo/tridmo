@@ -41,7 +41,6 @@ export default function SearchInput(props: InputProps) {
   return (
     <Box
       sx={{
-        maxWidth: '360px!important',
         backgroundColor: '#FAFAFA',
         border: '1px solid #424242',
         borderRadius: '4px',
@@ -87,10 +86,6 @@ export default function SearchInput(props: InputProps) {
         props?.withButton ?
           <Buttons
             name='Поиск'
-            sx={{
-              position: 'absolute',
-              right: -2,
-            }}
             className='search__btn'
             type="button"
             aria-label="search"

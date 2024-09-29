@@ -6,7 +6,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { IMAGES_BASE_URL } from '../../utils/env_vars';
 import SimpleTypography from '../typography';
-import { padding, width } from '@mui/system';
 
 
 export const Carousel = ({
@@ -136,7 +135,7 @@ export const Carousel = ({
         </div>
       )}
 
-      <Box className="slidesContainer" sx={{...slideDimensionStyles()}}>
+      <div className="slidesContainer" style={slideDimensionStyles()}>
         {!!manualMode && (
           <Fragment>
             <a
@@ -177,20 +176,23 @@ export const Carousel = ({
           style={{ left: calculateLeftMargin() }}>
           {stateSlides.map((model: any, index) => {
             return (
-              <Box
+              <div
                 key={index}
                 className={"slide"}
-                sx={slideDimensionStyles()}
+                style={slideDimensionStyles()}
               >
                 <Link
                   className={"slideInner"}
                   href={`/models/${model?.slug}`}
                   key={index}
+                  style={{
+                    width: '100%',
+                  }}
                 >
                   <Box
                     sx={{
-                      // p: '16px',
-                      width: '100%', 
+                      p: '16px',
+                      width: '100%',
                       display: 'flex',
                       flexDirection: 'column',
                       alignItems: 'center',
@@ -203,8 +205,6 @@ export const Carousel = ({
                       width={322}
                       height={322}
                       style={{
-                        marginTop: "40px",
-                        padding: "20px",
                         marginBottom: '24px',
                       }}
                     />
@@ -221,11 +221,11 @@ export const Carousel = ({
                     </Box>
                   </Box>
                 </Link>
-              </Box>
+              </div>
             )
           })}
         </div>
-      </Box>
+      </div>
 
     </div>
   )

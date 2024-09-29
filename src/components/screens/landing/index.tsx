@@ -112,58 +112,65 @@ export default function LandingPage() {
             sx={{
               marginLeft: 0,
               alignItems: "center",
-              justifyContent: "space-between",
+              justifyContent: { xs: 'center', sm: 'center', md: 'space-between', lg: 'space-between' },
             }}
           >
-            <Grid width={{ xs: "90%", sm: "590px" }}>
+            <Grid width={{ xs: "100%", sm: "100%", md: 'unset', lg: 'unset' }}
+              margin={{ xs: 'auto', sm: 'auto', md: 0, lg: 0 }}
+              sx={{ display: 'felx', justifyContent: { sm: 'center', md: 'flex-start' } }}
+            >
               <Box
                 my={4}
                 display="flex"
                 flexDirection={"column"}
                 justifyContent={"center"}
+                alignItems={{ xs: 'center', sm: 'center', md: 'flex-start', lg: 'flex-start' }}
               >
                 <SimpleTypography
                   text="Теперь дизайн не только на бумаге."
                   className="hero__title"
                   variant={"h1"}
+                  sx={{
+                    margin: { xs: '0 auto 16px auto !important', sm: '0 auto 16px auto !important', md: '0 0 16px 0 !important', lg: '0 0 16px 0 !important' },
+                    textAlign: { xs: 'center', sm: 'center', md: 'start', lg: 'start' }
+                  }}
                 />
                 <SimpleTypography
                   text="Единственная площадка для дизайнеров и производителей мебели в Узбекистане."
                   className="hero__desc"
+                  sx={{ textAlign: { xs: 'center', sm: 'center', md: 'start', lg: 'start' } }}
                 />
-                <Grid>
-                  <Box width={{ xs: "100%", md: "590px" }}>
-                    <form onSubmit={handleSearch}>
-                      <SearchInput
-                        sx={{
-                          width: "100%",
-                          p: "12px 14px",
-                        }}
-                        startIcon={false}
-                        withButton={true}
-                        onChange={setSearchVal}
-                        clic={setSearchClicked}
-                        placeHolder="Поиск..."
-                      />
-                    </form>
-                  </Box>
-                </Grid>
+                <Box width={{ xs: "80%", sm: '60%', md: "60%" }}
+                  display={'flex'}
+                  justifyContent={{ xs: 'center', sm: 'center', md: 'flex-start', lg: 'flex-start' }}
+                >
+                  <form style={{ width: '100%' }} onSubmit={handleSearch}>
+                    <SearchInput
+                      sx={{
+                        width: "100%",
+                        p: "12px 14px",
+                      }}
+                      startIcon={false}
+                      withButton={true}
+                      onChange={setSearchVal}
+                      clic={setSearchClicked}
+                      placeHolder="Поиск моделей"
+                    />
+                  </form>
+                </Box>
               </Box>
             </Grid>
             <Grid
+              display={{ xs: 'none', sm: 'none', md: 'flex', lg: 'flex', xl: 'flex' }}
               width={"auto"}
               margin={{ xs: "auto", lg: "0px 44px 0px 0px" }}
             >
               {topModels && topModels?.data?.models?.length ? (
-                // <IntervalRotateCard
-                //   slides={topModels?.data?.models}
-                //   autoScroll={true}
-                // />
                 <Carousel
                   slides={topModels?.data?.models}
                   speed={5000}
-                  // slideWidth={354}
-                  // slideHeight={396}
+                  slideWidth={354}
+                  slideHeight={396}
                   manualMode={false}
                   autoScroll
                 />
@@ -199,16 +206,16 @@ export default function LandingPage() {
               <Link key={index} href={item?.path} style={{ width: "100%" }}>
                 <Box
                   sx={{
-                    minHeight: { xs: width <= 390 && width >= 370 ? "210px" : width >= 400 ? "200px" : "230px", sm: "fit-content" },
+                    minHeight: "fit-content",
                     padding: "20px",
                     display: "flex",
                     flexDirection: {
                       xs: "column-reverse",
-                      sm: "row",
-                      md: "column-reverse",
+                      sm: "column-reverse",
+                      md: "row",
                       lg: "row",
                     },
-                    justifyContent: {xs: "flex-end", sm: "space-between", md: "flex-end", lg: "space-between" },
+                    justifyContent: { xs: "flex-end", sm: "space-between", md: "flex-end", lg: "space-between" },
                     gap: 2,
                     backgroundColor: "#fff",
                     border: "1px solid transparent",
@@ -236,29 +243,30 @@ export default function LandingPage() {
                       maxWidth: "100%",
                       display: "flex",
                       flexDirection: "column",
-                      gap: {xs: 0.5, sm: 1},
+                      gap: { xs: 0.5, sm: 1 },
                     }}
                   >
                     <SimpleTypography
                       text={item?.title}
                       className="landing_section_name"
-                      variant={{xs: "h6", md: "h2"}}
-                      sx={{fontSize: {xs: "1.1rem !important", md: "1.4rem !important"}}}
-                      
+                      variant={{ xs: "h6", md: "h2" }}
+                      sx={{ fontSize: { xs: "1.1rem !important", md: "1.4rem !important" } }}
+
                     />
                     <SimpleTypography
                       text={item?.desc}
                       className="landing_section_desc"
-                      sx={{fontSize: {xs: "0.8rem !important", md: "1rem !important"}}}
+                      sx={{ fontSize: { xs: "0.8rem !important", md: "1rem !important" } }}
                     />
                   </Box>
                   <Box
                     className="preview_images"
                     sx={{
-                      height: { xs: 40, sm: 54, md: 64},
-                      width: {xs: "100%", md: 64 * 3 - (100 - 54)},
+                      height: { xs: 40, sm: 54, md: 64 },
+                      width: { xs: "100%", md: 64 * 3 - (100 - 54) },
                       display: "flex",
                       alignItems: "center",
+                      justifyContent: 'flex-end',
                       flexDirection: "row",
                       position: "relative",
                     }}
@@ -302,7 +310,7 @@ export default function LandingPage() {
                         border: "2px solid #fff",
                         zIndex: 5,
                         position: "absolute",
-                        right: {xs: width <= 390 && width >= 370 ? "-10%" : width <= 400 ? "-20%" : 0, md: "-5%"},
+                        right: { xs: width <= 390 && width >= 370 ? "-10%" : width <= 400 ? "-20%" : 0, md: "-5%" },
                       }}
                     >
                       <svg
@@ -332,7 +340,7 @@ export default function LandingPage() {
             margin: "0 auto",
             padding: { xs: "0 18px", lg: 0 },
             alignItems: "flex-start",
-            marginTop: "64px",
+            marginTop: { xs: '32px', sm: "32px", lg: '64px', md: "64px" },
           }}
         >
           <Grid container>
@@ -423,7 +431,7 @@ export default function LandingPage() {
                 sm={6}
                 xs={12}
                 sx={{
-                  minHeight: "300px",
+                  minHeight: { xs: 'unset', sm: 'unset', md: "300px", lg: "300px" },
                 }}
               >
                 <Box
@@ -534,7 +542,7 @@ export default function LandingPage() {
             </Box>
           </Grid>
         </Box>
-      </Box>
+      </Box >
     </>
   );
 }
