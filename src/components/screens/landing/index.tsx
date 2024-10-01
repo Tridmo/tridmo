@@ -97,7 +97,7 @@ export default function LandingPage() {
               xs: "100%",
               lg: "1200px",
             },
-            minHeight: 507,
+            minHeight: { xs: 'unset', sm: 'unset', md: '500px', lg: '500px', xl: '500px' },
             display: "flex",
             margin: { xs: "0", lg: "0 auto" },
             padding: { xs: "0 18px", lg: 0 },
@@ -108,7 +108,6 @@ export default function LandingPage() {
             spacing={2}
             container
             columns={{ xs: 1, sm: 2 }}
-            padding={{ xs: "0 0 30px 0", lg: 0 }}
             sx={{
               marginLeft: 0,
               alignItems: "center",
@@ -207,7 +206,7 @@ export default function LandingPage() {
                 <Box
                   sx={{
                     minHeight: "fit-content",
-                    padding: "20px",
+                    padding: { xs: '10px', sm: "20px" },
                     display: "flex",
                     flexDirection: {
                       xs: "column-reverse",
@@ -256,7 +255,7 @@ export default function LandingPage() {
                     <SimpleTypography
                       text={item?.desc}
                       className="landing_section_desc"
-                      sx={{ fontSize: { xs: "0.8rem !important", md: "1rem !important" } }}
+                      sx={{ fontSize: { xs: "0.7rem !important", md: "1rem !important" } }}
                     />
                   </Box>
                   <Box
@@ -310,7 +309,7 @@ export default function LandingPage() {
                         border: "2px solid #fff",
                         zIndex: 5,
                         position: "absolute",
-                        right: { xs: width <= 390 && width >= 370 ? "-10%" : width <= 400 ? "-20%" : 0, md: "-5%" },
+                        right: { xs: width <= 390 && width >= 370 ? "-5%" : width <= 400 ? "-8%" : '-8%', sm: '-8%', md: "-20%" },
                       }}
                     >
                       <svg
@@ -406,6 +405,7 @@ export default function LandingPage() {
         {/* Why Us */}
         <Box
           sx={{
+            display: { xs: 'none', sm: 'none', md: 'block', lg: 'block', xl: 'block' },
             maxWidth: "1200px",
             width: "100%",
             margin: "0 auto",
@@ -474,7 +474,7 @@ export default function LandingPage() {
             margin: "0 auto",
             padding: { xs: "0 18px", lg: 0 },
             alignItems: "flex-start",
-            marginTop: "64px",
+            marginTop: { xs: '32px', sm: '32px', md: "64px" },
             mb: "56px"
           }}
         >
@@ -535,6 +535,7 @@ export default function LandingPage() {
                   sx={{
                     width: "100%",
                     textWrap: "nowrap",
+                    mt: "8px",
                     display: { xs: "flex", sm: "none" },
                   }}
                 />
