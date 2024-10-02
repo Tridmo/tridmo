@@ -27,12 +27,14 @@ import Buttons from "../buttons";
 import CustomCard from "../custom_card";
 import CustomCardSkeleton from "../custom_card/skeleton";
 import EmptyData from "../views/empty_data";
+import { selectInteriorTags, selectInteriorTags_status } from "../../data/get_interior_tags";
 type InputProps = {
   route: string;
   sliced?: number;
   cols: number;
   cardImgHeight?: string | null;
   withAuthor?: boolean;
+  data?: any[];
 };
 const heights = [
   208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208,
@@ -61,8 +63,6 @@ export default function SimpleCard(props: InputProps) {
     const all__models__status = useSelector(
       (state: any) => state?.get_all_models?.status
     );
-    console.log(props?.cardImgHeight);
-
     if (all__models__status === "failed") {
       return (
         <SimpleTypography text="Извините, ошибка сетевого подключения:("></SimpleTypography>
@@ -146,6 +146,101 @@ export default function SimpleCard(props: InputProps) {
                 model={model}
                 imgHeight={props?.cardImgHeight || "208px"}
                 tagIcon={model?.top ? "/icons/star.svg" : ""}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      ) : (
+        <EmptyData />
+      );
+    }
+  }
+
+  if (props?.route == "interior_models") {
+    const models_status = useSelector(selectInteriorTags_status)
+    const all__models = useSelector(selectInteriorTags)
+
+    if (models_status === "failed") {
+      return (
+        <SimpleTypography text="Извините, ошибка сетевого подключения:("></SimpleTypography>
+      );
+    }
+    if (models_status === "loading") {
+      return (
+        <Grid
+          className="models__card--wrap"
+          container
+          spacing={3}
+          sx={{ width: "100%", margin: "0" }}
+        >
+          {fakeModels(8)?.map((model: any, index: any) => (
+            <Grid
+              className="models__card"
+              sx={{
+                [`&:not(:nth-of-type(${props?.cols}n))`]: {
+                  padding: "0 9.5px 0 0 !important",
+                },
+                [`&:nth-of-type(${props?.cols}n)`]: {
+                  padding: "0 0 0 0 !important",
+                },
+                marginBottom: "10px",
+              }}
+              key={index}
+              md={12 / props?.cols}
+              sm={12 / (props?.cols - 2)}
+              xs={12 / (props?.cols - 4)}
+              item
+            >
+              <CustomCardSkeleton
+                type={"models"}
+                link={`/models`}
+                key={index}
+                model={model}
+                imgHeight={props?.cardImgHeight || "208px"}
+                tagIcon={model?.top ? "/icons/star.svg" : ""}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      );
+    }
+    if (models_status === "succeeded") {
+      const data_sliced = props?.sliced
+        ? all__models?.slice(0, props?.sliced)
+        : all__models;
+
+      return data_sliced?.length > 0 ? (
+        <Grid
+          className="models__card--wrap"
+          container
+          spacing={3}
+          sx={{ width: "100%", margin: "0" }}
+        >
+          {data_sliced?.map((interior_model: any, index: any) => (
+            <Grid
+              className="models__card"
+              sx={{
+                [`&:not(:nth-of-type(${props?.cols}n))`]: {
+                  padding: { xs: "0 5px 0 0 !important", md: "0 9.5px 0 0 !important" },
+                },
+                [`&:nth-of-type(${props?.cols}n)`]: {
+                  padding: { xs: "0 5px 0 0 !important", md: "0 9.5px 0 0 !important" },
+                },
+                marginBottom: "10px",
+              }}
+              key={index}
+              md={12 / props?.cols}
+              sm={12 / (props?.cols - 1)}
+              xs={12 / (props?.cols - 2)}
+              item
+            >
+              <CustomCard
+                type={"models"}
+                link={`/models/${interior_model?.model?.slug}`}
+                key={index}
+                model={interior_model?.model}
+                imgHeight={props?.cardImgHeight || "auto"}
+                tagIcon={interior_model?.model?.top ? "/icons/star.svg" : ""}
               />
             </Grid>
           ))}

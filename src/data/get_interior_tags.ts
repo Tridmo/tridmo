@@ -51,4 +51,5 @@ const get_interior_tags = createSlice({
 export const { setInteriorTags, resetInteriorTags } = get_interior_tags.actions;
 export const reducer = get_interior_tags.reducer;
 export const selectInteriorTags = (state: any) => state?.get_interior_tags?.data[0]?.data?.tags
+export const selectInteriorTags_status = (state: any) => state?.get_interior_tags?.status
 export default get_interior_tags;

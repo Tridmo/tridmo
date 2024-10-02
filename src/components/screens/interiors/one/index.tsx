@@ -34,6 +34,7 @@ import { getCategories } from '../../../../data/categories';
 import { getMyInteriors } from '../../../../data/get_my_interiors';
 import { getAllInteriors } from '../../../../data/get_all_interiors';
 import { ContainerStyle, primaryColor } from '../../../../styles/styles';
+import SimpleCard from '../../../simple_card';
 
 const TagsDropDown = styled(Menu)(
   ({ theme }: ThemeProps) => `
@@ -692,7 +693,7 @@ export default function OneInterior() {
 
       <Box sx={{
         width: '100%',
-        minHeight: '80dvh',
+        minHeight: { xs: 'unset', sm: 'unset', md: '80dvh', lg: '80dvh', xl: '80dvh' },
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -720,35 +721,21 @@ export default function OneInterior() {
         />
 
         {
-          interiorTags && interiorTags?.length > 0
-            ? <Box sx={{ width: '100%' }}>
-              <SimpleTypography
-                text='Использованные 3D модели:'
-                variant="h3"
-                sx={{
-                  fontWeight: 400,
-                  fontSize: '22px',
-                  lineHeight: '31.9px',
-                  letterSpacing: '-0.02em'
-                }}
-              />
-              {
-                interiorTags?.map((i, n) => (
-                  <Box key={n} sx={{ width: '100%' }}>
-                    <SimpleTypography
-                      text={`${n + 1}. ${i?.model?.name}`}
-                      sx={{
-                        fontWeight: 400,
-                        fontSize: '22px',
-                        lineHeight: '31.9px',
-                        letterSpacing: '-0.02em'
-                      }}
-                    />
-                  </Box>
-                ))
-              }
-            </Box>
-            : null
+          interiorTags && interiorTags?.length > 0 &&
+          <Box width={'100%'}>
+            <SimpleTypography
+              text='Использованные модели:'
+              variant="h3"
+              sx={{
+                fontWeight: 400,
+                fontSize: '22px',
+                lineHeight: '31.9px',
+                letterSpacing: '-0.02em',
+                mb: '8px'
+              }}
+            />
+            <SimpleCard route='interior_models' cols={5} />
+          </Box>
         }
       </Box>
 

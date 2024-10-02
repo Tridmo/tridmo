@@ -330,7 +330,7 @@ export const LoginContext = (props: LoginContextProps) => {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     value={values.email}
-                    placeholderText='example@gmail.com'
+                    placeholderText='example@example.com'
                   />
                 </Box>
 
@@ -347,16 +347,21 @@ export const LoginContext = (props: LoginContextProps) => {
                   placeholderText='Введите пароль'
                 />
 
-                <Box sx={{ marginTop: "10px" }}>
-                  <Buttons name="Забыли пароль?" className='underlined__btn' />
+                <Box width={'100%'} mt={"10px"}>
+                  {/* <Buttons
+                    name="Забыли пароль?"
+                    className='underlined__btn'
+                  /> */}
+
+                  <Buttons
+                    type="submit"
+                    name="Войти"
+                    startIcon={isSubmitting}
+                    disabled={Boolean(errors.submit) || isSubmitting}
+                    className='signIn__btn'
+                    sx={{ mt: '24px' }}
+                  />
                 </Box>
-                <Buttons
-                  type="submit"
-                  name="Войти"
-                  startIcon={isSubmitting}
-                  disabled={Boolean(errors.submit) || isSubmitting}
-                  className='signIn__btn'
-                />
               </Grid>
             </Grid>
           </form>)}
@@ -467,7 +472,7 @@ export const SignUpContext = (props: LoginContextProps) => {
           <form onSubmit={handleSubmit}>
             <Grid style={{ transformOrigin: '0 0 0' }}>
               <Grid sx={{ display: 'flex', alignItems: "start", justifyContent: "start", flexDirection: "column" }}>
-                <SimpleTypography className="modal__title" variant="h6" text="Sign up" />
+                <SimpleTypography className="modal__title" variant="h6" text="Регистрация" />
                 <Grid sx={{ display: "flex", alignItems: "center", justifyContent: "start" }}>
                   <SimpleTypography className="modal__sub-title" variant="h6" text="Уже зарегистрирован?" />
                   <Buttons
@@ -522,7 +527,7 @@ export const SignUpContext = (props: LoginContextProps) => {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     value={values.email}
-                    placeholderText='example@gmail.com'
+                    placeholderText='example@example.com'
                   />
                 </Box>
 
@@ -575,7 +580,7 @@ export const SignUpContext = (props: LoginContextProps) => {
                 {/* <Buttons name="Forgot your password?" className='underlined__btn' /> */}
                 <Buttons
                   type="submit"
-                  name="Create an account"
+                  name="Зарегистрироваться"
                   startIcon={isSubmitting}
                   disabled={Boolean(errors.submit) || isSubmitting}
                   className='signIn__btn'

@@ -17,10 +17,17 @@ const LoginSection = ({ loginLink, signUpLink }: LoginSectionProps) => {
   const dispatch = useDispatch<any>();
 
   return (
-    <div className='signBox'>
-      <div className='signLine'>Войдите или зарегистрируйтесь, чтобы оставить комментарий</div>
-      <div style={{ padding: "0", display: "flex" }}>
-        <Box sx={{ marginRight: "16px" }}>
+    <Box className='signBox'
+      display={'flex'}
+      width={'100%'}
+      flexDirection={{ xs: 'column', sm: 'row', md: 'row', lg: 'row', xl: 'row' }}
+    >
+      <Box className='signLine' mb={'24px'} >Войдите или зарегистрируйтесь, чтобы оставить комментарий</Box>
+      <Box
+        style={{ padding: "0", display: "flex" }}
+        width={{ xs: '100%', sm: 'unset', md: 'unset', lg: 'unset', xl: 'unset' }}
+      >
+        {/* <Box sx={{ marginRight: "16px" }}>
           <Buttons
             name="Регистрация "
             onClick={() => {
@@ -29,7 +36,7 @@ const LoginSection = ({ loginLink, signUpLink }: LoginSectionProps) => {
             }}
             className="bordered__btn--signup"
           />
-        </Box>
+        </Box> */}
         <Buttons
           name="Логин"
           onClick={() => {
@@ -37,9 +44,10 @@ const LoginSection = ({ loginLink, signUpLink }: LoginSectionProps) => {
             dispatch(setOpenModal(true))
           }}
           className="login__btn"
+          sx={{ width: '100%' }}
         />
-      </div>
-    </div>
+      </Box>
+    </Box>
   )
 }
 

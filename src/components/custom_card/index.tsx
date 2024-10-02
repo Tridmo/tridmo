@@ -255,20 +255,16 @@ function CustomCard({ model, type, link, imgHeight, tagIcon, tagText, withAuthor
       }
       {
         !imageSplit ?
-          <Box
-            height={imgHeight || '208px'}
-          >
-            <LazyLoadImage
-              src={model?.cover ? (model?.cover[0]?.image_src ? `${IMAGES_BASE_URL}/${model?.cover[0]?.image_src}` : '') : ''}
-              style={{ objectFit: "cover" }}
-              alt=""
-              effect='blur'
-              width={"100%"}
-              height={"100%"}
-              placeholderSrc='/img/placeholder.svg'
-              delayTime={300}
-            />
-          </Box>
+          <LazyLoadImage
+            src={model?.cover ? (model?.cover[0]?.image_src ? `${IMAGES_BASE_URL}/${model?.cover[0]?.image_src}` : '') : ''}
+            style={{ objectFit: "cover" }}
+            alt=""
+            effect='blur'
+            width={"100%"}
+            height={"100%"}
+            placeholderSrc='/img/placeholder.svg'
+            delayTime={300}
+          />
           :
           <Grid container
             rowGap={'4px'}
