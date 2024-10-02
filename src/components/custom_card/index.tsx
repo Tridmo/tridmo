@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { Box, styled, Paper, Avatar, MenuItem, Menu, Grid } from '@mui/material';
+import { Box, styled, Paper, Avatar, MenuItem, Menu, Grid, Skeleton } from '@mui/material';
 import Image from 'next/image';
 import SimpleTypography from '../typography';
 import Link from 'next/link';
@@ -16,6 +16,7 @@ import { toast } from 'react-toastify';
 import instance from '../../utils/axios';
 import { getMyInteriors } from '../../data/get_my_interiors';
 import { getMyProjects } from '../../data/get_my_projects';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 type InputProps = {
   item?: object,
@@ -36,7 +37,7 @@ type CustomCardProps = {
   type?: any,
   model?: any,
   link?: any,
-  imgHeight?: { lg?: string, md?: string, sm?: string, xs?: string } | string,
+  imgHeight?: string,
   tagText?: string,
   tagIcon?: string,
   withAuthor?: boolean,
@@ -254,16 +255,20 @@ function CustomCard({ model, type, link, imgHeight, tagIcon, tagText, withAuthor
       }
       {
         !imageSplit ?
-          <LazyLoadImage
-            src={model?.cover ? (model?.cover[0]?.image_src ? `${IMAGES_BASE_URL}/${model?.cover[0]?.image_src}` : '') : ''}
-            alt="cover"
-            effect="blur"
-            width={"100%"}
-            placeholderSrc={"/img/card-loader.jpg"}
-            height={imgHeight || `208px`}
-            delayTime={500}
-            style={{ objectFit: "cover" }}
-          />
+          <Box
+            height={imgHeight || '208px'}
+          >
+            <LazyLoadImage
+              src={model?.cover ? (model?.cover[0]?.image_src ? `${IMAGES_BASE_URL}/${model?.cover[0]?.image_src}` : '') : ''}
+              style={{ objectFit: "cover" }}
+              alt=""
+              effect='blur'
+              width={"100%"}
+              height={"100%"}
+              placeholderSrc='/img/placeholder.svg'
+              delayTime={50000}
+            />
+          </Box>
           :
           <Grid container
             rowGap={'4px'}

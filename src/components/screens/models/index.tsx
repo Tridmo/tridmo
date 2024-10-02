@@ -231,7 +231,7 @@ export default function ModelsPage() {
 
           {/* ---- MODEL CARDS ---- */}
 
-          <SimpleCard cols={5} route={"models"} cardImgHeight={{ lg: '154px', md: '208px', sm: '208px', xs: '208px' }} />
+          <SimpleCard cols={5} route={"models"} cardImgHeight={'208px'} />
 
           {/* ---- MODEL CARDS ---- */}
 

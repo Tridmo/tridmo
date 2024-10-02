@@ -7,6 +7,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import React from "react";
 import "./globals.css";
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 import { Box } from "@mui/system";
 import NextTopLoader from "nextjs-toploader";

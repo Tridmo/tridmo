@@ -31,7 +31,7 @@ type InputProps = {
   route: string;
   sliced?: number;
   cols: number;
-  cardImgHeight?: { xl?: string; lg?: string, md?: string, sm?: string, xs?: string } | string | null;
+  cardImgHeight?: string | null;
   withAuthor?: boolean;
 };
 const heights = [
@@ -517,7 +517,7 @@ export default function SimpleCard(props: InputProps) {
                 link={`/${props?.route}/${model?.slug}`}
                 key={index}
                 model={model}
-                imgHeight={props?.cardImgHeight || width < 900 ? "auto" : "256px"}
+                imgHeight={props?.cardImgHeight || 'auto'}
                 withAuthor={props?.withAuthor}
               />
             </Grid>
