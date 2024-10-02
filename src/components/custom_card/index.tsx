@@ -266,7 +266,7 @@ function CustomCard({ model, type, link, imgHeight, tagIcon, tagText, withAuthor
               width={"100%"}
               height={"100%"}
               placeholderSrc='/img/placeholder.svg'
-              delayTime={50000}
+              delayTime={300}
             />
           </Box>
           :
