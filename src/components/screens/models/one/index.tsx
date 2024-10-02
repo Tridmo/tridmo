@@ -141,7 +141,7 @@ export default function OneModel() {
                       link={`/models/${model?.slug}`}
                       key={index}
                       model={model}
-                      imgHeight={{ lg: '154px', md: '208px', sm: '208px', xs: '208px' }}
+                      imgHeight={'208px'}
                       tagIcon={model?.top ? '/icons/star.svg' : ''}
                     />
                   </Grid>
@@ -211,7 +211,7 @@ export default function OneModel() {
                   link={`/interiors/${interior?.interior?.slug}`}
                   key={index}
                   model={interior?.interior}
-                  imgHeight={{ lg: '268px', md: '268px', sm: '268px', xs: '268px' }}
+                  imgHeight={'208px'}
                 />
               </Grid>
             ))

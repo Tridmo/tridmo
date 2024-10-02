@@ -171,7 +171,13 @@ function CustomCard({ model, type, link, imgHeight, tagIcon, tagText, withAuthor
       position: "relative",
       cursor: "pointer",
       transition: "all 0.4s ease",
-      padding: "12px 12px 0 12px",
+      padding: {
+        xs: "8px 8px 0 8px",
+        sm: "8px 8px 0 8px",
+        md: "12px 12px 0 12px",
+        lg: "12px 12px 0 12px",
+        xl: "12px 12px 0 12px"
+      },
       display: "flex",
       flexDirection: "column",
       justifyContent: "space-between",
@@ -323,7 +329,13 @@ function CustomCard({ model, type, link, imgHeight, tagIcon, tagText, withAuthor
           display: "flex",
           alignItems: 'center',
           justifyContent: "space-between",
-          padding: "13px 0"
+          padding: {
+            xs: "8px 0",
+            sm: "8px 0",
+            md: "12px 0",
+            lg: "12px 0",
+            xl: "12px 0",
+          }
         }}
       >
         {

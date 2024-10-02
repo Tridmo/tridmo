@@ -257,13 +257,6 @@ export default function InteriorsPage() {
           <SimpleCard
             cols={4}
             route="interiors"
-            cardImgHeight={
-              mdScreen
-                ? {
-                  xs: "156px",
-                }
-                : null
-            }
           />
 
           {/* ---- MODEL CARDS ---- */}
