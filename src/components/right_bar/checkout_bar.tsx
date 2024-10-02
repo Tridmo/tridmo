@@ -286,7 +286,6 @@ const CheckoutBar = () => {
                               height={46}
                               placeholderSrc="/img/avatar.png"
                               delayTime={500}
-                              objectFit="cover"
                               style={{
                                 objectFit: 'cover',
                                 borderRadius: '23px',
