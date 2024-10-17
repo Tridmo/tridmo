@@ -384,7 +384,7 @@ export default function LandingPage() {
 
             {/* 3D MODELS MAP */}
 
-            <SimpleCard cols={5} route={"landing_models"} />
+            <SimpleCard cols={5} route={"landing_models"} cardImgHeight={'200px'} />
 
             <Box width={"100%"}>
               <Link href={`models`}>

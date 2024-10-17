@@ -28,6 +28,7 @@ import CustomCard from "../custom_card";
 import CustomCardSkeleton from "../custom_card/skeleton";
 import EmptyData from "../views/empty_data";
 import { selectInteriorTags, selectInteriorTags_status } from "../../data/get_interior_tags";
+import ConnectionError, { ConnectionErrorSmall } from "../site_info/connection_error";
 type InputProps = {
   route: string;
   sliced?: number;
@@ -54,18 +55,31 @@ export default function SimpleCard(props: InputProps) {
   const router = useRouter();
   const fakeModels = (length) => new Array(props?.sliced || length).fill("");
 
+  const lg = useMediaQuery('(max-width:1440px)')
+  const md = useMediaQuery('(max-width:1024px)')
+  const sm = useMediaQuery('(max-width:768px)')
+  const xs = useMediaQuery('(max-width:425px)')
+
   React.useEffect(() => {
     dispatch(setLimitFilter({ limit: 15 }));
   }, []);
 
   if (props?.route == "models") {
+
+    const imageHeight = 
+    xs ? '100px' : 
+    sm ? '180px' : 
+    md ? '200px' : 
+    lg ? '200px' 
+    : '200px'
+
     const all__models = useSelector(selectAllModels);
     const all__models__status = useSelector(
       (state: any) => state?.get_all_models?.status
     );
     if (all__models__status === "failed") {
       return (
-        <SimpleTypography text="Извините, ошибка сетевого подключения:("></SimpleTypography>
+        <ConnectionErrorSmall/>
       );
     }
     if (all__models__status === "loading") {
@@ -80,14 +94,6 @@ export default function SimpleCard(props: InputProps) {
           {fakeModels(15)?.map((model: any, index: any) => (
             <Grid
               className="models__card"
-              sx={{
-                // [`&:not(:nth-of-type(${props?.cols}n))`]: {
-                //   padding: "0 9.5px 0 0 !important",
-                // },
-                // [`&:nth-of-type(${props?.cols}n)`]: {
-                //   padding: "0 0 0 0 !important",
-                // },
-              }}
               key={index}
               lg={12 / props?.cols}
               md={12 / (props?.cols - 1)}
@@ -96,12 +102,7 @@ export default function SimpleCard(props: InputProps) {
               item
             >
               <CustomCardSkeleton
-                type={props?.route}
-                link={`/${props?.route}`}
-                key={index}
-                model={model}
-                imgHeight={props?.cardImgHeight || "208px"}
-                tagIcon={model?.top ? "/icons/star.svg" : ""}
+                imgHeight={imageHeight}
               />
             </Grid>
           ))}
@@ -124,14 +125,6 @@ export default function SimpleCard(props: InputProps) {
           {data_sliced?.map((model: any, index: any) => (
             <Grid
               className="models__card"
-              sx={{
-                // [`&:not(:nth-of-type(${props?.cols}n))`]: {
-                //   padding: "0 9.5px 0 0 !important",
-                // },
-                // [`&:nth-of-type(${props?.cols}n)`]: {
-                //   padding: "0 0 0 0 !important",
-                // },
-              }}
               key={index}
               lg={12 / props?.cols}
               md={12 / (props?.cols - 1)}
@@ -144,7 +137,7 @@ export default function SimpleCard(props: InputProps) {
                 link={`/${props?.route}/${model?.slug}`}
                 key={index}
                 model={model}
-                imgHeight={props?.cardImgHeight || "208px"}
+                imgHeight={'auto'}
                 tagIcon={model?.top ? "/icons/star.svg" : ""}
               />
             </Grid>
@@ -160,9 +153,16 @@ export default function SimpleCard(props: InputProps) {
     const models_status = useSelector(selectInteriorTags_status)
     const all__models = useSelector(selectInteriorTags)
 
+    const imageHeight = 
+    xs ? '100px' : 
+    sm ? '180px' : 
+    md ? '200px' : 
+    lg ? '200px' 
+    : '200px'
+
     if (models_status === "failed") {
       return (
-        <SimpleTypography text="Извините, ошибка сетевого подключения:("></SimpleTypography>
+        <ConnectionErrorSmall/>
       );
     }
     if (models_status === "loading") {
@@ -187,17 +187,12 @@ export default function SimpleCard(props: InputProps) {
               }}
               key={index}
               md={12 / props?.cols}
-              sm={12 / (props?.cols - 2)}
-              xs={12 / (props?.cols - 4)}
+              sm={12 / (props?.cols - 1)}
+              xs={12 / (props?.cols - 2)}
               item
             >
               <CustomCardSkeleton
-                type={"models"}
-                link={`/models`}
-                key={index}
-                model={model}
-                imgHeight={props?.cardImgHeight || "208px"}
-                tagIcon={model?.top ? "/icons/star.svg" : ""}
+                imgHeight={imageHeight}
               />
             </Grid>
           ))}
@@ -239,7 +234,7 @@ export default function SimpleCard(props: InputProps) {
                 link={`/models/${interior_model?.model?.slug}`}
                 key={index}
                 model={interior_model?.model}
-                imgHeight={props?.cardImgHeight || "auto"}
+                imgHeight={'auto'}
                 tagIcon={interior_model?.model?.top ? "/icons/star.svg" : ""}
               />
             </Grid>
@@ -257,9 +252,16 @@ export default function SimpleCard(props: InputProps) {
     const models__status = useSelector(selectLandingModels_status);
     const top_models__status = useSelector(selectLandingTopModels_status);
 
+    const imageHeight = 
+    xs ? '100px' : 
+    sm ? '180px' : 
+    md ? '200px' : 
+    lg ? '200px' 
+    : '200px'
+
     if (models__status === "failed" || top_models__status === "failed") {
       return (
-        <SimpleTypography text="Извините, ошибка сетевого подключения:("></SimpleTypography>
+        <ConnectionErrorSmall/>
       );
     }
     if (models__status === "loading" || top_models__status === "loading") {
@@ -284,17 +286,12 @@ export default function SimpleCard(props: InputProps) {
               }}
               key={index}
               md={12 / props?.cols}
-              sm={12 / (props?.cols - 2)}
-              xs={12 / (props?.cols - 4)}
+              sm={12 / (props?.cols - 1)}
+              xs={12 / (props?.cols - 2)}
               item
             >
               <CustomCardSkeleton
-                type={"models"}
-                link={`/models`}
-                key={index}
-                model={model}
-                imgHeight={props?.cardImgHeight || "208px"}
-                tagIcon={model?.top ? "/icons/star.svg" : ""}
+                imgHeight={imageHeight}
               />
             </Grid>
           ))}
@@ -338,7 +335,7 @@ export default function SimpleCard(props: InputProps) {
                 link={`/models/${model?.slug}`}
                 key={index}
                 model={model}
-                imgHeight={props?.cardImgHeight || "auto"}
+                imgHeight={'auto'}
                 tagIcon={model?.top ? "/icons/star.svg" : ""}
               />
             </Grid>
@@ -356,9 +353,16 @@ export default function SimpleCard(props: InputProps) {
       (state: any) => state?.get_saved_models?.status
     );
 
+    const imageHeight = 
+    xs ? '100px' : 
+    sm ? '180px' : 
+    md ? '200px' : 
+    lg ? '200px' 
+    : '200px'
+
     if (all__models__status === "failed") {
       return (
-        <SimpleTypography text="Извините, ошибка сетевого подключения:("></SimpleTypography>
+        <ConnectionErrorSmall/>
       );
     }
     if (all__models__status === "loading") {
@@ -380,12 +384,7 @@ export default function SimpleCard(props: InputProps) {
               item
             >
               <CustomCardSkeleton
-                type={props?.route}
-                link={`/${props?.route}`}
-                key={index}
-                model={model}
-                imgHeight={props?.cardImgHeight || "208px"}
-                tagIcon={model?.top ? "/icons/star.svg" : ""}
+                imgHeight={imageHeight}
               />
             </Grid>
           ))}
@@ -420,7 +419,7 @@ export default function SimpleCard(props: InputProps) {
                 link={`/models/${model?.model?.slug}`}
                 key={index}
                 model={model?.model}
-                imgHeight={props?.cardImgHeight || "208px"}
+                imgHeight={'auto'}
                 tagIcon={model?.model?.top ? "/icons/star.svg" : ""}
               />
             </Grid>
@@ -438,9 +437,16 @@ export default function SimpleCard(props: InputProps) {
       (state: any) => state?.get_brand_models?.status
     );
 
+    const imageHeight = 
+    xs ? '100px' : 
+    sm ? '180px' : 
+    md ? '200px' : 
+    lg ? '200px' 
+    : '200px'
+
     if (all__models__status === "failed") {
       return (
-        <SimpleTypography text="Извините, ошибка сетевого подключения:("></SimpleTypography>
+        <ConnectionErrorSmall/>
       );
     }
     if (all__models__status === "loading") {
@@ -470,12 +476,7 @@ export default function SimpleCard(props: InputProps) {
               item
             >
               <CustomCardSkeleton
-                type={props?.route}
-                link={`/${props?.route}`}
-                key={index}
-                model={model}
-                imgHeight={props?.cardImgHeight || "208px"}
-                tagIcon={model?.top ? "/icons/star.svg" : ""}
+                imgHeight={imageHeight}
               />
             </Grid>
           ))}
@@ -518,7 +519,7 @@ export default function SimpleCard(props: InputProps) {
                 link={`/models/${model?.slug}`}
                 key={index}
                 model={model}
-                imgHeight={props?.cardImgHeight || "208px"}
+                imgHeight={'auto'}
                 brandBox={false}
                 tagIcon={model?.top ? "/icons/star.svg" : ""}
               />
@@ -537,19 +538,16 @@ export default function SimpleCard(props: InputProps) {
       (state: any) => state?.get_all_interiors?.status
     );
 
-    // const all__interiors: { data?: any[] } = {
-    //   data: Array.from({ length: 20 }, () => ({
-    //     id: `${Math.random()}`,
-    //     cover: [{ image: { src: '/img/interior1.jpg' } }],
-    //     brand: { name: 'Brand name' },
-    //     name: `Interior`,
-    //     slug: `interior_slug`
-    //   }))
-    // }
+    const imageHeight = 
+    xs ? '180px' : 
+    sm ? '220px' : 
+    md ? '260px' : 
+    lg ? '260px' 
+    : '260px'
 
     if (all__interiors__status === "failed") {
       return (
-        <SimpleTypography text="Извините, ошибка сетевого подключения:("></SimpleTypography>
+        <ConnectionErrorSmall/>
       );
     }
     if (all__interiors__status === "loading") {
@@ -564,18 +562,14 @@ export default function SimpleCard(props: InputProps) {
             <Grid
               className="models__card"
               key={index}
-              md={12 / props?.cols}
+              lg={12 / props?.cols}
+              md={12 / (props?.cols - 1)}
               sm={12 / (props?.cols - 2)}
-              xs={12 / (props?.cols - 4)}
+              xs={12 / (props?.cols - 2)}
               item
             >
               <CustomCardSkeleton
-                type={props?.route}
-                link={`/${props?.route}`}
-                key={index}
-                model={model}
-                imgHeight={props?.cardImgHeight || "268px"}
-                tagIcon={model?.top ? "/icons/star.svg" : ""}
+                imgHeight={imageHeight}
               />
             </Grid>
           ))}
@@ -587,8 +581,6 @@ export default function SimpleCard(props: InputProps) {
       const data_sliced = props?.sliced
         ? all__interiors?.data?.interiors?.slice(0, props?.sliced)
         : all__interiors?.data?.interiors;
-
-      const width = window.innerWidth
 
       return data_sliced?.length > 0 ? (
         <Grid
@@ -612,7 +604,7 @@ export default function SimpleCard(props: InputProps) {
                 link={`/${props?.route}/${model?.slug}`}
                 key={index}
                 model={model}
-                imgHeight={props?.cardImgHeight || 'auto'}
+                imgHeight={'auto'}
                 withAuthor={props?.withAuthor}
               />
             </Grid>
@@ -630,19 +622,16 @@ export default function SimpleCard(props: InputProps) {
       (state: any) => state?.get_author_interiors?.status
     );
 
-    // const all__interiors: { data?: any[] } = {
-    //   data: Array.from({ length: 20 }, () => ({
-    //     id: `${Math.random()}`,
-    //     cover: [{ image: { src: '/img/interior1.jpg' } }],
-    //     brand: { name: 'Brand name' },
-    //     name: `Interior`,
-    //     slug: `interior_slug`
-    //   }))
-    // }
+    const imageHeight = 
+    xs ? '180px' : 
+    sm ? '220px' : 
+    md ? '268px' : 
+    lg ? '268px' 
+    : '268px'
 
     if (all__interiors__status === "failed") {
       return (
-        <SimpleTypography text="Извините, ошибка сетевого подключения:("></SimpleTypography>
+        <ConnectionErrorSmall/>
       );
     }
     if (all__interiors__status === "loading") {
@@ -667,17 +656,12 @@ export default function SimpleCard(props: InputProps) {
               }}
               key={index}
               md={12 / props?.cols}
-              sm={12 / (props?.cols - 2)}
-              xs={12 / (props?.cols - 4)}
+              sm={12 / (props?.cols - 3)}
+              xs={12 / (props?.cols - 1)}
               item
             >
               <CustomCardSkeleton
-                type={props?.route}
-                link={`/interiors`}
-                key={index}
-                model={model}
-                imgHeight={props?.cardImgHeight || "268px"}
-                tagIcon={model?.top ? "/icons/star.svg" : ""}
+                imgHeight={imageHeight}
               />
             </Grid>
           ))}
@@ -721,7 +705,7 @@ export default function SimpleCard(props: InputProps) {
                 link={`/interiors/${model?.slug}`}
                 key={index}
                 model={model}
-                imgHeight={props?.cardImgHeight || "268px"}
+                imgHeight={'auto'}
                 withAuthor={props?.withAuthor}
               />
             </Grid>
@@ -739,9 +723,16 @@ export default function SimpleCard(props: InputProps) {
       (state: any) => state?.get_my_interiors?.status
     );
 
+    const imageHeight = 
+    xs ? '180px' : 
+    sm ? '220px' : 
+    md ? '268px' : 
+    lg ? '268px' 
+    : '268px'
+
     if (all__interiors__status === "failed") {
       return (
-        <SimpleTypography text="Извините, ошибка сетевого подключения:("></SimpleTypography>
+        <ConnectionErrorSmall/>
       );
     }
     if (all__interiors__status === "loading") {
@@ -763,12 +754,7 @@ export default function SimpleCard(props: InputProps) {
               item
             >
               <CustomCardSkeleton
-                type={props?.route}
-                link={`/interiors`}
-                key={index}
-                model={model}
-                imgHeight={props?.cardImgHeight || "268px"}
-                tagIcon={model?.top ? "/icons/star.svg" : ""}
+                imgHeight={imageHeight}
               />
             </Grid>
           ))}
@@ -805,7 +791,7 @@ export default function SimpleCard(props: InputProps) {
                 link={`/interiors/${model?.slug}`}
                 key={index}
                 model={model}
-                imgHeight={props?.cardImgHeight || "268px"}
+                imgHeight={'auto'}
                 withAuthor={props?.withAuthor}
               />
             </Grid>
@@ -847,7 +833,7 @@ export default function SimpleCard(props: InputProps) {
 
     if (all__interiors__status === "failed") {
       return (
-        <SimpleTypography text="Извините, ошибка сетевого подключения:("></SimpleTypography>
+        <ConnectionErrorSmall/>
       );
     }
     if (all__interiors__status === "loading") {
@@ -945,7 +931,7 @@ export default function SimpleCard(props: InputProps) {
 
     if (all__projects__status === "failed") {
       return (
-        <SimpleTypography text="Извините, ошибка сетевого подключения:("></SimpleTypography>
+        <ConnectionErrorSmall/>
       );
     }
     if (all__projects__status === "loading") {
@@ -967,8 +953,6 @@ export default function SimpleCard(props: InputProps) {
             >
               <CustomCardSkeleton
                 type={props?.route}
-                key={index}
-                model={model}
                 imgHeight={props?.cardImgHeight || "171px"}
               />
             </Grid>

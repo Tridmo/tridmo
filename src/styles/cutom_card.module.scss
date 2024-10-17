@@ -1,0 +1,19 @@
+.img-container {
+    width: 100%;
+    height: auto;
+    min-height: 200px; /* Reserve space until the image loads */
+    position: relative;
+  }
+  
+  @media (max-width: 768px) {
+    .img-container {
+      min-height: 150px; /* Smaller height for mobile */
+    }
+  }
+  
+  @media (min-width: 769px) {
+    .img-container {
+      min-height: 250px; /* Larger height for tablets and desktops */
+    }
+  }
+  

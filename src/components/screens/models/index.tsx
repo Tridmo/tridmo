@@ -1,6 +1,6 @@
 "use client"
 
-import React, { Suspense, useEffect, useMemo, useState } from 'react'
+import React, { Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Grid, Box, useMediaQuery, IconButton, SwipeableDrawer } from '@mui/material'
 import SimpleCard from '../../simple_card'
@@ -9,7 +9,7 @@ import BasicPagination from '../../pagination/pagination'
 import Categories from '../../views/categories/model_categories'
 import { getAllModels, selectAllModels } from '../../../data/get_all_models';
 import Style from '../../views/styles/model_styles'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { searchModels, setSearchVal } from '../../../data/search_model'
 import { Close, FilterAlt } from '@mui/icons-material'
 import Buttons from '../../buttons'
@@ -32,6 +32,7 @@ export default function ModelsPage() {
   const matches = useMediaQuery('(max-width:600px)');
   const mdScreen = useMediaQuery('(max-width:960px)');
   const searchParams = useSearchParams();
+  const pathname = usePathname()
   const dispatch = useDispatch<any>();
   const router = useRouter();
   const getModelStatus = useSelector((state: any) => state?.get_all_models?.status);
@@ -50,11 +51,20 @@ export default function ModelsPage() {
   const getModelOrderBy = useSelector((state: any) => state?.handle_filters?.model_orderby)
   const getModelOrder = useSelector((state: any) => state?.handle_filters?.model_order)
   const page = searchParams.get('page') as string
-  const [keyword, setKeyword] = useState(getModelNameFilter)
+  const [searchValue, setSearchValue] = useState('')
 
   useEffect(() => {
-    setKeyword(getModelNameFilter);
-  }, [getModelNameFilter]);
+    setSearchValue(searchParams.get('name') as string)
+  }, [searchParams.toString()])
+  
+  const removeFromQuery = useCallback(
+    (name: string) => {
+      const params = new URLSearchParams(searchParams.toString())
+      params.delete(name)
+      return params.toString()
+    },
+    [searchParams]
+  )
 
   useEffect(() => {
     if (getModelStatus === "idle") {
@@ -65,9 +75,9 @@ export default function ModelsPage() {
           categories: getModelCategoryFilter,
           colors: getModelColorFilter,
           styles: getModelStyleFilter,
-          name: getModelNameFilter,
+          name: searchValue || getModelNameFilter,
           top: getModelTopFilter,
-          page: searchParams.get("page") || getModelPageFilter,
+          page: page || getModelPageFilter,
           orderBy: getModelOrderBy,
           order: getModelOrder,
           limit: modelsLimit,
@@ -87,18 +97,21 @@ export default function ModelsPage() {
 
   async function clearSearch() {
     dispatch(setModelNameFilter(''))
-    dispatch(getAllModels({
+    dispatch(
+      getAllModels({
       brand: getModelBrandFilter,
       categories: getModelCategoryFilter,
       colors: getModelColorFilter,
       styles: getModelStyleFilter,
       name: '',
       top: getModelTopFilter,
-      page: getModelPageFilter,
+      page: getModelPageFilter || 1,
       orderBy: getModelOrderBy,
       order: getModelOrder,
     }))
-    window.history.replaceState({ ...window.history.state, as: '/models', url: '/models' }, '', '/models');
+    const newQuery = removeFromQuery('name')
+    router.push(`${pathname}?${newQuery}`)
+    setSearchValue('')
   }
 
   const getAllBrandStatus = useSelector(
@@ -175,10 +188,10 @@ export default function ModelsPage() {
         }
         <Grid item lg={9.5} md={9.5} sm={12} xs={12} sx={{ p: { lg: "0 0 0 16px", md: '0 0 0 16px', sm: '0', xs: '0' }, minHeight: "90dvh" }}>
           {
-            keyword ?
+            searchValue ?
               <Box sx={{ borderBottom: '1px solid #e0e0e0', padding: '0 8px 10px', marginBottom: '10px' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <SimpleTypography text={`Модели «${keyword}»`} className='prodcts__result--title' variant="h2" />
+                  <SimpleTypography text={`Модели «${searchValue}»`} className='prodcts__result--title' variant="h2" />
                   <Buttons onClick={clearSearch} sx={{ color: '#646464', minWidth: '30px', width: '30px', height: '30px', borderRadius: '50%' }}>
                     <Close />
                   </Buttons>

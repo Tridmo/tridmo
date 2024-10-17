@@ -43,6 +43,7 @@ export default function RootLayout({
             showSpinner={false}
             speed={200}
             shadow="0 0 10px #2299DD,0 0 5px #2299DD"
+            zIndex={5001}
           />
           <Box sx={{ position: "realtive" }}>
             {/* <TopLoading /> */}
@@ -50,7 +51,9 @@ export default function RootLayout({
           </Box>
           <Navbar />
           <RightBar />
+          <Box pt={'80px'}>
           {children}
+          </Box>
           <Footer />
         </Providers>
       </body>

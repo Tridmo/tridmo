@@ -40,6 +40,7 @@ import { switch_on } from "../../../data/toggle_cart";
 import { IMAGES_BASE_URL } from "../../../utils/env_vars";
 import SimpleTypography from "../../typography";
 import MobileMode from "./mobile_mode";
+import { SearchBar } from "./search_bar/serach_bar";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -199,7 +200,7 @@ export default function Navbar() {
     <>
       <BasicModal />
       <WyNotificationToasts draggable appearance="internal" />
-      <Box sx={{ position: "relative" }}>
+      <Box sx={{ position: "fixed", zIndex: '5000', top: 0, right: 0, left: 0 }}>
         <Box
           sx={{
             flexGrow: 1,
@@ -368,10 +369,10 @@ export default function Navbar() {
                 </Box>
               </Box>
 
-              <Box sx={{ overflow: "hidden", transform: 'translate(39px, 0)' }}>
+              {/* <Box sx={{ overflow: "hidden", transform: 'translate(39px, 0)' }}>
                 <Box
                   sx={{
-                    width: searchClicked ? { xs: "200px", md: "260px" } : 0,
+                    width: searchClicked ? { xs: "200px", md: "212px" } : 0,
                     visibility: searchClicked ? "visible" : "hidden",
                     transition: "all 0.2s ease",
                   }}
@@ -390,16 +391,15 @@ export default function Navbar() {
                     />
                   </form>
                 </Box>
-              </Box>
+              </Box> */}
 
               <IconButton
                 onClick={() => {
-                  if (searchClicked) setSearchVal("");
                   setSearchClicked(!searchClicked);
                 }}
                 aria-label="menu"
                 sx={{
-                  marginRight: "0px",
+                  marginRight: "8px",
                   transition: "all 0.4s ease",
                 }}
               >
@@ -632,6 +632,7 @@ export default function Navbar() {
             </Grid> */}
           </Grid>
         </Box>
+        <SearchBar isOpen={searchClicked} setIsOpen={setSearchClicked}/>
       </Box>
     </>
   );

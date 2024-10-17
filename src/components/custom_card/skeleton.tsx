@@ -27,7 +27,7 @@ type CustomCardProps = {
   type?: any,
   model?: any,
   link?: any,
-  imgHeight?: { lg?: string, md?: string, sm?: string, xs?: string } | string,
+  imgHeight?: string,
   tagText?: string,
   tagIcon?: string,
   withAuthor?: boolean,
@@ -61,22 +61,10 @@ export default function CustomCardSkeleton({ model, link, imgHeight, tagIcon, ta
         flexDirection: "column",
         justifyContent: "space-between"
       }}>
-        {/* <LazyLoadImage
-                    src="/img/card-loader.jpg"
-                    alt="Model image"
-                    effect="blur"
-                    width={"100%"}
-                    placeholderSrc={"/img/card-loader.jpg"}
-                    height={imgHeight || `208px`}
-                    delayTime={500}
-                    style={{ objectFit: "cover" }}
-                    /> */}
         <Skeleton
           variant="rectangular"
           width={'100%'}
-          sx={{
-            height: imgHeight || `208px`,
-          }}
+          height={imgHeight || `200px`}
         />
         <Label
           sx={{

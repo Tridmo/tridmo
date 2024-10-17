@@ -16,10 +16,11 @@ type InputProps = {
   clic?: any,
   value?: string;
   sx?: SxProps,
-  onChange?: any,
+  onChange?: (value: string) => void,
   search?: (searchValue: string) => void | any,
   searchDelay?: number,
   withButton?: boolean,
+  noAutoSearch?: boolean,
 };
 
 
@@ -29,7 +30,7 @@ export default function SearchInput(props: InputProps) {
   const [searchInit, setSearchInit] = useState(false)
 
   useMemo(() => {
-    if (props?.search && searchInit) {
+    if (props?.search && searchInit && !props?.withButton && !props?.noAutoSearch) {
       const delayDebounceFn = setTimeout(() => {
         props?.search ? props?.search(searchTerm) : null
       }, 10)
@@ -72,11 +73,16 @@ export default function SearchInput(props: InputProps) {
         sx={{ flex: 1, padding: 0, fontSize: '16px' }}
         placeholder={props?.placeHolder}
         onChange={(e) => {
-          clearTimeout('setTermTimeout')
-          const setTermTimeout = setTimeout(() => {
-            setSearchInit(true)
-            setSearchTerm(e.target.value)
-          }, props?.searchDelay || 1000)
+          if(!props?.withButton && !props?.noAutoSearch) {
+            clearTimeout('setTermTimeout')
+            const setTermTimeout = setTimeout(() => {
+              setSearchInit(true)
+              setSearchTerm(e.target.value)
+            }, props?.searchDelay || 1000)
+          }
+          else if (!!props?.onChange) {
+            props.onChange(e.target.value)
+          }
         }}
         inputProps={{
           'style': { padding: '0', fontSize: '16px' }
@@ -85,6 +91,9 @@ export default function SearchInput(props: InputProps) {
       {
         props?.withButton ?
           <Buttons
+          sx={{
+            p: "7px 12px !important",
+          }}
             name='Поиск'
             className='search__btn'
             type="button"
