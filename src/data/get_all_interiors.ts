@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../utils/axios'
-import { interiorsLimit } from '../types/filters';
+import { interiorOrderBy, interiorsLimit, order } from '../types/filters';
 
 const initialState = {
   data: [],
@@ -9,16 +9,24 @@ const initialState = {
   progress: 0,
 };
 export const getAllInteriors = createAsyncThunk('/interiors',
-  async (wrapper?: any) => {
+  async (wrapper?: {
+    author?: string;
+    name?: string;
+    categories?: any[];
+    limit?: number;
+    orderBy?: interiorOrderBy | string;
+    order?: order;
+    page?: number;
+  }) => {
     let send__route = `/interiors`
 
     wrapper?.categories?.forEach(category_id => {
       send__route += send__route.includes("/?") ? `&categories=${category_id}` : `/?categories=${category_id}`;
     });
 
-    wrapper?.styles?.forEach(style_id => {
-      send__route += !send__route.includes("/?") ? `/?styles=${style_id}` : `&styles=${style_id}`;
-    });
+    if (wrapper?.name) {
+      send__route += send__route.includes("/?") ? `&name=${wrapper?.name}` : `/?name=${wrapper?.name}`
+    }
 
     send__route +=
       !send__route.includes("/?") && wrapper?.author

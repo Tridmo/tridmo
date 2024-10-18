@@ -17,6 +17,8 @@ export const getAllDesigners = createAsyncThunk('/users/designers',
     page?: number;
   }) => {
     let send__route = `/users/designers`
+    console.log(wrapper);
+    
 
     if (wrapper?.name) {
       send__route += `/?full_name=${wrapper?.name}`
@@ -33,7 +35,8 @@ export const getAllDesigners = createAsyncThunk('/users/designers',
         : (send__route?.includes("/?") ? `&orderBy=rating` : `/?orderBy=rating`);
 
     send__route += !send__route.includes("/?") && wrapper?.page ? `/?page=${wrapper.page}` : wrapper?.page ? `&page=${wrapper.page}` : "";
-
+    console.log(send__route);
+    
     const response = await api.get(send__route)
     return response.data
 

@@ -1,6 +1,6 @@
 "use client"
 
-import React, { CSSProperties, Suspense, useEffect } from 'react'
+import React, { CSSProperties, Suspense, useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectAllModels } from '../../../data/get_all_models';
 import { Avatar, Divider, List, ListItem, ListItemAvatar, ListItemText, Box, Grid, SxProps, Skeleton, useMediaQuery } from '@mui/material'
@@ -8,23 +8,71 @@ import Image from 'next/image';
 import SimpleTypography from '@/components/typography';
 import BasicPagination from '@/components/pagination/pagination';
 import Link from 'next/link';
-import { selectAllDesigners } from '../../../data/get_all_designers';
+import { getAllDesigners, selectAllDesigners } from '../../../data/get_all_designers';
 import EmptyData from '../../views/empty_data';
-import { selectMyProfile } from '../../../data/me';
+import { getMyProfile, selectMyProfile } from '../../../data/me';
 import { IMAGES_BASE_URL } from '../../../utils/env_vars';
 import { dataItemIndex } from '../../../utils/utils';
 import { ContainerStyle, liAvatarSx, liAvatarWrapper, liHeaderSx, liHeaderTextSx, listSx, liSx } from '../../../styles/styles';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { Close } from '@mui/icons-material';
+import Buttons from '@/components/buttons';
+import { set_designers_name } from '@/data/handle_filters';
+import { designersLimit } from '@/types/filters';
 
 
 export default function DesignersPage() {
-  const dispatch = useDispatch<any>();
+
   const isAuthenticated = useSelector((state: any) => state?.auth_slicer?.authState)
   const getDesignersStatus = useSelector((state: any) => state?.get_all_designers?.status);
+  const getProfileStatus = useSelector((state: any) => state?.get_profile?.status);
+  const getDesignersNameFilter = useSelector((state: any) => state?.handle_filters?.designers_name);
+  const getDesignersPageFilter = useSelector((state: any) => state?.handle_filters?.designers_page);
   const all__designers = useSelector(selectAllDesigners)
   const profile = useSelector(selectMyProfile)
-  const smallScreen = useMediaQuery('(max-width:768px)');
 
+  const dispatch = useDispatch<any>();
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const smallScreen = useMediaQuery('(max-width:768px)');
   const fakeDesigners = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  const [searchValue, setSearchValue] = useState('')
+  const page = searchParams.get("page") as string;
+
+  useEffect(() => {
+    setSearchValue(searchParams.get('name') as string)
+  }, [searchParams.toString()])
+  
+  React.useEffect(() => {
+    if (getDesignersStatus === "idle") {
+      dispatch(getAllDesigners({ 
+        limit: designersLimit,
+        name: searchValue || getDesignersNameFilter,
+        page: page || getDesignersPageFilter
+      }))
+    }
+    if (getProfileStatus === "idle") {
+      dispatch(getMyProfile({}))
+    }
+  }, [getDesignersStatus, getProfileStatus])
+
+  const removeFromQuery = useCallback(
+    (name: string) => {
+      const params = new URLSearchParams(searchParams.toString())
+      params.delete(name)
+      return params.toString()
+    },
+    [searchParams]
+  )
+
+  async function clearSearch() {
+    dispatch(set_designers_name(''))
+    dispatch(getAllDesigners({name: '', limit: designersLimit, page: page || getDesignersPageFilter }))
+    const newQuery = removeFromQuery('name')
+    router.push(`${pathname}?${newQuery}`)
+    setSearchValue('')
+  }
 
   const widthControl = {
     '&:nth-of-type(1)': {
@@ -50,11 +98,58 @@ export default function DesignersPage() {
   }
 
   return (
-    <Box sx={ContainerStyle}>
-      <SimpleTypography text='Дизайнеры' className='section__title' sx={{ margin: '32px auto !important' }} />
+    <Box sx={{...ContainerStyle, mt: '32px'}}>
+      { !searchValue && <SimpleTypography text='Дизайнеры' className='section__title' /> }
       {
         getDesignersStatus == 'succeeded' ?
           <>
+          <Grid
+            container
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "space-between",
+              borderBottom: "1px solid #e0e0e0",
+              marginBottom: "20px",
+              paddingBottom:"10px",
+            }}
+          >
+            <Grid item lg={12} md={12} sm={12} xs={12}
+              sx={{ padding: "0 !important", alignItems: "center" }}
+            >
+              {
+              searchValue ?
+                <Box sx={{ borderBottom: '1px solid #e0e0e0', padding: '10px 0', marginBottom: '10px' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <SimpleTypography text={`Дизайнеры  «${searchValue}»`} className='prodcts__result--title' variant="h2" />
+                    <Buttons onClick={clearSearch} sx={{ color: '#646464', minWidth: '30px', width: '30px', height: '30px', borderRadius: '50%' }}>
+                      <Close />
+                    </Buttons>
+                  </Box>
+                  <SimpleTypography text={`найдено ${all__designers?.data?.pagination?.data_count} результатов`} className='products__result--text' variant="h2" />
+                </Box>
+                : null
+            }
+                  
+                    <SimpleTypography
+                      text={`Показаны ${dataItemIndex<string>(
+                        all__designers?.data?.pagination?.limit,
+                        all__designers?.data?.pagination?.current,
+                        1
+                      ) || 0
+                        }–${dataItemIndex<string>(
+                          all__designers?.data?.pagination?.limit,
+                          all__designers?.data?.pagination?.current,
+                          all__designers?.data?.designers?.length
+                        ) || 0
+                        } из ${all__designers?.data?.pagination?.data_count || 0} дизайнеров`}
+                      className='pagenation__desc'
+                    />
+                  
+            </Grid>
+          </Grid>
+
+
             <List
               sx={listSx}
             >

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { brandOrderBy, modelOrderBy, order } from '@/types/filters';
+import { brandOrderBy, interiorOrderBy, modelOrderBy, order } from '@/types/filters';
 const initialState = {
   author: '',
   model_brand: '',
@@ -37,6 +37,9 @@ const initialState = {
   projects_page: 1,
   saved_models_page: 1,
   brand_models_page: 1,
+  designers_name: '',
+  designers_order: 'desc',
+  designers_orderby: 'rating',
   designers_page: 1,
   brands_page: 1,
   error: null,
@@ -194,11 +197,21 @@ const handle_filters = createSlice({
     set_interiors_name: (state: any, action: PayloadAction<any>) => {
       state.interiors_name = action.payload;
     },
-    set_interiors_order: (state: any, action: PayloadAction<any>) => {
+    set_interiors_order: (state: any, action: PayloadAction<order>) => {
       state.interiors_order = action.payload;
     },
-    set_interiors_orderby: (state: any, action: PayloadAction<any>) => {
+    set_interiors_orderby: (state: any, action: PayloadAction<interiorOrderBy>) => {
       state.interiors_orderby = action.payload;
+    },
+
+    set_designers_name: (state: any, action: PayloadAction<any>) => {
+      state.designers_name = action.payload;
+    },
+    set_designers_order: (state: any, action: PayloadAction<order>) => {
+      state.designers_order = action.payload;
+    },
+    set_designers_orderby: (state: any, action: PayloadAction<any>) => {
+      state.designers_orderby = action.payload;
     },
     resetFilters: () => ({
       ...initialState
@@ -249,6 +262,9 @@ export const {
   set_interiors_name,
   set_interiors_order,
   set_interiors_orderby,
+  set_designers_name,
+  set_designers_order,
+  set_designers_orderby,
 } = handle_filters.actions;
 export const reducer = handle_filters.reducer;
 export default handle_filters;

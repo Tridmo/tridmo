@@ -40,12 +40,18 @@ export function SearchBar({isOpen, setIsOpen}) {
               opacity: isOpen ? 1 : 0 
             }}
             >
-            <Box sx={ContainerStyle}>
-              <Box className={styles.search_bar_wrapper}>
+            <Box sx={{...ContainerStyle, minHeight: 'unset'}}>
+              <Box 
+                className={styles.search_bar_wrapper}
+                sx={{
+                  flexDirection: {xl: 'row', lg: 'row', md: 'row', sm: 'column', xs: 'column'}
+                }}
+              >
 
                 <SearchInput
                   sx={{
                     width: '300px',
+                    mb: {sm: '8px', xs: '8px'}
                   }}
                   noAutoSearch
                   value={searchVal}
@@ -55,8 +61,10 @@ export function SearchBar({isOpen, setIsOpen}) {
                   startIcon={true}
                 />
 
-                  <Box display={'flex'} alignItems={'center'} p={'0 24px'}>
-                    <SimpleTypography sx={{textWrap: 'nowrap', lineHeight: 'unset'}} text="Искать из:"/>
+                  <Box display={'flex'} alignItems={'center'} p={'0 24px'}
+                  flexDirection={{xl: 'row', lg: 'row', md: 'row', sm: 'column', xs: 'column'}}
+                  >
+                    <SimpleTypography sx={{textWrap: 'nowrap', lineHeight: 'unset', mb: {sm: '8px', xs: '8px'}}} text="Искать из:"/>
                     <SearchOptionTabs options={searchOptions} searchValue={searchVal}/>
                   </Box>
 

@@ -18,6 +18,9 @@ export const getAllBrands = createAsyncThunk('/brands',
   }) => {
     let send__route = `/brands`
 
+    console.log(wrapper);
+    
+
     if (wrapper?.name) {
       send__route += `/?name=${wrapper?.name}`
     }
@@ -33,7 +36,8 @@ export const getAllBrands = createAsyncThunk('/brands',
         : "";
 
     send__route += !send__route.includes("/?") && wrapper?.page ? `/?page=${wrapper.page}` : wrapper?.page ? `&page=${wrapper.page}` : "";
-
+    console.log(send__route);
+    
     const response = await api.get(send__route)
     return response.data
   })

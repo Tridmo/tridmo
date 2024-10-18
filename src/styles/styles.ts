@@ -37,6 +37,7 @@ export const MenuProps = {
 export const ContainerStyle = {
   width: { lg: "1200px", md: '100%', sm: '100%', xs: "96%" },
   p: { lg: 0, md: '0 24px', sm: '0 24px', xs: '0' },
+  minHeight: '70dvh',
   display: "block",
   margin: "0 auto",
 }

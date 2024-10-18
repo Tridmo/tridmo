@@ -1,5 +1,6 @@
 export type order = 'asc' | 'desc';
 export type modelOrderBy = 'name' | 'downloads_count' | 'furniture_cost' | 'brand_id' | 'created_at' | 'top';
+export type interiorOrderBy = 'name' | 'created_at' | 'views' | 'likes';
 export type brandOrderBy = 'name' | 'models_count';
 export type designersOrderBy = 'full_name' | 'desgins_count' | 'tags_count' | 'rating';
 export const modelsLimit = 50;

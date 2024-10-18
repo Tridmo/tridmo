@@ -24,7 +24,7 @@ import SearchInput from "../../inputs/search";
 import BasicModal from "@/components/modals/modal";
 import { selectGetOrders } from "@/data/get_orders";
 import { ThemeProps } from "@/types/theme";
-import { ChatOutlined, Close, ControlPointOutlined, PersonOutlineOutlined, SearchOutlined } from "@mui/icons-material";
+import { ChatOutlined, Close, ControlPointOutlined, KeyboardArrowUp, PersonOutlineOutlined, SearchOutlined } from "@mui/icons-material";
 import { WyNotificationToasts } from "@weavy/uikit-react";
 import Cookies from "js-cookie";
 import Link from "next/link";
@@ -404,7 +404,7 @@ export default function Navbar() {
                 }}
               >
                 {searchClicked ? (
-                  <Close />
+                  <KeyboardArrowUp />
                 ) : (
                   <SearchOutlined sx={{ color: "#424242" }} />
                 )}

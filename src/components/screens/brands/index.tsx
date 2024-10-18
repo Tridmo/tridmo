@@ -1,8 +1,8 @@
 "use client"
 
-import React, { CSSProperties, Suspense } from 'react'
+import React, { CSSProperties, Suspense, useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectAllBrands } from '../../../data/get_all_brands';
+import { getAllBrands, selectAllBrands } from '../../../data/get_all_brands';
 import { Avatar, Divider, List, ListItem, ListItemAvatar, ListItemText, Box, Grid, SxProps, Skeleton, useMediaQuery } from '@mui/material'
 import Image from 'next/image';
 import SimpleTypography from '@/components/typography';
@@ -12,15 +12,65 @@ import { IMAGES_BASE_URL } from '../../../utils/env_vars';
 import EmptyData from '../../views/empty_data';
 import { dataItemIndex } from '../../../utils/utils';
 import { ContainerStyle, liAvatarSx, liAvatarWrapper, liHeaderSx, liHeaderTextSx, listSx, liSx } from '../../../styles/styles';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { brandsLimit } from '@/types/filters';
+import { setBrandNameFilter } from '@/data/handle_filters';
+import Buttons from '@/components/buttons';
+import { Close } from '@mui/icons-material';
 
 
 export default function BrandsPage() {
+  const getAllBrandStatus = useSelector((state: any) => state?.get_all_brands?.status);
+  const getBrandsNameFilter = useSelector((state: any) => state?.handle_filters?.brand_name);
+  const getBrandsPageFilter = useSelector((state: any) => state?.handle_filters?.brands_page);
+
   const dispatch = useDispatch<any>();
-  const getAllBrandStatus = useSelector((state: any) => state?.get_all_brands?.status)
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const all__brands = useSelector(selectAllBrands)
   const smallScreen = useMediaQuery('(max-width:768px)');
-
   const fakeBrands = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+  const [searchValue, setSearchValue] = useState('')
+  const page = searchParams.get("page") as string;
+
+  useEffect(() => {
+    setSearchValue(searchParams.get('name') as string)
+  }, [searchParams.toString()])
+
+  React.useEffect(() => {
+    if (getAllBrandStatus === "idle") {
+      dispatch(getAllBrands({
+        name: searchParams.get('name') || getBrandsNameFilter,
+        page: page || getBrandsPageFilter,
+        orderBy: 'models_count',
+        limit: brandsLimit,
+      }))
+    }
+  }, [getAllBrandStatus, searchParams.toString()])
+
+  const removeFromQuery = useCallback(
+    (name: string) => {
+      const params = new URLSearchParams(searchParams.toString())
+      params.delete(name)
+      return params.toString()
+    },
+    [searchParams]
+  )
+
+  async function clearSearch() {
+    dispatch(setBrandNameFilter(''))
+    dispatch(getAllBrands({
+      name: '',
+      orderBy: 'models_count',
+      limit: brandsLimit,
+      page: page || getBrandsPageFilter
+    }))
+    const newQuery = removeFromQuery('name')
+    router.push(`${pathname}?${newQuery}`)
+    setSearchValue('')
+  }
 
   const widthControl = {
     '&:nth-of-type(1)': {
@@ -47,6 +97,51 @@ export default function BrandsPage() {
       {
         getAllBrandStatus == 'succeeded' ?
           <>
+            <Grid
+              container
+              sx={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "space-between",
+                borderBottom: "1px solid #e0e0e0",
+                marginBottom: "20px",
+                paddingBottom: "10px",
+              }}
+            >
+              <Grid item lg={12} md={12} sm={12} xs={12}
+                sx={{ padding: "0 !important", alignItems: "center" }}
+              >
+                {
+                  searchValue ?
+                    <Box sx={{ borderBottom: '1px solid #e0e0e0', padding: '10px 0', marginBottom: '10px' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <SimpleTypography text={`Дизайнеры  «${searchValue}»`} className='prodcts__result--title' variant="h2" />
+                        <Buttons onClick={clearSearch} sx={{ color: '#646464', minWidth: '30px', width: '30px', height: '30px', borderRadius: '50%' }}>
+                          <Close />
+                        </Buttons>
+                      </Box>
+                      <SimpleTypography text={`найдено ${all__brands?.data?.pagination?.data_count} результатов`} className='products__result--text' variant="h2" />
+                    </Box>
+                    : null
+                }
+
+                <SimpleTypography
+                  text={`Показаны ${dataItemIndex<string>(
+                    all__brands?.data?.pagination?.limit,
+                    all__brands?.data?.pagination?.current,
+                    1
+                  ) || 0
+                    }–${dataItemIndex<string>(
+                      all__brands?.data?.pagination?.limit,
+                      all__brands?.data?.pagination?.current,
+                      all__brands?.data?.brands?.length
+                    ) || 0
+                    } из ${all__brands?.data?.pagination?.data_count || 0} дизайнеров`}
+                  className='pagenation__desc'
+                />
+
+              </Grid>
+            </Grid>
             {
               all__brands?.data?.brands && all__brands?.data?.brands?.length != 0
                 ? <List

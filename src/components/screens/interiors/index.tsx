@@ -12,15 +12,15 @@ import {
   SwipeableDrawer,
   useMediaQuery,
 } from "@mui/material";
-import { useSearchParams } from "next/navigation";
-import React, { Suspense, useMemo } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import React, { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAllInteriors,
   selectAllInteriors,
 } from "../../../data/get_all_interiors";
 import { getAllStyles } from "../../../data/get_all_styles";
-import { setPageFilter } from "../../../data/handle_filters";
+import { set_interiors_name, setPageFilter } from "../../../data/handle_filters";
 import { setSearchVal } from "../../../data/search_interior";
 import { interiorsLimit } from "../../../types/filters";
 import { dataItemIndex } from "../../../utils/utils";
@@ -33,33 +33,48 @@ import Sorts from "../../views/sorts";
 export default function InteriorsPage() {
   const dispatch = useDispatch<any>();
   const searchParams = useSearchParams();
-  const matches = useMediaQuery('(max-width:743px)');
-
-  const IsFilterOpen = useSelector(
-    (state: any) => state?.modal_checker?.isFilterModal
-  );
-  const searchedInteriors = useSelector(
-    (state: any) => state?.search_interiors?.data
-  );
-  const StyleStatus = useSelector(
-    (state: any) => state?.get_all_styles?.status
-  );
-  const getInteriorsStatus = useSelector(
-    (state: any) => state?.get_all_interiors?.status
-  );
-  const getInteriorCategoryFilter = useSelector(
-    (state: any) => state?.handle_filters?.interior_categories
-  );
-  const getInteriorPageFilter = useSelector(
-    (state: any) => state?.handle_filters?.interiors_page
-  );
+  const pathname = usePathname();
+  const router = useRouter();
   const all__interiors = useSelector(selectAllInteriors);
   const keyword = searchParams.get("name") as string;
   const page = searchParams.get("page") as string;
+  const matches = useMediaQuery('(max-width:743px)');
   const mdScreen = useMediaQuery("(max-width:900px)");
-  const smScreen = useMediaQuery("(max-width:600px)");
+  const [searchValue, setSearchValue] = useState('')
+  
+  const IsFilterOpen = useSelector((state: any) => state?.modal_checker?.isFilterModal);
+  const getInteriorsStatus = useSelector((state: any) => state?.get_all_interiors?.status);
+  const getInteriorCategoryFilter = useSelector((state: any) => state?.handle_filters?.interior_categories);
+  const getInteriorNameFilter = useSelector((state: any) => state?.handle_filters?.interiors_name);
+  const getInteriorPageFilter = useSelector((state: any) => state?.handle_filters?.interiors_page);
 
-  const width = window.outerWidth;
+  useEffect(() => {
+    setSearchValue(searchParams.get('name') as string)
+  }, [searchParams.toString()])
+  
+  const removeFromQuery = useCallback(
+    (name: string) => {
+      const params = new URLSearchParams(searchParams.toString())
+      params.delete(name)
+      return params.toString()
+    },
+    [searchParams]
+  )
+
+  async function clearSearch() {
+    dispatch(set_interiors_name(''))
+    dispatch(
+      getAllInteriors({
+        categories: getInteriorCategoryFilter,
+        page: page || getInteriorPageFilter,
+        name: '',
+        limit: interiorsLimit,
+      })
+    )
+    const newQuery = removeFromQuery('name')
+    router.push(`${pathname}?${newQuery}`)
+    setSearchValue('')
+  }
 
   React.useEffect(() => {
     if (getInteriorsStatus === "idle") {
@@ -68,23 +83,19 @@ export default function InteriorsPage() {
         getAllInteriors({
           categories: getInteriorCategoryFilter,
           page: page || getInteriorPageFilter,
+          name: searchValue || getInteriorNameFilter,
           limit: interiorsLimit,
         })
       );
     }
-    if (StyleStatus === "idle") {
-      dispatch(getAllStyles());
-    }
+    // if (StyleStatus === "idle") {
+    //   dispatch(getAllStyles());
+    // }
   }, [
     getInteriorPageFilter,
     getInteriorCategoryFilter,
-    StyleStatus,
     getInteriorsStatus,
   ]);
-
-  useMemo(() => {
-    dispatch(setSearchVal(keyword));
-  }, [keyword]);
 
   return (
     <Box sx={ContainerStyle}>
@@ -98,7 +109,7 @@ export default function InteriorsPage() {
           textAlign: "start",
         }}
       />
-      <Grid spacing={2} sx={{ display: "flex", justifyContent: "center" }}>
+      <Grid container spacing={2} sx={{ display: "flex", justifyContent: "center" }}>
         {mdScreen ? (
           <Box>
             <React.Fragment>
@@ -150,37 +161,21 @@ export default function InteriorsPage() {
           </Grid>
         )}
 
-        <Grid
-          container
-          item
-          md={9.5}
-          sm={12}
-          xs={12}
-          sx={{
-            maxWidth: "100vw",
-            padding: { md: "0 0 0 16px", sm: "0 16px 0 16px", xs: "0" },
-          }}
-        >
-          {keyword ? (
-            <Box
-              sx={{
-                borderBottom: "1px solid #e0e0e0",
-                padding: "0 8px 10px",
-                marginBottom: "10px",
-              }}
-            >
-              <SimpleTypography
-                text={`Интерьеры «${keyword}»`}
-                className="prodcts__result--title"
-                variant="h2"
-              />
-              <SimpleTypography
-                text={`найдено ${searchedInteriors?.pagination?.data_count} результатов`}
-                className="products__result--text"
-                variant="h2"
-              />
-            </Box>
-          ) : null}
+        
+        <Grid item lg={9.5} md={9.5} sm={12} xs={12} sx={{ p: { lg: "0 0 0 16px", md: '0 0 0 16px', sm: '0', xs: '0' }, minHeight: "90dvh" }}>
+          {
+            searchValue ?
+              <Box sx={{ borderBottom: '1px solid #e0e0e0', padding: '0 8px 10px', marginBottom: '10px' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <SimpleTypography text={`Интерьеры  «${searchValue}»`} className='prodcts__result--title' variant="h2" />
+                  <Buttons onClick={clearSearch} sx={{ color: '#646464', minWidth: '30px', width: '30px', height: '30px', borderRadius: '50%' }}>
+                    <Close />
+                  </Buttons>
+                </Box>
+                <SimpleTypography text={`найдено ${all__interiors?.data?.pagination?.data_count} результатов`} className='products__result--text' variant="h2" />
+              </Box>
+              : null
+          }
 
           <Grid
             container
@@ -190,13 +185,16 @@ export default function InteriorsPage() {
               justifyContent: "space-between",
               borderBottom: "1px solid #e0e0e0",
               marginBottom: "20px",
-              paddingBottom: { xs: "10px", sm: 0 },
+              paddingBottom:"10px",
             }}
           >
-            <Grid item lg={12} md={12} sm={12} xs={12}>
+            
+            <Grid item lg={12} md={9} sm={9} xs={9}>
               <Sorts route={'interiors'} dataCount={
-                <>
-                  <p style={{ margin: matches ? '0 0 auto 0' : 'auto 0' }}>
+                <Grid
+                  sx={{ padding: "0 !important", display: "flex", alignItems: "baseline" }}
+                >
+                  <p>
                     <SimpleTypography
                       text={`Показаны ${dataItemIndex<string>(
                         all__interiors?.data?.pagination?.limit,
@@ -206,26 +204,13 @@ export default function InteriorsPage() {
                         }–${dataItemIndex<string>(
                           all__interiors?.data?.pagination?.limit,
                           all__interiors?.data?.pagination?.current,
-                          all__interiors?.data?.models?.length
+                          all__interiors?.data?.interiors?.length
                         ) || 0
-                        } из ${all__interiors?.data?.pagination?.data_count || 0
-                        } моделей`}
-                      className="pagenation__desc"
+                        } из ${all__interiors?.data?.pagination?.data_count || 0} интерьеров`}
+                      className='pagenation__desc'
                     />
                   </p>
-                  {
-                    matches &&
-                    <Buttons
-                      name={'Фильтры'}
-                      childrenFirst
-                      className='bookmark__btn'
-                      onClick={() => dispatch(setFiltersModal(true))}
-                    >
-                      <FilterAlt />
-                    </Buttons>
-
-                  }
-                </>
+                </Grid>
               } />
             </Grid>
 
