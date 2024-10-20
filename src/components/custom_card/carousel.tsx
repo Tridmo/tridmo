@@ -3,6 +3,7 @@ import React, { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectTopModels } from '../../data/get_top_models';
 import Link from 'next/link';
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import Image from 'next/image';
 import { IMAGES_BASE_URL } from '../../utils/env_vars';
 import SimpleTypography from '../typography';
@@ -199,7 +200,18 @@ export const Carousel = ({
                       justifyContent: 'center'
                     }}
                   >
-                    <Image
+                    <LazyLoadImage
+                      src={model?.cover ? (model?.cover[0]?.image_src ? `${IMAGES_BASE_URL}/${model?.cover[0]?.image_src}` : '') : ''}
+                      style={{ objectFit: "cover", marginBottom: '24px' }}
+                      alt=""
+                      effect='blur'
+                      width={'322px'}
+                      height={'322px'}
+                      placeholderSrc='/img/placeholder.svg'
+                      delayTime={100}
+                    />
+                    {/* <Image
+                      priority
                       src={`${IMAGES_BASE_URL}/${model?.cover[0]?.image_src}`}
                       alt='Model image'
                       width={322}
@@ -207,7 +219,7 @@ export const Carousel = ({
                       style={{
                         marginBottom: '24px',
                       }}
-                    />
+                    /> */}
                     <Box
                       sx={{
                         width: '100%',

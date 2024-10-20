@@ -263,13 +263,13 @@ function CustomCard({ model, type, link, imgHeight, tagIcon, tagText, withAuthor
         !imageSplit ?
           <LazyLoadImage
             src={model?.cover ? (model?.cover[0]?.image_src ? `${IMAGES_BASE_URL}/${model?.cover[0]?.image_src}` : '') : ''}
-            style={{ objectFit: "cover"}}
+            style={{ objectFit: "cover" }}
             alt=""
             effect='blur'
             width={"100%"}
             height={imgHeight}
             placeholderSrc='/img/placeholder.svg'
-            delayTime={300}
+            delayTime={100}
           />
           :
           <Grid container
