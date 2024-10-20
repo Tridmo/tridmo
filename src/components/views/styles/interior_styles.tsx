@@ -79,7 +79,6 @@ export default function InteriorStyles() {
     dispatch(setStyleFilter({ snex: res }))
     dispatch(getAllInteriors({
       categories: getCategoryFilter,
-      styles: res,
       page: getPageFilter,
     }))
 
