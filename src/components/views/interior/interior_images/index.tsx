@@ -2,7 +2,7 @@
 
 import { Box, height, SxProps, width } from '@mui/system';
 import axios from 'axios';
-import { useState, useEffect, CSSProperties, MouseEvent, useMemo } from 'react';
+import { useState, useEffect, CSSProperties, MouseEvent, useMemo, useCallback } from 'react';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { readFile } from '@/components/inputs/file_input';
 import { useDispatch, useSelector } from 'react-redux';
@@ -84,26 +84,27 @@ export default function InteriorImages() {
   const [loadingTagId, setLoadingTagId] = useState<string>('')
   const [loadingImages, setLoadingImages] = useState<boolean>(false)
 
-  useEffect(() => {
-    const getImages = async () => {
-      const arr: any[] = [];
-      await Promise.all(
-        interior?.images?.map(async (img) => {
-          try {
-            const sizes = await getImageSize(img.image_src);
-            arr[img?.index] = { ...img, ...sizes };
-          } catch (error) {
-            console.log('GET IMAGE ERROR: ', error);
-          }
-        })
-      );
-      setImages(arr);
-    };
+  // useEffect(() => {
+  //   const getImages = async () => {
+  //     const arr: any[] = [];
+  //     await Promise.all(
+  //       interior?.images?.map(async (img) => {
+  //         try {
+  //           const sizes = await getImageSize(img.image_src);
+  //           console.log(sizes);
+  //           arr[img?.index] = { ...img, ...sizes };
+  //         } catch (error) {
+  //           console.log('GET IMAGE ERROR: ', error);
+  //         }
+  //       })
+  //     );
+  //     setImages(arr);
+  //   };
 
-    if (interior) {
-      getImages();
-    }
-  }, [interior]);
+  //   if (interior) {
+  //     getImages();
+  //   }
+  // }, [interior]);
 
   useMemo(() => {
     if (addingTags == false) {
@@ -111,19 +112,15 @@ export default function InteriorImages() {
     }
   }, [addingTags])
 
-  const getImageSize = (src): Promise<any> => {
+  const getImageSize = useCallback((src: string): Promise<any> => {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.src = `${IMAGES_BASE_URL}/${src}`;
-      img.onload = () => {
-        resolve({
-          width: img.width,
-          height: img.height,
-        });
-      };
+      img.onload = () => resolve({ width: img.width, height: img.height });
       img.onerror = reject;
     });
-  };
+  }, []);
+
   function handleClick(event, index) {
     const target = event.target;
     const classList = [...target.classList]
@@ -141,7 +138,7 @@ export default function InteriorImages() {
       }
       else {
         setSelectedImageIndex(index)
-        dispatch(setShowInteriorImagesModal(true, index - 1))
+        dispatch(setShowInteriorImagesModal(true, index))
       }
     }
   }
@@ -281,11 +278,17 @@ export default function InteriorImages() {
   return (
 
     <>
-      <InteriorImagesModal mainImageWidth={800} images={images} selectedSlide={selectedImageIndex} />
-      <ImageViewerModal />
+      {
+        !!interior &&
+        <>
+          <InteriorImagesModal mainImageWidth={800} images={interior?.images} selectedSlide={selectedImageIndex} />
+          <ImageViewerModal />
+        </>
+      }
 
       {
-        images?.map((img, n) => {
+        !!interior &&
+        interior?.images?.map((img, n) => {
           if (!img?.is_main) {
             return (
               <Box key={n}
@@ -528,6 +531,7 @@ export default function InteriorImages() {
                   <NextImage
                     className={'image'}
                     unoptimized
+                    priority
                     src={`${IMAGES_BASE_URL}/${img?.image_src}`}
                     alt=""
                     width={0}

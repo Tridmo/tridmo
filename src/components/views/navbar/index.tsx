@@ -200,7 +200,7 @@ export default function Navbar() {
     <>
       <BasicModal />
       <WyNotificationToasts draggable appearance="internal" />
-      <Box sx={{ position: "fixed", zIndex: '5000', top: 0, right: 0, left: 0 }}>
+      <Box sx={{ position: "fixed", zIndex: '1200', top: 0, right: 0, left: 0 }}>
         <Box
           sx={{
             flexGrow: 1,
@@ -632,7 +632,7 @@ export default function Navbar() {
             </Grid> */}
           </Grid>
         </Box>
-        <SearchBar isOpen={searchClicked} setIsOpen={setSearchClicked}/>
+        <SearchBar isOpen={searchClicked} setIsOpen={setSearchClicked} />
       </Box>
     </>
   );

@@ -202,7 +202,7 @@ export const Carousel = ({
                   >
                     <LazyLoadImage
                       src={model?.cover ? (model?.cover[0]?.image_src ? `${IMAGES_BASE_URL}/${model?.cover[0]?.image_src}` : '') : ''}
-                      style={{ objectFit: "cover", marginBottom: '24px' }}
+                      style={{ objectFit: "cover" }}
                       alt=""
                       effect='blur'
                       width={'322px'}
@@ -224,6 +224,7 @@ export const Carousel = ({
                       sx={{
                         width: '100%',
                         display: 'flex',
+                        mt: '24px'
                       }}
                     >
                       <SimpleTypography
