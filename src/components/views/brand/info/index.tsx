@@ -94,8 +94,9 @@ export default function BrandInfo() {
           width={0}
           height={0}
           priority
+          unoptimized
           alt={brand?.name}
-          style={{width: "100%", height: "100%", objectFit: "cover", border: '1px solid #0000004D' }}
+          style={{ width: "100%", height: "100%", objectFit: "cover", border: '1px solid #0000004D' }}
           src={`${IMAGES_BASE_URL}/${brand?.image_src}`}
         />
       </Box>

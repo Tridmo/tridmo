@@ -47,7 +47,7 @@ export default function CustomCardSkeleton({ model, link, imgHeight, tagIcon, ta
 
 
   return (
-    <Box key={Math.random()} sx={{ margin: '0', textDecoration: "none" }}>
+    <Box sx={{ margin: '0', textDecoration: "none" }}>
       <Box sx={{
         height: "auto",
         width: "100%",
