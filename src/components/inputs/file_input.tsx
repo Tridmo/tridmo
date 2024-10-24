@@ -401,7 +401,7 @@ export default function FileInput(props: InputAdornmentsProps) {
     }
   };
 
-  React.useMemo(() => {
+  React.useEffect(() => {
 
     if (props?.limit && uploadedFiles.length > props?.limit) {
       uploadedFiles.length = props?.limit;

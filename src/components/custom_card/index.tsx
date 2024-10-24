@@ -99,12 +99,15 @@ function CustomCard({ model, type, link, imgHeight, tagIcon, tagText, withAuthor
   }, [model])
 
   const handleClick = (event: any, interior) => {
+    event.preventDefault();
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
     setSelectedInterior(interior)
   };
 
   const handleClose = () => {
     setAnchorEl(null);
+    setSelectedInterior(null)
   };
 
   function openEditProject(project) {
