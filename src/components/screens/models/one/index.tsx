@@ -141,7 +141,7 @@ export default function OneModel() {
                       link={`/models/${model?.slug}`}
                       key={index}
                       model={model}
-                      imgHeight={'208px'}
+                      imgHeight={'auto'}
                       tagIcon={model?.top ? '/icons/star.svg' : ''}
                     />
                   </Grid>
