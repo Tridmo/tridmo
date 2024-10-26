@@ -106,7 +106,9 @@ export function AddInteriorForm({ editing, interior }: { editing?: boolean, inte
       </Box>
 
       <Box sx={{ width: '100%' }}>
-        {!!interior ? (
+        {editing && !interior ? (
+          <CircularProgress />
+        ) : (
           <Formik
             enableReinitialize
             initialValues={initials}
@@ -394,8 +396,6 @@ export function AddInteriorForm({ editing, interior }: { editing?: boolean, inte
               )
             }
           </Formik>
-        ) : (
-          <CircularProgress />
         )}
       </Box>
     </Box >
