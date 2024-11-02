@@ -16,7 +16,7 @@ export default function EditInteriorPage() {
   const categoriesDate__status = useSelector((state: any) => state?.categories?.interior_status)
   const params = useParams<{ slug: string }>();
 
-  useMemo(() => {
+  useEffect(() => {
     dispatch(getOneInterior(params.slug))
   }, [params])
 

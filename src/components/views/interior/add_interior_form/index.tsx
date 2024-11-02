@@ -368,6 +368,7 @@ export function AddInteriorForm({ editing, interior }: { editing?: boolean, inte
                           name={"Отмена"}
                           type='button'
                           className="bookmark__btn"
+                          onClick={() => router.back()}
                           sx={{ mr: '8px', padding: '11px 40px !important' }}
                         />
                         : null
