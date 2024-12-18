@@ -27,6 +27,22 @@ export default function Chat() {
     }, 500)
   }
 
+  useEffect(() => {
+    const messenger = document.querySelector('#messenger');
+    const messegesWrapper = messenger?.shadowRoot?.querySelector('.wy-messenger-layout');
+    const messegesBox = messegesWrapper?.querySelector('.wy-messenger-conversation');
+    if (messegesBox && messenger?.shadowRoot) {
+      const style = document.createElement('style');
+      style.textContent = `
+      .custom-style {
+        min-height: 100% !important;
+      }
+    `;
+      messenger.shadowRoot.appendChild(style);
+      messegesBox.classList.add('custom-style');
+    }
+  }, [document.readyState])
+
   return (
     <Box sx={{ background: "#fafafa" }} className="products" >
       <Box className='products__container' sx={{ maxWidth: "1200px", width: "100%", padding: { xs: "0 18px", lg: 0 }, margin: "0 auto !important", alignItems: "center", }}>
@@ -43,6 +59,7 @@ export default function Chat() {
             onClick={handleChatUnread}
           >
             <WyMessenger
+              id='messenger'
               uid={`${profile?.username}-messenger`}
               notifications='button-list'
               notificationsBadge='count'
