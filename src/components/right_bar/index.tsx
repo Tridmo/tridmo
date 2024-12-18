@@ -31,6 +31,7 @@ opacity: 1
 
 const RightBar: React.FC = () => {
   const get_cart_status = useSelector(selectToggleCardActionStatus);
+  const isAuthenticated = useSelector((state: any) => state?.auth_slicer?.authState)
   const router = useRouter();
   const dispatch = useDispatch<any>();
 
@@ -39,16 +40,21 @@ const RightBar: React.FC = () => {
   }
 
   return (
-    <React.Fragment>
-      <SwipeableDrawer
-        anchor={'left'}
-        open={get_cart_status}
-        onClose={() => toggleDrawer(false)}
-        onOpen={() => toggleDrawer(true)}
-      >
-        <CheckoutBar />
-      </SwipeableDrawer>
-    </React.Fragment>
+    <>
+      {
+        isAuthenticated &&
+        <React.Fragment>
+          <SwipeableDrawer
+            anchor={'left'}
+            open={get_cart_status}
+            onClose={() => toggleDrawer(false)}
+            onOpen={() => toggleDrawer(true)}
+          >
+            <CheckoutBar />
+          </SwipeableDrawer>
+        </React.Fragment>
+      }
+    </>
   )
 }
 

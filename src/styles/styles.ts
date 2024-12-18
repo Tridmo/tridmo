@@ -729,6 +729,33 @@ export const ButtonStyles = (theme) => `
         }
       }
 
+
+      &.MuiButton-remove_new_tag{
+        background: #fafafa;
+        padding: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #DB2E2E;
+        min-height: auto !important;
+
+        & > .MuiButton-startIcon {
+          margin: 0 !important;
+        }
+
+        svg path {
+          transition: all 0.2s ease;  
+        }
+
+        &:hover {
+          background-color: #FAe1e1;
+        }
+
+        &:hover svg path {
+          fill: #DB2E2E;
+        }
+      }
+
       &.MuiButton-icon_button{
         min-width: 40px;
         min-height: 40px;

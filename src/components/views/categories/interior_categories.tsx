@@ -78,8 +78,6 @@ function InteriorCategories() {
     dispatch(setInteriorCategoryFilter({ knex: res }))
     dispatch(getAllInteriors({
       categories: res,
-      colors: getColorFilter,
-      styles: getStyleFilter,
       page: getPageFilter,
     }))
 

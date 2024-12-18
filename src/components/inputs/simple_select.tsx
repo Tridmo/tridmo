@@ -118,17 +118,6 @@ export default function SimpleSelect(props: SimpleSelectProps) {
         type={props?.type}
         variant="standard"
         MenuProps={MenuProps}
-        inputProps={{
-          startAdornment: props?.startAdornment || (
-            <InputAdornment position="start">
-            </InputAdornment>
-          ),
-          endAdornment: props?.endAdornment || (
-            <InputAdornment position="start">
-            </InputAdornment>
-          ),
-        }}
-      // select
       >
         {
           props?.placeholderText ?

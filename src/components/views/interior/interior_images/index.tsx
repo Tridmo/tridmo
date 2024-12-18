@@ -2,7 +2,7 @@
 
 import { Box, height, SxProps, width } from '@mui/system';
 import axios from 'axios';
-import { useState, useEffect, CSSProperties, MouseEvent, useMemo } from 'react';
+import { useState, useEffect, CSSProperties, MouseEvent, useMemo, useCallback, useRef } from 'react';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { readFile } from '@/components/inputs/file_input';
 import { useDispatch, useSelector } from 'react-redux';
@@ -57,7 +57,7 @@ const tagStyle: SxProps = {
   zIndex: 300,
   cursor: 'default',
   padding: '7px',
-  borderRadius: '32px 32px 32px 0',
+  borderRadius: '0 32px 32px 32px',
   border: '1px solid #686868',
   boxShadow: '0px 4px 8px 0px #00000040',
   backgroundColor: '#fff',
@@ -82,28 +82,30 @@ export default function InteriorImages() {
   const [selectedImageIndex, setSelectedImageIndex] = useState<any>()
   const [newTags, setNewTags] = useState<NewTag[]>([])
   const [loadingTagId, setLoadingTagId] = useState<string>('')
-  const [loadingImages, setLoadingImages] = useState<boolean>(false)
+  const imageRef = useRef(null); // Reference to the image
+  const containerRef = useRef(null); // Reference to the image container
 
-  useEffect(() => {
-    const getImages = async () => {
-      const arr: any[] = [];
-      await Promise.all(
-        interior?.images?.map(async (img) => {
-          try {
-            const sizes = await getImageSize(img.image_src);
-            arr[img?.index] = { ...img, ...sizes };
-          } catch (error) {
-            console.log('GET IMAGE ERROR: ', error);
-          }
-        })
-      );
-      setImages(arr);
-    };
+  // useEffect(() => {
+  //   const getImages = async () => {
+  //     const arr: any[] = [];
+  //     await Promise.all(
+  //       interior?.images?.map(async (img) => {
+  //         try {
+  //           const sizes = await getImageSize(img.image_src);
+  //           console.log(sizes);
+  //           arr[img?.index] = { ...img, ...sizes };
+  //         } catch (error) {
+  //           console.log('GET IMAGE ERROR: ', error);
+  //         }
+  //       })
+  //     );
+  //     setImages(arr);
+  //   };
 
-    if (interior) {
-      getImages();
-    }
-  }, [interior]);
+  //   if (interior) {
+  //     getImages();
+  //   }
+  // }, [interior]);
 
   useMemo(() => {
     if (addingTags == false) {
@@ -111,19 +113,26 @@ export default function InteriorImages() {
     }
   }, [addingTags])
 
-  const getImageSize = (src): Promise<any> => {
+  // useMemo(() => {
+  //   console.log('HE', newTags);
+  // }, [newTags])
+
+  const getImageSize = useCallback((src: string): Promise<{ width: number, height: number }> => {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.src = `${IMAGES_BASE_URL}/${src}`;
-      img.onload = () => {
-        resolve({
-          width: img.width,
-          height: img.height,
-        });
-      };
+      img.onload = () => resolve({ width: img.width, height: img.height });
       img.onerror = reject;
     });
-  };
+  }, []);
+
+  function getTagPosition(event, image) {
+    const imgRect = image.getBoundingClientRect();
+    const xPercent = ((event.clientX - imgRect.left) / imgRect.width) * 100;
+    const yPercent = ((event.clientY - imgRect.top) / imgRect.height) * 100;
+    return { x: xPercent, y: yPercent, sizes: { width: imgRect.width, height: imgRect.height } };
+  }
+
   function handleClick(event, index) {
     const target = event.target;
     const classList = [...target.classList]
@@ -133,20 +142,20 @@ export default function InteriorImages() {
       classList.includes('image_parent_wrapper__box')
     ) {
       if (addingTags) {
-        const rect = target.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
+        const image = interior?.images?.[index]
+        if (!image) toast('Что-то пошло не так. Попробуйте еще раз.')
+        const { x, y } = getTagPosition(event, target)
 
-        setNewTags(prev => [...prev, { id: v4(), x, y, img: images[index]?.id }])
+        setNewTags(prev => [...prev, { id: v4(), x, y, img: image?.id }])
       }
       else {
         setSelectedImageIndex(index)
-        dispatch(setShowInteriorImagesModal(true, index - 1))
+        dispatch(setShowInteriorImagesModal(true, index))
       }
     }
   }
 
-  function handleRemoceNewEmptyTag(id) {
+  function handleRemoveNewEmptyTag(id) {
     const arr = [...newTags]
     const filtered = arr.filter(x => x.id != id)
     setNewTags(filtered)
@@ -281,11 +290,17 @@ export default function InteriorImages() {
   return (
 
     <>
-      <InteriorImagesModal mainImageWidth={800} images={images} selectedSlide={selectedImageIndex} />
-      <ImageViewerModal />
+      {
+        !!interior &&
+        <>
+          <InteriorImagesModal mainImageWidth={800} images={interior?.images} selectedSlide={selectedImageIndex} />
+          <ImageViewerModal />
+        </>
+      }
 
       {
-        images?.map((img, n) => {
+        !!interior &&
+        interior?.images?.map((img, n) => {
           if (!img?.is_main) {
             return (
               <Box key={n}
@@ -293,6 +308,7 @@ export default function InteriorImages() {
                 sx={{ marginBottom: '20px', cursor: 'pointer' }}
               >
                 <Box
+                  ref={containerRef}
                   className={'image_wrapper__box'}
                   onClick={(e) => handleClick(e, n)}
                   sx={{
@@ -311,9 +327,9 @@ export default function InteriorImages() {
                               key={t.id}
                               className={'add_tag_wrapper__box'}
                               sx={{
-                                top: t.y - (t.model || t.not_found || t.loading ? 113 : 56),
-                                left: t.x,
-                                width: '345px',
+                                top: `${t.y}%`,
+                                left: `${t.x}%`,
+                                width: { xl: '345px', lg: '345px', md: '345px', sm: '40vw', xs: '60vw' },
                                 minHeight: `${t.model || t.not_found || t.loading ? 113 : 56}px`,
                                 ...tagStyle
                               }}
@@ -338,11 +354,13 @@ export default function InteriorImages() {
                                   <SearchInput
                                     className={'add_tag__input'}
                                     placeHolder='https://demod.uz/models/...'
+                                    // placeHolder={`x: ${t.x}%, y: ${t.y}%`}
                                     search={(val) => handleGetModel(val, t.id)}
                                     searchDelay={500}
                                     onChange={(val) => handleInputChange(val, t.id)}
                                     sx={{
-                                      borderTopLeftRadius: '20px'
+                                      width: '100%',
+                                      borderBottomLeftRadius: '20px'
                                     }}
                                   />
                                   {
@@ -389,7 +407,7 @@ export default function InteriorImages() {
                                 >
                                   <IconButton
                                     className={'icon_button add_tag__button'}
-                                    onClick={() => handleRemoceNewEmptyTag(t.id)}
+                                    onClick={() => handleRemoveNewEmptyTag(t.id)}
                                   >
                                     <Close />
                                   </IconButton>
@@ -427,13 +445,13 @@ export default function InteriorImages() {
                                 ...tagStyle,
                                 opacity: 0.7,
                                 padding: '7px 14px',
-                                top: t.y - 46,
-                                left: t.x - 0,
+                                top: `${t.y}%`,
+                                left: `${t.x}%`,
                                 minHeight: `46px`,
                                 width: '46px',
                                 height: '46px',
                                 borderRadius: '23px',
-                                borderBottomLeftRadius: '0',
+                                borderTopLeftRadius: '0',
                                 transition: 'all 0.4s ease',
                                 display: 'flex',
                                 alignItems: 'center',
@@ -443,10 +461,8 @@ export default function InteriorImages() {
                                   opacity: 1,
                                   width: isAuthenticated && interior?.author?.id == currentUser?.user_id ? '320px' : '250px',
                                   height: '94px',
-                                  top: t.y - 94,
-                                  left: t.x - 0,
                                   minHeight: '94px',
-                                  borderRadius: '32px 32px 32px 0',
+                                  borderRadius: '0 32px 32px 32px',
                                 }
                               }}
                             >
@@ -479,6 +495,7 @@ export default function InteriorImages() {
                                     alt="icon"
                                     width={80}
                                     height={80}
+                                    style={{ borderRadius: '8px' }}
                                   />
                                   <Box
                                     sx={{
@@ -526,8 +543,10 @@ export default function InteriorImages() {
                       : null
                   }
                   <NextImage
+                    ref={imageRef}
                     className={'image'}
                     unoptimized
+                    priority
                     src={`${IMAGES_BASE_URL}/${img?.image_src}`}
                     alt=""
                     width={0}

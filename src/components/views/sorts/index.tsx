@@ -11,7 +11,7 @@ import { set_interiors_order, set_interiors_orderby, setCategoryFilter, setColor
 import { getAllModels } from '../../../data/get_all_models';
 import { getAllInteriors } from '../../../data/get_all_interiors';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { modelOrderBy } from '../../../types/filters';
+import { interiorOrderBy, modelOrderBy } from '../../../types/filters';
 import Buttons from '../../buttons';
 import { setFiltersModal } from '../../../data/modal_checker';
 import { FilterAlt } from '@mui/icons-material';
@@ -128,7 +128,7 @@ function Sorts({ route, dataCount = <></>, ...props }) {
         orderBy: sorts[selected].orderBy,
         order: getInteriorOrder || 'desc'
       }))
-      dispatch(set_interiors_orderby(sorts[selected].orderBy))
+      dispatch(set_interiors_orderby(sorts[selected].orderBy as interiorOrderBy))
     }
 
     setSorts(
