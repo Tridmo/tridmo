@@ -84,7 +84,7 @@ export default function Footer() {
             flexDirection: { xs: "column", sm: "row" },
             justifyContent: "space-between",
             alignItems: "center",
-          overflow: "hidden",
+            overflow: "hidden",
             padding: "0 16px",
           }}
         >
@@ -174,7 +174,7 @@ export default function Footer() {
         {/* Footer Description */}
         <Box sx={{ marginTop: "16px", textAlign: "center", width: "100%" }}>
           <SimpleTypography
-            text="2024 © Все права защищены."
+            text={`${new Date().getFullYear()} © Все права защищены.`}
             className="footer__desc"
           ></SimpleTypography>
         </Box>
