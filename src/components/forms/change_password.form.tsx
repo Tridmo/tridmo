@@ -58,7 +58,6 @@ const ChangePasswordForm: React.FC = () => {
         // Authenticated password change flow
         response = await instance.post('/auth/updatePassword', {
           newPassword: values.newPassword,
-          refreshToken: Cookies.get('refreshToken')
         });
       }
 
