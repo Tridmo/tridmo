@@ -16,7 +16,7 @@ import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Buttons from "../../buttons";
 import SearchInput from "../../inputs/search";
@@ -41,6 +41,8 @@ import { IMAGES_BASE_URL } from "../../../utils/env_vars";
 import SimpleTypography from "../../typography";
 import MobileMode from "./mobile_mode";
 import { SearchBar } from "./search_bar/serach_bar";
+import { authTokens, privateRoutes } from "../../../constants";
+import { isPrivateRoute } from "../../../utils/utils";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -154,15 +156,14 @@ export default function Navbar() {
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {
-    Cookies.remove("accessToken");
-    Cookies.remove("refreshToken");
-    Cookies.remove("chatToken");
+  // Memoized logout handler
+  const handleLogout = useCallback(() => {
+    authTokens.forEach(cookie => Cookies.remove(cookie));
     dispatch(setAuthState(false));
-    router.push(pathname);
+    router.push(isPrivateRoute(pathname) ? '/' : pathname);
     router.refresh();
     setAnchorEl(null);
-  };
+  }, [dispatch, pathname, router]);
 
   function handleSearch(e) {
     e.preventDefault();

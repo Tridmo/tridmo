@@ -12,6 +12,8 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 import { Box } from "@mui/system";
 import NextTopLoader from "nextjs-toploader";
 import AlertWrapper from "../components/alert";
+import TawkMessengerReact from '@tawk.to/tawk-messenger-react';
+import ClientWrapper from "../components/client_wrapper";
 
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
@@ -34,27 +36,11 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <Providers>
-          <NextTopLoader
-            color="#7210BE"
-            initialPosition={0.08}
-            crawlSpeed={200}
-            height={3}
-            crawl={true}
-            showSpinner={false}
-            speed={200}
-            shadow="0 0 10px #2299DD,0 0 5px #2299DD"
-            zIndex={5001}
-          />
-          <Box sx={{ position: "realtive" }}>
-            {/* <TopLoading /> */}
-            <AlertWrapper />
-          </Box>
           <Navbar />
-          <RightBar />
-          <Box pt={'80px'}>
-          {children}
-          </Box>
-          <Footer />
+          <ClientWrapper>
+            <main style={{ paddingTop: "80px" }}>{children}</main>
+            <Footer />
+          </ClientWrapper>
         </Providers>
       </body>
     </html>

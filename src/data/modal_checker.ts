@@ -25,6 +25,7 @@ export interface ContextState {
   profileImagePreview: File | null;
   isConfirm: boolean;
   isLogin: boolean;
+  isForgotPassword: boolean;
   isWarning: boolean;
   warningMessage: string;
   isInfo: boolean;
@@ -50,6 +51,7 @@ const initialState: ContextState = {
   isConfirm: false,
   isWarning: false,
   warningMessage: '',
+  isForgotPassword: false,
   isInfo: false,
   isLogin: false,
   isSignup: false,
@@ -105,6 +107,9 @@ const modalChecker = createSlice({
     },
     setWarningState(state, action) {
       state.isWarning = action.payload;
+    },
+    setForgotPasswordState(state, action) {
+      state.isForgotPassword = action.payload;
     },
     setWarningMessage(state, action) {
       state.warningMessage = action.payload;
@@ -180,6 +185,7 @@ export const {
   setWarningState,
   setWarningMessage,
   setInfoState,
+  setForgotPasswordState,
   setProfileImageState,
   setConfirmState,
   setLoginState,

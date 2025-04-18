@@ -1,174 +1,202 @@
-import React, { createContext, useContext, useEffect } from "react";
+"use client"
+import React, { createContext, useContext, useEffect, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Cookies from 'js-cookie';
+import { usePathname, useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+
+// Redux actions
 import { setAuthState } from "../../data/login";
-import { getUpdatedAccessToken } from '../../data/re-update_access_token'
-// import Cookies from 'js-cookie'
-import Cookies from 'js-cookie'
-const AuthContext = createContext({});
 import { getMyProfile, selectMyProfile } from '../../data/me';
 import { getChatToken, selectChatToken } from "../../data/get_chat_token";
 import { setAuthToken } from "../../utils/axios";
-import { useParams, usePathname, useRouter } from "next/navigation";
-import useHash from "../hooks/use_hash";
-import { toast } from "react-toastify";
-
-import { getProfile } from '../../data/get_profile'
-import { setLoginState, setOpenModal, setVerifyState, setWarningMessage, setWarningState } from '../../data/modal_checker'
-import { getSetVerified } from '../../data/set_verified'
-import { getMyInteriors } from '../../data/get_my_interiors'
-import { getSavedModels } from '../../data/get_saved_models'
-import { myInteriorsLimit, projectsLimit, savedModelsLimit } from '../../types/filters'
-import { getMyProjects } from '../../data/get_my_projects'
+import { getNotifications, selectNotificationsStatus } from "../../data/get_notifications";
+import {
+  setLoginState,
+  setOpenModal,
+  setVerifyState,
+  setWarningMessage,
+  setWarningState
+} from '../../data/modal_checker';
 import { accountBannedMessage } from "../../variables";
 import { tokenFactory } from "../../utils/chat";
-import { getNotifications, selectNotificationsStatus } from "../../data/get_notifications";
+import { isPrivateRoute } from "../../utils/utils";
+import { authTokens } from "../../constants";
 
+const AuthContext = createContext({});
+const PasswordResetContext = createContext<{
+  recoveryToken: string | null;
+  consumeRecoveryToken: () => string | null;
+}>({
+  recoveryToken: null,
+  consumeRecoveryToken: () => null,
+});
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useDispatch<any>();
-  const update_cookie_status = useSelector((state: any) => state?.update_access_token?.status);
-  const myProfile = useSelector(selectMyProfile)
-  const myProfileStatus = useSelector((state: any) => state?.profile_me?.status)
-  const myProfileError = useSelector((state: any) => state?.profile_me?.error)
-  const tokenStatus = useSelector((state: any) => state?.get_chat_token?.status)
-  const chatToken = useSelector(selectChatToken)
-  const notifications_status = useSelector(selectNotificationsStatus);
-
-  const pathname = usePathname()
   const router = useRouter();
-  const params = useParams();
-  const hash = useHash();
+  const pathname = usePathname();
+  const [hash, setHash] = useState<string | null>(null);
 
-  const handleLogout = () => {
-    Cookies.remove('accessToken')
-    Cookies.remove('refreshToken')
-    Cookies.remove('chatToken')
-    dispatch(setAuthState(false))
-    router.push(pathname)
+  useEffect(() => {
+    setHash(window.location.hash);
+  }, []);
+
+  // Selectors
+  const myProfile = useSelector(selectMyProfile);
+  const myProfileStatus = useSelector((state: any) => state?.profile_me?.status);
+  const myProfileError = useSelector((state: any) => state?.profile_me?.error);
+  const chatToken = useSelector(selectChatToken);
+  const notificationsStatus = useSelector(selectNotificationsStatus);
+
+  // Memoized logout handler
+  const handleLogout = useCallback(() => {
+    authTokens.forEach(cookie => Cookies.remove(cookie));
+    dispatch(setAuthState(false));
+    console.log(isPrivateRoute(pathname))
+    router.push(isPrivateRoute(pathname) ? '/' : pathname);
     router.refresh();
-  }
+  }, [dispatch, pathname, router]);
 
+  const [recoveryToken, setRecoveryToken] = React.useState<string | null>(null);
+
+  // Add this useEffect to handle the recovery token from URL
   useEffect(() => {
-    if (myProfile) {
-      if (notifications_status === 'idle') {
-        dispatch(getNotifications());
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      const token = url.searchParams.get('token');
+      const type = url.searchParams.get('type');
+
+      if (token && type === 'recovery') {
+        setRecoveryToken(token);
+        // Clear the token from URL without reloading
+        window.history.replaceState({}, '', '/account/change-password');
       }
     }
-  }, [myProfile, notifications_status]);
+  }, []);
 
-
+  // Load notifications when profile is available
   useEffect(() => {
-    async function loadUserFromCookies() {
+    if (myProfile && notificationsStatus === 'idle') {
+      dispatch(getNotifications());
+    }
+  }, [myProfile, notificationsStatus, dispatch]);
 
-      if (Cookies.get('accessToken')) {
-        setAuthToken(Cookies.get('accessToken'))
+  // Handle profile loading and authentication state
+  const loadUserFromCookies = useCallback(async () => {
+    const accessToken = Cookies.get('accessToken');
 
-        if (myProfileStatus === 'idle' && !myProfile) {
-          await dispatch(getMyProfile({}))
-        }
-        if (myProfile && (!Cookies.get('chatToken') || !chatToken)) {
-          dispatch(getChatToken())
-          await tokenFactory()
-        }
-        if (myProfileStatus === 'failed') {
-          if (myProfileError) {
-            if (myProfileError?.reason == 'token_expired') {
-              handleLogout()
-              dispatch(setLoginState(true))
-              dispatch(setOpenModal(true))
-            }
-            if (myProfileError?.reason == 'banned') {
-              handleLogout()
-              dispatch(setWarningMessage(accountBannedMessage))
-              dispatch(setWarningState(true))
-              dispatch(setOpenModal(true))
-            }
-          }
-          dispatch(setAuthState(false));
-        }
+    if (!accessToken) {
+      handleLogout();
+      return;
+    }
 
-        dispatch(setAuthState(true));
+    setAuthToken(accessToken);
+
+    try {
+      if (myProfileStatus === 'idle' && !myProfile) {
+        await dispatch(getMyProfile({}));
       }
 
-      // if (Cookies.get('refreshToken')) {
-      //   if (update_cookie_status === "idle" && !Cookies.get('accessToken')) {
-      //     dispatch(getUpdatedAccessToken())
-      //     if (update_cookie_status === 'succeeded') {
-      //       dispatch(setAuthState(true));
+      if (myProfileStatus === 'succeeded' && !myProfile) {
+        handleLogout();
+        return;
+      }
 
-      //       if (myProfileStatus === 'idle') {
-      //         await dispatch(getMyProfile({}))
-      //       }
+      if (myProfile) {
+        if (!Cookies.get('chatToken') || !chatToken) {
+          await dispatch(getChatToken());
+          await tokenFactory();
+        }
+      }
 
-      //     }
-      //   }
-      // } else {
-      //   dispatch(setAuthState(false));
-      // }
+      if (myProfileStatus === 'failed') {
+        if (myProfileError?.reason === 'token_expired') {
+          handleLogout();
+          dispatch(setLoginState(true));
+          dispatch(setOpenModal(true));
+        } else if (myProfileError?.reason === 'banned') {
+          handleLogout();
+          dispatch(setWarningMessage(accountBannedMessage));
+          dispatch(setWarningState(true));
+          dispatch(setOpenModal(true));
+        } else {
+          handleLogout();
+        }
+        return;
+      }
+
+      dispatch(setAuthState(true));
+    } catch (error) {
+      console.error('Authentication error:', error);
+      handleLogout();
     }
+  }, [myProfile, myProfileStatus, myProfileError, chatToken, dispatch, handleLogout]);
+
+  // Handle hash parameters for OAuth callback
+  const handleHashParams = useCallback(() => {
+    if (!hash) return;
+
+    const hashParams = new URLSearchParams(hash.slice(1));
+    const accessToken = hashParams.get('access_token');
+    const refreshToken = hashParams.get('refresh_token');
+    const expiresAt = hashParams.get('expires_at');
+
+    if (accessToken && refreshToken && expiresAt) {
+      Cookies.set('accessToken', accessToken, {
+        expires: new Date(parseInt(expiresAt) * 1000),
+        path: '/',
+        sameSite: 'Lax',
+        secure: true,
+      });
+
+      Cookies.set('refreshToken', refreshToken, {
+        path: '/',
+        sameSite: 'Lax',
+        secure: true
+      });
+
+      // Set auth state and redirect
+      dispatch(setAuthState(true));
+      dispatch(setVerifyState(false));
+
+      toast.success("Электронная почта успешно подтверждена");
+      router.replace(pathname.includes('change-password') ? '/account/change-password' : '/');
+    } else {
+      toast.error("Не удалось подтвердить электронную почту! Пожалуйста, попробуйте еще раз");
+      router.push('/');
+    }
+  }, [hash, dispatch, router, pathname]);
+
+  // Initial load and hash handling
+  useEffect(() => {
     loadUserFromCookies();
-  }, [myProfile, Cookies, myProfileStatus]);
 
-  useEffect(() => {
     if (hash) {
-      const hashParams = new URLSearchParams(hash.slice(1))
-
-      const accessToken = hashParams.get('access_token')
-      const refreshToken = hashParams.get('refresh_token')
-      const expiresAt = hashParams.get('expires_at');
-      const expiresIn = hashParams.get('expires_in');
-
-
-      if (accessToken && refreshToken && expiresAt) {
-        Cookies.set(
-          'accessToken',
-          accessToken,
-          { expires: new Date(parseInt(expiresAt) * 1000), path: '/', sameSite: 'Lax', secure: true },
-        )
-
-        Cookies.set(
-          'refreshToken',
-          refreshToken,
-          { path: '/', sameSite: 'Lax', secure: true }
-        )
-
-        const x = setTimeout(() => {
-          dispatch(getProfile({ Authorization: `Bearer ${accessToken}` }))
-          dispatch(getMyInteriors({ Authorization: `Bearer ${accessToken}`, limit: myInteriorsLimit }))
-          dispatch(getMyProjects({ Authorization: `Bearer ${accessToken}`, limit: projectsLimit }))
-          dispatch(getSavedModels({ Authorization: `Bearer ${accessToken}`, limit: savedModelsLimit }))
-          router.replace('/');
-          toast.success("Электронная почта успешно подтверждена");
-          dispatch(setAuthState(true))
-          dispatch(setVerifyState(false))
-          dispatch(getSetVerified({ Authorization: `Bearer ${accessToken}` }))
-          clearTimeout(x)
-        }, 10)
-      }
-      else {
-        const x = setTimeout(() => {
-          toast.error("Не удалось подтвердить электронную почту! Пожалуйста, попробуйте еще раз");
-          router.push('/');
-          clearTimeout(x)
-        }, 0)
-      }
+      handleHashParams();
+    } else if (pathname.includes("unauthorized_client")) {
+      toast.error("Не удалось подтвердить электронную почту! Пожалуйста, попробуйте еще раз");
+      router.push('/');
     }
-    if (pathname && pathname.includes("unauthorized_client")) {
-      setTimeout(() => {
-        toast.error("Не удалось подтвердить электронную почту! Пожалуйста, попробуйте еще раз");
-        router.push('/');
-      }, 0)
-    }
-  }, [router, dispatch, params, hash])
+  }, [loadUserFromCookies, handleHashParams, hash, pathname, router]);
 
   return (
-    <AuthContext.Provider
-      value={{}}
-    >
-      {children}
+    <AuthContext.Provider value={{}}>
+      <PasswordResetContext.Provider
+        value={{
+          recoveryToken,
+          consumeRecoveryToken: () => {
+            const token = recoveryToken;
+            setRecoveryToken(null);
+            return token;
+          },
+        }}
+      >
+        {children}
+      </PasswordResetContext.Provider>
     </AuthContext.Provider>
   );
 };
 
-
 export const useAuth = () => useContext(AuthContext);
+export const usePasswordReset = () => useContext(PasswordResetContext);

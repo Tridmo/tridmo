@@ -4,7 +4,7 @@ import { Formik } from 'formik';
 import { toast } from 'react-toastify';
 import { getMyProfile, resetMyProfile, selectMyProfile } from '../../data/me';
 import { useDispatch, useSelector } from 'react-redux';
-import { setLoginState, setSignupState, setVerifyState, setOpenModal, setProfileEditState, setConfirmState, resetConfirmProps, resetConfirmData, ConfirmContextProps, ConfirmData, setConfirmData, setProfileImageState, setProfileImagePreview, setAddingProjectState, setEditingProjectState, selectEditingProject, setProjectsListState, setWarningState, setWarningMessage } from '../../data/modal_checker';
+import { setLoginState, setSignupState, setVerifyState, setOpenModal, setProfileEditState, setConfirmState, resetConfirmProps, resetConfirmData, ConfirmContextProps, ConfirmData, setConfirmData, setProfileImageState, setProfileImagePreview, setAddingProjectState, setEditingProjectState, selectEditingProject, setProjectsListState, setWarningState, setWarningMessage, setForgotPasswordState } from '../../data/modal_checker';
 import { setAuthState } from "../../data/login";
 import { Box, Typography, Grid, Button, TextField, InputAdornment, IconButton, SxProps, FormControlLabel, Checkbox, styled, TooltipProps, Tooltip, tooltipClasses, List, ListItem, ListItemText, ListItemAvatar, Divider, Skeleton } from '@mui/material';
 import Image from 'next/image';
@@ -187,9 +187,7 @@ export const ConfirmContext = () => {
 }
 
 export const LoginContext = (props: LoginContextProps) => {
-  const authState = useSelector((state: any) => state?.auth_slicer?.authState);
   const dispatch = useDispatch<any>();
-  const pathname = usePathname();
   const [values, setValues] = React.useState({
     amount: '',
     password: '',
@@ -348,10 +346,14 @@ export const LoginContext = (props: LoginContextProps) => {
                 />
 
                 <Box width={'100%'} mt={"10px"}>
-                  {/* <Buttons
+                  <Buttons
                     name="Забыли пароль?"
                     className='underlined__btn'
-                  /> */}
+                    onClick={() => {
+                      dispatch(setLoginState(false))
+                      dispatch(setForgotPasswordState(true))
+                    }}
+                  />
 
                   <Buttons
                     type="submit"
@@ -634,6 +636,92 @@ export const SignUpContext = (props: LoginContextProps) => {
 }
 
 
+export const ForgotPasswordContext = () => {
+
+  const dispatch = useDispatch<any>();
+
+  return (
+    <Formik
+      initialValues={{
+        email: '',
+        submit: null,
+      }}
+      validationSchema={Yup.object().shape({
+        email: Yup.string()
+          .email('Указанный адрес электронной почты должен быть действительным адресом электронной почты.')
+          .required('Поле обязательно для заполнения.'),
+      })}
+      onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+        try {
+          const res = await instance.post(`auth/sendResetPasswordEmail`, {
+            email: values.email,
+          });
+          toast.success(res?.data?.message || 'Ссылка для сброса пароля отправлена на вашу почту.');
+          dispatch(setForgotPasswordState(false));
+          dispatch(setOpenModal(false));
+          setStatus({ success: true });
+        } catch (err: any) {
+          setStatus({ success: false });
+          toast.error(err?.response?.data?.message || 'Произошла ошибка. Попробуйте снова.');
+          setErrors({ submit: err.message });
+        } finally {
+          setSubmitting(false);
+        }
+      }}
+    >
+      {({
+        errors,
+        handleBlur,
+        handleChange,
+        handleSubmit,
+        isSubmitting,
+        touched,
+        values,
+      }) => (
+        <form onSubmit={handleSubmit}>
+          <Grid container direction="column" alignItems="flex-start" spacing={2}>
+            <Grid item>
+              <SimpleTypography
+                className="modal__title"
+                variant="h6"
+                text="Сброс пароля"
+              />
+            </Grid>
+            <Grid item>
+              <SimpleTypography
+                className="modal__sub-title"
+                variant="body1"
+                text="Введите адрес электронной почты, чтобы получить ссылку для сброса пароля."
+              />
+            </Grid>
+            <Grid item sx={{ width: '100%' }}>
+              <EmailInputAdornments
+                error={Boolean(touched.email && errors.email)}
+                helperText={touched.email && errors.email}
+                name="email"
+                type="email"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.email}
+                placeholderText="example@example.com"
+              />
+            </Grid>
+            <Grid item sx={{ width: '100%' }}>
+              <Buttons
+                type="submit"
+                name="Отправить"
+                startIcon={isSubmitting}
+                disabled={Boolean(errors.submit) || isSubmitting}
+                className="signIn__btn"
+              />
+            </Grid>
+          </Grid>
+        </form>
+      )}
+    </Formik>
+  );
+}
+
 export const WarningContext = () => {
 
   const dispatch = useDispatch<any>();
@@ -881,7 +969,7 @@ export const VerificationContext = (props: LoginContextProps) => {
   );
 }
 
-export const EditProfileContext = (props: LoginContextProps) => {
+export const EditProfileContext = () => {
   const dispatch = useDispatch<any>();
   const profile = useSelector(selectMyProfile)
 
@@ -1184,7 +1272,7 @@ export const EditProfileContext = (props: LoginContextProps) => {
   );
 }
 
-export const AddProjectContext = (props: LoginContextProps) => {
+export const AddProjectContext = () => {
   const dispatch = useDispatch<any>();
   const profile = useSelector(selectMyProfile)
 
@@ -1302,7 +1390,7 @@ export const AddProjectContext = (props: LoginContextProps) => {
   );
 }
 
-export const EditProjectContext = (props: LoginContextProps) => {
+export const EditProjectContext = () => {
   const dispatch = useDispatch<any>();
   const project = useSelector(selectEditingProject)
 
@@ -1446,7 +1534,7 @@ const listSx: SxProps = {
 }
 
 
-export const ProjectsContext = (props: LoginContextProps) => {
+export const ProjectsContext = () => {
   const dispatch = useDispatch<any>();
   const model = useSelector(selectOneModel)
   const projects = useSelector(selectMyProjects)

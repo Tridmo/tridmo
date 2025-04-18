@@ -18,7 +18,7 @@ import { Box } from "@mui/system";
 import Cookies from "js-cookie";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { setAuthState } from "../../../data/login";
 import { useDispatch, useSelector } from "react-redux";
 import { usePathname, useRouter } from "next/navigation";
@@ -29,6 +29,8 @@ import { relative } from "path";
 import { switch_on } from "../../../data/toggle_cart";
 import { selectNotificationCounts, selectNotificationCountsStatus } from "../../../data/get_notifications";
 import { selectChatUnread } from "../../../data/chat";
+import { isPrivateRoute } from "../../../utils/utils";
+import { authTokens } from "../../../constants";
 
 export default function MobileMode() {
   const [open, setOpen] = useState(false);
@@ -131,14 +133,13 @@ export default function MobileMode() {
     setOpen(newOpen);
   };
 
-  const handleLogout = () => {
-    Cookies.remove("accessToken");
-    Cookies.remove("refreshToken");
-    Cookies.remove("chatToken");
+  // Memoized logout handler
+  const handleLogout = useCallback(() => {
+    authTokens.forEach(cookie => Cookies.remove(cookie));
     dispatch(setAuthState(false));
-    router.push(pathname);
+    router.push(isPrivateRoute(pathname) ? '/' : pathname);
     router.refresh();
-  };
+  }, [dispatch, pathname, router]);
 
   function handleClickLogout() {
     const modalContent: ConfirmContextProps = {

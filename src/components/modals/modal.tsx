@@ -3,7 +3,7 @@ import * as React from 'react';
 import LoadingBar from 'react-top-loading-bar';
 import { setAddingProjectState, setConfirmState, setEditingProjectState, setLoginState, setOpenModal, setProfileEditState, setProfileImagePreview, setProfileImageState, setSignupState, setVerifyState, setWarningMessage, setWarningState } from '../../data/modal_checker';
 import { useDispatch, useSelector } from '../../store';
-import { AddProjectContext, ConfirmContext, EditProfileContext, EditProjectContext, LoginContext, ProfileImageContext, ProjectsContext, SignUpContext, VerificationContext, WarningContext } from './context';
+import { AddProjectContext, ConfirmContext, EditProfileContext, EditProjectContext, ForgotPasswordContext, LoginContext, ProfileImageContext, ProjectsContext, SignUpContext, VerificationContext, WarningContext } from './context';
 
 export default function BasicModal(props: { styles?: SxProps }) {
   const [userEmail, setUserEmail] = React.useState('');
@@ -13,6 +13,7 @@ export default function BasicModal(props: { styles?: SxProps }) {
   const isProfileImageOpen = useSelector((state: any) => state?.modal_checker?.isProfileImage);
   const isConfirmOpen = useSelector((state: any) => state?.modal_checker?.isConfirm);
   const isLoginOpen = useSelector((state: any) => state?.modal_checker?.isLogin);
+  const isForgotPasswordOpen = useSelector((state: any) => state?.modal_checker?.isForgotPassword);
   const isWarningOpen = useSelector((state: any) => state?.modal_checker?.isWarning);
   const isSignupOpen = useSelector((state: any) => state?.modal_checker?.isSignup);
   const isVerifyOpen = useSelector((state: any) => state?.modal_checker?.isVerify);
@@ -101,20 +102,23 @@ export default function BasicModal(props: { styles?: SxProps }) {
                         setUserEmail={(email: any) => { setUserEmail(email) }}
                       />
                       :
-                      isVerifyOpen ?
-                        <VerificationContext
-                          userEmail={userEmail}
-                          setProgress={(val: any) => { setProgress(val) }}
-                        />
+                      isForgotPasswordOpen ?
+                        <ForgotPasswordContext />
                         :
-                        isProfileEditOpen ? <EditProfileContext />
+                        isVerifyOpen ?
+                          <VerificationContext
+                            userEmail={userEmail}
+                            setProgress={(val: any) => { setProgress(val) }}
+                          />
                           :
-                          isAddingProjectOpen ? <AddProjectContext />
+                          isProfileEditOpen ? <EditProfileContext />
                             :
-                            isEditingProjectOpen ? <EditProjectContext />
+                            isAddingProjectOpen ? <AddProjectContext />
                               :
-                              isProjectsListOpen ? <ProjectsContext />
-                                : null
+                              isEditingProjectOpen ? <EditProjectContext />
+                                :
+                                isProjectsListOpen ? <ProjectsContext />
+                                  : null
           }
         </Box>
       </Modal>
