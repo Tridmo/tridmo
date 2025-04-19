@@ -172,6 +172,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     if (hash) {
       handleHashParams();
+      loadUserFromCookies();
     } else if (pathname.includes("unauthorized_client")) {
       toast.error("Не удалось подтвердить электронную почту! Пожалуйста, попробуйте еще раз");
       router.push('/');
