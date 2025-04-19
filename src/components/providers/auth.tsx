@@ -53,9 +53,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const handleLogout = useCallback(() => {
     authTokens.forEach(cookie => Cookies.remove(cookie));
     dispatch(setAuthState(false));
-    console.log(isPrivateRoute(pathname))
     router.push(isPrivateRoute(pathname) ? '/' : pathname);
-    router.refresh();
   }, [dispatch, pathname, router]);
 
   const [recoveryToken, setRecoveryToken] = React.useState<string | null>(null);
