@@ -93,7 +93,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     try {
       if (myProfileStatus === 'idle' && !myProfile) {
-        await dispatch(getMyProfile({}));
+        await dispatch(getMyProfile({ Authorization: `Bearer ${Cookies.get('accessToken')}` }));
       }
 
       if (myProfileStatus === 'succeeded' && !myProfile) {
@@ -156,7 +156,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       // Set auth state and redirect
       setAuthToken(accessToken);
-      dispatch(getMyProfile({}));
+      dispatch(getMyProfile({ Authorization: `Bearer ${Cookies.get('accessToken')}` }));
       dispatch(setAuthState(true));
       dispatch(setVerifyState(false));
 

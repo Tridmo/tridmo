@@ -76,17 +76,13 @@ const ChangePasswordForm: React.FC = () => {
             expires: REFRESH_TOKEN_EXPIRATION_DAYS, path: '/', sameSite: 'Lax', secure: true
           });
 
-          console.log('accessToken cookie', Cookies.get('accessToken'));
-          console.log('refreshToken cookie', Cookies.get('refreshToken'));
-
           setAuthToken(accessToken);
           dispatch(setAuthState(true))
-          await dispatch(getMyProfile({}))
           toast.success(response?.data?.message || 'Пароль успешно изменен');
           const redirect = setTimeout(() => {
             router.push('/profile');
             clearTimeout(redirect)
-          }, 10000)
+          }, 1000)
         }
       } else {
         toast.error(response?.data?.message || 'Ошибка при изменении пароля');
