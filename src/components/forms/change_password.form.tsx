@@ -80,18 +80,11 @@ const ChangePasswordForm: React.FC = () => {
 
           dispatch(setAuthState(true));
 
-          try {
-            // Force fetch profile before redirecting
-            await dispatch(getMyProfile({ Authorization: `Bearer ${accessToken}` }));
-            toast.success(response?.data?.message || 'Пароль успешно изменен');
+          toast.success(response?.data?.message || 'Пароль успешно изменен');
 
-            setTimeout(() => {
-              router.push('/profile');
-            }, 1000);
-          } catch (err) {
-            console.error('Failed to fetch profile after password reset:', err);
-            toast.error('Не удалось загрузить профиль после обновления пароля');
-          }
+          setTimeout(() => {
+            window.location.href = '/profile';
+          }, 1000);
         }
 
       } else {
