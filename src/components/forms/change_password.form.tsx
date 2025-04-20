@@ -81,6 +81,7 @@ const ChangePasswordForm: React.FC = () => {
           toast.success(response?.data?.message || 'Пароль успешно изменен');
           const redirect = setTimeout(() => {
             router.push('/profile');
+            clearTimeout(redirect)
           }, 1000)
         }
       } else {
