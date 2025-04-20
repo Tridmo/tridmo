@@ -10,6 +10,8 @@ import { toast } from 'react-toastify';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Cookies from 'js-cookie';
 import { ACCESS_TOKEN_EXPIRATION_DAYS, REFRESH_TOKEN_EXPIRATION_DAYS } from '../../utils/env_vars';
+import { setAuthState } from '../../data/login';
+import { getMyProfile } from '../../data/me';
 
 const ChangePasswordForm: React.FC = () => {
   const dispatch = useDispatch();
@@ -75,8 +77,9 @@ const ChangePasswordForm: React.FC = () => {
           });
 
           setAuthToken(accessToken);
+          dispatch(setAuthState(true))
           toast.success(response?.data?.message || 'Авторизация прошла успешна');
-          router.push(isRecoveryFlow ? '/' : '/profile');
+          router.push('/profile');
         }
       } else {
         toast.error(response?.data?.message || 'Ошибка при изменении пароля');

@@ -155,6 +155,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       });
 
       // Set auth state and redirect
+      setAuthToken(accessToken);
+      dispatch(getMyProfile({}));
       dispatch(setAuthState(true));
       dispatch(setVerifyState(false));
 
@@ -168,15 +170,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Initial load and hash handling
   useEffect(() => {
-    loadUserFromCookies();
-
     if (hash) {
       handleHashParams();
-      loadUserFromCookies();
     } else if (pathname.includes("unauthorized_client")) {
       toast.error("Не удалось подтвердить электронную почту! Пожалуйста, попробуйте еще раз");
       router.push('/');
     }
+    loadUserFromCookies();
   }, [loadUserFromCookies, handleHashParams, hash, pathname, router]);
 
   return (
