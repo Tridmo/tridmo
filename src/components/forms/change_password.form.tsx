@@ -65,25 +65,35 @@ const ChangePasswordForm: React.FC = () => {
 
       if (response.status === 200) {
         if (response?.data?.data?.user?.is_verified) {
-
           const accessToken = response?.data?.data?.token?.accessToken;
           const refreshToken = response?.data?.data?.token?.refreshToken;
 
           Cookies.set('accessToken', accessToken, {
             expires: ACCESS_TOKEN_EXPIRATION_DAYS, path: '/', sameSite: 'Lax', secure: true
           });
+
           Cookies.set('refreshToken', refreshToken, {
             expires: REFRESH_TOKEN_EXPIRATION_DAYS, path: '/', sameSite: 'Lax', secure: true
           });
 
-          setAuthToken(accessToken);
-          dispatch(setAuthState(true))
-          toast.success(response?.data?.message || 'Пароль успешно изменен');
-          const redirect = setTimeout(() => {
-            router.push('/profile');
-            clearTimeout(redirect)
-          }, 1000)
+          setAuthToken(accessToken); // Set it for Axios headers
+
+          dispatch(setAuthState(true));
+
+          try {
+            // Force fetch profile before redirecting
+            await dispatch(getMyProfile({ Authorization: `Bearer ${accessToken}` }));
+            toast.success(response?.data?.message || 'Пароль успешно изменен');
+
+            setTimeout(() => {
+              router.push('/profile');
+            }, 1000);
+          } catch (err) {
+            console.error('Failed to fetch profile after password reset:', err);
+            toast.error('Не удалось загрузить профиль после обновления пароля');
+          }
         }
+
       } else {
         toast.error(response?.data?.message || 'Ошибка при изменении пароля');
       }
