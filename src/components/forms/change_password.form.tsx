@@ -14,7 +14,7 @@ import { setAuthState } from '../../data/login';
 import { getMyProfile } from '../../data/me';
 
 const ChangePasswordForm: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<any>();
   const router = useRouter();
   const searchParams = useSearchParams();
   const isAuthenticated = useSelector((state: any) => state?.auth_slicer?.authState)
@@ -78,11 +78,12 @@ const ChangePasswordForm: React.FC = () => {
 
           setAuthToken(accessToken);
           dispatch(setAuthState(true))
+          await dispatch(getMyProfile({}))
           toast.success(response?.data?.message || 'Пароль успешно изменен');
           const redirect = setTimeout(() => {
             router.push('/profile');
             clearTimeout(redirect)
-          }, 1000)
+          }, 2000)
         }
       } else {
         toast.error(response?.data?.message || 'Ошибка при изменении пароля');
