@@ -43,6 +43,7 @@ import MobileMode from "./mobile_mode";
 import { SearchBar } from "./search_bar/serach_bar";
 import { authTokens, privateRoutes } from "../../../constants";
 import { isPrivateRoute } from "../../../utils/utils";
+import { navItemsData } from "./data";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -72,29 +73,6 @@ const DropDown = styled(Menu)(
   }
   `
 );
-
-const navItemsData = [
-  {
-    id: 1,
-    text: "Дизайнеры",
-    link: "/designers",
-  },
-  {
-    id: 2,
-    text: "Бренды",
-    link: "/brands",
-  },
-  {
-    id: 3,
-    text: "Модели",
-    link: "/models/?page=1",
-  },
-  {
-    id: 4,
-    text: "Интерьеры",
-    link: "/interiors/?page=1",
-  },
-];
 
 export default function Navbar() {
   const dispatch = useDispatch<any>();

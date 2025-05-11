@@ -1,11 +1,5 @@
-import { ChatOutlined, Close, Collections, CollectionsOutlined, ControlPointOutlined, GroupOutlined, GroupsOutlined, HowToRegRounded, MenuOutlined, NotificationsOutlined, PersonOutlineOutlined, ViewInAr } from "@mui/icons-material";
-import EmojiPeopleIcon from "@mui/icons-material/EmojiPeople";
-import HomeIcon from "@mui/icons-material/Home";
-import MenuIcon from "@mui/icons-material/Menu";
-import PersonIcon from "@mui/icons-material/Person";
-import StorefrontIcon from "@mui/icons-material/Storefront";
+import { Close, MenuOutlined } from "@mui/icons-material";
 import {
-  Drawer,
   IconButton,
   List,
   ListItem,
@@ -31,6 +25,7 @@ import { selectNotificationCounts, selectNotificationCountsStatus } from "../../
 import { selectChatUnread } from "../../../data/chat";
 import { isPrivateRoute } from "../../../utils/utils";
 import { authTokens } from "../../../constants";
+import { navItemsDataMobile } from "./data";
 
 export default function MobileMode() {
   const [open, setOpen] = useState(false);
@@ -58,76 +53,7 @@ export default function MobileMode() {
     dispatch(switch_on(true));
   }
 
-  const navItemsData = [
-    {
-      id: 1,
-      text: "Дизайнеры",
-      link: "/designers",
-      icon: <GroupOutlined />,
-    },
-    {
-      id: 2,
-      text: "Бренды",
-      link: "/brands",
-      icon: <StorefrontIcon />,
-    },
-    {
-      id: 3,
-      text: "Модели",
-      link: "/models/?page=1",
-      icon: <ViewInAr />,
-    },
-    {
-      id: 4,
-      text: "Интерьеры",
-      link: "/interiors/?page=1",
-      icon: <CollectionsOutlined />,
-    },
-    ...(
-      isAuthenticated ? [{
-        id: -1,
-        text: "Добавить работу",
-        link: "/profile",
-        icon: <ControlPointOutlined />,
-      }, {
-        id: -2,
-        text: `Уведомления (${notificationCountsStatus === "succeeded" ? notificationCounts?.data?.unread_count || "0" : "0"})`,
-        link: "",
-        click: openNotifications,
-        icon: <NotificationsOutlined />,
-      }, {
-        id: -3,
-        text: `Чат (${String(
-          Number(chatUnread?.private || 0) +
-          Number(chatUnread?.rooms || 0)
-        ) || "0"})`,
-        link: "/chat",
-        icon: <ChatOutlined />,
-      }, {
-        id: -4,
-        text: "Мой профиль",
-        link: "/profile",
-        icon: <PersonOutlineOutlined />,
-      }] : [{
-        id: -1,
-        text: "Логин",
-        link: "",
-        click: openLogin,
-        icon: <Image
-          src="/icons/login-circle.svg"
-          alt="icon"
-          width={24}
-          height={24}
-        />
-      }, {
-        id: -2,
-        text: "Регистрация",
-        link: "",
-        click: openSignup,
-        icon: <HowToRegRounded />
-      }]
-    ),
-  ];
+
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -189,7 +115,7 @@ export default function MobileMode() {
         </IconButton>
       </Box>
       <List>
-        {navItemsData.map((item) => (
+        {navItemsDataMobile(isAuthenticated, notificationCountsStatus, notificationCounts, chatUnread, openLogin, openSignup, openNotifications).map((item) => (
           <ListItem sx={{ position: 'relative' }} key={item.id} disablePadding>
             {
               !!item?.link ?

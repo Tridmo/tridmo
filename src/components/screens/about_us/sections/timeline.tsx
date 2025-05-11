@@ -18,7 +18,7 @@ const timelineSx = (steps: any) => ({
         '&::before': {
             content: 'none',
         },
-        flexDirection: 'column',
+        flexDirection: 'column !important',
         justifyContent: 'center',
 
         '& .MuiTimelineSeparator-root': {
