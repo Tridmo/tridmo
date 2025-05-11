@@ -7,7 +7,7 @@ import AlertWrapper from "../components/alert";
 import TawkMessengerReact from '@tawk.to/tawk-messenger-react';
 import { Box } from "@mui/system";
 import RightBar from "@/components/right_bar";
-import { TAWKTO_PROPERTY_ID, TAWKTO_RUSSIAN_WIDGET_ID } from "../utils/env_vars";
+import { ENVIRONMENT, TAWKTO_PROPERTY_ID, TAWKTO_RUSSIAN_WIDGET_ID } from "../utils/env_vars";
 
 const ClientWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -28,10 +28,13 @@ const ClientWrapper = ({ children }: { children: React.ReactNode }) => {
       </Box>
       <RightBar />
       {children}
-      <TawkMessengerReact
-        propertyId={TAWKTO_PROPERTY_ID}
-        widgetId={TAWKTO_RUSSIAN_WIDGET_ID}
-      />
+      {
+        ENVIRONMENT == 'production' &&
+        <TawkMessengerReact
+          propertyId={TAWKTO_PROPERTY_ID}
+          widgetId={TAWKTO_RUSSIAN_WIDGET_ID}
+        />
+      }
     </>
   );
 };

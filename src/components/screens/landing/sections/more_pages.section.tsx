@@ -1,0 +1,65 @@
+import { Grid } from "@mui/material"
+import InfiniteLinearCarousel from "../../../carousel/infinite_linear_carousel";
+import { useDispatch, useSelector } from "react-redux";
+import { IMAGES_BASE_URL } from "../../../../utils/env_vars";
+import { selectBrandsForLandingPage } from "../../../../data/get_all_brands";
+import { selectDesignersForLandingPage } from "../../../../data/get_all_designers";
+
+export function MorePagesSection() {
+  const brands = useSelector(selectBrandsForLandingPage);
+  const designers = useSelector(selectDesignersForLandingPage);
+
+  return (
+    <Grid
+      container
+      width={'100%'}
+      justifyContent="space-between"
+      gap={1}
+    >
+      <Grid item xs={12} sm={12} md={12} lg={5.95} xl={5.95}>
+        <InfiniteLinearCarousel
+          title="Дизайнеры"
+          speed={80}
+          cardStyle={!designers ? {
+            height: 148,
+            border: 'none',
+            padding: '0'
+          } : {
+            height: 148
+          }}
+          logoStyle={{ width: '80%', height: '80%' }}
+          items={
+            designers?.map((designer) => {
+              // const [firstName, lastName] = (designer?.full_name as string)?.trim()?.split(' ')
+              return {
+                name: designer?.company_name,
+                logo: designer?.image_src ? `${IMAGES_BASE_URL}/${designer?.image_src}` : `https://ui-avatars.com/api/?name=${designer?.company_name}&background=0D8ABC&color=fff&size=128`
+              }
+            })
+          } />
+      </Grid>
+
+      <Grid item xs={12} sm={12} md={12} lg={5.95} xl={5.95}>
+        <InfiniteLinearCarousel title="Бренды" showNames={false}
+          cardStyle={{
+            height: 148,
+            border: 'none',
+            padding: '0'
+          }}
+          logoStyle={{
+            width: '100%',
+            height: '100%',
+            borderRadius: '12px',
+          }}
+          items={
+            brands ?
+              brands?.map((brand) => ({
+                name: brand?.name,
+                logo: `${IMAGES_BASE_URL}/${brand?.image_src}`,
+              }))
+              : []
+          } />
+      </Grid>
+    </Grid>
+  )
+}

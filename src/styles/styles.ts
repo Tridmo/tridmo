@@ -166,12 +166,13 @@ export const ButtonStyles = (theme) => `
         background-color: #7210BE;
         padding:23px 16px;
         position: absolute;
-        top: -2%;
-        bottom: -2%;
-        right: -1%;
-        border: 1.7px solid #7210BE;
+        top: 0;
+        bottom: 0;
+        right: 0;
         border-top-left-radius: 0 !important;
         border-bottom-left-radius: 0 !important;
+        border-top-right-radius: 3px !important;
+        border-bottom-right-radius: 3px !important;
         height: unset !important;
 
         &:hover{

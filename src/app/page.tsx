@@ -7,8 +7,8 @@ import { getAllStyles } from '@/data/get_all_styles';
 import { getAllInteriors } from '@/data/get_all_interiors';
 import LandingPage from '../components/screens/landing';
 import { getAllModels } from '../data/get_all_models';
-import { getAllDesigners } from '../data/get_all_designers';
-import { getAllBrands } from '../data/get_all_brands';
+import { getAllDesigners, getDesignersForLandingPage } from '../data/get_all_designers';
+import { getAllBrands, getBrandsForLandingPage } from '../data/get_all_brands';
 import { getTopModels } from '../data/get_top_models';
 import { getLandingModels, getLandingTopModels } from '../data/get_landingpage_models';
 
@@ -32,6 +32,8 @@ export default function Home() {
     dispatch(getAllInteriors({}))
     dispatch(getLandingTopModels())
     dispatch(getLandingModels())
+    dispatch(getDesignersForLandingPage())
+    dispatch(getBrandsForLandingPage({ orderBy: 'models_count' }))
   }, [])
 
   return (
