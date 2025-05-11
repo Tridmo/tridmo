@@ -1,13 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Grid, Typography, Paper, SxProps } from '@mui/material';
 import CountUp from 'react-countup';
 import { primaryColor } from '../styles/styles';
-
-const stats = [
-  { number: 11, label: 'партнеров' },
-  { number: 626, label: '3D модели' },
-  { number: 417, label: 'пользователя' },
-];
+import { selectMainStats, selectMainStats_status } from '@/data/get_main_stats';
+import { useSelector } from 'react-redux';
 
 type Props = {
   numberStyles?: SxProps;
@@ -18,6 +14,27 @@ const StatsCard = ({
   numberStyles,
   textStyles
 }: Props) => {
+
+  const mainStats = useSelector(selectMainStats);
+  const status = useSelector(selectMainStats_status)
+
+  const [stats, setStats] = useState([
+    { number: 11, label: 'партнеров' },
+    { number: 626, label: '3D модели' },
+    { number: 417, label: 'пользователя' },
+  ])
+
+  useEffect(() => {
+    if(status === 'succeeded' && mainStats){
+      
+      setStats([
+        {number: mainStats.brands_count, label: 'партнеров'},
+        {number: mainStats.models_count, label: '3D модели'},
+        {number: mainStats.users_count, label: 'пользователя'},
+      ])
+    }
+  }, [status, mainStats])
+
   return (
     <Grid container gap="16px" justifyContent="center" margin={'12px 0'}>
       {stats.map((item, index) => (

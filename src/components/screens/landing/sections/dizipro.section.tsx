@@ -1,73 +1,80 @@
-import { Box } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import SimpleTypography from "../../../typography";
 import Buttons from "../../../buttons";
 import { ArrowOutward } from "@mui/icons-material";
 import Link from "next/link";
 import Image from "next/image";
-
-const Bee = () => (
-  <Box
-    sx={{
-      width: '244px',
-    }}
-  >
-    <Image
-      unoptimized
-      src={'/img/bee.png'}
-      alt=""
-      width={0}
-      height={0}
-      style={{ width: '100%', height: '100%' }}
-    />
-  </Box>
-)
+import { getLanguageByDomain, translations } from "@/utils/language";
+import { useEffect, useState } from "react";
 
 export function DiziproSection() {
-  return (
-    <Box
-      width={'100%'}
-      display={'flex'}
-      justifyContent={'flex-end'}
-      position={'relative'}
-    >
+  const [lang, setLang] = useState('ru');
 
-      <Box
+  useEffect(() => {
+    setLang(getLanguageByDomain());
+  }, []);
+
+  return (
+    <Grid
+      container
+      width={'100%'}
+    >
+      <Grid
+        item
+        xs={6}
+        sm={6}
+        md={6}
+        lg={6}
+        xl={6}
         sx={{
-          display: { xs: 'none', sm: 'flex' },
-          position: 'absolute',
-          left: 0,
-          top: '50%',
-          transform: 'translateY(-50%)'
+          width: '100%',
+          paddingX: '20px',
+          gap: '10px',
+          borderTopWidth: 1,
+          borderBottomWidth: 1,
+          borderLeftWidth: 1,
+          borderRightWidth: 0,
+          borderStyle: 'solid',
+          borderColor: '#E0E0E0',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          background: '#FAFAFA',
         }}
       >
-        <Bee />
-      </Box>
-      <Box display={'flex'} flexDirection={'column'}
+        <Image
+          unoptimized
+          src={'/img/build-model-process.png'}
+          alt=""
+          width={0}
+          height={0}
+          style={{ width: '90%', height: '100%' }}
+        />
+      </Grid>
+      <Grid
+        item
+        xs={6}
+        sm={6}
+        md={6}
+        lg={6}
+        xl={6}
         sx={{
-          width: {
-            xs: '100%',
-            sm: '90%',
-          },
-          p: {
-            xs: '16px',
-            sm: '32px 50px 32px 200px',
-            md: '32px 100px 32px 200px',
-          },
-          gap: '16px',
-          backgroundColor: '#fff',
-          border: '1px solid #E0E0E0',
+          padding: '32px 48px',
+          gap: '20px',
+          borderTopWidth: 1,
+          borderRightWidth: 1,
+          borderBottomWidth: 1,
+          borderLeftWidth: 0,
+          borderStyle: 'solid',
+          borderColor: '#E0E0E0',
+          background: '#FFFFFF',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
         }}
       >
-        <Box
-          sx={{
-            width: '100%',
-            display: { xs: 'flex', sm: 'none' },
-            justifyContent: 'flex-start'
-          }}
-        >
-          <Bee />
-        </Box>
-        <SimpleTypography text="Dizipro.org" variant={'h2'}
+        <SimpleTypography text={translations[lang].title} variant={'h2'}
           sx={{
             fontWeight: 500,
             fontSize: '22px',
@@ -82,10 +89,10 @@ export function DiziproSection() {
             lineHeight: '26px',
             letterSpacing: '-0.01em',
           }}
-          text="Designs are available in various formats, including OBJ and MAX, and are suitable for use in various software applications. Tridmo worries about security of its users, so by downloading 3D models from our platform you can be sure that you purchased licensed and secured files." variant={'p'} />
+          text={translations[lang].description} variant={'p'} />
         <Link href={'https://dizipro.org'}>
           <Buttons
-            name="Dizipro.org"
+            name={translations[lang].button}
             className="login__btn"
             sx={{
               width: { xs: '100%', sm: 'auto' }
@@ -94,7 +101,7 @@ export function DiziproSection() {
             <ArrowOutward sx={{ ml: '8px' }} />
           </Buttons>
         </Link>
-      </Box>
-    </Box>
+      </Grid>
+    </Grid>
   )
 }

@@ -29,17 +29,6 @@ type InputProps = {
   item?: object;
 };
 
-const CustomBoxWrapper = styled(Box)(
-  ({ theme }) =>
-    `
-      img {
-        margin: 0;
-        padding: 12px;
-        margin-bottom: 4px;
-        object-fit:cover;
-      }
-    `
-);
 type CustomCardProps = {
   type?: any;
   model?: any;
@@ -266,13 +255,7 @@ function CustomCard({
               position: "relative",
               cursor: "pointer",
               transition: "all 0.4s ease",
-              padding: {
-                xs: "8px 8px 0 8px",
-                sm: "8px 8px 0 8px",
-                md: "12px 12px 0 12px",
-                lg: "12px 12px 0 12px",
-                xl: "12px 12px 0 12px",
-              },
+              padding: "8px 8px 0 8px",
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",

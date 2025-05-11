@@ -11,6 +11,7 @@ import { getAllDesigners, getDesignersForLandingPage } from '../data/get_all_des
 import { getAllBrands, getBrandsForLandingPage } from '../data/get_all_brands';
 import { getTopModels } from '../data/get_top_models';
 import { getLandingModels, getLandingTopModels } from '../data/get_landingpage_models';
+import { getMainStats } from '@/data/get_main_stats';
 
 declare global {
   interface Window {
@@ -22,10 +23,7 @@ export default function Home() {
   const dispatch = useDispatch<any>();
   const router = useRouter();
 
-  // ---- intial staters ---- //
 
-  const getModelStatus = useSelector((state: any) => state?.get_all_models?.status);
-  const getInteriorsStatus = useSelector((state: any) => state?.get_all_interiors?.status);
 
   React.useEffect(() => {
     dispatch(getTopModels())
@@ -34,6 +32,7 @@ export default function Home() {
     dispatch(getLandingModels())
     dispatch(getDesignersForLandingPage())
     dispatch(getBrandsForLandingPage({ orderBy: 'models_count' }))
+    dispatch(getMainStats())
   }, [])
 
   return (

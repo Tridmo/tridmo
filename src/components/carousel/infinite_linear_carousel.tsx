@@ -1,10 +1,14 @@
 import { Box, Typography, Avatar, Card, CardContent, SxProps, Skeleton } from '@mui/material';
 import SimpleTypography from '../typography';
+import Image from 'next/image';
+import { CSSProperties } from 'react';
+import Link from 'next/link';
 
 // Props
 type Item = {
   name: string;
   logo: string;
+  link: string;
 };
 
 type Props = {
@@ -13,12 +17,11 @@ type Props = {
   showNames?: boolean;
   speed?: number;
   cardStyle?: SxProps;
-  logoStyle?: SxProps;
+  logoStyle?: CSSProperties;
 };
 
 export default function LinearCarousel({ title, items, showNames = true, speed = 30, cardStyle = {}, logoStyle = {} }: Props) {
   const doubledItems = items && items.length ? [...items, ...items] : new Array(20).fill(1); // For smooth infinite scroll
-  console.log(title, cardStyle);
 
   return (
     <Box
@@ -81,9 +84,10 @@ export default function LinearCarousel({ title, items, showNames = true, speed =
           }}
         >
           {doubledItems.map((item, index) => (
-            <Card
-              key={index}
-              sx={{
+            <Link href={item.link || ''}>
+              <Card
+                key={index}
+                sx={{
                 width: 148,
                 p: '12px',
                 display: 'flex',
@@ -107,10 +111,12 @@ export default function LinearCarousel({ title, items, showNames = true, speed =
                   />
                   :
                   <>
-                    <Avatar
+                    <Image
                       src={item.logo}
                       alt={item.name}
-                      sx={{ borderRadius: '80px', ...logoStyle }}
+                      width={logoStyle?.width as number || 148}
+                      height={logoStyle?.height as number || 148}
+                      style={{ borderRadius: '80px', ...logoStyle }}
                     />
                     {
                       showNames &&
@@ -129,7 +135,8 @@ export default function LinearCarousel({ title, items, showNames = true, speed =
                     }
                   </>
               }
-            </Card>
+              </Card>
+            </Link>
           ))}
         </Box>
       </Box>

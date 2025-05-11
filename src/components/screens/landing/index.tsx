@@ -67,21 +67,24 @@ export default function LandingPage() {
         </Box>
       </Box>
 
-      <Box sx={{ width: "100%", p: { xs: "54px 0", md: "94px 0" } }}>
-        <Box sx={{ ...ContainerStyle }}>
-          <AboutUsSection />
-        </Box>
-      </Box>
-      <Box sx={{ width: "100%", backgroundColor: '#fff', py: '32px' }}>
-        <Box sx={{ ...ContainerStyle }}>
-          <NumbersSection />
-        </Box>
-      </Box>
-
       <Box sx={{ width: "100%", marginTop: { xs: '32px' } }}>
         <Box sx={ContainerStyle}>
           <InteriorsSection />
         </Box >
+      </Box>
+      
+      {/* 
+      <Box sx={{ width: "100%", backgroundColor: '#fff', py: '32px' }}>
+        <Box sx={{ ...ContainerStyle }}>
+          <NumbersSection />
+        </Box>
+      </Box> 
+      */}
+
+      <Box sx={{ width: "100%", p: { xs: "54px 0", md: "94px 0" } }}>
+        <Box sx={{ ...ContainerStyle }}>
+          <AboutUsSection />
+        </Box>
       </Box>
 
       <Box sx={{ width: "100%", marginTop: { xs: '32px' } }}>

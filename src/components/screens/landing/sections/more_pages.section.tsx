@@ -27,13 +27,14 @@ export function MorePagesSection() {
           } : {
             height: 148
           }}
-          logoStyle={{ width: '80%', height: '80%' }}
+          logoStyle={{ width: 100, height: 100 }}
           items={
             designers?.map((designer) => {
               // const [firstName, lastName] = (designer?.full_name as string)?.trim()?.split(' ')
               return {
                 name: designer?.company_name,
-                logo: designer?.image_src ? `${IMAGES_BASE_URL}/${designer?.image_src}` : `https://ui-avatars.com/api/?name=${designer?.company_name}&background=0D8ABC&color=fff&size=128`
+                link: `/designers/${designer?.username}`,
+                logo: designer?.image_src ? `${IMAGES_BASE_URL}/${designer?.image_src}` : `https://ui-avatars.com/api/?name=${designer?.company_name}&background=0D8ABC&color=fff&size=100`
               }
             })
           } />
@@ -47,14 +48,15 @@ export function MorePagesSection() {
             padding: '0'
           }}
           logoStyle={{
-            width: '100%',
-            height: '100%',
+            width: 148,
+            height: 148,
             borderRadius: '12px',
           }}
           items={
             brands ?
               brands?.map((brand) => ({
                 name: brand?.name,
+                link: `/brands/${brand?.slug}`,
                 logo: `${IMAGES_BASE_URL}/${brand?.image_src}`,
               }))
               : []
