@@ -16,7 +16,7 @@ export function MorePagesSection() {
       justifyContent="space-between"
       gap={1}
     >
-      <Grid item xs={12} sm={12} md={12} lg={5.95} xl={5.95}>
+      <Grid item xs={12} sm={12} md={5.9} lg={5.95} xl={5.95}>
         <InfiniteLinearCarousel
           title="Дизайнеры"
           speed={80}
@@ -40,7 +40,7 @@ export function MorePagesSection() {
           } />
       </Grid>
 
-      <Grid item xs={12} sm={12} md={12} lg={5.95} xl={5.95}>
+      <Grid item xs={12} sm={12} md={5.9} lg={5.95} xl={5.95}>
         <InfiniteLinearCarousel title="Бренды" showNames={false}
           cardStyle={{
             height: 148,

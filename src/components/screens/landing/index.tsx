@@ -55,7 +55,7 @@ export default function LandingPage() {
         </Box>
       </Box>
 
-      <Box sx={{ width: "100%", p: { xs: "44px 0", md: "94px 0" } }}>
+      <Box sx={{ width: "100%", pt: { xs: "14px", md: "44px" }, pb: { xs: "44px", md: "84px" } }}>
         <Box sx={{ ...ContainerStyle }}>
           <DiziproSection />
         </Box>
@@ -81,13 +81,13 @@ export default function LandingPage() {
       </Box> 
       */}
 
-      <Box sx={{ width: "100%", p: { xs: "54px 0", md: "94px 0" } }}>
+      <Box sx={{ width: "100%", p: { xs: "34px 0", md: "44px 0" } }}>
         <Box sx={{ ...ContainerStyle }}>
           <AboutUsSection />
         </Box>
       </Box>
 
-      <Box sx={{ width: "100%", marginTop: { xs: '32px' } }}>
+      <Box sx={{ width: "100%", marginY: { xs: '32px', md: '44px' } }}>
         <Box sx={ContainerStyle}>
           <WhyUsSection />
         </Box>

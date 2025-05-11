@@ -6,18 +6,14 @@ export function WhyUsSection() {
   return (
     <Box
       sx={{
-        display: { xs: 'none', sm: 'none', md: 'block', lg: 'block', xl: 'block' },
+        display: { xs: 'block', sm: 'block', md: 'block', lg: 'block', xl: 'block' },
         maxWidth: "1200px",
         width: "100%",
         margin: "0 auto",
-        paddingTop: "64px",
-        paddingBottom: "40px",
-        paddingLeft: "16px",
-        paddingRight: "16px",
       }}
     >
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid item xs={12} paddingLeft={0}>
           <SimpleTypography
             text="Почему именно Demod?"
             className="section__title"

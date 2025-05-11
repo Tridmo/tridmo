@@ -7,14 +7,14 @@ import Image from "next/image";
 
 const textSx = {
   fontWeight: 400,
-  fontSize: '18px',
+  fontSize: { xs: '16px', sm: '18px', md: '18px', lg: '18px', xl: '18px' },
   lineHeight: '26px',
   letterSpacing: '-0.01em',
 }
 
 const titleSx = {
   fontWeight: 500,
-  fontSize: '22px',
+  fontSize: { xs: '20px', sm: '22px', md: '22px', lg: '22px', xl: '22px' },
   lineHeight: '26px',
   letterSpacing: '-0.02em',
 }
@@ -23,7 +23,11 @@ const contentContinerSx = {
   display: 'flex',
   flexDirection: 'column',
   p: {
-    lg: '32px 48px'
+    xs: '16px 16px',
+    sm: '32px 48px',
+    md: '32px 48px',
+    lg: '32px 48px',
+    xl: '32px 48px'
   },
   gap: '16px',
   backgroundColor: '#fff',
@@ -37,7 +41,11 @@ export function AboutUsSection() {
     >
       <Grid
         item
+        xs={12}
+        sm={12}
+        md={5}
         lg={5}
+        xl={5}
       >
         <Image
           unoptimized
@@ -45,13 +53,17 @@ export function AboutUsSection() {
           alt=""
           width={0}
           height={0}
-          style={{ width: '100%', height: '100%' }}
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />
       </Grid>
 
       <Grid
         item
+        xs={12}
+        sm={12}
+        md={7}
         lg={7}
+        xl={7}
         sx={contentContinerSx}
       >
         <SimpleTypography text="О нас" variant={'h2'} sx={titleSx} />

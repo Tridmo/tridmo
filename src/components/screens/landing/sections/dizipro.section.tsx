@@ -21,7 +21,7 @@ export function DiziproSection() {
     >
       <Grid
         item
-        xs={6}
+        xs={12}
         sm={6}
         md={6}
         lg={6}
@@ -31,9 +31,9 @@ export function DiziproSection() {
           paddingX: '20px',
           gap: '10px',
           borderTopWidth: 1,
-          borderBottomWidth: 1,
+          borderBottomWidth: { xs: 0, sm: 1, md: 1, lg: 1, xl: 1 },
           borderLeftWidth: 1,
-          borderRightWidth: 0,
+          borderRightWidth: { xs: 1, sm: 0, md: 0, lg: 0, xl: 0 },
           borderStyle: 'solid',
           borderColor: '#E0E0E0',
           display: 'flex',
@@ -48,23 +48,23 @@ export function DiziproSection() {
           alt=""
           width={0}
           height={0}
-          style={{ width: '90%', height: '100%' }}
+          style={{ width: '90%', height: '100%', objectFit: 'contain' }}
         />
       </Grid>
       <Grid
         item
-        xs={6}
+        xs={12}
         sm={6}
         md={6}
         lg={6}
         xl={6}
         sx={{
-          padding: '32px 48px',
+          padding: { xs: '16px 16px', sm: '32px 48px', md: '32px 48px', lg: '32px 48px', xl: '32px 48px' },
           gap: '20px',
-          borderTopWidth: 1,
+          borderTopWidth: { xs: 0, sm: 1, md: 1, lg: 1, xl: 1 },
           borderRightWidth: 1,
           borderBottomWidth: 1,
-          borderLeftWidth: 0,
+          borderLeftWidth: { xs: 1, sm: 0, md: 0, lg: 0, xl: 0 },
           borderStyle: 'solid',
           borderColor: '#E0E0E0',
           background: '#FFFFFF',
@@ -77,7 +77,7 @@ export function DiziproSection() {
         <SimpleTypography text={translations[lang].title} variant={'h2'}
           sx={{
             fontWeight: 500,
-            fontSize: '22px',
+            fontSize: { xs: '18px', sm: '22px', md: '22px', lg: '22px', xl: '22px' },
             lineHeight: '26px',
             letterSpacing: '-0.02em',
           }}
@@ -85,7 +85,7 @@ export function DiziproSection() {
         <SimpleTypography
           sx={{
             fontWeight: 400,
-            fontSize: '18px',
+            fontSize: { xs: '16px', sm: '18px', md: '18px', lg: '18px', xl: '18px' },
             lineHeight: '26px',
             letterSpacing: '-0.01em',
           }}
