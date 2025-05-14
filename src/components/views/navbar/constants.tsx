@@ -1,6 +1,5 @@
-import { ChatOutlined, CollectionsOutlined, ControlPointOutlined, HomeOutlined, HowToRegRounded, InfoOutlined, NotificationsOutlined, PersonOutlineOutlined } from "@mui/icons-material";
+import { ChatOutlined, CollectionsOutlined, ControlPointOutlined, GroupOutlined, HomeOutlined, HowToRegRounded, NotificationsOutlined, PersonOutlineOutlined, ViewInAr } from "@mui/icons-material";
 import StorefrontIcon from "@mui/icons-material/Storefront";
-import { GroupOutlined, ViewInAr } from "@mui/icons-material";
 import Image from "next/image";
 
 export const navItemsData = [
@@ -8,11 +7,6 @@ export const navItemsData = [
     id: 1,
     text: "Главная",
     link: "/",
-  },
-  {
-    id: 2,
-    text: "О нас",
-    link: "/about-us",
   },
   {
     id: 3,
@@ -27,12 +21,12 @@ export const navItemsData = [
   {
     id: 5,
     text: "Модели",
-    link: "/models/?page=1",
+    link: "/models",
   },
   {
     id: 6,
     text: "Интерьеры",
-    link: "/interiors/?page=1",
+    link: "/interiors",
   }
 ];
 
@@ -42,12 +36,6 @@ export const navItemsDataMobile = (isAuthenticated: boolean, notificationCountsS
     text: "Главная",
     link: "/",
     icon: <HomeOutlined />,
-  },
-  {
-    id: 2,
-    text: "О нас",
-    link: "/about-us",
-    icon: <InfoOutlined />,
   },
   {
     id: 3,
@@ -64,13 +52,13 @@ export const navItemsDataMobile = (isAuthenticated: boolean, notificationCountsS
   {
     id: 5,
     text: "Модели",
-    link: "/models/?page=1",
+    link: "/models",
     icon: <ViewInAr />,
   },
   {
     id: 6,
     text: "Интерьеры",
-    link: "/interiors/?page=1",
+    link: "/interiors",
     icon: <CollectionsOutlined />,
   },
   ...(

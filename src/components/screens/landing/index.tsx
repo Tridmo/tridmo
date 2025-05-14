@@ -1,27 +1,12 @@
 "use client";
 
-import Buttons from "@/components/buttons";
-import SearchInput from "@/components/inputs/search";
-import { Box, Grid, IconButton, Skeleton, useMediaQuery } from "@mui/material";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getAllModels } from "../../../data/get_all_models";
-import { selectTopModels } from "../../../data/get_top_models";
-import { setModelNameFilter } from "../../../data/handle_filters";
-import { Carousel } from "../../custom_card/carousel";
-import SimpleTypography from "../../typography";
-import StatsCard from "../../stats_card";
+import { Box } from "@mui/material";
 import { DiziproSection } from "./sections/dizipro.section";
-import { WhyUsSection } from "./sections/why_us.section";
+import { HeaderHeroSection } from "./sections/header_hero.section";
 import { InteriorsSection } from "./sections/interiors.section";
 import { ModelsSection } from "./sections/models.section";
 import { MorePagesSection } from "./sections/more_pages.section";
-import { AboutUsSection } from "./sections/about_us.section";
-import { HeaderHeroSection } from "./sections/header_hero.section";
-import { NumbersSection } from "./sections/numbers.section";
+import { WhyUsSection } from "./sections/why_us.section";
 
 const ContainerStyle = {
   width: {
@@ -81,11 +66,11 @@ export default function LandingPage() {
       </Box> 
       */}
 
-      <Box sx={{ width: "100%", p: { xs: "34px 0", md: "44px 0" } }}>
+      {/* <Box sx={{ width: "100%", p: { xs: "34px 0", md: "44px 0" } }}>
         <Box sx={{ ...ContainerStyle }}>
           <AboutUsSection />
         </Box>
-      </Box>
+      </Box> */}
 
       <Box sx={{ width: "100%", marginY: { xs: '32px', md: '44px' } }}>
         <Box sx={ContainerStyle}>
