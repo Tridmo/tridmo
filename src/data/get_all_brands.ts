@@ -1,12 +1,16 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../utils/axios'
-import { brandOrderBy, brandsLimit, order } from '../types/filters';
+import { brandOrderBy, brandsForLandingPageLimit, brandsLimit, order } from '../types/filters';
 
 const initialState = {
   data: [],
   status: 'idle',
   error: null,
   progress: 0,
+  landing_page_brands_data: [],
+  landing_page_brands_status: 'idle',
+  landing_page_brands_error: null,
+  landing_page_brands_progress: 0,
 };
 export const getAllBrands = createAsyncThunk('/brands',
   async (wrapper?: {
@@ -17,9 +21,6 @@ export const getAllBrands = createAsyncThunk('/brands',
     page?: number;
   }) => {
     let send__route = `/brands`
-
-    console.log(wrapper);
-    
 
     if (wrapper?.name) {
       send__route += `/?name=${wrapper?.name}`
@@ -36,8 +37,29 @@ export const getAllBrands = createAsyncThunk('/brands',
         : "";
 
     send__route += !send__route.includes("/?") && wrapper?.page ? `/?page=${wrapper.page}` : wrapper?.page ? `&page=${wrapper.page}` : "";
-    console.log(send__route);
-    
+
+    const response = await api.get(send__route)
+    return response.data
+  })
+
+export const getBrandsForLandingPage = createAsyncThunk('/brands/landing-page',
+  async (wrapper?: {
+    limit?: number;
+    orderBy?: brandOrderBy;
+    order?: order;
+  }) => {
+    let send__route = `/brands`
+
+    send__route +=
+      wrapper?.limit
+        ? (send__route?.includes("/?") ? `&limit=${wrapper?.limit}` : `/?limit=${wrapper?.limit}`)
+        : (send__route?.includes("/?") ? `&limit=${brandsForLandingPageLimit}` : `/?limit=${brandsForLandingPageLimit}`);
+
+    send__route +=
+      wrapper?.orderBy
+        ? (send__route?.includes("/?") ? `&orderBy=${wrapper?.orderBy}` : `/?orderBy=${wrapper?.orderBy}`)
+        : "";
+
     const response = await api.get(send__route)
     return response.data
   })
@@ -69,6 +91,22 @@ const get_all_brands = createSlice({
         state.status = 'failed'
         state.error = action.error.message
       })
+
+    builder
+      .addCase(getBrandsForLandingPage.pending, (state?: any, action?: any) => {
+        state.landing_page_brands_status = 'loading'
+      })
+      .addCase(getBrandsForLandingPage.fulfilled, (state?: any, action?: any) => {
+        state.landing_page_brands_progress = 20
+        state.landing_page_brands_status = 'succeeded'
+        state.landing_page_brands_data = [];
+        state.landing_page_brands_data = state.landing_page_brands_data.concat(action.payload)
+        state.landing_page_brands_progress = 100
+      })
+      .addCase(getBrandsForLandingPage.rejected, (state?: any, action?: any) => {
+        state.landing_page_brands_status = 'failed'
+        state.landing_page_brands_error = action.error.message
+      })
   }
 });
 
@@ -76,4 +114,6 @@ export const { resetAllBrands } = get_all_brands.actions;
 export const reducer = get_all_brands.reducer;
 export const selectAllBrands = (state: any) => state?.get_all_brands?.data[0]
 export const selectAllBrands_status = (state: any) => state?.get_all_brands?.status
+export const selectBrandsForLandingPage = (state: any) => state?.get_all_brands?.landing_page_brands_data[0]?.data?.brands
+export const selectBrandsForLandingPage_status = (state: any) => state?.get_all_brands?.landing_page_brands_status
 export default get_all_brands;

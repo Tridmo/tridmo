@@ -73,7 +73,7 @@ export default function SearchInput(props: InputProps) {
         sx={{ flex: 1, padding: 0, fontSize: '16px' }}
         placeholder={props?.placeHolder}
         onChange={(e) => {
-          if(!props?.withButton && !props?.noAutoSearch) {
+          if (!props?.withButton && !props?.noAutoSearch) {
             clearTimeout('setTermTimeout')
             const setTermTimeout = setTimeout(() => {
               setSearchInit(true)
@@ -91,9 +91,9 @@ export default function SearchInput(props: InputProps) {
       {
         props?.withButton ?
           <Buttons
-          sx={{
-            p: "7px 12px !important",
-          }}
+            sx={{
+              p: "7px 12px !important",
+            }}
             name='Поиск'
             className='search__btn'
             type="button"

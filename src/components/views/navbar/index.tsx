@@ -5,10 +5,8 @@ import {
   setOpenModal,
   setSignupState,
 } from "@/data/modal_checker";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { CircularProgress, Divider, IconButton } from "@mui/material";
+import { Divider, IconButton } from "@mui/material";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -19,30 +17,28 @@ import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Buttons from "../../buttons";
-import SearchInput from "../../inputs/search";
 // import { searchModels } from 'src/data/search_model';
 import BasicModal from "@/components/modals/modal";
-import { selectGetOrders } from "@/data/get_orders";
+import { primaryColor } from "@/styles/styles";
 import { ThemeProps } from "@/types/theme";
-import { ChatOutlined, Close, ControlPointOutlined, KeyboardArrowUp, PersonOutlineOutlined, SearchOutlined } from "@mui/icons-material";
+import { ChatOutlined, KeyboardArrowUp, SearchOutlined } from "@mui/icons-material";
 import { WyNotificationToasts } from "@weavy/uikit-react";
 import Cookies from "js-cookie";
 import Link from "next/link";
+import { authTokens } from "../../../constants";
 import { selectChatUnread } from "../../../data/chat";
-import { getAllModels } from "../../../data/get_all_models";
 import {
   selectNotificationCounts,
   selectNotificationCountsStatus,
 } from "../../../data/get_notifications";
-import { setModelNameFilter } from "../../../data/handle_filters";
 import { setAuthState } from "../../../data/login";
 import { switch_on } from "../../../data/toggle_cart";
 import { IMAGES_BASE_URL } from "../../../utils/env_vars";
+import { isPrivateRoute } from "../../../utils/utils";
 import SimpleTypography from "../../typography";
+import { navItemsData } from "./constants";
 import MobileMode from "./mobile_mode";
 import { SearchBar } from "./search_bar/serach_bar";
-import { authTokens, privateRoutes } from "../../../constants";
-import { isPrivateRoute } from "../../../utils/utils";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -73,63 +69,8 @@ const DropDown = styled(Menu)(
   `
 );
 
-const navItemsData = [
-  {
-    id: 1,
-    text: "Дизайнеры",
-    link: "/designers",
-  },
-  {
-    id: 2,
-    text: "Бренды",
-    link: "/brands",
-  },
-  {
-    id: 3,
-    text: "Модели",
-    link: "/models/?page=1",
-  },
-  {
-    id: 4,
-    text: "Интерьеры",
-    link: "/interiors/?page=1",
-  },
-];
-
 export default function Navbar() {
   const dispatch = useDispatch<any>();
-  const CardDetails = useSelector(selectGetOrders);
-
-  const getModelCategoryFilter = useSelector(
-    (state: any) => state?.handle_filters?.categories
-  );
-  const getModelBrandFilter = useSelector(
-    (state: any) => state?.handle_filters?.model_brand
-  );
-  const getModelCategoryNameFilter = useSelector(
-    (state: any) => state?.handle_filters?.category_name
-  );
-  const getModelColorFilter = useSelector(
-    (state: any) => state?.handle_filters?.colors
-  );
-  const getModelStyleFilter = useSelector(
-    (state: any) => state?.handle_filters?.styles
-  );
-  const getModelPageFilter = useSelector(
-    (state: any) => state?.handle_filters?.page
-  );
-  const getModelTopFilter = useSelector(
-    (state: any) => state?.handle_filters?.model_top
-  );
-  const getModelNameFilter = useSelector(
-    (state: any) => state?.handle_filters?.model_name
-  );
-  const getModelOrderBy = useSelector(
-    (state: any) => state?.handle_filters?.model_orderby
-  );
-  const getModelOrder = useSelector(
-    (state: any) => state?.handle_filters?.model_order
-  );
 
   const isAuthenticated = useSelector(
     (state: any) => state?.auth_slicer?.authState
@@ -140,7 +81,6 @@ export default function Navbar() {
   const chatUnread = useSelector(selectChatUnread);
   const userData = useSelector(selectMyProfile);
   const [searchClicked, setSearchClicked] = useState(false);
-  const [searchVal, setSearchVal] = useState("");
 
   const router = useRouter();
   const pathname = usePathname();
@@ -165,37 +105,9 @@ export default function Navbar() {
     setAnchorEl(null);
   }, [dispatch, pathname, router]);
 
-  function handleSearch(e) {
-    e.preventDefault();
-    dispatch(setModelNameFilter(searchVal));
-    const newUrl = `/models/?name=${searchVal}`;
-    router.push(newUrl);
-    dispatch(
-      getAllModels({
-        brand: getModelBrandFilter,
-        categories: getModelCategoryFilter,
-        colors: getModelColorFilter,
-        styles: getModelStyleFilter,
-        name: searchVal,
-        top: getModelTopFilter,
-        page: getModelPageFilter,
-        orderBy: getModelOrderBy,
-        order: getModelOrder,
-      })
-    );
-  }
   const openRightBar = () => {
     dispatch(switch_on(true));
   };
-
-  function AccountHandler() {
-    if (isAuthenticated) {
-      router.push("/profile");
-    } else {
-      dispatch(setSignupState(true));
-      dispatch(setOpenModal(true));
-    }
-  }
 
   return (
     <>
@@ -363,6 +275,7 @@ export default function Navbar() {
                         <SimpleTypography
                           text={item.text}
                           className="nav__item--text"
+                          sx={{ color: item.link === pathname ? `${primaryColor} !important` : "#424242 !important" }}
                         />
                       </Link>
                     </Box>
@@ -439,7 +352,7 @@ export default function Navbar() {
                         height: 17,
                         position: "absolute",
                         borderRadius: "12px",
-                        bgcolor: "#7210BE",
+                        bgcolor: primaryColor,
                         top: 0,
                         right: 0,
                         display: "flex",
@@ -482,7 +395,7 @@ export default function Navbar() {
                           height: 17,
                           position: "absolute",
                           borderRadius: "12px",
-                          bgcolor: "#7210BE",
+                          bgcolor: primaryColor,
                           top: 0,
                           right: 0,
                           display: "flex",
@@ -589,7 +502,7 @@ export default function Navbar() {
                                   : {
                                     minWidth: "11px",
                                     minHeight: "7px",
-                                    color: "#7210BE",
+                                    color: prim,
                                     transform: "rotateZ(180deg)",
                                     transitionDuration: "1000ms",
                                   }

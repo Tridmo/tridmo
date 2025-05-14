@@ -592,6 +592,15 @@ export default function SimpleCard(props: InputProps) {
           {data_sliced?.map((model: any, index: any) => (
             <Grid
               className="models__card"
+              sx={{
+                [`&:not(:nth-of-type(${props?.cols}n))`]: {
+                  padding: "0 9.5px 0 0 !important",
+                },
+                [`&:nth-of-type(${props?.cols}n)`]: {
+                  padding: "0 0 0 0 !important",
+                },
+                marginBottom: "10px",
+              }}
               key={index}
               lg={12 / props?.cols}
               md={12 / (props?.cols - 1)}
