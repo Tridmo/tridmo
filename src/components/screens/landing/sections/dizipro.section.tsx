@@ -89,10 +89,10 @@ export function DiziproSection() {
             lineHeight: '26px',
             letterSpacing: '-0.01em',
           }}
-          text={translations[lang].description} variant={'p'} />
+          text={translations.ru.description} variant={'p'} />
         <Link href={'https://dizipro.org'}>
           <Buttons
-            name={translations[lang].button}
+            name={translations.ru.button}
             className="login__btn"
             sx={{
               width: { xs: '100%', sm: 'auto' }
