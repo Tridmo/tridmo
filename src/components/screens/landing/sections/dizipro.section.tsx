@@ -1,11 +1,11 @@
-import { Box, Grid } from "@mui/material";
-import SimpleTypography from "../../../typography";
-import Buttons from "../../../buttons";
-import { ArrowOutward } from "@mui/icons-material";
-import Link from "next/link";
-import Image from "next/image";
 import { getLanguageByDomain, translations } from "@/utils/language";
+import { ArrowOutward } from "@mui/icons-material";
+import { Grid } from "@mui/material";
+import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
+import Buttons from "../../../buttons";
+import SimpleTypography from "../../../typography";
 
 export function DiziproSection() {
   const [lang, setLang] = useState('ru');
@@ -74,7 +74,7 @@ export function DiziproSection() {
           alignItems: 'flex-start',
         }}
       >
-        <SimpleTypography text={translations[lang].title} variant={'h2'}
+        <SimpleTypography text={translations.ru.title} variant={'h2'}
           sx={{
             fontWeight: 500,
             fontSize: { xs: '18px', sm: '22px', md: '22px', lg: '22px', xl: '22px' },
