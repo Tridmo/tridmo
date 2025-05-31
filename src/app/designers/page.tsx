@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import * as React from 'react';
-import DesignersPage from '../../components/screens/designers';
+import * as React from "react";
+import DesignersPage from "../../components/screens/designers";
 
 declare global {
   interface Window {
@@ -11,12 +11,10 @@ declare global {
 
 export default function Designers() {
   return (
-    <>
-      <section style={{ background: "#fafafa" }}>
-        <React.Suspense>
-          <DesignersPage />
-        </React.Suspense>
-      </section>
-    </>
-  )
+    <section style={{ background: "#fafafa" }}>
+      <React.Suspense>
+        <DesignersPage />
+      </React.Suspense>
+    </section>
+  );
 }

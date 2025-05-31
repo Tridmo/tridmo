@@ -1,10 +1,8 @@
 "use client"
-import { useRouter } from "next/navigation";
-import { ChangePasswordScreen } from "../../../components/screens/auth/change_password.screen";
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { selectMyProfile } from "../../../data/me";
 import { Box } from "@mui/material";
+import { useSelector } from "react-redux";
+import { ChangePasswordScreen } from "../../../components/screens/auth/change_password.screen";
+import { selectMyProfile } from "../../../data/me";
 import { ContainerStyle } from "../../../styles/styles";
 
 export default function ChangePasswordPage() {

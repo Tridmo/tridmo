@@ -1,48 +1,24 @@
 "use client"
 
+import ConnectionError from '@/components/site_info/connection_error';
+import { Box } from '@mui/material';
+import { useParams, useSearchParams } from 'next/navigation';
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useSearchParams } from 'next/navigation';
-import ConnectionError from '@/components/site_info/connection_error';
-import { Box, Grid } from '@mui/material';
 
+import { BgBlur, ContainerStyle, LoaderStyle } from '@/styles/styles';
 import CircularProgress from '@mui/material/CircularProgress';
-import { getOneBrand, selectOneBrand } from '../../data/get_one_brand';
-import { getBrandModels } from '../../data/get_brand_models';
 import OneBrand from '../../components/screens/brands/one';
 import { getBrandCategories } from '../../data/categories';
-import { selectMyProfile } from '../../data/me';
-import { getProfile } from '../../data/get_profile';
+import { getBrandModels } from '../../data/get_brand_models';
 import { getChatToken } from '../../data/get_chat_token';
+import { getOneBrand, selectOneBrand } from '../../data/get_one_brand';
+import { getProfile } from '../../data/get_profile';
+import { selectMyProfile } from '../../data/me';
 import { brandModelsLimit } from '../../types/filters';
-
-const LoaderStyle = {
-  // width: "100px !important",
-  // height: "100px !important",
-  zIndex: "10",
-  position: "relative"
-}
-const ContainerStyle = {
-  display: "flex",
-  justifyContent: "center",
-  maxWidth: "1200px",
-  height: "697px",
-  margin: "0 auto",
-  alignItems: "center",
-}
-const BgBlur = {
-  position: "absolute",
-  left: "0",
-  top: "0",
-  width: "100%",
-  height: "100%",
-  background: "#fff",
-  filter: "blur(10px)"
-}
 
 export default function OneBrandPage() {
   const getBrandStatus = useSelector((state: any) => state?.get_one_brand?.status)
-  const getBrandCategoriesStatus = useSelector((state: any) => state?.categories?.brand_status)
   const getProfileStatus = useSelector((state: any) => state?.get_profile?.status)
   const tokenStatus = useSelector((state: any) => state?.get_chat_token?.status)
   const profile = useSelector(selectMyProfile)
@@ -75,23 +51,18 @@ export default function OneBrandPage() {
 
   if (getBrandStatus === "succeeded") {
     return (
-      <>
         <Box sx={{ background: "#fafafa" }}>
           <OneBrand />
         </Box>
-      </>
     )
   } else if (getBrandStatus === "failed") {
     return (
-      <>
         <Box sx={{ background: "#fafafa" }}>
           <ConnectionError />
         </Box>
-      </>
     )
   } else {
     return (
-      <>
         <Box sx={{ background: "#fafafa", position: "relative" }}>
           <Box sx={BgBlur} />
           <Box>
@@ -100,7 +71,6 @@ export default function OneBrandPage() {
             </Box>
           </Box>
         </Box>
-      </>
     )
   }
 }

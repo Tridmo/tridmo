@@ -1,27 +1,40 @@
 "use client"
 
-import { Box, SxProps } from '@mui/system';
-import { useState, useEffect, CSSProperties, useMemo, useCallback } from 'react';
-import { IMAGES_BASE_URL } from '@/utils/env_vars';
-import NextImage from 'next/image';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectOneInterior } from '@/data/get_one_interior';
-import { selectToggleAddingTags, selectToggleShowTags } from '../../../../data/toggle_tags';
+import { domain } from "@/constants";
+import { selectOneInterior } from "@/data/get_one_interior";
+import { setShowInteriorImagesModal } from "@/data/loader";
+import { IMAGES_BASE_URL } from "@/utils/env_vars";
 import { CheckOutlined, Close } from '@mui/icons-material';
 import { CircularProgress, IconButton } from '@mui/material';
-import { v4 } from 'uuid';
-import SimpleTypography from '../../../typography';
-import instance from '../../../../utils/axios';
-import { toast } from 'react-toastify';
-import { selectInteriorTags, setInteriorTags } from '../../../../data/get_interior_tags';
-import Link from 'next/link';
+import { Box, SxProps } from "@mui/system";
+import NextImage from "next/image";
+import Link from "next/link";
+import {
+  CSSProperties,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { v4 } from "uuid";
+import {
+  selectInteriorTags,
+  setInteriorTags,
+} from "../../../../data/get_interior_tags";
 import { selectMyProfile } from '../../../../data/me';
 import { ConfirmContextProps, resetConfirmData, resetConfirmProps, setConfirmProps, setConfirmState, setOpenModal } from '../../../../data/modal_checker';
-import InteriorImagesModal from './images_modal';
-import ImageViewerModal from './zoom_viewer';
-import { setShowInteriorImagesModal } from '@/data/loader';
-import SearchInput from '../../../inputs/search';
-import Buttons from '../../../buttons';
+import {
+  selectToggleAddingTags,
+  selectToggleShowTags,
+} from "../../../../data/toggle_tags";
+import instance from "../../../../utils/axios";
+import Buttons from "../../../buttons";
+import SearchInput from "../../../inputs/search";
+import SimpleTypography from "../../../typography";
+import InteriorImagesModal from "./images_modal";
+import ImageViewerModal from "./zoom_viewer";
 
 const imageStyle: CSSProperties = {
   width: '100%',
@@ -264,69 +277,130 @@ export default function InteriorImages() {
         sx={{
           ...tagStyle,
           opacity: isNewTag ? 1 : 0.7,
-          padding: isNewTag ? '7px' : '7px 14px',
-          top: tag.y - (isNewTag ? (tag.model || tag.not_found || tag.loading ? 113 : 56) : 46),
+          padding: isNewTag ? "7px" : "7px 14px",
+          top:
+            tag.y -
+            (isNewTag
+              ? tag.model || tag.not_found || tag.loading
+                ? 113
+                : 56
+              : 46),
           left: tag.x - (isNewTag ? 0 : 0),
-          minHeight: isNewTag ? `${tag.model || tag.not_found || tag.loading ? 113 : 56}px` : '46px',
-          width: isNewTag ? '345px' : '46px',
-          height: isNewTag ? 'auto' : '46px',
-          borderRadius: isNewTag ? '32px 32px 32px 0' : '23px',
-          borderBottomLeftRadius: isNewTag ? '0' : '0',
-          transition: 'all 0.4s ease',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          '&:hover': isNewTag ? {} : {
-            opacity: 1,
-            width: isAuthenticated && interior?.author?.id == currentUser?.user_id ? '320px' : '250px',
-            height: '94px',
-            top: tag.y - 94,
-            left: tag.x - 0,
-            minHeight: '94px',
-            borderRadius: '32px 32px 32px 0',
-          }
+          minHeight: isNewTag
+            ? `${tag.model || tag.not_found || tag.loading ? 113 : 56}px`
+            : "46px",
+          width: isNewTag ? "345px" : "46px",
+          height: isNewTag ? "auto" : "46px",
+          borderRadius: isNewTag ? "32px 32px 32px 0" : "23px",
+          borderBottomLeftRadius: isNewTag ? "0" : "0",
+          transition: "all 0.4s ease",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          "&:hover": isNewTag
+            ? {}
+            : {
+                opacity: 1,
+                width:
+                  isAuthenticated &&
+                  interior?.author?.id == currentUser?.user_id
+                    ? "320px"
+                    : "250px",
+                height: "94px",
+                top: tag.y - 94,
+                left: tag.x - 0,
+                minHeight: "94px",
+                borderRadius: "32px 32px 32px 0",
+              },
         }}
       >
         {isNewTag ? (
-          <Box sx={{ width: '100%', display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-start' }}>
-            <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'flex-start' }}>
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              alignItems: "flex-start",
+              justifyContent: "flex-start",
+            }}
+          >
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                justifyContent: "flex-start",
+              }}
+            >
               <SearchInput
                 className="add_tag__input"
-                placeHolder="https://demod.uz/models/..."
+                placeHolder={`https://${domain}/models/...`}
                 search={(val) => handleGetModel(val, tag.id)}
                 searchDelay={500}
                 onChange={(val) => handleInputChange(val, tag.id)}
-                sx={{ borderTopLeftRadius: '20px' }}
+                sx={{ borderTopLeftRadius: "20px" }}
               />
               {(tag.model || tag.not_found || tag.loading) && (
-                <Box sx={{ width: '100%', minHeight: '50px', display: 'flex', alignItems: 'center', justifyContent: tag.loading ? 'center' : 'flex-start', mt: '7px' }}>
+                <Box
+                  sx={{
+                    width: "100%",
+                    minHeight: "50px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: tag.loading ? "center" : "flex-start",
+                    mt: "7px",
+                  }}
+                >
                   {tag.loading ? (
                     <CircularProgress size="1rem" />
                   ) : (
                     <>
                       <NextImage
                         alt="cover"
-                        src={tag.model ? tag.model.cover : tag.not_found ? '/img/empty-box.svg' : ''}
+                        src={
+                          tag.model
+                            ? tag.model.cover
+                            : tag.not_found
+                            ? "/img/empty-box.svg"
+                            : ""
+                        }
                         width={50}
                         height={50}
                       />
                       <SimpleTypography
-                        sx={{ ml: '7px' }}
-                        text={tag.model ? tag.model.name : tag.not_found ? 'Модель не найдена' : ''}
+                        sx={{ ml: "7px" }}
+                        text={
+                          tag.model
+                            ? tag.model.name
+                            : tag.not_found
+                            ? "Модель не найдена"
+                            : ""
+                        }
                       />
                     </>
                   )}
                 </Box>
               )}
             </Box>
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'flex-start', ml: '7px' }}>
-              <IconButton className="icon_button add_tag__button" onClick={() => handleRemoveNewEmptyTag(tag.id)}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-end",
+                justifyContent: "flex-start",
+                ml: "7px",
+              }}
+            >
+              <IconButton
+                className="icon_button add_tag__button"
+                onClick={() => handleRemoveNewEmptyTag(tag.id)}
+              >
                 <Close />
               </IconButton>
               {tag.model && (
                 <Buttons
                   className="icon_button add_tag__button"
-                  disabled={!Boolean(tag.model) || loadingTagId == tag.id}
+                  disabled={!tag.model || loadingTagId == tag.id}
                   onClick={() => handleTagCreate(tag.id)}
                   startIcon={loadingTagId == tag.id}
                 >
@@ -342,23 +416,23 @@ export default function InteriorImages() {
               sx={{
                 textDecoration: "none",
                 display: "none",
-                width: '100%',
+                width: "100%",
                 alignItems: "center",
-                justifyContent: 'space-between',
+                justifyContent: "space-between",
                 opacity: 0,
-                transition: 'all 0.4s ease',
-                bgcolor: '#fff',
-                zIndex: '300',
+                transition: "all 0.4s ease",
+                bgcolor: "#fff",
+                zIndex: "300",
               }}
             >
               <Link
                 href={`/models/${tag?.model?.slug}`}
                 target="_blank"
                 style={{
-                  textDecoration: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'flex-start'
+                  textDecoration: "none",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-start",
                 }}
               >
                 <NextImage
@@ -367,40 +441,72 @@ export default function InteriorImages() {
                   width={80}
                   height={80}
                 />
-                <Box sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                  justifyContent: 'center',
-                  marginLeft: '10px',
-                  maxWidth: '130px',
-                }}>
-                  <SimpleTypography sx={{ width: '100% !important', marginLeft: '0px !important' }} className="card__title drow-down__text" text={tag?.model?.name} />
-                  <SimpleTypography sx={{ width: '100% !important', marginLeft: '0px !important' }} className="card__title drow-down__text" text={`${tag?.model?.brand?.name}`} />
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    justifyContent: "center",
+                    marginLeft: "10px",
+                    maxWidth: "130px",
+                  }}
+                >
+                  <SimpleTypography
+                    sx={{
+                      width: "100% !important",
+                      marginLeft: "0px !important",
+                    }}
+                    className="card__title drow-down__text"
+                    text={tag?.model?.name}
+                  />
+                  <SimpleTypography
+                    sx={{
+                      width: "100% !important",
+                      marginLeft: "0px !important",
+                    }}
+                    className="card__title drow-down__text"
+                    text={`${tag?.model?.brand?.name}`}
+                  />
                 </Box>
               </Link>
-              {isAuthenticated && interior?.author?.id == currentUser?.user_id && (
-                <Box sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  paddingLeft: '10px',
-                  borderLeft: '1.6px solid #E0E0E0'
-                }}>
-                  <Buttons
-                    className="delete__tag"
-                    onClick={(e) => handleDeleteTag(tag.id)}
-                    disabled={loadingTagId == tag.id}
-                    startIcon={loadingTagId == tag.id}
+              {isAuthenticated &&
+                interior?.author?.id == currentUser?.user_id && (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      paddingLeft: "10px",
+                      borderLeft: "1.6px solid #E0E0E0",
+                    }}
                   >
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M1.66634 4.33398H12.333V13.0007C12.333 13.1775 12.2628 13.347 12.1377 13.4721C12.0127 13.5971 11.8432 13.6673 11.6663 13.6673H2.33301C2.1562 13.6673 1.98663 13.5971 1.8616 13.4721C1.73658 13.347 1.66634 13.1775 1.66634 13.0007V4.33398ZM2.99967 5.66732V12.334H10.9997V5.66732H2.99967ZM4.99967 7.00065H6.33301V11.0007H4.99967V7.00065ZM7.66634 7.00065H8.99967V11.0007H7.66634V7.00065ZM3.66634 2.33398V1.00065C3.66634 0.82384 3.73658 0.654271 3.8616 0.529246C3.98663 0.404222 4.1562 0.333984 4.33301 0.333984H9.66634C9.84315 0.333984 10.0127 0.404222 10.1377 0.529246C10.2628 0.654271 10.333 0.82384 10.333 1.00065V2.33398H13.6663V3.66732H0.333008V2.33398H3.66634ZM4.99967 1.66732V2.33398H8.99967V1.66732H4.99967Z" fill="#686868" />
-                    </svg>
-                  </Buttons>
-                </Box>
-              )}
+                    <Buttons
+                      className="delete__tag"
+                      onClick={(e) => handleDeleteTag(tag.id)}
+                      disabled={loadingTagId == tag.id}
+                      startIcon={loadingTagId == tag.id}
+                    >
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 14 14"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M1.66634 4.33398H12.333V13.0007C12.333 13.1775 12.2628 13.347 12.1377 13.4721C12.0127 13.5971 11.8432 13.6673 11.6663 13.6673H2.33301C2.1562 13.6673 1.98663 13.5971 1.8616 13.4721C1.73658 13.347 1.66634 13.1775 1.66634 13.0007V4.33398ZM2.99967 5.66732V12.334H10.9997V5.66732H2.99967ZM4.99967 7.00065H6.33301V11.0007H4.99967V7.00065ZM7.66634 7.00065H8.99967V11.0007H7.66634V7.00065ZM3.66634 2.33398V1.00065C3.66634 0.82384 3.73658 0.654271 3.8616 0.529246C3.98663 0.404222 4.1562 0.333984 4.33301 0.333984H9.66634C9.84315 0.333984 10.0127 0.404222 10.1377 0.529246C10.2628 0.654271 10.333 0.82384 10.333 1.00065V2.33398H13.6663V3.66732H0.333008V2.33398H3.66634ZM4.99967 1.66732V2.33398H8.99967V1.66732H4.99967Z"
+                          fill="#686868"
+                        />
+                      </svg>
+                    </Buttons>
+                  </Box>
+                )}
             </Box>
-            <SimpleTypography sx={{ position: 'absolute' }} classNames={`ind${tag.id}`} text={String(index + 1)} />
+            <SimpleTypography
+              sx={{ position: "absolute" }}
+              classNames={`ind${tag.id}`}
+              text={String(index + 1)}
+            />
           </>
         )}
       </Box>

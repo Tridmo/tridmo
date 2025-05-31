@@ -37,12 +37,9 @@ export default function BrandMobileMode() {
     target: string,
     connector: string = "/"
   ) {
+    if (!target) return urls[0];
     const has = urls.find((url) => target.startsWith(url));
-    return target
-      ? !!has
-        ? target
-        : `${urls[0]}${connector}${target}`
-      : urls[0];
+    return has ? target : `${urls[0]}${connector}${target}`;
   }
 
   function getSocialLinkUsername(urls: string[], target: string) {
@@ -135,27 +132,27 @@ export default function BrandMobileMode() {
               />
             </Box>
             <Box>
-              {brand.name &&
-                brand.name.split(" ").map((word: string) => (
-                  <SimpleTypography
-                    sx={{
-                      fontSize: {
-                        md: "25px",
-                        sm: "22px",
-                        xs: "20px",
-                      },
-                      fontWeight: "500",
-                      lineFeight: "26px",
-                      letterSpacing: "-0.02em",
-                      textAlign: {
-                        md: "center",
-                        sm: "start",
-                        xs: "start",
-                      },
-                    }}
-                    text={word}
-                  />
-                ))}
+              {brand?.name?.split(" ").map((word: string, index: number) => (
+                <SimpleTypography
+                  key={`${word}-${index}`}
+                  sx={{
+                    fontSize: {
+                      md: "25px",
+                      sm: "22px",
+                      xs: "20px",
+                    },
+                    fontWeight: "500",
+                    lineFeight: "26px",
+                    letterSpacing: "-0.02em",
+                    textAlign: {
+                      md: "center",
+                      sm: "start",
+                      xs: "start",
+                    },
+                  }}
+                  text={word}
+                />
+              ))}
             </Box>
           </Box>
           <SimpleTypography

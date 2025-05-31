@@ -2,6 +2,14 @@
   display: none;
 }
 
+.root_main {
+  padding-top: 80px;
+  padding-bottom: 32px;
+}
+
+.landing-page-section {
+  background-color: #fafafa;
+}
 html,
 body {
   padding: 0;

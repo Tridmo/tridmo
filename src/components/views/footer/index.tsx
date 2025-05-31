@@ -1,67 +1,14 @@
 "use client";
 
-import { ThemeProps } from "@/types/theme";
-import { List, ListItem, styled, Typography } from "@mui/material";
+import { Logo } from "@/components/logo";
+import { socialMedia } from "@/constants";
+import { List, ListItem, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
 import Image from "next/image";
 import Link from "next/link";
 import SimpleTypography from "../../typography";
 
 export default function Footer() {
-  const Item = styled(Paper)(({ theme }: ThemeProps) => ({
-    backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: "center",
-    color: theme.palette.text.secondary,
-  }));
-
-  const footerList = [
-    {
-      text: "О нас",
-      url: "about-us",
-    },
-    {
-      text: "Условия",
-      url: "terms-condications",
-    },
-    {
-      text: "Компания",
-      url: "company",
-    },
-    {
-      text: "Блог",
-      url: "blog",
-    },
-    {
-      text: "Сообщество",
-      url: "community",
-    },
-    {
-      text: "Карьера",
-      url: "careers",
-    },
-  ];
-
-  const socialMedia = [
-    {
-      icon: "/icons/instagram-icon.svg",
-      url: "https://www.instagram.com/demod.uz/",
-      margin: true,
-    },
-    {
-      icon: "/icons/telegram-icon.svg",
-      url: "https://t.me/demoduz",
-      margin: true,
-    },
-    {
-      icon: "/icons/chat.svg",
-      url: "https://t.me/demod_uz",
-      margin: true,
-    },
-  ];
-
   return (
     <footer style={{ marginTop: "auto" }}>
       <Box
@@ -73,7 +20,7 @@ export default function Footer() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          overflow: "hidden"
+          overflow: "hidden",
         }}
       >
         <Box
@@ -97,12 +44,7 @@ export default function Footer() {
             }}
           >
             <Link href="/">
-              <Image
-                width="110"
-                height="24"
-                alt="demo svg"
-                src="/logos/logo.svg"
-              />
+              <Logo />
             </Link>
           </Box>
 
@@ -148,9 +90,9 @@ export default function Footer() {
                   gap: "24px",
                 }}
               >
-                {socialMedia.map((item, i) => (
+                {socialMedia.map((item, index) => (
                   <ListItem
-                    key={i}
+                    key={item.url + index}
                     sx={{
                       width: "auto",
                       padding: "0",
@@ -181,47 +123,4 @@ export default function Footer() {
       </Box>
     </footer>
   );
-}
-
-{
-  /* <Grid item xs={3} sx={{ padding: "0 !important", display: "flex", justifyContent: "center" }} >
-                        <Item sx={{ padding: "0" }}>
-                            <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', padding: "0" }}>
-                                {
-                                    footerList.slice(0, 3).map((item, i) => (
-                                        <ListItem
-                                            key={i}
-                                            sx={{ padding: "0" }}
-                                        >
-                                            <Link href={item.url}>
-
-                                                <SimpleTypography text={item.text} className='footer__link'></SimpleTypography>
-
-                                            </Link>
-                                        </ListItem>
-                                    ))
-                                }
-                            </List>
-                        </Item>
-                    </Grid>
-                    <Grid item xs={3} sx={{ padding: "0 !important", display: "flex", justifyContent: "center" }} >
-                        <Item sx={{ padding: "0" }}>
-                            <List sx={{ width: '100%', bgcolor: 'background.paper', padding: "0" }}>
-                                {
-                                    footerList.slice(3, 6).map((item, i) => (
-                                        <ListItem
-                                            key={i}
-                                            sx={{ padding: "0" }}
-                                        >
-                                            <Link href={item.url}>
-
-                                                <SimpleTypography text={item.text} className='footer__link'></SimpleTypography>
-
-                                            </Link>
-                                        </ListItem>
-                                    ))
-                                }
-                            </List>
-                        </Item>
-                    </Grid> */
 }

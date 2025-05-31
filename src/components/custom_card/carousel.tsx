@@ -1,13 +1,9 @@
-import { Box, Grid, List, ListItem, styled, useMediaQuery } from '@mui/material';
-import React, { Fragment, useEffect, useMemo, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { selectTopModels } from '../../data/get_top_models';
-import Link from 'next/link';
+import { Box } from "@mui/material";
+import Link from "next/link";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import Image from 'next/image';
-import { IMAGES_BASE_URL } from '../../utils/env_vars';
-import SimpleTypography from '../typography';
-
+import { IMAGES_BASE_URL } from "../../utils/env_vars";
+import SimpleTypography from "../typography";
 
 export const Carousel = ({
   slides = [],
@@ -19,113 +15,112 @@ export const Carousel = ({
   manualMode,
   displayDots,
 }: {
-  slides: any[],
-  speed?: number,
-  transitionSpeed?: number,
-  slideWidth?: number,
-  slideHeight?: number,
-  autoScroll?: boolean,
-  manualMode?: boolean,
-  displayDots?: boolean,
+  slides: any[];
+  speed?: number;
+  transitionSpeed?: number;
+  slideWidth?: number;
+  slideHeight?: number;
+  autoScroll?: boolean;
+  manualMode?: boolean;
+  displayDots?: boolean;
 }) => {
-
-  const [visibleSlide, setVisibleSlide] = useState(1)
-  const [hasTransitionClass, setHasTransitionClass] = useState(true)
-  const [stateSlides, setStateSlides] = useState<any[]>([])
-  const [leftAndRightDisabled, setLeftAndRightDisabled] = useState(false)
-  const intervalId = useRef<any>(null)
+  const [visibleSlide, setVisibleSlide] = useState(1);
+  const [hasTransitionClass, setHasTransitionClass] = useState(true);
+  const [stateSlides, setStateSlides] = useState<any[]>([]);
+  const [leftAndRightDisabled, setLeftAndRightDisabled] = useState(false);
+  const intervalId = useRef<any>(null);
 
   useEffect(() => {
-    const slidesWithClones = [...slides]
-    slidesWithClones.unshift(slidesWithClones[slidesWithClones.length - 1])
-    slidesWithClones.push(slidesWithClones[1])
-    setStateSlides(slidesWithClones)
-  }, [])
+    const slidesWithClones = [...slides];
+    slidesWithClones.unshift(slidesWithClones[slidesWithClones.length - 1]);
+    slidesWithClones.push(slidesWithClones[1]);
+    setStateSlides(slidesWithClones);
+  }, []);
   useMemo(() => {
     if (!!autoScroll && stateSlides.length) {
-      start()
+      start();
     }
-  }, [stateSlides])
+  }, [stateSlides]);
 
   useEffect(() => {
     if (visibleSlide == stateSlides.length - 1) {
-      setLeftAndRightDisabled(true)
+      setLeftAndRightDisabled(true);
       setTimeout(() => {
-        setHasTransitionClass(false)
-        setVisibleSlide(1)
-      }, transitionSpeed)
+        setHasTransitionClass(false);
+        setVisibleSlide(1);
+      }, transitionSpeed);
     }
 
     if (visibleSlide === 1) {
       setTimeout(() => {
-        setHasTransitionClass(true)
-      }, transitionSpeed)
+        setHasTransitionClass(true);
+      }, transitionSpeed);
     }
 
     if (visibleSlide === 0) {
-      setLeftAndRightDisabled(true)
+      setLeftAndRightDisabled(true);
       setTimeout(() => {
-        setHasTransitionClass(false)
-        setVisibleSlide(stateSlides.length - 2)
-      }, transitionSpeed)
+        setHasTransitionClass(false);
+        setVisibleSlide(stateSlides.length - 2);
+      }, transitionSpeed);
     }
 
     if (visibleSlide == stateSlides.length - 2) {
       setTimeout(() => {
-        setHasTransitionClass(true)
-      }, transitionSpeed)
+        setHasTransitionClass(true);
+      }, transitionSpeed);
     }
-  }, [visibleSlide])
+  }, [visibleSlide]);
 
   useEffect(() => {
     if (leftAndRightDisabled) {
       setTimeout(() => {
-        setLeftAndRightDisabled(false)
-      }, transitionSpeed * 2)
+        setLeftAndRightDisabled(false);
+      }, transitionSpeed * 2);
     }
-  }, [leftAndRightDisabled])
+  }, [leftAndRightDisabled]);
 
   function start() {
     if (intervalId.current != null) {
-      return
+      return;
     }
     intervalId.current = setInterval(() => {
-      setVisibleSlide(prevVisibleSlide => {
+      setVisibleSlide((prevVisibleSlide) => {
         if (prevVisibleSlide + 1 === stateSlides.length) {
-          return 0
+          return 0;
         }
-        return prevVisibleSlide + 1
-      })
-    }, speed)
+        return prevVisibleSlide + 1;
+      });
+    }, speed);
   }
 
   const stop = () => {
-    clearInterval(intervalId.current)
-  }
+    clearInterval(intervalId.current);
+  };
 
   const calculateLeftMargin = () => {
-    return "-" + (visibleSlide * slideWidth) + "px"
-  }
+    return "-" + visibleSlide * slideWidth + "px";
+  };
 
   const slideDimensionStyles = () => {
-    return { width: slideWidth + "px", height: slideHeight + "px" }
-  }
+    return { width: slideWidth + "px", height: slideHeight + "px" };
+  };
 
   const scrollLeft = () => {
-    setVisibleSlide(visibleSlide - 1)
-  }
+    setVisibleSlide(visibleSlide - 1);
+  };
 
   const scrollRight = () => {
-    setVisibleSlide(visibleSlide + 1)
-  }
+    setVisibleSlide(visibleSlide + 1);
+  };
 
   const dotIsActive = (index) => {
     return (
       index === visibleSlide ||
       (index === 1 && visibleSlide === stateSlides.length - 1) ||
       (index === stateSlides.length - 2 && visibleSlide === 0)
-    )
-  }
+    );
+  };
 
   return (
     <div className="carousel">
@@ -139,75 +134,95 @@ export const Carousel = ({
       <div className="slidesContainer" style={slideDimensionStyles()}>
         {!!manualMode && (
           <Fragment>
-            <a
-              onClick={!leftAndRightDisabled ? scrollLeft : () => { }}
-              href="#"
-              className={`scrollLeft ${leftAndRightDisabled ? "disabled" : ""}`}>
+            <button
+              onClick={!leftAndRightDisabled ? scrollLeft : () => {}}
+              className={`scrollLeft ${leftAndRightDisabled ? "disabled" : ""}`}
+              type="button"
+              aria-label="Previous slide"
+              disabled={leftAndRightDisabled}
+              onKeyDown={(e) =>
+                e.key === "Enter" && !leftAndRightDisabled && scrollLeft()
+              }
+            >
               Left
-            </a>
-            <a
-              onClick={!leftAndRightDisabled ? scrollRight : () => { }}
-              href="#" className={`scrollRight ${leftAndRightDisabled ? "disabled" : ""}`}>
+            </button>
+            <button
+              onClick={!leftAndRightDisabled ? scrollRight : () => {}}
+              className={`scrollRight ${
+                leftAndRightDisabled ? "disabled" : ""
+              }`}
+              type="button"
+              aria-label="Next slide"
+              disabled={leftAndRightDisabled}
+              onKeyDown={(e) =>
+                e.key === "Enter" && !leftAndRightDisabled && scrollRight()
+              }
+            >
               Right
-            </a>
+            </button>
           </Fragment>
         )}
-        {
-          !!displayDots && (
-            <div className="slideIndicator">
-              {stateSlides.map((slide, index) => {
-                if (index === 0 || index === stateSlides.length - 1) {
-                  return null
-                }
-                return (
-                  <div
-                    key={index}
-                    onClick={() => setVisibleSlide(index)}
-                    className={`dot ${dotIsActive(index) ? "active" : ""}`}
-                  />
-                )
-              })}
-            </div>
-          )
-        }
-
+        {!!displayDots && (
+          <div className="slideIndicator">
+            {stateSlides.map((slide, index) => {
+              if (index === 0 || index === stateSlides.length - 1) {
+                return null;
+              }
+              return (
+                <div
+                  aria-label="Slide indicator"
+                  key={slide.id + index}
+                  onClick={() => setVisibleSlide(index)}
+                  className={`dot ${dotIsActive(index) ? "active" : ""}`}
+                />
+              );
+            })}
+          </div>
+        )}
         <div
           id="slides"
           className={`slides ${hasTransitionClass ? "transition" : ""}`}
-          style={{ left: calculateLeftMargin() }}>
+          style={{ left: calculateLeftMargin() }}
+        >
           {stateSlides.map((model: any, index) => {
             return (
               <div
-                key={index}
+                key={model.id + index}
                 className={"slide"}
                 style={slideDimensionStyles()}
               >
                 <Link
                   className={"slideInner"}
                   href={`/models/${model?.slug}`}
-                  key={index}
+                  key={model.id + index}
                   style={{
-                    width: '100%',
+                    width: "100%",
                   }}
                 >
                   <Box
                     sx={{
-                      p: '16px',
-                      width: '100%',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center'
+                      p: "16px",
+                      width: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
                     }}
                   >
                     <LazyLoadImage
-                      src={model?.cover ? (model?.cover[0]?.image_src ? `${IMAGES_BASE_URL}/${model?.cover[0]?.image_src}` : '') : ''}
+                      src={
+                        model?.cover
+                          ? model?.cover[0]?.image_src
+                            ? `${IMAGES_BASE_URL}/${model?.cover[0]?.image_src}`
+                            : ""
+                          : ""
+                      }
                       style={{ objectFit: "cover" }}
                       alt=""
-                      effect='blur'
-                      width={'322px'}
-                      height={'322px'}
-                      placeholderSrc='/img/placeholder.svg'
+                      effect="blur"
+                      width={"322px"}
+                      height={"322px"}
+                      placeholderSrc="/img/placeholder.svg"
                       delayTime={100}
                     />
                     {/* <Image
@@ -222,24 +237,24 @@ export const Carousel = ({
                     /> */}
                     <Box
                       sx={{
-                        width: '100%',
-                        display: 'flex',
-                        mt: '24px'
+                        width: "100%",
+                        display: "flex",
+                        mt: "24px",
                       }}
                     >
                       <SimpleTypography
                         text={model?.name}
-                        className='card__title'
+                        className="card__title"
                       />
                     </Box>
                   </Box>
                 </Link>
               </div>
-            )
+            );
           })}
         </div>
+        ; ; ; ;
       </div>
-
     </div>
-  )
-}
+  );
+};

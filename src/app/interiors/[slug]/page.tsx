@@ -1,93 +1,61 @@
 "use client"
 
-import * as React from 'react';
-import type { NextPage } from 'next'
-import { useDispatch, useSelector } from 'react-redux';
-import { getOneInterior, selectOneInterior } from '@/data/get_one_interior';
-import { useParams } from 'next/navigation';
-import IconBreadcrumbs from '@/components/breadcrumbs';
-import ConnectionError from '@/components/site_info/connection_error';
-import { Box, Grid } from '@mui/material';
+import { getOneInterior, selectOneInterior } from "@/data/get_one_interior";
+import { Box } from "@mui/material";
+import { useParams } from "next/navigation";
+import * as React from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import CircularProgress from '@mui/material/CircularProgress';
-import { getBrandModels } from '../../../data/get_brand_models';
-import { getTopModels } from '../../../data/get_top_models';
-import OneInterior from '../../../components/screens/interiors/one';
-import { getComments } from '../../../data/get_comments';
-import { getInteriorTags } from '../../../data/get_interior_tags';
-import { selectMyProfile, selectMyProfileStatus } from '../../../data/me';
-
-const LoaderStyle = {
-  // width: "100px !important",
-  // height: "100px !important",
-  zIndex: "10",
-  position: "relative"
-}
-const ContainerStyle = {
-  display: "flex",
-  justifyContent: "center",
-  maxWidth: "1200px",
-  height: "697px",
-  margin: "0 auto",
-  alignItems: "center",
-}
-const BgBlur = {
-  position: "absolute",
-  left: "0",
-  top: "0",
-  width: "100%",
-  height: "100%",
-  background: "#fff",
-  filter: "blur(10px)"
-}
+import ConnectionError from "@/components/site_info/connection_error";
+import { BgBlur, ContainerStyle, LoaderStyle } from "@/styles/styles";
+import CircularProgress from "@mui/material/CircularProgress";
+import OneInterior from "../../../components/screens/interiors/one";
+import { getComments } from "../../../data/get_comments";
+import { getInteriorTags } from "../../../data/get_interior_tags";
+import { selectMyProfileStatus } from "../../../data/me";
 
 export default function OneProduct() {
-
   const dispatch = useDispatch<any>();
-  const getOneInterior__status = useSelector((state: any) => state?.get_one_interior?.status);
+  const getOneInterior__status = useSelector(
+    (state: any) => state?.get_one_interior?.status
+  );
   const profile__status = useSelector(selectMyProfileStatus);
-  const selectedInterior = useSelector(selectOneInterior)
+  const selectedInterior = useSelector(selectOneInterior);
   const params = useParams<{ slug: string }>();
 
   React.useEffect(() => {
-    if (profile__status != 'loading') dispatch(getOneInterior(params.slug))
-  }, [params, profile__status])
+    if (profile__status != "loading") dispatch(getOneInterior(params.slug));
+  }, [params, profile__status]);
 
   React.useEffect(() => {
     if (selectedInterior) {
-      dispatch(getComments({ entity_id: selectedInterior?.id }))
-      dispatch(getInteriorTags(selectedInterior?.id))
+      dispatch(getComments({ entity_id: selectedInterior?.id }));
+      dispatch(getInteriorTags(selectedInterior?.id));
     }
-  }, [selectedInterior])
+  }, [selectedInterior]);
 
   if (getOneInterior__status === "succeeded") {
     return (
-      <>
-        <Box sx={{ background: "#fafafa" }}>
-          <OneInterior />
-        </Box>
-      </>
-    )
+      <Box sx={{ background: "#fafafa" }}>
+        <OneInterior />
+      </Box>
+    );
   } else if (getOneInterior__status === "failed") {
     return (
-      <>
-        <Box sx={{ background: "#fafafa" }}>
-          <ConnectionError />
-        </Box>
-      </>
-    )
+      <Box sx={{ background: "#fafafa" }}>
+        <ConnectionError />
+      </Box>
+    );
   } else {
     return (
-      <>
-        <Box sx={{ background: "#fafafa", position: "relative" }}>
-          <Box sx={BgBlur} />
-          <Box>
-            <Box sx={ContainerStyle}>
-              <CircularProgress sx={LoaderStyle} />
-            </Box>
+      <Box sx={{ background: "#fafafa", position: "relative" }}>
+        <Box sx={BgBlur} />
+        <Box>
+          <Box sx={ContainerStyle}>
+            <CircularProgress sx={LoaderStyle} />
           </Box>
         </Box>
-      </>
-    )
+      </Box>
+    );
   }
 }

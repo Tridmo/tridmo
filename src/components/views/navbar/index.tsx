@@ -1,10 +1,33 @@
 "use client";
+import { Logo } from "@/components/logo";
+import BasicModal from "@/components/modals/modal";
+import SimpleTypography from "@/components/typography";
+import { navItemsData } from "@/components/views/navbar/constants";
+import MobileMode from "@/components/views/navbar/mobile_mode";
+import { SearchBar } from "@/components/views/navbar/search_bar/serach_bar";
+import { authTokens } from "@/constants";
+import { selectChatUnread } from "@/data/chat";
+import {
+  selectNotificationCounts,
+  selectNotificationCountsStatus,
+} from "@/data/get_notifications";
+import { setAuthState } from "@/data/login";
 import { selectMyProfile } from "@/data/me";
 import {
   setLoginState,
   setOpenModal,
   setSignupState,
 } from "@/data/modal_checker";
+import { switch_on } from "@/data/toggle_cart";
+import { primaryColor } from "@/styles/styles";
+import { ThemeProps } from "@/types/theme";
+import { IMAGES_BASE_URL } from "@/utils/env_vars";
+import { isPrivateRoute } from "@/utils/utils";
+import {
+  ChatOutlined,
+  KeyboardArrowUp,
+  SearchOutlined,
+} from "@mui/icons-material";
 import { Divider, IconButton } from "@mui/material";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -12,33 +35,14 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
+import { WyNotificationToasts } from "@weavy/uikit-react";
+import Cookies from "js-cookie";
 import Image from "next/image";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Buttons from "../../buttons";
-// import { searchModels } from 'src/data/search_model';
-import BasicModal from "@/components/modals/modal";
-import { primaryColor } from "@/styles/styles";
-import { ThemeProps } from "@/types/theme";
-import { ChatOutlined, KeyboardArrowUp, SearchOutlined } from "@mui/icons-material";
-import { WyNotificationToasts } from "@weavy/uikit-react";
-import Cookies from "js-cookie";
-import Link from "next/link";
-import { authTokens } from "../../../constants";
-import { selectChatUnread } from "../../../data/chat";
-import {
-  selectNotificationCounts,
-  selectNotificationCountsStatus,
-} from "../../../data/get_notifications";
-import { setAuthState } from "../../../data/login";
-import { switch_on } from "../../../data/toggle_cart";
-import { IMAGES_BASE_URL } from "../../../utils/env_vars";
-import { isPrivateRoute } from "../../../utils/utils";
-import SimpleTypography from "../../typography";
-import { navItemsData } from "./constants";
-import MobileMode from "./mobile_mode";
-import { SearchBar } from "./search_bar/serach_bar";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -113,7 +117,9 @@ export default function Navbar() {
     <>
       <BasicModal />
       <WyNotificationToasts draggable appearance="internal" />
-      <Box sx={{ position: "fixed", zIndex: '1200', top: 0, right: 0, left: 0 }}>
+      <Box
+        sx={{ position: "fixed", zIndex: "1200", top: 0, right: 0, left: 0 }}
+      >
         <Box
           sx={{
             flexGrow: 1,
@@ -224,14 +230,7 @@ export default function Navbar() {
             >
               <Link href="/">
                 <Item sx={{ padding: "0 !important", height: "27px" }}>
-                  <Image
-                    className="header__logo"
-                    alt="logo"
-                    priority={true}
-                    src="/logos/logo.svg"
-                    width={123}
-                    height={32}
-                  />
+                  <Logo />
                 </Item>
               </Link>
             </Grid>
@@ -275,7 +274,12 @@ export default function Navbar() {
                         <SimpleTypography
                           text={item.text}
                           className="nav__item--text"
-                          sx={{ color: item.link === pathname ? `${primaryColor} !important` : "#424242 !important" }}
+                          sx={{
+                            color:
+                              item.link === pathname
+                                ? `${primaryColor} !important`
+                                : "#424242 !important",
+                          }}
                         />
                       </Link>
                     </Box>
@@ -357,7 +361,7 @@ export default function Navbar() {
                         right: 0,
                         display: "flex",
                         justifyContent: "center",
-                        alignItems: "center"
+                        alignItems: "center",
                       }}
                     >
                       <SimpleTypography
@@ -400,14 +404,14 @@ export default function Navbar() {
                           right: 0,
                           display: "flex",
                           justifyContent: "center",
-                          alignItems: "center"
+                          alignItems: "center",
                         }}
                       >
                         <SimpleTypography
                           text={
                             String(
                               Number(chatUnread?.private || 0) +
-                              Number(chatUnread?.rooms || 0)
+                                Number(chatUnread?.rooms || 0)
                             ) || "0"
                           }
                           sx={{
@@ -438,42 +442,41 @@ export default function Navbar() {
               >
                 <Box className="header__btns">
                   {isAuthenticated ? (
-                    <>
-                      <Item
+                    <Item
+                      sx={{
+                        padding: "0 !important",
+                        display: { xs: "none", md: "flex" },
+                      }}
+                    >
+                      <IconButton
+                        id="basic-menu"
+                        aria-controls={"basic-menu"}
+                        aria-haspopup="true"
+                        aria-expanded={true}
+                        onClick={handleClick}
                         sx={{
-                          padding: "0 !important",
-                          display: { xs: "none", md: "flex" },
+                          display: "flex",
+                          height: "auto",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          "&:hover": { background: "#F5F5F5" },
                         }}
                       >
-                        <IconButton
-                          id="basic-menu"
-                          aria-controls={"basic-menu"}
-                          aria-haspopup="true"
-                          aria-expanded={true}
-                          onClick={handleClick}
-                          sx={{
-                            display: "flex",
-                            height: 'auto',
-                            alignItems: "center",
-                            justifyContent: "center",
-                            "&:hover": { background: "#F5F5F5" },
-                          }}
-                        >
-                          <Box sx={{ display: "flex", alignItems: "center" }}>
-                            <Image
-                              width="28"
-                              height="28"
-                              alt="user icon"
-                              style={{
-                                borderRadius: "50%",
-                              }}
-                              src={
-                                userData?.image_src
-                                  ? `${IMAGES_BASE_URL}/${userData?.image_src}`
-                                  : "/img/avatar.png"
-                              }
-                            />
-                            {/* <SimpleTypography
+                        <Box sx={{ display: "flex", alignItems: "center" }}>
+                          <Image
+                            width="28"
+                            height="28"
+                            alt="user icon"
+                            style={{
+                              borderRadius: "50%",
+                            }}
+                            src={
+                              userData?.image_src
+                                ? `${IMAGES_BASE_URL}/${userData?.image_src}`
+                                : "/img/avatar.png"
+                            }
+                          />
+                          {/* <SimpleTypography
                               text={
                                 userData?.full_name ? (
                                   userData?.full_name?.split(" ")[0]
@@ -491,7 +494,7 @@ export default function Navbar() {
                               }
                               className={"user__name"}
                             /> */}
-                            {/* <KeyboardArrowDownIcon
+                          {/* <KeyboardArrowDownIcon
                               sx={
                                 !open
                                   ? {
@@ -508,10 +511,9 @@ export default function Navbar() {
                                   }
                               }
                             /> */}
-                          </Box>
-                        </IconButton>
-                      </Item>
-                    </>
+                        </Box>
+                      </IconButton>
+                    </Item>
                   ) : (
                     <Item
                       sx={{ padding: "0", display: { xs: "none", md: "flex" } }}

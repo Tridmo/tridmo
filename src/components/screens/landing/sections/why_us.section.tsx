@@ -15,7 +15,7 @@ export function WhyUsSection() {
       <Grid container spacing={2}>
         <Grid item xs={12} paddingLeft={0}>
           <SimpleTypography
-            text="Почему именно Demod?"
+            text="Почему именно Tridmo?"
             className="section__title"
             variant="h2"
           />

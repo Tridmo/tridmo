@@ -30,17 +30,17 @@ type InputProps = {
 };
 
 type CustomCardProps = {
-  type?: any;
-  model?: any;
-  link?: any;
-  imgHeight?: string;
-  tagText?: string;
-  tagIcon?: string;
-  withAuthor?: boolean;
-  settingsBtn?: boolean;
-  useButton?: boolean;
-  imageSplit?: number;
-  brandBox?: boolean;
+  readonly type?: any;
+  readonly model?: any;
+  readonly link?: any;
+  readonly imgHeight?: string;
+  readonly tagText?: string;
+  readonly tagIcon?: string;
+  readonly withAuthor?: boolean;
+  readonly settingsBtn?: boolean;
+  readonly useButton?: boolean;
+  readonly imageSplit?: number;
+  readonly brandBox?: boolean;
 };
 const Label = styled(Paper)(({ theme }: ThemeProps) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -367,14 +367,14 @@ function CustomCard({
                   i?.src && i?.src != null ? (
                     <Grid
                       item
-                      key={index}
+                      key={i?.src + index}
                       lg={5.85}
                       md={5.85}
                       sm={5.85}
                       xs={2.85}
                       sx={{
                         // width: '49%',
-                        height: imgHeight || "171px",
+                        height: imgHeight ?? "171px",
                         border: "2px solid #F5F5F5",
                       }}
                     >
@@ -394,14 +394,14 @@ function CustomCard({
                   ) : (
                     <Grid
                       item
-                      key={index}
+                      key={i?.src + index}
                       lg={5.85}
                       md={5.85}
                       sm={5.85}
                       xs={2.85}
                       sx={{
                         // width: '49%',
-                        height: imgHeight || "171px",
+                        height: imgHeight ?? "171px",
                         bgcolor: "#F5F5F5",
                         border: "2px solid #F5F5F5",
                       }}

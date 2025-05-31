@@ -1,38 +1,34 @@
-import * as React from 'react';
-import * as Yup from 'yup';
-import { Formik } from 'formik';
-import { toast } from 'react-toastify';
-import { getMyProfile, resetMyProfile, selectMyProfile } from '../../data/me';
-import { useDispatch, useSelector } from 'react-redux';
-import { setLoginState, setSignupState, setVerifyState, setOpenModal, setProfileEditState, setConfirmState, resetConfirmProps, resetConfirmData, ConfirmContextProps, ConfirmData, setConfirmData, setProfileImageState, setProfileImagePreview, setAddingProjectState, setEditingProjectState, selectEditingProject, setProjectsListState, setWarningState, setWarningMessage, setForgotPasswordState } from '../../data/modal_checker';
-import { setAuthState } from "../../data/login";
-import { Box, Typography, Grid, Button, TextField, InputAdornment, IconButton, SxProps, FormControlLabel, Checkbox, styled, TooltipProps, Tooltip, tooltipClasses, List, ListItem, ListItemText, ListItemAvatar, Divider, Skeleton } from '@mui/material';
-import Image from 'next/image';
-import SimpleTypography from '../typography'
-import Buttons from '../buttons';
-import axios, { setAuthToken } from '../../utils/axios';
-import { ACCESS_TOKEN_EXPIRATION_DAYS, IMAGES_BASE_URL, REFRESH_TOKEN_EXPIRATION_DAYS } from '../../utils/env_vars'
+import { usernameRegex } from '@/types/regex';
+import { ErrorOutline } from '@mui/icons-material';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import Cookies from 'js-cookie'
-import SimpleInp from '../inputs/simple_input';
-import EmailInputAdornments from '../inputs/email';
-import PasswordInputAdornments from '../inputs/password';
-import { passwordRegex, phoneRegex, usernameRegex } from '@/types/regex';
+import { Box, Button, Checkbox, Divider, FormControlLabel, Grid, List, ListItem, ListItemText, Skeleton, styled, SxProps, Tooltip, tooltipClasses, TooltipProps } from '@mui/material';
+import { Formik } from 'formik';
+import Cookies from 'js-cookie';
+import Image from 'next/image';
 import Link from 'next/link';
-import UsernameInputAdornments from '../inputs/username';
-import instance from '../../utils/axios';
-import CropImage from '../crop_image';
-import ImageCropper from '../crop_image';
-import { usePathname } from 'next/navigation';
+import * as React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import * as Yup from 'yup';
+import { accountBannedMessage } from '../../constants';
 import { getMyInteriors } from '../../data/get_my_interiors';
-import { getSavedInteriors } from '../../data/get_saved_interiors';
-import { getSavedModels } from '../../data/get_saved_models';
 import { getMyProjects, selectMyProjects } from '../../data/get_my_projects';
 import { selectOneModel } from '../../data/get_one_model';
+import { getSavedModels } from '../../data/get_saved_models';
+import { setAuthState } from "../../data/login";
+import { getMyProfile, resetMyProfile, selectMyProfile } from '../../data/me';
+import { ConfirmContextProps, ConfirmData, resetConfirmData, resetConfirmProps, selectEditingProject, setAddingProjectState, setConfirmData, setConfirmState, setEditingProjectState, setForgotPasswordState, setLoginState, setOpenModal, setProfileEditState, setProfileImagePreview, setProfileImageState, setProjectsListState, setSignupState, setVerifyState, setWarningMessage, setWarningState } from '../../data/modal_checker';
 import { myInteriorsLimit, projectsLimit, savedModelsLimit } from '../../types/filters';
-import { accountBannedMessage } from '../../variables';
+import { default as axios, default as instance, setAuthToken } from '../../utils/axios';
+import { ACCESS_TOKEN_EXPIRATION_DAYS, IMAGES_BASE_URL, REFRESH_TOKEN_EXPIRATION_DAYS } from '../../utils/env_vars';
 import { formatMessage } from '../../utils/format_message';
-import { ErrorOutline, Launch, Report } from '@mui/icons-material';
+import Buttons from '../buttons';
+import ImageCropper from '../crop_image';
+import EmailInputAdornments from '../inputs/email';
+import PasswordInputAdornments from '../inputs/password';
+import SimpleInp from '../inputs/simple_input';
+import UsernameInputAdornments from '../inputs/username';
+import SimpleTypography from '../typography';
 //Login context
 interface LoginContextProps {
   // setAlertMessage: any
@@ -730,7 +726,6 @@ export const WarningContext = () => {
   const content = { __html: `${formatMessage(message)}` }
 
   return (
-    <>
       <Box>
         <Box
           sx={{
@@ -775,11 +770,10 @@ export const WarningContext = () => {
             className='signIn__btn'
           >
             <Launch sx={{ width: '18px', height: '18px', mr: '6px' }} />
-            <Link href={`mailto:support@demod.uz`}>Служба поддержки</Link>
+            <Link href={`mailto:support@tridmo.com`}>Служба поддержки</Link>
           </Buttons> */}
         </Box>
       </Box>
-    </>
   );
 }
 
@@ -794,32 +788,7 @@ export const VerificationContext = (props: LoginContextProps) => {
   //declare dispatcher
   const dispatch = useDispatch<any>();
 
-  const Renderer = ({ minutes, seconds, completed }: RenderTypes) => {
-    if (completed) {
-      // Render a completed state
-      return (
-        <Grid sx={{ display: "flex", alignItems: "center", justifyContent: "start" }}>
-          <SimpleTypography
-            className="modal__sub-title"
-            variant="h6"
-
-            text="Didn't receive a code?"
-          />
-          <Buttons
-            name="Send code again"
-            onClick={() => { }}
-            className='underlined__btn'
-          />
-        </Grid>
-      )
-    } else {
-      // Render a countdown
-      return (<>Resend in {" "}<span>{minutes}:{seconds}</span></>)
-    }
-  };
-
   return (
-    <>
       <Formik
         initialValues={{
           code: '',
@@ -965,7 +934,6 @@ export const VerificationContext = (props: LoginContextProps) => {
             </Grid>
           </form>)}
       </Formik>
-    </>
   );
 }
 
@@ -982,7 +950,6 @@ export const EditProfileContext = () => {
   }
 
   return (
-    <>
       <Formik
         initialValues={{
           full_name: profile?.full_name || '',
@@ -1268,7 +1235,6 @@ export const EditProfileContext = () => {
             </Grid>
           </form>)}
       </Formik>
-    </>
   );
 }
 
@@ -1277,7 +1243,6 @@ export const AddProjectContext = () => {
   const profile = useSelector(selectMyProfile)
 
   return (
-    <>
       <Formik
         initialValues={{
           name: '',
@@ -1386,7 +1351,6 @@ export const AddProjectContext = () => {
             </Grid>
           </form>)}
       </Formik>
-    </>
   );
 }
 
