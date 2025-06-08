@@ -2,7 +2,7 @@
 
 import { Logo } from "@/components/logo";
 import { socialMedia } from "@/constants";
-import { List, ListItem, Typography } from "@mui/material";
+import { List, ListItem } from "@mui/material";
 import Box from "@mui/material/Box";
 import Image from "next/image";
 import Link from "next/link";
@@ -59,7 +59,7 @@ export default function Footer() {
               justifyContent: "space-between",
               alignItems: { xs: "center", sm: "flex-start" },
               width: "100%",
-              maxWidth: "400px",
+              maxWidth: "500px",
             }}
           >
             <Box
@@ -72,9 +72,12 @@ export default function Footer() {
                 text="Для сотрудничества"
                 className="footer__title"
               ></SimpleTypography>
-              <Typography variant="h4" sx={{ fontSize: "18px", color: "#333" }}>
-                +998 90 666 66 60
-              </Typography>
+              <Link href="mailto:tridmo.company@gmail.com">
+                <SimpleTypography
+                  text="tridmo.company@gmail.com"
+                  className="footer__title"
+                ></SimpleTypography>
+              </Link>
             </Box>
 
             <Box sx={{ textAlign: { xs: "center", sm: "left" } }}>

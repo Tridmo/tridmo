@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../utils/axios'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { modelOrderBy, modelsLimit, order } from '../types/filters';
+import api from '../utils/axios';
 
 const initialState = {
   data: [],
@@ -14,6 +14,7 @@ export const getAllModels = createAsyncThunk('/models',
   async (wrapper?: {
     name?: string;
     brand?: string;
+    country_id?: string;
     top?: boolean;
     categories?: any[];
     colors?: any[];
@@ -31,6 +32,9 @@ export const getAllModels = createAsyncThunk('/models',
       }
       if (wrapper?.name) {
         send__route += send__route.includes("/?") ? `&name=${wrapper?.name}` : `/?name=${wrapper?.name}`
+      }
+      if (wrapper?.country_id) {
+        send__route += send__route.includes("/?") ? `&country_id=${wrapper?.country_id}` : `/?country_id=${wrapper?.country_id}`
       }
       if (wrapper?.top != undefined) {
         send__route += send__route.includes("/?") ? `&top=${wrapper?.top}` : `/?top=${wrapper?.top}`

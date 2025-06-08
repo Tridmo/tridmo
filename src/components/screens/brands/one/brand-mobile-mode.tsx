@@ -1,18 +1,14 @@
-import { setSelectedConversation } from "@/data/chat";
 import { selectChatToken } from "@/data/get_chat_token";
 import { selectOneBrand } from "@/data/get_one_brand";
-import { setLoginState, setOpenModal } from "@/data/modal_checker";
-import { chatApi, setChatToken } from "@/utils/axios";
 import { IMAGES_BASE_URL } from "@/utils/env_vars";
 import {
   Instagram,
   Language,
   PhoneOutlined,
   PlaceOutlined,
-  RateReview,
+  Public,
 } from "@mui/icons-material";
 import { Box, Grid, useMediaQuery } from "@mui/material";
-import Cookies from "js-cookie";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -52,26 +48,27 @@ export default function BrandMobileMode() {
     return domen;
   }
 
-  async function handleCreateConversation() {
-    if (isAuthenticated) {
-      setConversationLoading(true);
-      setChatToken(
-        Cookies.get("chatToken") ? Cookies.get("chatToken") : token ? token : ""
-      );
-      chatApi
-        .post(`/conversations`, {
-          members: [brand?.admin_user_id],
-        })
-        .then((res) => {
-          dispatch(setSelectedConversation(res?.data?.id));
-          router.push("/chat");
-          setConversationLoading(false);
-        });
-    } else {
-      dispatch(setLoginState(true));
-      dispatch(setOpenModal(true));
-    }
-  }
+  // Deprecated
+  // async function handleCreateConversation() {
+  //   if (isAuthenticated) {
+  //     setConversationLoading(true);
+  //     setChatToken(
+  //       Cookies.get("chatToken") ? Cookies.get("chatToken") : token ? token : ""
+  //     );
+  //     chatApi
+  //       .post(`/conversations`, {
+  //         members: [brand?.admin_user_id],
+  //       })
+  //       .then((res) => {
+  //         dispatch(setSelectedConversation(res?.data?.id));
+  //         router.push("/chat");
+  //         setConversationLoading(false);
+  //       });
+  //   } else {
+  //     dispatch(setLoginState(true));
+  //     dispatch(setOpenModal(true));
+  //   }
+  // }
 
   const width = useMediaQuery("(max-width:780px)");
 
@@ -187,6 +184,31 @@ export default function BrandMobileMode() {
               gap: "8px",
             }}
           >
+            <Grid item sx={{ width: "100%" }}>
+              <Link
+                style={{ width: "100%" }}
+                target="_blank"
+                href={`http://maps.google.com/?q=${brand?.address}`}
+                rel="noopener noreferrer"
+              >
+                <Buttons className="brand__box" name="">
+                  <Public
+                    sx={{
+                      width: "23px",
+                      height: "23px",
+                      color: "#424242",
+                    }}
+                  />
+                  <Box sx={{ marginLeft: "11px" }}>
+                    <SimpleTypography className="brand__name" text="Страна" />
+                    <SimpleTypography
+                      className="brand__box--text"
+                      text={brand?.country}
+                    />
+                  </Box>
+                </Buttons>
+              </Link>
+            </Grid>
             <Grid item sx={{ width: "100%" }}>
               <Link
                 style={{ width: "100%" }}
@@ -321,7 +343,7 @@ export default function BrandMobileMode() {
           justifyContent: "flex-end",
         }}
       >
-        <Buttons
+        {/* <Buttons
           startIcon={conversationLoading}
           disabled={!brand?.admin_user_id}
           onClick={() => handleCreateConversation()}
@@ -331,7 +353,7 @@ export default function BrandMobileMode() {
           childrenFirst={true}
         >
           <RateReview sx={{ mr: "8px" }} />
-        </Buttons>
+        </Buttons> */}
       </Grid>
     </Box>
   );

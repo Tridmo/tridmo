@@ -6,7 +6,6 @@ import { navItemsData } from "@/components/views/navbar/constants";
 import MobileMode from "@/components/views/navbar/mobile_mode";
 import { SearchBar } from "@/components/views/navbar/search_bar/serach_bar";
 import { authTokens } from "@/constants";
-import { selectChatUnread } from "@/data/chat";
 import {
   selectNotificationCounts,
   selectNotificationCountsStatus,
@@ -23,11 +22,7 @@ import { primaryColor } from "@/styles/styles";
 import { ThemeProps } from "@/types/theme";
 import { IMAGES_BASE_URL } from "@/utils/env_vars";
 import { isPrivateRoute } from "@/utils/utils";
-import {
-  ChatOutlined,
-  KeyboardArrowUp,
-  SearchOutlined,
-} from "@mui/icons-material";
+import { KeyboardArrowUp, SearchOutlined } from "@mui/icons-material";
 import { Divider, IconButton } from "@mui/material";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -35,7 +30,6 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
-import { WyNotificationToasts } from "@weavy/uikit-react";
 import Cookies from "js-cookie";
 import Image from "next/image";
 import Link from "next/link";
@@ -82,7 +76,7 @@ export default function Navbar() {
   const notificationCountsStatus = useSelector(selectNotificationCountsStatus);
   const notificationCounts = useSelector(selectNotificationCounts);
 
-  const chatUnread = useSelector(selectChatUnread);
+  // const chatUnread = useSelector(selectChatUnread);
   const userData = useSelector(selectMyProfile);
   const [searchClicked, setSearchClicked] = useState(false);
 
@@ -102,9 +96,9 @@ export default function Navbar() {
 
   // Memoized logout handler
   const handleLogout = useCallback(() => {
-    authTokens.forEach(cookie => Cookies.remove(cookie));
+    authTokens.forEach((cookie) => Cookies.remove(cookie));
     dispatch(setAuthState(false));
-    router.push(isPrivateRoute(pathname) ? '/' : pathname);
+    router.push(isPrivateRoute(pathname) ? "/" : pathname);
     router.refresh();
     setAnchorEl(null);
   }, [dispatch, pathname, router]);
@@ -116,7 +110,7 @@ export default function Navbar() {
   return (
     <>
       <BasicModal />
-      <WyNotificationToasts draggable appearance="internal" />
+      {/* <WyNotificationToasts draggable appearance="internal" /> */}
       <Box
         sx={{ position: "fixed", zIndex: "1200", top: 0, right: 0, left: 0 }}
       >
@@ -385,7 +379,8 @@ export default function Navbar() {
                       height={21}
                     ></Image>
                   </IconButton>
-                  <Link href={"/chat"}>
+                  {/* Deprecated */}
+                  {/*<Link href={"/chat"}>
                     <IconButton
                       sx={{
                         display: { xs: "none", md: "flex" },
@@ -424,7 +419,7 @@ export default function Navbar() {
                       </Box>
                       <ChatOutlined htmlColor="#424242" />
                     </IconButton>
-                  </Link>
+                  </Link>*/}
                 </>
               ) : null}
 

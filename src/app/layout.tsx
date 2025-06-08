@@ -9,6 +9,8 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 import "./globals.css";
 
 import { domain, metaTitle, pageLanguage, plausibleScriptUrl } from "@/constants";
+import { GA_TRACKING_ID } from "@/lib/gtag";
+import Script from "next/script";
 import ClientWrapper from "../components/client_wrapper";
 
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
@@ -24,11 +26,24 @@ export default function RootLayout({
   return (
     <html lang={pageLanguage}>
       <head>
-        <script
-          defer
-          data-domain={domain}
-          src={plausibleScriptUrl}
-        ></script>
+        <Script defer data-domain={domain} src={plausibleScriptUrl}></Script>
+        {/* Google Tag Manager - gtag.js */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script
+          id="google-ads"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${GA_TRACKING_ID}');
+            `,
+          }}
+        />
       </head>
       <body className={inter.className}>
         <Providers>

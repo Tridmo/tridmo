@@ -1,5 +1,5 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { brandOrderBy, interiorOrderBy, modelOrderBy, order } from '@/types/filters';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 const initialState = {
   author: '',
   model_brand: '',
@@ -11,6 +11,7 @@ const initialState = {
   brand_name: '',
   brand_orderby: '',
   brand_order: 'desc',
+  country: '',
   categories: [],
   interior_categories: [],
   interiors_name: '',
@@ -53,6 +54,9 @@ const handle_filters = createSlice({
     setAuthor: (state: any, action: PayloadAction<any>) => {
       const { ...params } = action.payload;
       state.author = params.author;
+    },
+    setCountryFilter: (state: any, action: PayloadAction<string>) => {
+      state.country = action.payload;
     },
     setCategoryFilter: (state: any, action: PayloadAction<any[]>) => {
       state.categories = action.payload;
@@ -225,6 +229,7 @@ const handle_filters = createSlice({
 export const {
   setBrandModelsCategory,
   setAuthor,
+  setCountryFilter,
   setCategoryFilter,
   setModelBrandFilter,
   setModelTopFilter,

@@ -1,21 +1,17 @@
-import { setSelectedConversation } from "@/data/chat";
 import { selectChatToken } from "@/data/get_chat_token";
 import { selectDesignerProfile } from "@/data/get_designer";
 import { selectMyProfile } from "@/data/me";
 import {
   setAddingProjectState,
-  setLoginState,
   setOpenModal,
   setProfileEditState,
   setProfileImagePreview,
   setProfileImageState,
 } from "@/data/modal_checker";
-import { chatApi, setChatToken } from "@/utils/axios";
 import { IMAGES_BASE_URL } from "@/utils/env_vars";
 import formatDate from "@/utils/format_date";
-import { OpenInNew, RateReview } from "@mui/icons-material";
+import { OpenInNew } from "@mui/icons-material";
 import { Box, Grid, Input, useMediaQuery } from "@mui/material";
-import Cookies from "js-cookie";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -74,25 +70,25 @@ export default function ProfileMobileMode(props: ProfileProps) {
     dispatch(setProfileImagePreview(e.target.files[0]));
   }
 
-  async function handleCreateConversation() {
-    if (isAuthenticated) {
-      setConversationLoading(true);
-      setChatToken(Cookies.get("chatToken") || token);
+  // async function handleCreateConversation() {
+  //   if (isAuthenticated) {
+  //     setConversationLoading(true);
+  //     setChatToken(Cookies.get("chatToken") || token);
 
-      chatApi
-        .post(`/conversations`, {
-          members: [profileInfo?.user_id],
-        })
-        .then((res) => {
-          dispatch(setSelectedConversation(res?.data?.id));
-          router.push("/chat");
-          setConversationLoading(false);
-        });
-    } else {
-      dispatch(setLoginState(true));
-      dispatch(setOpenModal(true));
-    }
-  }
+  //     chatApi
+  //       .post(`/conversations`, {
+  //         members: [profileInfo?.user_id],
+  //       })
+  //       .then((res) => {
+  //         dispatch(setSelectedConversation(res?.data?.id));
+  //         router.push("/chat");
+  //         setConversationLoading(false);
+  //       });
+  //   } else {
+  //     dispatch(setLoginState(true));
+  //     dispatch(setOpenModal(true));
+  //   }
+  // }
 
   const width = useMediaQuery("(max-width:780px)");
 
@@ -108,7 +104,7 @@ export default function ProfileMobileMode(props: ProfileProps) {
             gap: "4px",
             backgroundColor: "#fff",
             border: "1px solid #E0E0E0",
-            marginBottom: "20px"
+            marginBottom: "20px",
           }}
         >
           <Box
@@ -123,10 +119,25 @@ export default function ProfileMobileMode(props: ProfileProps) {
               <Box sx={{ display: "flex", alignItems: "center", gap: "16px" }}>
                 <Box
                   sx={{
-                    width: { lg: '152px', md: '152px', sm: '140px', xs: '112px' },
-                    height: { lg: '152px', md: '152px', sm: '140px', xs: '112px' },
+                    width: {
+                      lg: "152px",
+                      md: "152px",
+                      sm: "140px",
+                      xs: "112px",
+                    },
+                    height: {
+                      lg: "152px",
+                      md: "152px",
+                      sm: "140px",
+                      xs: "112px",
+                    },
                     position: "relative",
-                    borderRadius: { lg: `${152 / 2}px`, md: `${152 / 2}px`, sm: `${140 / 2}px`, xs: `${112 / 2}px` },
+                    borderRadius: {
+                      lg: `${152 / 2}px`,
+                      md: `${152 / 2}px`,
+                      sm: `${140 / 2}px`,
+                      xs: `${112 / 2}px`,
+                    },
                     bgcolor: "#fff",
                     overflow: "hidden",
 
@@ -137,7 +148,7 @@ export default function ProfileMobileMode(props: ProfileProps) {
                 >
                   <Image
                     fill
-                    sizes={'100%'}
+                    sizes={"100%"}
                     alt="avatar"
                     style={{
                       objectFit: "cover",
@@ -162,8 +173,13 @@ export default function ProfileMobileMode(props: ProfileProps) {
                           bottom: 0,
                           left: 0,
                           rigth: 0,
-                          width: { lg: '152px', md: '152px', sm: '140px', xs: '112px' },
-                          height: '40px',
+                          width: {
+                            lg: "152px",
+                            md: "152px",
+                            sm: "140px",
+                            xs: "112px",
+                          },
+                          height: "40px",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
@@ -198,21 +214,41 @@ export default function ProfileMobileMode(props: ProfileProps) {
                 <Box>
                   <SimpleTypography
                     sx={{
-                      fontSize: { lg: "25px", md: '25px', sm: '22px', xs: '20px' },
+                      fontSize: {
+                        lg: "25px",
+                        md: "25px",
+                        sm: "22px",
+                        xs: "20px",
+                      },
                       fontWeight: "500",
                       lineFeight: "26px",
                       letterSpacing: "-0.02em",
-                      textAlign: { lg: "center", md: 'center', sm: 'start', xs: 'start' },
+                      textAlign: {
+                        lg: "center",
+                        md: "center",
+                        sm: "start",
+                        xs: "start",
+                      },
                     }}
                     text={profileInfo?.full_name}
                   />
                   <SimpleTypography
                     sx={{
-                      fontSize: { lg: "20px", md: '20px', sm: '18px', xs: '16px' },
+                      fontSize: {
+                        lg: "20px",
+                        md: "20px",
+                        sm: "18px",
+                        xs: "16px",
+                      },
                       fontWeight: "500",
                       lineFeight: "26px",
                       letterSpacing: "-0.02em",
-                      textAlign: { lg: "center", md: 'center', sm: 'start', xs: 'start' },
+                      textAlign: {
+                        lg: "center",
+                        md: "center",
+                        sm: "start",
+                        xs: "start",
+                      },
                     }}
                     text={`@${profileInfo?.username}`}
                   />
@@ -256,13 +292,23 @@ export default function ProfileMobileMode(props: ProfileProps) {
                 <SimpleTypography
                   text={"Компания:"}
                   sx={{
-                    fontSize: { lg: "16px", md: '16px', sm: '15px', xs: '14px' },
+                    fontSize: {
+                      lg: "16px",
+                      md: "16px",
+                      sm: "15px",
+                      xs: "14px",
+                    },
                   }}
                 />
                 <SimpleTypography
                   text={profileInfo?.company_name}
                   sx={{
-                    fontSize: { lg: "16px", md: '16px', sm: '15px', xs: '14px' },
+                    fontSize: {
+                      lg: "16px",
+                      md: "16px",
+                      sm: "15px",
+                      xs: "14px",
+                    },
                   }}
                 />
               </Box>
@@ -278,13 +324,23 @@ export default function ProfileMobileMode(props: ProfileProps) {
                 <SimpleTypography
                   text={"Дата регистрации:"}
                   sx={{
-                    fontSize: { lg: "16px", md: '16px', sm: '15px', xs: '14px' },
+                    fontSize: {
+                      lg: "16px",
+                      md: "16px",
+                      sm: "15px",
+                      xs: "14px",
+                    },
                   }}
                 />
                 <SimpleTypography
                   text={formatDate(profileInfo?.created_at)}
                   sx={{
-                    fontSize: { lg: "16px", md: '16px', sm: '15px', xs: '14px' },
+                    fontSize: {
+                      lg: "16px",
+                      md: "16px",
+                      sm: "15px",
+                      xs: "14px",
+                    },
                   }}
                 />
               </Box>
@@ -301,13 +357,23 @@ export default function ProfileMobileMode(props: ProfileProps) {
                   <SimpleTypography
                     text={"Э-почта:"}
                     sx={{
-                      fontSize: { lg: "16px", md: '16px', sm: '15px', xs: '14px' },
+                      fontSize: {
+                        lg: "16px",
+                        md: "16px",
+                        sm: "15px",
+                        xs: "14px",
+                      },
                     }}
                   />
                   <SimpleTypography
                     text={profileInfo?.email}
                     sx={{
-                      fontSize: { lg: "16px", md: '16px', sm: '15px', xs: '14px' },
+                      fontSize: {
+                        lg: "16px",
+                        md: "16px",
+                        sm: "15px",
+                        xs: "14px",
+                      },
                     }}
                   />
                 </Box>
@@ -333,14 +399,24 @@ export default function ProfileMobileMode(props: ProfileProps) {
                 <SimpleTypography
                   text={"Адрес:"}
                   sx={{
-                    fontSize: { lg: "16px", md: '16px', sm: '15px', xs: '14px' },
+                    fontSize: {
+                      lg: "16px",
+                      md: "16px",
+                      sm: "15px",
+                      xs: "14px",
+                    },
                   }}
                 />
                 {!!profileInfo?.address ? (
                   <SimpleTypography
                     text={profileInfo?.address}
                     sx={{
-                      fontSize: { lg: "16px", md: '16px', sm: '15px', xs: '14px' },
+                      fontSize: {
+                        lg: "16px",
+                        md: "16px",
+                        sm: "15px",
+                        xs: "14px",
+                      },
                     }}
                   />
                 ) : (
@@ -358,14 +434,24 @@ export default function ProfileMobileMode(props: ProfileProps) {
                 <SimpleTypography
                   text={"Сайт:"}
                   sx={{
-                    fontSize: { lg: "16px", md: '16px', sm: '15px', xs: '14px' },
+                    fontSize: {
+                      lg: "16px",
+                      md: "16px",
+                      sm: "15px",
+                      xs: "14px",
+                    },
                   }}
                 />
                 {!!profileInfo?.portfolio_link ? (
                   <SimpleTypography
                     text={profileInfo?.portfolio_link || ""}
                     sx={{
-                      fontSize: { lg: "16px", md: '16px', sm: '15px', xs: '14px' },
+                      fontSize: {
+                        lg: "16px",
+                        md: "16px",
+                        sm: "15px",
+                        xs: "14px",
+                      },
                     }}
                   />
                 ) : (
@@ -383,14 +469,24 @@ export default function ProfileMobileMode(props: ProfileProps) {
                 <SimpleTypography
                   text={"Телефон:"}
                   sx={{
-                    fontSize: { lg: "16px", md: '16px', sm: '15px', xs: '14px' },
+                    fontSize: {
+                      lg: "16px",
+                      md: "16px",
+                      sm: "15px",
+                      xs: "14px",
+                    },
                   }}
                 />
                 {!!profileInfo?.phone ? (
                   <SimpleTypography
                     text={profileInfo?.phone}
                     sx={{
-                      fontSize: { lg: "16px", md: '16px', sm: '15px', xs: '14px' },
+                      fontSize: {
+                        lg: "16px",
+                        md: "16px",
+                        sm: "15px",
+                        xs: "14px",
+                      },
                     }}
                   />
                 ) : (
@@ -409,7 +505,12 @@ export default function ProfileMobileMode(props: ProfileProps) {
                   <SimpleTypography
                     text={"Инстаграм:"}
                     sx={{
-                      fontSize: { lg: "16px", md: '16px', sm: '15px', xs: '14px' },
+                      fontSize: {
+                        lg: "16px",
+                        md: "16px",
+                        sm: "15px",
+                        xs: "14px",
+                      },
                     }}
                   />
                   {props.of == "own" && !profileInfo?.instagram ? (
@@ -423,52 +524,40 @@ export default function ProfileMobileMode(props: ProfileProps) {
                     />
                   )}
                 </Box>
-              ): null }
+              ) : null}
             </Box>
           </Box>
           <Grid
             container
             sx={{
               width: "100%",
-              justifyContent: "space-between"
+              justifyContent: "space-between",
             }}
           >
-            {props?.of == "designer" ? (
-              <>
-                <Grid item md={12} xs={12}>
-                  <Buttons
-                    startIcon={conversationLoading}
-                    onClick={() => handleCreateConversation()}
-                    sx={{ width: "100%" }}
-                    className="upload__btn"
-                    name="Написать сообщение"
-                    childrenFirst={true}
-                  >
-                    <RateReview sx={{ mr: "8px" }} />
-                  </Buttons>
-                </Grid>
-              </>
-            ) : (
-              <Grid item md={12} xs={12} sx={{ mt: { lg: 0, md: 0, sm: '24px', xs: '24px' } }}>
-                <Buttons
-                  sx={{ width: "100%" }}
-                  className="bookmark__btn"
-                  name="Редактировать"
-                  childrenFirst={true}
-                  onClick={() => {
-                    dispatch(setProfileEditState(true));
-                    dispatch(setOpenModal(true));
-                  }}
-                >
-                  <Image
-                    width={16}
-                    height={16}
-                    alt="Phone number"
-                    src={"/icons/edit.svg"}
-                  />
-                </Buttons>
-              </Grid>
-            )}
+            <Grid
+              item
+              md={12}
+              xs={12}
+              sx={{ mt: { lg: 0, md: 0, sm: "24px", xs: "24px" } }}
+            >
+              <Buttons
+                sx={{ width: "100%" }}
+                className="bookmark__btn"
+                name="Редактировать"
+                childrenFirst={true}
+                onClick={() => {
+                  dispatch(setProfileEditState(true));
+                  dispatch(setOpenModal(true));
+                }}
+              >
+                <Image
+                  width={16}
+                  height={16}
+                  alt="Phone number"
+                  src={"/icons/edit.svg"}
+                />
+              </Buttons>
+            </Grid>
           </Grid>
         </Box>
         {props?.of == "own" && (
@@ -485,7 +574,12 @@ export default function ProfileMobileMode(props: ProfileProps) {
               sx={{
                 width: "48%",
                 height: "auto !important",
-                padding: { lg: "8px 20px !important", md: "8px 20px !important", sm: "8px 12px !important", xs: "8px 12px !important" },
+                padding: {
+                  lg: "8px 20px !important",
+                  md: "8px 20px !important",
+                  sm: "8px 12px !important",
+                  xs: "8px 12px !important",
+                },
               }}
               name="Создать проект"
               childrenFirst={true}
@@ -507,7 +601,12 @@ export default function ProfileMobileMode(props: ProfileProps) {
                 sx={{
                   width: "100%",
                   height: "auto !important",
-                  padding: { lg: "8px 20px !important", md: "8px 20px !important", sm: "8px 12px !important", xs: "8px 12px !important" },
+                  padding: {
+                    lg: "8px 20px !important",
+                    md: "8px 20px !important",
+                    sm: "8px 12px !important",
+                    xs: "8px 12px !important",
+                  },
                 }}
                 name="Добавить работу"
                 childrenFirst={true}

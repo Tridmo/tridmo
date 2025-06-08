@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../utils/axios'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { brandOrderBy, brandsForLandingPageLimit, brandsLimit, order } from '../types/filters';
+import api from '../utils/axios';
 
 const initialState = {
   data: [],
@@ -11,6 +11,10 @@ const initialState = {
   landing_page_brands_status: 'idle',
   landing_page_brands_error: null,
   landing_page_brands_progress: 0,
+  filter_brands_data: [],
+  filter_brands_status: 'idle',
+  filter_brands_error: null,
+  filter_brands_progress: 0,
 };
 export const getAllBrands = createAsyncThunk('/brands',
   async (wrapper?: {
@@ -64,6 +68,22 @@ export const getBrandsForLandingPage = createAsyncThunk('/brands/landing-page',
     return response.data
   })
 
+  export const getFilterBrands = createAsyncThunk('/brands/filter',
+    async (wrapper?: {
+      country_id?: string;
+      limit?: number;
+    }) => {
+      let send__route = `/brands`
+  
+      if (wrapper?.country_id) {
+        send__route += `/?country_id=${wrapper?.country_id}`
+      }
+      
+      const response = await api.get(send__route)
+      return response.data
+    })
+  
+
 const get_all_brands = createSlice({
   name: 'get_all_brands',
   initialState,
@@ -107,6 +127,22 @@ const get_all_brands = createSlice({
         state.landing_page_brands_status = 'failed'
         state.landing_page_brands_error = action.error.message
       })
+
+    builder
+      .addCase(getFilterBrands.pending, (state?: any, action?: any) => {
+        state.filter_brands_status = 'loading'
+      })
+      .addCase(getFilterBrands.fulfilled, (state?: any, action?: any) => {
+        state.filter_brands_progress = 20
+        state.filter_brands_status = 'succeeded'
+        state.filter_brands_data = [];
+        state.filter_brands_data = state.filter_brands_data.concat(action.payload)
+        state.filter_brands_progress = 100
+      })
+      .addCase(getFilterBrands.rejected, (state?: any, action?: any) => {
+        state.filter_brands_status = 'failed'
+        state.filter_brands_error = action.error.message
+      })
   }
 });
 
@@ -116,4 +152,6 @@ export const selectAllBrands = (state: any) => state?.get_all_brands?.data[0]
 export const selectAllBrands_status = (state: any) => state?.get_all_brands?.status
 export const selectBrandsForLandingPage = (state: any) => state?.get_all_brands?.landing_page_brands_data[0]?.data?.brands
 export const selectBrandsForLandingPage_status = (state: any) => state?.get_all_brands?.landing_page_brands_status
+export const selectFilterBrands = (state: any) => state?.get_all_brands?.filter_brands_data[0]?.data?.brands
+export const selectFilterBrands_status = (state: any) => state?.get_all_brands?.filter_brands_status
 export default get_all_brands;

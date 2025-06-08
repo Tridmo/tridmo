@@ -14,7 +14,6 @@ import { toast } from "react-toastify";
 
 // Redux actions
 import { accountBannedMessage, authTokens } from "@/constants";
-import { getChatToken, selectChatToken } from "../../data/get_chat_token";
 import {
   getNotifications,
   selectNotificationsStatus,
@@ -29,7 +28,6 @@ import {
   setWarningState,
 } from "../../data/modal_checker";
 import { setAuthToken } from "../../utils/axios";
-import { tokenFactory } from "../../utils/chat";
 import { isPrivateRoute } from "../../utils/utils";
 
 const AuthContext = createContext({});
@@ -56,7 +54,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     (state: any) => state?.profile_me?.status
   );
   const myProfileError = useSelector((state: any) => state?.profile_me?.error);
-  const chatToken = useSelector(selectChatToken);
+  // const chatToken = useSelector(selectChatToken);
   const notificationsStatus = useSelector(selectNotificationsStatus);
 
   const authProviderValues = useMemo(
@@ -135,12 +133,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return;
       }
 
-      if (myProfile) {
-        if (!Cookies.get("chatToken") || !chatToken) {
-          await dispatch(getChatToken());
-          await tokenFactory();
-        }
-      }
+      // Deprecated
+      // if (myProfile) {
+      //   if (!Cookies.get("chatToken") || !chatToken) {
+      //     await dispatch(getChatToken());
+      //     await tokenFactory();
+      //   }
+      // }
 
       if (myProfileStatus === "failed") {
         if (myProfileError?.reason === "token_expired") {
@@ -163,14 +162,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.error("Authentication error:", error);
       handleLogout();
     }
-  }, [
-    myProfile,
-    myProfileStatus,
-    myProfileError,
-    chatToken,
-    dispatch,
-    handleLogout,
-  ]);
+  }, [myProfile, myProfileStatus, myProfileError, dispatch, handleLogout]);
 
   // Handle hash parameters for OAuth callback
   const handleHashParams = useCallback(() => {

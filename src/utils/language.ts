@@ -11,7 +11,7 @@ export const getLanguageByDomain = () => {
 export const translations = {
   ru: {
     title: "МЫ СОЗДАЕМ ДЛЯ ВАС КАЧЕСТВЕННЫЕ 3D МОДЕЛИ",
-    description: "Dizipro создает первоклассные 3D-модели онлайн с помощью нашей опытной команды фрилансеров.",
+    description: "Dizipro создает первоклассные 3D-модели с помощью нашей опытной команды специалистов",
     button: "Dizipro.org"
   },
   uz: {

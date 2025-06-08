@@ -1,13 +1,18 @@
 // app/components/ClientWrapper.tsx
 'use client';
 
-import React from "react";
-import NextTopLoader from "nextjs-toploader";
-import AlertWrapper from "../components/alert";
-import TawkMessengerReact from '@tawk.to/tawk-messenger-react';
-import { Box } from "@mui/system";
 import RightBar from "@/components/right_bar";
-import { ENVIRONMENT, TAWKTO_PROPERTY_ID, TAWKTO_RUSSIAN_WIDGET_ID } from "../utils/env_vars";
+import { Box } from "@mui/system";
+import TawkMessengerReact from "@tawk.to/tawk-messenger-react";
+import NextTopLoader from "nextjs-toploader";
+import React from "react";
+import AlertWrapper from "../components/alert";
+import {
+  ENVIRONMENT,
+  TAWKTO_PROPERTY_ID,
+  TAWKTO_RUSSIAN_WIDGET_ID,
+} from "../utils/env_vars";
+import { GTagTracker } from "./gtag_tracker";
 
 const ClientWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -27,14 +32,14 @@ const ClientWrapper = ({ children }: { children: React.ReactNode }) => {
         <AlertWrapper />
       </Box>
       <RightBar />
+      <GTagTracker />
       {children}
-      {
-        ENVIRONMENT == 'production' &&
+      {ENVIRONMENT == "production" && (
         <TawkMessengerReact
           propertyId={TAWKTO_PROPERTY_ID}
           widgetId={TAWKTO_RUSSIAN_WIDGET_ID}
         />
-      }
+      )}
     </>
   );
 };
