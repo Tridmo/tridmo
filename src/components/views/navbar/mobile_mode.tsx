@@ -1,3 +1,4 @@
+import { Logo } from "@/components/logo";
 import { Close, MenuOutlined } from "@mui/icons-material";
 import {
   IconButton,
@@ -8,7 +9,7 @@ import {
   ListItemText,
   SwipeableDrawer,
 } from "@mui/material";
-import { Box } from "@mui/system";
+import { Box, useMediaQuery } from "@mui/system";
 import Cookies from "js-cookie";
 import Image from "next/image";
 import Link from "next/link";
@@ -38,6 +39,7 @@ import SimpleTypography from "../../typography";
 import { navItemsDataMobile } from "./constants";
 
 export default function MobileMode() {
+  const smScreen = useMediaQuery("(max-width:460px)");
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch<any>();
   const router = useRouter();
@@ -100,24 +102,29 @@ export default function MobileMode() {
   }
 
   const DrawerList = (
-    <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
+    <Box
+      sx={{ width: "100%" }}
+      role="presentation"
+      onClick={toggleDrawer(false)}
+    >
       <Box
         sx={{
           padding: "12px 12px",
           display: "flex",
+          width: "100%",
           justifyContent: "space-between",
         }}
       >
-        <Link href="/">
-          <Image
-            className="header__logo"
-            alt="logo"
-            priority={true}
-            src="/logos/logo.svg"
-            width={123}
-            height={32}
+        {smScreen ? (
+          <Link href="/">
+            <Logo />
+          </Link>
+        ) : (
+          <SimpleTypography
+            text="Меню"
+            sx={{ textAlign: "start", fontSize: "24px", fontWeight: "bold" }}
           />
-        </Link>
+        )}
         <IconButton onClick={() => toggleDrawer(false)}>
           <Close />
         </IconButton>
@@ -176,6 +183,11 @@ export default function MobileMode() {
         <MenuOutlined sx={{ color: "#424242" }} />
       </IconButton>
       <SwipeableDrawer
+        sx={
+          smScreen
+            ? { "& .MuiDrawer-paper": { width: "100%" } }
+            : { "& .MuiDrawer-paper": { width: 250 } }
+        }
         open={open}
         anchor="right"
         onClose={toggleDrawer(false)}

@@ -41,12 +41,14 @@ export default function BrandsPage() {
     (state: any) => state?.modal_checker?.isBrandsFilterModal
   );
 
+  const smScreen = useMediaQuery("(max-width:600px)");
+  const mdScreen = useMediaQuery("(max-width:960px)");
+
   const dispatch = useDispatch<any>();
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
   const all__brands = useSelector(selectAllBrands);
-  const mdScreen = useMediaQuery("(max-width:960px)");
 
   const [searchValue, setSearchValue] = useState("");
   const page = searchParams.get("page") as string;
@@ -111,12 +113,27 @@ export default function BrandsPage() {
           <Box>
             <React.Fragment>
               <SwipeableDrawer
+                sx={
+                  smScreen
+                    ? {
+                        "& .MuiDrawer-paper": {
+                          width: "100%",
+                          p: "24px",
+                        },
+                      }
+                    : {
+                        "& .MuiDrawer-paper": {
+                          width: "300px",
+                          p: "24px",
+                        },
+                      }
+                }
                 anchor={"left"}
                 open={isFilterOpen}
                 onClose={() => dispatch(setBrandsFilterModal(false))}
                 onOpen={() => dispatch(setBrandsFilterModal(true))}
               >
-                <Box sx={{ width: "100%", p: "24px" }}>
+                <Box sx={{ width: "100%" }}>
                   <Grid
                     item
                     lg={12}
@@ -166,6 +183,8 @@ export default function BrandsPage() {
           }}
         >
           <BramdsListPaginationIndicator
+            mdScreen={mdScreen}
+            smScreen={smScreen}
             isLoading={
               getAllBrandStatus == "loading" || getAllBrandStatus == "idle"
             }

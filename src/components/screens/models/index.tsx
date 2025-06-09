@@ -40,7 +40,7 @@ export default function ModelsPage() {
   const IsFilterOpen = useSelector(
     (state: any) => state?.modal_checker?.isFilterModal
   );
-  const matches = useMediaQuery("(max-width:600px)");
+  const smScreen = useMediaQuery("(max-width:600px)");
   const mdScreen = useMediaQuery("(max-width:960px)");
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -186,12 +186,27 @@ export default function ModelsPage() {
           <Box>
             <React.Fragment>
               <SwipeableDrawer
+                sx={
+                  smScreen
+                    ? {
+                        "& .MuiDrawer-paper": {
+                          width: "100%",
+                          p: "24px",
+                        },
+                      }
+                    : {
+                        "& .MuiDrawer-paper": {
+                          width: "300px",
+                          p: "24px",
+                        },
+                      }
+                }
                 anchor={"left"}
                 open={IsFilterOpen}
                 onClose={() => dispatch(setFiltersModal(false))}
                 onOpen={() => dispatch(setFiltersModal(true))}
               >
-                <Box sx={{ width: "100%", p: "24px" }}>
+                <Box sx={{ width: "100%" }}>
                   <Grid
                     item
                     lg={12}
@@ -337,7 +352,7 @@ export default function ModelsPage() {
                 }}
               >
                 <Buttons
-                  name={matches ? "" : "Фильтры"}
+                  name={smScreen ? "" : "Фильтры"}
                   childrenFirst
                   className="bookmark__btn"
                   onClick={() => dispatch(setFiltersModal(true))}
