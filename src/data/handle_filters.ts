@@ -11,6 +11,7 @@ const initialState = {
   brand_name: '',
   brand_orderby: '',
   brand_order: 'desc',
+  brand_country: '',
   country: '',
   categories: [],
   interior_categories: [],
@@ -57,6 +58,9 @@ const handle_filters = createSlice({
     },
     setCountryFilter: (state: any, action: PayloadAction<string>) => {
       state.country = action.payload;
+    },
+    setBrandCountryFilter: (state: any, action: PayloadAction<string>) => {
+      state.brand_country = action.payload;
     },
     setCategoryFilter: (state: any, action: PayloadAction<any[]>) => {
       state.categories = action.payload;
@@ -230,6 +234,7 @@ export const {
   setBrandModelsCategory,
   setAuthor,
   setCountryFilter,
+  setBrandCountryFilter,
   setCategoryFilter,
   setModelBrandFilter,
   setModelTopFilter,

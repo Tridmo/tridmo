@@ -1,4 +1,3 @@
-import { SxProps } from '@mui/system';
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 // Type for our state
 export interface ConfirmContextProps {
@@ -40,6 +39,7 @@ export interface ContextState {
   order_id: string | null,
   isOrderModal: boolean;
   isFilterModal: boolean;
+  isBrandsFilterModal: boolean;
   confirm_props: ConfirmContextProps;
   confirmation_data: ConfirmData;
 }
@@ -65,6 +65,7 @@ const initialState: ContextState = {
   order_id: null,
   isOrderModal: false,
   isFilterModal: false,
+  isBrandsFilterModal: false,
   confirmation_data: {
     checkbox_checked: false
   },
@@ -135,6 +136,9 @@ const modalChecker = createSlice({
     setFiltersModal(state, action) {
       state.isFilterModal = action.payload
     },
+    setBrandsFilterModal(state, action) {
+      state.isBrandsFilterModal = action.payload
+    },
     setOpenModal(state, action) {
       state.isModalOpen = action.payload;
     },
@@ -198,7 +202,8 @@ export const {
   setConfirmProps,
   resetConfirmProps,
   setConfirmData,
-  resetConfirmData
+  resetConfirmData,
+  setBrandsFilterModal
 } = modalChecker.actions;
 
 export const selectEditingProject = (state: any) => state?.modal_checker?.editingProject

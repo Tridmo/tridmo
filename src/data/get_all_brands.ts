@@ -20,6 +20,7 @@ export const getAllBrands = createAsyncThunk('/brands',
   async (wrapper?: {
     name?: string;
     limit?: number;
+    country_id?: string;
     orderBy?: brandOrderBy;
     order?: order;
     page?: number;
@@ -28,6 +29,14 @@ export const getAllBrands = createAsyncThunk('/brands',
 
     if (wrapper?.name) {
       send__route += `/?name=${wrapper?.name}`
+    }
+
+    if (wrapper?.country_id) {
+      if (send__route?.includes("/?")) {
+        send__route += `&country_id=${wrapper?.country_id}`
+      } else {
+        send__route += `/?country_id=${wrapper?.country_id}`
+      }
     }
 
     send__route +=

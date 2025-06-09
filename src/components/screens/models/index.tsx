@@ -33,7 +33,7 @@ import Buttons from "../../buttons";
 import BasicPagination from "../../pagination/pagination";
 import SimpleCard from "../../simple_card";
 import SimpleTypography from "../../typography";
-import ModelFilters from "../../views/filters/model_filters";
+import ModelFilters from "../../views/filters/models_filters";
 import Sorts from "../../views/sorts";
 
 export default function ModelsPage() {
@@ -163,35 +163,6 @@ export default function ModelsPage() {
     router.push(`${pathname}?${newQuery}`);
     setSearchValue("");
   }
-
-  const smallScreen = useMediaQuery("(max-width:768px)");
-
-  const widthControl = {
-    "&:nth-of-type(1)": {
-      minWidth: { lg: "56px", md: "56px", sm: "30px", xs: "30px" },
-      maxWidth: { lg: "56px", md: "56px", sm: "30px", xs: "30px" },
-    },
-    "&:nth-of-type(2)": {
-      minWidth: smallScreen
-        ? "60%"
-        : { lg: "40%", md: "40%", sm: "40%", xs: "60%" },
-      maxWidth: smallScreen
-        ? "60%"
-        : { lg: "40%", md: "40%", sm: "40%", xs: "60%" },
-    },
-    "&:nth-of-type(3)": {
-      minWidth: smallScreen
-        ? "30%"
-        : { lg: "25%", md: "25%", sm: "25%", xs: "30%" },
-      maxWidth: smallScreen
-        ? "30%"
-        : { lg: "25%", md: "25%", sm: "25%", xs: "30%" },
-    },
-    "&:nth-of-type(4)": {
-      minWidth: "25%",
-      maxWidth: "25%",
-    },
-  };
 
   return (
     <Box sx={ContainerStyle}>

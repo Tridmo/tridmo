@@ -1,16 +1,16 @@
+import {
+  selectAllCountries,
+  selectAllCountries_status,
+} from "@/data/get_all_countries";
 import { Box, FormControlLabel, Radio } from "@mui/material";
 import Skeleton from "@mui/material/Skeleton";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getFilterBrands,
-  selectFilterBrands,
-  selectFilterBrands_status,
-} from "../../../data/get_all_brands";
-import { getAllModels } from "../../../data/get_all_models";
-import { setModelBrandFilter } from "../../../data/handle_filters";
-import SimpleTypography from "../../typography";
+import { getAllCountries } from "../../../../data/get_all_countries";
+import { getAllModels } from "../../../../data/get_all_models";
+import { setCountryFilter } from "../../../../data/handle_filters";
+import SimpleTypography from "../../../typography";
 
 const SkletonData = ["", "", "", "", "", ""];
 interface Props {
@@ -18,12 +18,11 @@ interface Props {
   name: string;
   is__Selected: boolean;
 }
-export default function BrandsFilter() {
-  const pathname = usePathname();
+export default function CountryFilter() {
   const dispatch = useDispatch<any>();
-  const brands_data = useSelector(selectFilterBrands);
-  const brands_status = useSelector(selectFilterBrands_status);
-  const [customBrands, setCustomBrands] = useState<Props[]>([]);
+  const countries_data = useSelector(selectAllCountries);
+  const countries_status = useSelector(selectAllCountries_status);
+  const [customCountries, setCustomCountries] = useState<Props[]>([]);
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -32,11 +31,11 @@ export default function BrandsFilter() {
   const getModelCategoryFilter = useSelector(
     (state: any) => state?.handle_filters?.categories
   );
-  const getModelCountryFilter = useSelector(
-    (state: any) => state?.handle_filters?.country
-  );
   const getModelBrandFilter = useSelector(
     (state: any) => state?.handle_filters?.model_brand
+  );
+  const getModelCountryFilter = useSelector(
+    (state: any) => state?.handle_filters?.country
   );
   const getModelColorFilter = useSelector(
     (state: any) => state?.handle_filters?.colors
@@ -61,17 +60,13 @@ export default function BrandsFilter() {
   );
 
   useEffect(() => {
-    if (brands_status == "idle") {
-      dispatch(getFilterBrands({ country_id: getModelCountryFilter }));
+    if (countries_status == "idle") {
+      dispatch(getAllCountries());
     }
-  }, [brands_data, brands_status, dispatch]);
+  }, [countries_data, countries_status, dispatch]);
 
   useEffect(() => {
-    dispatch(getFilterBrands({ country_id: getModelCountryFilter }));
-  }, [getModelCountryFilter]);
-
-  useEffect(() => {
-    if (brands_status === "succeeded") {
+    if (countries_status === "succeeded") {
       if (router) {
         let arr = new Array();
         arr.push({
@@ -79,24 +74,25 @@ export default function BrandsFilter() {
           name: "Все",
           is__Selected: true,
         });
-        brands_data?.forEach((brand: Props) => {
+        countries_data?.data?.forEach((country: Props) => {
           arr.push({
-            id: brand?.id,
-            name: brand?.name,
-            is__Selected: getModelBrandFilter == brand?.id,
+            id: country?.id,
+            name: country?.name,
+            is__Selected: getModelCountryFilter == country?.id,
           });
         });
-        setCustomBrands(arr);
+
+        setCustomCountries(arr);
         // setIsInitialized(true);
       }
     }
-  }, [brands_data, brands_status, router, getModelBrandFilter]);
+  }, [countries_data, countries_status, router, getModelStyleFilter]);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement>,
     id: string
   ) => {
-    let arr = [...customBrands];
+    let arr = [...customCountries];
     let res: string = "";
     for (let i = 0; i < arr?.length; i++) {
       if (arr[i].id !== id || (arr[i].id === id && !event.target.checked)) {
@@ -106,12 +102,12 @@ export default function BrandsFilter() {
         res = arr[i].id;
       }
     }
-    dispatch(setModelBrandFilter(res));
+    dispatch(setCountryFilter(res));
     dispatch(
       getAllModels({
-        brand: res,
+        country_id: res,
+        brand: getModelBrandFilter,
         categories: getModelCategoryFilter,
-        country_id: getModelCountryFilter,
         colors: getModelColorFilter,
         styles: getModelStyleFilter,
         name: keyword || getModelNameFilter,
@@ -122,15 +118,15 @@ export default function BrandsFilter() {
       })
     );
 
-    setCustomBrands(arr);
+    setCustomCountries(arr);
   };
 
-  if (brands_status === "succeeded") {
+  if (countries_status === "succeeded") {
     return (
       <Box>
-        <SimpleTypography text="Бренд" className="section__title" />
+        <SimpleTypography text="Страна" className="section__title" />
         <Box sx={{ display: "flex", flexDirection: "column" }}>
-          {customBrands?.map((item: any, index: number) => (
+          {customCountries?.map((item: any, index: number) => (
             <FormControlLabel
               key={item.id}
               label={item?.name}
@@ -151,7 +147,7 @@ export default function BrandsFilter() {
   } else {
     return (
       <Box>
-        <SimpleTypography text="Бренд" className="section__title" />
+        <SimpleTypography text="Страна" className="section__title" />
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           {SkletonData.map((item, index): any => (
             <Skeleton

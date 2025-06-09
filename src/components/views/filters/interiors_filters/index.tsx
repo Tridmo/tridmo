@@ -1,11 +1,8 @@
-import SimpleTypography from "@/components/typography";
 import { selectAllInteriors } from "@/data/get_all_interiors";
-import { dataItemIndex } from "@/utils/utils";
-import { Box, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 import { Suspense } from "react";
 import { useSelector } from "react-redux";
-import InteriorCategories from "../categories/interior_categories";
-import Sorts from "../sorts";
+import InteriorCategories from "../../categories/interior_categories";
 
 export default function InteriorsFilters() {
   const all__interiors = useSelector(selectAllInteriors);
